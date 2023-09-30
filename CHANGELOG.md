@@ -1,4 +1,4 @@
-## 0.0.2
+## 0.0.4
 Teste de mudança de versão para importe em novo projeto
 
 ## 0.0.1
