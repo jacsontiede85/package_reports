@@ -1,3 +1,3 @@
 abstract class Teste{
-  String name = 'JACSON TIEDE';
+  static String name = 'JACSON TIEDE (VERSÃO 2)';
 }
