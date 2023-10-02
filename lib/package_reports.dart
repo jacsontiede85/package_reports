@@ -1,2 +1,2 @@
 library package_reports;
-export 'teste.dart';
+export 'version.dart';
