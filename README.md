@@ -129,3 +129,9 @@ lib-|
 
 ### Relatório de saída:
 ![Relatório de exemplo](lib/exemplo/img/exemplo.png)
+
+### Relatório de saída - Gráficos:
+![Relatório de exemplo](lib/exemplo/img/exemplo_grafico.png)
+
+### Relatório de saída - Exporte para Excel:
+![Relatório de exemplo](lib/exemplo/img/exemplo_xlsx.png)
