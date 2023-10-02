@@ -44,7 +44,7 @@ class API {
   }
 
   Future<List> getDataReportApi({required String function}) async {
-    final filtro = GetIt.I.get<Filtros>();
+    // final filtro = GetIt.I.get<Filtros>();
     try{
       var response = await jwtSendJson(
         dados: {

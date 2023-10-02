@@ -8,7 +8,7 @@ import 'package:package_reports/report_module/charts/charts.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/report_module/core/features.dart';
-import 'controller/report_chart_controller.dart';
+import '../controller/report_chart_controller.dart';
 
 class ChartsReport extends StatelessWidget with Charts {
   late String title;

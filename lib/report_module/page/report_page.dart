@@ -10,8 +10,8 @@ import 'package:package_reports/report_module/controller/layout_controller.dart'
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/report_module/controller/report_to_xlsx_controller.dart';
 import 'package:package_reports/report_module/core/features.dart';
-import 'package:package_reports/report_module/filtros_page.dart';
-import 'package:package_reports/report_module/report_chart_page.dart';
+import 'package:package_reports/report_module/page/filtros_page.dart';
+import 'package:package_reports/report_module/page/report_chart_page.dart';
 import 'package:package_reports/report_module/widget/texto.dart';
 import 'package:package_reports/report_module/widget/widgets.dart';
 
