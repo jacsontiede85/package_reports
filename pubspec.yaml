@@ -1,15 +1,16 @@
 name: package_reports
 description: Package de criação de relatórios automaticamente a partir de uma entrada de JSON
-version: 0.0.1
+version: 0.0.2
 #publish_to: none
 repository: https://github.com/jacsontiede85/package_reports
-author: Jacson Tiede
 homepage: https://github.com/jacsontiede85/package_reports
 
 platforms:
-  - android
-  - ios
-  - web
+  android:
+  ios:
+  web:
+  windows:
+  linux:
 
 licenses:
   - "MIT"

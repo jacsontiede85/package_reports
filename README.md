@@ -8,7 +8,7 @@ Package de criação de relatórios automaticamente a partir de uma entrada de J
 - Adicione isto ao arquivo pubspec.yaml do seu pacote:
 ``` Dart
 dependencies:
-     package_reports: ^0.0.1
+     package_reports: ^0.0.2
 ```
 - Get dependencies
 
