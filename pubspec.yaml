@@ -1,5 +1,5 @@
 name: package_reports
-description: Package de criação de relatórios automaticamente a partir de uma entrada de JSON
+description: Package de criação de relatórios, gráficos e exportação para excel, tudo automaticamente a partir de uma entrada de JSON.
 version: 0.0.2
 #publish_to: none
 repository: https://github.com/jacsontiede85/package_reports
