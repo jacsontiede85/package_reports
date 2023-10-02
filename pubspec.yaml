@@ -25,7 +25,7 @@ dependencies:
   intl: ^0.18.1
   mobx: ^2.2.0
   flutter_mobx: ^2.0.6+5
-  get_it: 7.6.3
+  get_it: 7.6.4
   http: ^1.1.0
   crypto: ^3.0.3
   loading_animation_widget: ^1.2.0+4
