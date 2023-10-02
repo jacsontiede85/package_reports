@@ -128,3 +128,4 @@ lib-|
 ```
 
 - Relatório de saída:
+![Relatório de exemplo](lib/exemplo/img/exemplo.png)
