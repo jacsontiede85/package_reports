@@ -1,3 +1,6 @@
+## 0.0.3
+Correções e melhorias
+
 ## 0.0.2
 Correções
 
@@ -17,7 +20,7 @@ criar package:
     flutter create --template=package package_reports
 ```
 
-PUBLICAR PACKAGE
+PUBLICAR PACKAGE (histórico de nerd)
 dart pub publish -> publicar um package
 O uso do --dry-run permite que você verifique se tudo está configurado corretamente
 
