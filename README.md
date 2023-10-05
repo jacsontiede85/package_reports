@@ -81,16 +81,49 @@ lib-|
 ## Exemplo de formatação das colunas através da key do JSON de entrada
 
 - Exemplo que como escrever uma query na API no back-end:
-```roomsql
-    select 
-          pcpedc.codsupervisor as cod__INT__NO_METRICS
-        , pcsuperv.nome
-        , count(*) qtde_pedidos__INT
-        , sum(pcpedc.vlatend) as total
-    from pcpedc, pcsuperv
-    where pcpedc.codsupervisor = pcsuperv.codsupervisor
-    and data between to_date('01/10/2023', 'DD/MM/YYYY') and to_date('02/10/2023', 'DD/MM/YYYY')
-    group by pcpedc.codsupervisor, pcsuperv.nome;
+```php
+<?php
+    include_once "../header.php";
+        
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $inputJSON = file_get_contents('php://input');
+        $data = json_decode($inputJSON);
+        if ($data === null) {
+            http_response_code(400);
+            echo json_encode(["error" => "Erro ao decodificar o JSON de entrada."]);
+            exit;
+        }
+
+        // FAZER VERIFICAÇÕES DE ENTRADA DE CADA FILTRO
+        if (!isset($data->data_inicio) || !isset($data->data_fim) || !isset($data->banco)) {
+            http_response_code(400);
+            echo json_encode(["error" => "Os campos 'data_inicio' e 'data_fim' são obrigatórios."]);
+            exit;
+        }
+    } else {
+        http_response_code(405);
+        echo json_encode(["error" => "Método não permitido. Use POST para enviar os dados JSON."]);
+        exit;
+    }
+
+    $sql =  "select 
+                  pcpedc.codusur as cod__INT__NO_METRICS
+                , pcusuari.nome
+                , count(*) qtde_pedidos__INT
+                , sum(pcpedc.vlatend) as total
+            from pcpedc, pcusuari
+            where pcpedc.codusur = pcusuari.codusur
+            and data between to_date('$data->data_inicio', 'DD/MM/YYYY') and to_date('$data->data_fim', 'DD/MM/YYYY')
+            and pcusuari.codusur not in(3644)
+            group by pcpedc.codusur, pcusuari.nome
+            order by total desc";
+
+    $db = instancia_DB($data->banco);
+    $result = $db->select($sql);
+
+    http_response_code(200);
+    echo json_encode($result);
+    exit;
 ```
 
 - Saída JSON da query:
