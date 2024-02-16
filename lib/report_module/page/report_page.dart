@@ -349,8 +349,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                         isSelected: element['isSelected'],
                         order: element['order']),
                   ),
-                )
-                .toList(),
+                ),
         ],
       );
 
@@ -435,7 +434,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               return Row(
                 children: row,
               );
-            }).toList(),
+            }),
           ],
         );
 
@@ -464,7 +463,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 return Row(
                   children: row,
                 );
-              }).toList(),
+              }),
           ],
         );
 
@@ -479,29 +478,27 @@ class _ReportPageState extends State<ReportPage> with Rows {
         child: Row(
           children: [
             if (controller.colunas.isNotEmpty)
-              ...controller.colunas
-                  .map(
-                    (element) => rowTextFormatted(
-                      width: controller.getWidthCol(
-                        key: element['key'],
-                      ),
-                      height: 40,
-                      controller: controller,
-                      key: element['key'],
-                      type: element['key'].toString().toLowerCase().contains('__dontsum') ? String : element['type'],
-                      value: controller.colunas.indexOf(element) == 0
-                          ? '${controller.dados.length}'
-                          : element['type'] == String
+              ...controller.colunas.map(
+                (element) => rowTextFormatted(
+                  width: controller.getWidthCol(
+                    key: element['key'],
+                  ),
+                  height: 40,
+                  controller: controller,
+                  key: element['key'],
+                  type: element['key'].toString().toLowerCase().contains('__dontsum') ? String : element['type'],
+                  value: controller.colunas.indexOf(element) == 0
+                      ? '${controller.dados.length}'
+                      : element['type'] == String
+                          ? ''
+                          : element['key'].toString().toLowerCase().contains('__dontsum')
                               ? ''
-                              : element['key'].toString().toLowerCase().contains('__dontsum')
-                                  ? ''
-                                  : element['vlrTotalDaColuna'],
-                      isSelected: element['isSelected'],
-                      isRodape: true,
-                      order: element['order'],
-                    ),
-                  )
-                  .toList(),
+                              : element['vlrTotalDaColuna'],
+                  isSelected: element['isSelected'],
+                  isRodape: true,
+                  order: element['order'],
+                ),
+              ),
           ],
         ),
       );

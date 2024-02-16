@@ -42,9 +42,9 @@ mixin Charts{
           enableAxisAnimation: true,
           legend: const Legend(isVisible: false),
           isTransposed: isTransposed??false,
-          primaryXAxis: CategoryAxis(
-            labelStyle: const TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
-            majorGridLines: const MajorGridLines(width: 0),
+          primaryXAxis: const CategoryAxis(
+            labelStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
+            majorGridLines: MajorGridLines(width: 0),
             isInversed: true,
           ),
           primaryYAxis: NumericAxis(
@@ -54,7 +54,7 @@ mixin Charts{
             rangePadding: ChartRangePadding.auto,
           ),
           // tooltipBehavior: TooltipBehavior(enable: false),
-          series: <ChartSeries>[
+          series: [
             BarSeries<ChartData, String>(
               dataSource: dados,
               xValueMapper: (ChartData data, _) => data.nome,
@@ -91,9 +91,9 @@ mixin Charts{
             if(dados!=null)
               if((dados[0].title??'').isNotEmpty) Padding(padding: const EdgeInsets.only(left: 30, top: 20), child: Text('${dados[0].title}'),),
             SfCartesianChart(
-                primaryXAxis: CategoryAxis(),
+                primaryXAxis: const CategoryAxis(),
                 margin: const EdgeInsets.only(left: 0, top: 15, right: 0, bottom: 0),
-                series: <ChartSeries>[
+                series: [
                   if(dados!=null && dadosList==null)
                     LineSeries<ChartData, String>(
                         dataSource: dados,
@@ -176,9 +176,9 @@ mixin Charts{
                   if((dadosList[1][0].title??'').isNotEmpty)
                     Padding(padding: const EdgeInsets.only(left: 30, top: 0), child: Text('${dadosList[1][0].title}'),),
                 SfCartesianChart(
-                    primaryXAxis: CategoryAxis(),
+                    primaryXAxis: const CategoryAxis(),
                     margin: const EdgeInsets.only(left: 0, top: 15, right: 0, bottom: 0),
-                    series: <ChartSeries>[
+                    series: <CartesianSeries>[
                       if(dados!=null && dadosList==null)
                         AreaSeries<ChartData, String>(
                             dataSource: dados,
