@@ -11,7 +11,6 @@ class _ExemploReportPageState extends State<ExemploReportPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
   @override

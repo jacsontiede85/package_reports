@@ -58,8 +58,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
 
     return Container(
       color: Colors.white,
-      child: WillPopScope(
-      onWillPop: controller.willPopCallback,
+      child: PopScope(
+      onPopInvoked: (value) => controller.willPopCallback,
       child: ScaffoldPage(
         header: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

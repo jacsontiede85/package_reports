@@ -1,11 +1,8 @@
-import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'package:package_reports/report_module/core/features.dart';
 import 'package:package_reports/report_module/core/settings.dart';
 import 'dart:convert';
-
-import 'filtros.dart';
 
 class API {
 
