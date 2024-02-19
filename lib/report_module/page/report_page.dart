@@ -328,30 +328,33 @@ class _ReportPageState extends State<ReportPage> with Rows {
     );
   }
 
-  Widget colunas() => Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
-            ...controller.colunas
-                .map(
-                  (element) => HoverButton(
-                    onPressed: () => controller.setOrderBy(key: element['key'], order: element['order']),
-                    builder: (context, state) => rowTextFormatted(
-                        width: controller.getWidthCol(
-                          key: element['key'],
-                        ),
-                        height: controller.getHeightColunasCabecalho,
-                        controller: controller,
-                        key: element['key'],
-                        type: element['type'],
-                        value: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado'].trim()),
-                        isTitle: true,
-                        isSelected: element['isSelected'],
-                        order: element['order']),
+  Widget colunas() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
+          ...controller.colunas.map(
+            (element) => HoverButton(
+              onPressed: () => controller.setOrderBy(key: element['key'], order: element['order']),
+              builder: (context, state) {
+                return rowTextFormatted(
+                  width: controller.getWidthCol(
+                    key: element['key'],
                   ),
-                ),
-        ],
-      );
+                  height: controller.getHeightColunasCabecalho,
+                  controller: controller,
+                  key: element['key'],
+                  type: element['type'],
+                  value: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado'].trim()),
+                  isTitle: true,
+                  isSelected: element['isSelected'],
+                  order: element['order']);
+              },
+            ),
+          ),
+      ],
+    );
+  }
 
   Widget colunasElevated() {
     var element = controller.getMapColuna(key: controller.keyFreeze);
@@ -386,7 +389,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           List<Widget> row = [];
           val.forEach((key, value) {
             Type type = value.runtimeType;
-            if (!key.toString().contains('__invisible'))
+            if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE'))
               row.add(
                 rowTextFormatted(
                   width: controller.getWidthCol(
@@ -416,7 +419,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               List<Widget> row = [];
               val.forEach((key, value) {
                 Type type = value.runtimeType;
-                if (!key.toString().contains('__invisible'))
+                if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE'))
                   row.add(
                     rowTextFormatted(
                       width: controller.getWidthCol(
@@ -467,55 +470,71 @@ class _ReportPageState extends State<ReportPage> with Rows {
           ],
         );
 
-  Widget rodape() => Container(
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            if (controller.colunas.isNotEmpty)
-              ...controller.colunas.map(
-                (element) => rowTextFormatted(
-                  width: controller.getWidthCol(
-                    key: element['key'],
-                  ),
-                  height: 40,
-                  controller: controller,
-                  key: element['key'],
-                  type: element['key'].toString().toLowerCase().contains('__dontsum') ? String : element['type'],
-                  value: controller.colunas.indexOf(element) == 0
-                      ? '${controller.dados.length}'
-                      : element['type'] == String
-                          ? ''
-                          : element['key'].toString().toLowerCase().contains('__dontsum')
-                              ? ''
-                              : element['vlrTotalDaColuna'],
-                  isSelected: element['isSelected'],
-                  isRodape: true,
-                  order: element['order'],
-                ),
+  Widget rodape() {
+    return Container(
+      decoration: const BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            offset: Offset(0, -2),
+            blurRadius: 10,
+            spreadRadius: 0.1,
+          ),
+        ]
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if(controller.colunas.isNotEmpty && controller.colunasRodapePerson.isEmpty)
+            ...controller.colunas.map((element)=>
+              rowTextFormatted(
+                width: controller.getWidthCol(key: element['key'],),
+                height: 40,
+                controller: controller,
+                key: element['key'],
+                type: element['key'].toString().contains('__DONTSUM') ? String : element['type'],
+                value: controller.colunas.indexOf(element)==0
+                    ? '${controller.dados.length}'
+                    : element['type']==String ? ''
+                    : element['key'].toString().contains('__DONTSUM') ? ''
+                    : element['vlrTotalDaColuna'],
+                isSelected: element['isSelected'],
+                isRodape: true,
+                order: element['order'],
               ),
-          ],
-        ),
-      );
+            )
+          else
+            ...controller.colunasRodapePerson.map((element) {
+              for(var value in controller.dados){
+                if(element['key'].toString().contains('__ISRODAPE')){
+                  return rowTextComLable(
+                    width:controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().contains('__ISRODAPE')).length,
+                    height: 40,
+                    controller: controller,
+                    key: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado']),
+                    type: element['type'],
+                    value: value[element['key']],
+                  );                     
+                }
+              }
+              return const SizedBox();
+            }),      
+        ]
+      ),
+    );
+  }
 
-  Widget rodapeElevated() {
+  Widget rodapeElevated(){
     var element = controller.getMapColuna(key: controller.keyFreeze);
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
         rowTextFormatted(
-          width: controller.getWidthCol(
-            key: controller.keyFreeze,
-          ),
+          width: controller.getWidthCol(key: controller.keyFreeze,),
           height: 40,
           controller: controller,
           key: controller.keyFreeze,
-          type: controller.keyFreeze.toString().toLowerCase().contains('__dontsum') ? String : element['type'],
+          type: controller.keyFreeze.toString().contains('__DONTSUM') ? String : element['type'],
           value: '${controller.dados.length}',
           isSelected: element['isSelected'],
           isRodape: true,
@@ -524,6 +543,55 @@ class _ReportPageState extends State<ReportPage> with Rows {
       ],
     );
   }
+
+  Widget exibirSelecaoDeColunasParaExporta ({required void Function()? onPressed, required String titulo}){
+    return ContentDialog(
+      title: Text(titulo),
+      actions: [
+        Button(
+          onPressed: onPressed, 
+          child: const Text(
+            "Exportar",
+            style: TextStyle(
+              fontSize: 19,
+              color: Colors.white
+            ),
+          )
+        ),
+
+        Button(
+          onPressed: (){
+            Navigator.pop(context);
+          }, 
+          child: const Text("Cancelar")
+        ),
+
+      ],
+      content: SizedBox(
+        width: MediaQuery.sizeOf(context).width * 0.6,
+        child: ListView(
+          children: controller.colunas.map((e) {
+            return Observer(
+              builder: (_) => Checkbox(
+                checked: e['selecionado'],
+                onChanged: (value){
+                  setState(() {
+                    e['selecionado'] = !e['selecionado'];
+                  });
+                },
+                content: Text(
+                  e.entries.first.value.toString().split('__')[0].replaceAll('_', ' ')
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+
+
 }
 
 mixin Rows {
@@ -576,4 +644,60 @@ mixin Rows {
       ],
     );
   }
+
+  Widget rowTextComLable ({
+    required ReportFromJSONController controller,
+    required double width,
+    double? height,
+    required key,
+    required Type type,
+    required value,
+  }){
+    return Stack(
+      children: [
+        Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            color: Colors.grey,
+            border: Border.all(color: Colors.purple.withOpacity(0.5), width: 0.1),
+          ),
+          padding: const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 5 
+          ),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Text(
+                key,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 11,
+                  color: Colors.black,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Text(
+                  type == DateTime ? value.toString()
+                  : type == String ? Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString().replaceAll('_', ' '))
+                  : type == double ? Features.toFormatNumber(value.toString().replaceAll('_', ' '))
+                  : type == int ? Features.toFormatInteger(value.toString().replaceAll('_', ' '),)
+                  : value.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
 }

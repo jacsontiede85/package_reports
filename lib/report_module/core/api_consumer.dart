@@ -6,7 +6,7 @@ import 'dart:convert';
 
 class API {
 
-  Future<String> jwtSendJson({required String banco, required Map dados, bool? printToken = false}) async {
+  Future<String> jwtSendJson({required String banco, required Map dados,}) async {
     //header
     var header = {
       "alg": "HS256",
@@ -23,7 +23,6 @@ class API {
     var digest = hmac.convert("$header64.$payload64".codeUnits);
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
-    //if (printToken!) printO("token: $token");
 
     var res = await http.post(
       Uri.parse(Settings.enderecoRepositorio),
@@ -35,7 +34,6 @@ class API {
     if (res.statusCode == 200) {
       return res.body;
     } else {
-      //printE('Erro de API ${res.statusCode}');
       return "";
     }
   }
@@ -55,7 +53,6 @@ class API {
       );
       return jsonDecode(response);
     }catch(e){
-      //printE("Erro getDataReportApi");
       return [];
     }
   }

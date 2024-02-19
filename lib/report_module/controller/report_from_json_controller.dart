@@ -1,5 +1,4 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -11,6 +10,7 @@ part 'report_from_json_controller.g.dart';
 class ReportFromJSONController = ReportFromJSONControllerBase with _$ReportFromJSONController;
 
 abstract class ReportFromJSONControllerBase with Store {
+
   late String nomeFunction;
   late double sizeWidth;
   ReportFromJSONControllerBase({required this.nomeFunction, required this.sizeWidth}) {
@@ -28,7 +28,13 @@ abstract class ReportFromJSONControllerBase with Store {
   List<Map<String, dynamic>> colunas = [];
 
   @observable
-  bool loading = false;  
+  bool loading = false;
+
+  @observable
+  bool colunaSelecionadaParaExportacao = true;
+
+  @observable
+  List<ObservableMap<String, dynamic>> colunasRodapePerson = [];
 
   @observable
   double widthTable = 1000.0;
@@ -100,44 +106,55 @@ abstract class ReportFromJSONControllerBase with Store {
     dados = [];
     dados = await API().getDataReportApi(function: nomeFunction);
 
+ List keys = [];
+    for(var value in dados){
+      for(var key in value.keys)
+        if(key.toString().contains('__LOCK'))
+          keys.add(key);
+    }
+
+    for(var value in keys)
+      for(int i = 0; i<dados.length; i++)
+        dados[i].remove(value);
+
     /////////////////////////////// TRATAR TIPOS DE DADOS [ ROWS ]
     /*
       Forma de realizar formatação de dados e alinhamento em tela.
       Deve-se enviar a seguinte informação no final de cada nome de coluna na query:
 
-      __int_string    => para forçar numero ser tratado e alinhado como string
-      __string        => forçar o uso de String
-      __double        => forçar uso de double
-      __int           => forçar uso de int
-      __no_metrics    => excluir da exibição de metricas dos graficos
-      __nochartarea   => excluir do grafico de area e line
-      __invisible     => não exibir campo no relatório
-      __dontsum       => não somar na barra de totalizador
-      __perc          => colocar % (percentagem) junto ao texto da coluna
-      __freeze        => congelar coluna ao deslizar barra de scroll horizontal
-      __sizew         => passar largura fixa de coluna. Exemplo: __sizew300
+      __INT_STRING    => para forçar numero ser tratado e alinhado como string
+      __STRING        => forçar o uso de String
+      __DOUBLE        => forçar uso de double
+      __INT           => forçar uso de int
+      __NO_METRICS    => excluir da exibição de metricas dos graficos
+      __NOCHARTAREA   => excluir do grafico de area e line
+      __INVISIBLE     => não exibir campo no relatório
+      __DONTSUM       => não somar na barra de totalizador
+      __PERC          => colocar % (percentagem) junto ao texto da coluna
+      __FREEZE        => congelar coluna ao deslizar barra de scroll horizontal
+      __SIZEW         => passar largura fixa de coluna. Exemplo: __SIZEW300
+      __LOCK          => Validar se o usuario tem acesso ao campo
 
       IMPORTANTE: coso o tipo de dado não seja informado, o tipo de formatação será identificado a partir dos dados recebidos
-
-      OBS: todos os tipos foram mudados para lowercase nesse projeto, pois toda query retorna me lowercase
     */
 
     for (var value in dados) {
       for (var key in value.keys) {
-        if (key.toString().contains('__string') || key.toString().contains('__int_string')) continue;
-        if (key.toString().contains('__int')) {
+        if (key.toString().contains('__STRING') || key.toString().contains('__INT_STRING')) continue;
+        if (key.toString().contains('__INT')) {
           try {
-            value[key] = int.parse(value[key]);
+            var val = double.parse(value[key]).floor();
+            value[key] = val;
           } catch (e) {
-            continue;
+            value[key] = 0;
           }
           continue;
         }
-        if (key.toString().contains('__double')) {
+        if (key.toString().contains('__DOUBLE')) {
           try {
             value[key] = double.parse(value[key]);
           } catch (e) {
-            continue;
+            value[key] = 0.0;
           }
           continue;
         }
@@ -149,7 +166,7 @@ abstract class ReportFromJSONControllerBase with Store {
           try {
             value[key] = int.parse(value[key]);
           } catch (e) {
-            continue;
+            value[key] = 0;
           }
         }
       }
@@ -157,18 +174,43 @@ abstract class ReportFromJSONControllerBase with Store {
 
     /////////////////////////////// COLUNAS
     colunas.clear();
+    colunasRodapePerson.clear();
     try {
+
       for (var key in dados[0].keys) {
-        if (!key.toString().contains('__invisible'))
-          colunas.add({
-            'key': key,
-            'nomeFormatado': getNomeColunaFormatado(text: key),
-            'type': key.toString().contains('__int_string') ? String : getType(dados[0][key]),
-            'order': 'asc',
-            'isSelected': false,
-            'vlrTotalDaColuna': 0.0,
-            'widthCol': 0.0,
-          });
+        if (key.toString().contains('__ISRODAPE')){
+
+          colunasRodapePerson.add(
+            ObservableMap.of({
+              'key': key,
+              'nomeFormatado': getNomeColunaFormatado(text: key),
+              'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
+              'order': 'asc',
+              'isSelected': false,
+              'vlrTotalDaColuna': 0.0,
+              'widthCol': 0.0,
+              'selecionado' : colunaSelecionadaParaExportacao,
+            })
+          );
+          
+        }
+        else if (!key.toString().contains('__INVISIBLE')){
+
+          colunas.add(
+            ObservableMap.of({
+              'key': key,
+              'nomeFormatado': getNomeColunaFormatado(text: key),
+              'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
+              'order': 'asc',
+              'isSelected': false,
+              'vlrTotalDaColuna': 0.0,
+              'widthCol': 0.0,
+              'selecionado' : colunaSelecionadaParaExportacao,
+            })
+          );
+          
+        }
+
       }
 
       //calcular totalizadores de rodape
@@ -184,9 +226,9 @@ abstract class ReportFromJSONControllerBase with Store {
         for (var row in dados)
           for (var key in row.keys) {
             if (key == col['key']) {
-              try {
-                if (key.toString().contains('__sizew')) {
-                  var temp = key.toString().split('__sizew');
+              try{
+                if(key.toString().contains('__SIZEW')){
+                  var temp = key.toString().split('__SIZEW');
                   col['widthCol'] = double.parse(temp[1]);
                 } else {
                   if (col['type'] == String) {
@@ -195,7 +237,7 @@ abstract class ReportFromJSONControllerBase with Store {
                     col['widthCol'] = double.parse('${'${col['vlrTotalDaColuna'].toStringAsFixed(2)}'.length}');
                   }
                 }
-              } catch (e) {
+              } catch (e){
                 if (col['type'] == String) {
                   if (col['widthCol'].floor() < row[key].toString().length) col['widthCol'] = double.parse('${row[key].toString().length}');
                 } else {
@@ -208,7 +250,7 @@ abstract class ReportFromJSONControllerBase with Store {
       setOrderBy(key: colunas[0]['key'], order: 'asc');
       getColunaElevada();
     } catch (e) {
-      //printE("|");
+      // printE("Erro getDados");
     }
 
     notify();

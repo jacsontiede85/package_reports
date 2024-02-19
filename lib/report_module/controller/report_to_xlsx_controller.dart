@@ -21,9 +21,6 @@ class ReportToXLSXController extends WidgetReportXLSX {
     reportFromJSONController.loading = true;
     xlsxFileName = 'Rel-${Features.getDataHoraNomeParaArquivo()}';
 
-    //ENVIAR LOG DE ACESSO
-    // LogController().setLog( tela: '$title, ${this.runtimeType.toString()}' );
-
     // Create a new Excel Document.
     final Workbook workbook = Workbook();
 
@@ -41,27 +38,54 @@ class ReportToXLSXController extends WidgetReportXLSX {
     /////////////////////////////////////////////////// CABEÇALHO
     int linha = 1;
     int coluna = 1;
-    tilulo(sheet: sheet, titulo: title, linha: linha, coluna: coluna, cabecalhoStyle: cabecalhoStyle, totalColunas: reportFromJSONController.colunas.length);
+
+    tilulo(
+      sheet: sheet, 
+      titulo: title, 
+      linha: linha, 
+      coluna: coluna, 
+      cabecalhoStyle: cabecalhoStyle, 
+      totalColunas: reportFromJSONController.colunas.where((element) => element['selecionado'] == true).length,
+    );
 
     ///////////////////////////////////////////////////  COLUNAS
     linha = linha + 1;
     coluna = 1;
-    colunas(sheet: sheet, linha: linha, coluna: coluna, colunasStyle: colunasStyle, colunasList: reportFromJSONController.colunas, rowHeight: reportFromJSONController.getHeightColunasCabecalho * 0.5);
+
+    colunas(
+      sheet: sheet, 
+      linha: linha, 
+      coluna: coluna, 
+      colunasStyle: colunasStyle, 
+      colunasList: reportFromJSONController.colunas.where((element) => element['selecionado'] == true), 
+      rowHeight: reportFromJSONController.getHeightColunasCabecalho * 0.5,
+    );
 
     /////////////////////////////////////////////////// LINHAS
     linha = linha + 1;
-    for (var map in reportFromJSONController.dados) {
-      coluna = 1;
+        for (Map<String,dynamic> map in reportFromJSONController.dados) {
 
-      map.forEach((key, value) {
-        Style style = linha % 2 == 0 ? celulaCinzaStyle : celulaBrancoStyle;
+      coluna=1;
+      for (var colunas in reportFromJSONController.colunas){
+        if(colunas['selecionado']){
+          map.forEach((key, value) {
 
-        // if(key.contains('HORA') )
-        //   value ='${value.toString().replaceAll('00', '')}:00';
+            Style style = linha%2==0 ? celulaCinzaStyle : celulaBrancoStyle;
+          
+            if(!key.toString().contains('__INVISIBLE') && colunas['key'] == key.toString()){
+              celulaText(
+                sheet: sheet, 
+                linha: linha, 
+                coluna: coluna, 
+                style: style, 
+                text: value,
+              );              
+            }
 
-        if (!key.toString().contains('__invisible')) celulaText(sheet: sheet, linha: linha, coluna: coluna, style: style, text: value);
-        coluna++;
-      });
+          });  
+          coluna++;            
+        }
+      }
 
       linha++;
     }
@@ -113,7 +137,16 @@ class WidgetReportXLSX extends WidgetXLSX {
   }
 
   @override
-  celulaText({required Worksheet sheet, required int linha, required int coluna, required Style style, required text, bool? autoFitColumns, bool? laguraFixa, bool? larguraTitulo}) {
+  celulaText({
+    required Worksheet sheet, 
+    required int linha, 
+    required int coluna, 
+    required Style style, 
+    required text, 
+    bool? autoFitColumns, 
+    bool? laguraFixa, 
+    bool? larguraTitulo,
+  }) {
     sheet.getRangeByIndex(linha, coluna).cellStyle = style;
     Range range = sheet.getRangeByIndex(linha, coluna);
 
