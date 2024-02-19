@@ -57,6 +57,24 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$mostrarBarraPesquisarAtom = Atom(
+      name: 'ReportFromJSONControllerBase.mostrarBarraPesquisar',
+      context: context);
+
+  @override
+  bool get mostrarBarraPesquisar {
+    _$mostrarBarraPesquisarAtom.reportRead();
+    return super.mostrarBarraPesquisar;
+  }
+
+  @override
+  set mostrarBarraPesquisar(bool value) {
+    _$mostrarBarraPesquisarAtom.reportWrite(value, super.mostrarBarraPesquisar,
+        () {
+      super.mostrarBarraPesquisar = value;
+    });
+  }
+
   late final _$colunaSelecionadaParaExportacaoAtom = Atom(
       name: 'ReportFromJSONControllerBase.colunaSelecionadaParaExportacao',
       context: context);
@@ -161,6 +179,7 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
 dados: ${dados},
 colunas: ${colunas},
 loading: ${loading},
+mostrarBarraPesquisar: ${mostrarBarraPesquisar},
 colunaSelecionadaParaExportacao: ${colunaSelecionadaParaExportacao},
 colunasRodapePerson: ${colunasRodapePerson},
 widthTable: ${widthTable},

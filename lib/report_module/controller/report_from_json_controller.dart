@@ -31,6 +31,9 @@ abstract class ReportFromJSONControllerBase with Store {
   bool loading = false;
 
   @observable
+  bool mostrarBarraPesquisar = false;
+
+  @observable
   bool colunaSelecionadaParaExportacao = true;
 
   @observable

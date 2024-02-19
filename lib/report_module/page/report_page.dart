@@ -68,13 +68,43 @@ class _ReportPageState extends State<ReportPage> with Rows {
               visible: widget.voltarComPop!,
               child: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
-                color: Colors.white,
+                color: const Color.fromRGBO(255, 255, 255, 1),
                 onPressed: (){
                   Navigator.of(context).pop(true);
                 }
               ),
             ),
             actions: [
+              Observer(
+                builder: (_) => Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: AnimatedContainer(
+                    height: 50,
+                    width: controller.mostrarBarraPesquisar ? 250 : 60,
+                    duration: const Duration(milliseconds: 300),
+                    margin: const EdgeInsets.all(10),
+                    child: SearchBar(
+                      hintText: 'Pesquisar',
+                      elevation: const MaterialStatePropertyAll(10),
+                      backgroundColor: const MaterialStatePropertyAll(Colors.black87),
+                      textStyle: MaterialStatePropertyAll(
+                        TextStyle(
+                          color: widget.corTitulo
+                        )
+                      ),
+                      leading: IconButton(
+                        onPressed: (){
+                          controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
+                        },
+                        icon: Icon(
+                          controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
+                          color: widget.corTitulo,
+                        )
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               Wrap(
                 children: [
                   Observer(
@@ -117,8 +147,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
                               onPressed: (){
                                 ReportToXLSXController(title: widget.title, reportFromJSONController: controller);
                                 Navigator.pop(context);
-                              }, 
-                              titulo: 'Selecione as colunas para serem exportadas para Excel'
+                              },
+                              titulo: 'Exportar para Excel'
                             )             
                           );
                         },
@@ -524,45 +554,57 @@ class _ReportPageState extends State<ReportPage> with Rows {
 
   Widget exibirSelecaoDeColunasParaExporta ({required void Function()? onPressed, required String titulo}){
     return AlertDialog(
-      title: Text(titulo),
+      elevation: 0,
+      title: Text(
+        titulo,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500
+        ),
+      ),
       actions: [
-        TextButton(
-          onPressed: onPressed, 
-          child: const Text(
+        ElevatedButton.icon(
+          onPressed: onPressed,
+          icon:  Icon(
+            Icons.sim_card_download_rounded,
+            color: Colors.green[500],
+          ),
+          label: Text(
             "Exportar",
             style: TextStyle(
               fontSize: 19,
-              color: Colors.white
+              color: Colors.green[500],
             ),
           )
         ),
-
-        TextButton(
-          onPressed: (){
-            Navigator.pop(context);
-          }, 
-          child: const Text("Cancelar")
-        ),
-
       ],
       content: SizedBox(
-        width: MediaQuery.sizeOf(context).width * 0.6,
-        child: ListView(
-          children: controller.colunas.map((e) {
+        width: 300,
+        height: 500,
+        child: ListView.builder(
+          itemCount: controller.colunas.length,
+          itemBuilder:(context, index) {
             return Observer(
-              builder: (_) => CheckboxListTile(
-                value: e['selecionado'],
-                onChanged: (value){
-                  setState(() {
-                    e['selecionado'] = !e['selecionado'];
-                  });
-                },
-                title: Text(
-                  e.entries.first.value.toString().split('__')[0].replaceAll('_', ' ')
+              builder: (_) => Card(
+                child: CheckboxListTile(
+                  value: controller.colunas[index]['selecionado'],
+                  onChanged: (value){
+                    setState(() {
+                      controller.colunas[index]['selecionado'] = !controller.colunas[index]['selecionado'];
+                    });
+                  },
+                  title: Text(
+                    Features.formatarTextoPrimeirasLetrasMaiusculas(controller.colunas[index].entries.first.value.toString().split('__')[0].replaceAll('_', ' ')),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ),
             );
-          }).toList(),
+          },
         ),
       ),
     );
@@ -571,7 +613,19 @@ class _ReportPageState extends State<ReportPage> with Rows {
 }
 
 mixin Rows {
-  rowTextFormatted({required ReportFromJSONController controller, required double width, double? height, required key, required Type type, required value, bool isTitle = false, bool isRodape = false, bool isSelected = false, String order = 'asc', Color? cor}) {
+  rowTextFormatted({
+    required ReportFromJSONController controller, 
+    required double width, 
+    double? height, 
+    required key, 
+    required Type type, 
+    required value, 
+    bool isTitle = false,
+    bool isRodape = false, 
+    bool isSelected = false, 
+    String order = 'asc', 
+    Color? cor,
+  }) {
     double fontSize = 12;
     return Stack(
       children: [
