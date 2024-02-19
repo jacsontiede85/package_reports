@@ -79,18 +79,25 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 builder: (_) => Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: AnimatedContainer(
-                    height: 50,
+                    height: 40,
                     width: controller.mostrarBarraPesquisar ? 250 : 60,
                     duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.all(5),
                     child: SearchBar(
                       hintText: 'Pesquisar',
-                      elevation: const MaterialStatePropertyAll(10),
-                      backgroundColor: const MaterialStatePropertyAll(Colors.black87),
+                      elevation: const MaterialStatePropertyAll(0),
+                      side: const MaterialStatePropertyAll(BorderSide(color: Colors.white, width: 0.25),),
+                      backgroundColor: const MaterialStatePropertyAll(Colors.black12),
                       textStyle: MaterialStatePropertyAll(
                         TextStyle(
                           color: widget.corTitulo
                         )
+                      ),
+                      hintStyle: MaterialStatePropertyAll(
+                        TextStyle(
+                          color: widget.corTitulo?.withOpacity(0.7),
+                          fontWeight: FontWeight.normal
+                        ),
                       ),
                       leading: IconButton(
                         onPressed: (){
@@ -98,7 +105,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                         },
                         icon: Icon(
                           controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
-                          color: widget.corTitulo,
+                          color: controller.mostrarBarraPesquisar ? widget.corTitulo?.withOpacity(0.7) : widget.corTitulo,
                         )
                       ),
                     ),
