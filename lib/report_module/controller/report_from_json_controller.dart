@@ -106,7 +106,7 @@ abstract class ReportFromJSONControllerBase with Store {
     dados = [];
     dados = await API().getDataReportApi(function: nomeFunction);
 
- List keys = [];
+    List keys = [];
     for(var value in dados){
       for(var key in value.keys)
         if(key.toString().contains('__LOCK'))
@@ -140,8 +140,8 @@ abstract class ReportFromJSONControllerBase with Store {
 
     for (var value in dados) {
       for (var key in value.keys) {
-        if (key.toString().contains('__STRING') || key.toString().contains('__INT_STRING')) continue;
-        if (key.toString().contains('__INT')) {
+        if (key.toString().contains('__string') || key.toString().contains('__int_string')) continue;
+        if (key.toString().contains('__int')) {
           try {
             var val = double.parse(value[key]).floor();
             value[key] = val;
@@ -150,7 +150,7 @@ abstract class ReportFromJSONControllerBase with Store {
           }
           continue;
         }
-        if (key.toString().contains('__DOUBLE')) {
+        if (key.toString().contains('__double')) {
           try {
             value[key] = double.parse(value[key]);
           } catch (e) {

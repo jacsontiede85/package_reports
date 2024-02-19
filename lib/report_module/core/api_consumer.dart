@@ -1,10 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
-import 'package:package_reports/report_module/core/features.dart';
 import 'package:package_reports/report_module/core/settings.dart';
 import 'dart:convert';
 
-class API {
+class API with Settings{
+
 
   Future<String> jwtSendJson({required String banco, required Map dados,}) async {
     //header
@@ -38,22 +38,58 @@ class API {
     }
   }
 
-  Future<List> getDataReportApi({required String function}) async {
-    // final filtro = GetIt.I.get<Filtros>();
-    try{
-      var response = await jwtSendJson(
-        dados: {
-          "function" : function,
-          "datainicio" : "${Features.formatarDataUS('filtro.dataInicioFiltro.toString()')}",
-          "datafim" : "${Features.formatarDataUS('filtro.dataFimFiltro.toString()')}",
-          "filial": 'filtro.selectedFiliaisFiltro',
-          "transportadora": 'filtro.selectedTransportadoraFiltro'
-        },
-        banco: "sgt_mysql",
-      );
-      return jsonDecode(response);
-    }catch(e){
-      return [];
+  Future<List> getDataReportApi({required String function,}) async {
+
+    http.Response response = await http.post(
+      Uri.parse('${Settings.enderecoRepositorio}/$function'),
+      body: {
+        "url-reports" : function,
+        "banco": "atacado",
+        "dtinicio": "",
+        "dtfim": "",
+        "exibirCardDataFaturamento": "",
+        "exibirOpcaoRCASemVendas" :"",
+        "rcaAtivosInativos" :"",
+        "filial": "",
+        "supervisor": "",
+        "matricula": "",
+        "posicao": "",
+        "pcpedi_numped": "",
+        "pcclient_codcli": "",
+        "pcclient_codcliprinc": "",
+        "pcusuari_codusur": "",
+        "pcplpag_codplpag": "",
+        "pcpraca_codpraca": "",
+        "pcregiao_numregiao": "",
+        "pccob_codcob": "",
+        "pcprodut_codprod": "",
+        "pcprodut_codprodprinc": "",
+        "pcpraca_rota": "",
+        "pcsecao_codsec": "",
+        "pcdepto_codepto": "",
+        "pcativi_codativ": "",
+        "pccidade_codcidade": "",
+        "pcfornec_codfornec": "",
+        "pcclient_estcob": "",
+        "pcpedc_origemped": "",
+        "pcmarca_codmarca": "",
+        "pcpedido_tipobonific": "",
+        "rankingRuptura": "",
+        "pcprodut_classe":"",
+        "mes_campanha": "",
+        "comprador": "",
+      },
+    );
+    
+    try {
+      return jsonDecode(response.body);
+    } catch (e) {
+      return [
+        {
+          'status_code': response.statusCode,
+          'mensagem': 'Dados não encontrado! Verifique os filtros selecionados e tente novamente.\nCatch message nerd: $e',
+        }
+      ];
     }
   }
 

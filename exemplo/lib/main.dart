@@ -45,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            IconButton.filledTonal( 
+            IconButton.filledTonal(
               icon: const Icon(CupertinoIcons.doc),
               onPressed: () async {
                 Navigator.push(
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) => const ReportPage(
                       title: 'Title',
                       voltarComPop: true,
-                      function: 'getFilial',
+                      function: 'repositorio/reports/query/vendas-venda-por-cliente.php',
                     ),
                   )
                 );

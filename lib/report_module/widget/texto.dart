@@ -26,41 +26,41 @@ class Texto extends StatelessWidget {
       case 'grande':
         return SelectableText(
           texto, 
-          style: typography.black.bodyLarge?.apply(fontSizeFactor: scale),
+          style: typography.englishLike.bodyLarge?.apply(fontSizeFactor: scale),
         );
       case 'titulo':
         return SelectableText(
           texto, 
-          style: typography.black.titleMedium?.apply(fontSizeFactor: scale),
+          style: typography.englishLike.titleMedium?.apply(fontSizeFactor: scale),
         );
       case 'legenda':
         return SelectableText(
           texto, 
-          style: typography.black.labelMedium?.apply(fontSizeFactor: scale),
+          style: typography.englishLike.labelMedium?.apply(fontSizeFactor: scale),
         );
       case 'corpo_grande':
         return SelectableText(
           texto, 
-          style: typography.black.bodyLarge?.apply(fontSizeFactor: scale),
+          style: typography.englishLike.bodyLarge?.apply(fontSizeFactor: scale),
         );
       case 'corpo_negrito':
         return SelectableText(
           texto, 
           style: const TextStyle(
-            fontFamily: 'typography.black.bodyMedium',
+            fontFamily: 'typography.englishLike.bodyMedium',
             fontWeight: FontWeight.bold,
           ),
         );
       case 'corpo':
         return SelectableText(
           texto, 
-          style: typography.black.bodyMedium?.apply(fontSizeFactor: scale),
+          style: typography.englishLike.bodyMedium?.apply(fontSizeFactor: scale),
         );
       case 'rubrica':
         return SelectableText(
           texto, 
           style: const TextStyle(
-            fontFamily: 'typography.black.bodyMedium',
+            fontFamily: 'typography.englishLike.bodyMedium',
             fontStyle: FontStyle.italic,
           ),
         );
