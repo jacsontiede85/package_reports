@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:package_reports/report_module/widget/texto.dart';
 
 class Widgets{

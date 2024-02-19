@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:package_reports/report_module/core/api_consumer.dart';
+import 'package:package_reports/report_module/page/report_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -47,13 +47,16 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             IconButton.filledTonal( 
               icon: const Icon(CupertinoIcons.doc),
-              onPressed: (){
-                API().jwtSendJson(
-                  banco: 'atacado', 
-                  dados: {
-                    "arquivo" : "",
-                    "funcao" : "",
-                  }
+              onPressed: () async {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => const ReportPage(
+                      title: 'Title',
+                      voltarComPop: true,
+                      function: 'getFilial',
+                    ),
+                  )
                 );
               },
             )

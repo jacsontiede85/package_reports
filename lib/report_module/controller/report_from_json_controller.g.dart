@@ -57,6 +57,41 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$colunaSelecionadaParaExportacaoAtom = Atom(
+      name: 'ReportFromJSONControllerBase.colunaSelecionadaParaExportacao',
+      context: context);
+
+  @override
+  bool get colunaSelecionadaParaExportacao {
+    _$colunaSelecionadaParaExportacaoAtom.reportRead();
+    return super.colunaSelecionadaParaExportacao;
+  }
+
+  @override
+  set colunaSelecionadaParaExportacao(bool value) {
+    _$colunaSelecionadaParaExportacaoAtom
+        .reportWrite(value, super.colunaSelecionadaParaExportacao, () {
+      super.colunaSelecionadaParaExportacao = value;
+    });
+  }
+
+  late final _$colunasRodapePersonAtom = Atom(
+      name: 'ReportFromJSONControllerBase.colunasRodapePerson',
+      context: context);
+
+  @override
+  List<ObservableMap<String, dynamic>> get colunasRodapePerson {
+    _$colunasRodapePersonAtom.reportRead();
+    return super.colunasRodapePerson;
+  }
+
+  @override
+  set colunasRodapePerson(List<ObservableMap<String, dynamic>> value) {
+    _$colunasRodapePersonAtom.reportWrite(value, super.colunasRodapePerson, () {
+      super.colunasRodapePerson = value;
+    });
+  }
+
   late final _$widthTableAtom =
       Atom(name: 'ReportFromJSONControllerBase.widthTable', context: context);
 
@@ -126,6 +161,8 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
 dados: ${dados},
 colunas: ${colunas},
 loading: ${loading},
+colunaSelecionadaParaExportacao: ${colunaSelecionadaParaExportacao},
+colunasRodapePerson: ${colunasRodapePerson},
 widthTable: ${widthTable},
 positionScroll: ${positionScroll},
 visibleColElevated: ${visibleColElevated}

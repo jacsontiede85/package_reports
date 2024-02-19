@@ -1,7 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'dart:math';
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import '../charts/chart_data.dart';
 import '../charts/charts.dart';

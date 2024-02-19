@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 
 class TipoTexto {
   static const String grande = 'grandes';
@@ -18,26 +18,52 @@ class Texto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(debugCheckHasFluentTheme(context));
     double scale = 1.0;
-    Typography typography = FluentTheme.of(context).typography;
-    typography = typography.apply(displayColor: cor);
+    Typography typography = Theme.of(context).typography;
+    // typography = typography.black.bodyLarge?.apply(backgroundColor: cor);
 
     switch (tipo) {
       case 'grande':
-        return Text(texto, style: typography.titleLarge?.apply(fontSizeFactor: scale));
+        return SelectableText(
+          texto, 
+          style: typography.black.bodyLarge?.apply(fontSizeFactor: scale),
+        );
       case 'titulo':
-        return Text(texto, style: typography.title?.apply(fontSizeFactor: scale));
+        return SelectableText(
+          texto, 
+          style: typography.black.titleMedium?.apply(fontSizeFactor: scale),
+        );
       case 'legenda':
-        return Text(texto, style: typography.subtitle?.apply(fontSizeFactor: scale));
+        return SelectableText(
+          texto, 
+          style: typography.black.labelMedium?.apply(fontSizeFactor: scale),
+        );
       case 'corpo_grande':
-        return Text(texto, style: typography.bodyLarge?.apply(fontSizeFactor: scale));
+        return SelectableText(
+          texto, 
+          style: typography.black.bodyLarge?.apply(fontSizeFactor: scale),
+        );
       case 'corpo_negrito':
-        return Text(texto, style: typography.bodyStrong?.apply(fontSizeFactor: scale));
+        return SelectableText(
+          texto, 
+          style: const TextStyle(
+            fontFamily: 'typography.black.bodyMedium',
+            fontWeight: FontWeight.bold,
+          ),
+        );
       case 'corpo':
-        return Text(texto, style: typography.body?.apply(fontSizeFactor: scale));
+        return SelectableText(
+          texto, 
+          style: typography.black.bodyMedium?.apply(fontSizeFactor: scale),
+        );
       case 'rubrica':
-        return Text(texto, style: typography.caption?.apply(fontSizeFactor: scale));
+        return SelectableText(
+          texto, 
+          style: const TextStyle(
+            fontFamily: 'typography.black.bodyMedium',
+            fontStyle: FontStyle.italic,
+          ),
+        );
       default:
         return const Text("");
     }

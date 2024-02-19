@@ -1,6 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:package_reports/report_module/core/features.dart';
 import '../charts/chart_data.dart';
@@ -106,7 +106,7 @@ mixin Charts{
                         enableTooltip: true,
                         width: 3,
                         animationDuration: 2,
-                        markerSettings: MarkerSettings(
+                        markerSettings: const MarkerSettings(
                             isVisible: true,
                             height: 4,
                             width: 4,
@@ -137,7 +137,7 @@ mixin Charts{
                           enableTooltip: true,
                           width: 3,
                           animationDuration: 2,
-                          markerSettings: MarkerSettings(
+                          markerSettings: const MarkerSettings(
                               isVisible: true,
                               height: 4,
                               width: 4,
@@ -191,7 +191,7 @@ mixin Charts{
                             color: dados[0].color,
                             enableTooltip: true,
                             animationDuration: 2,
-                            markerSettings: MarkerSettings(
+                            markerSettings: const MarkerSettings(
                                 isVisible: true,
                                 height: 4,
                                 width: 4,
@@ -224,7 +224,7 @@ mixin Charts{
                               color: dados[0].color,
                               enableTooltip: true,
                               animationDuration: 2,
-                              markerSettings: MarkerSettings(
+                              markerSettings: const MarkerSettings(
                                   isVisible: true,
                                   height: 4,
                                   width: 4,

@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 
 class FiltrosReport {
   FiltrosReport({
@@ -9,7 +9,7 @@ class FiltrosReport {
     function = function;
     filtros = IconButton(
       icon: const Icon(
-        FluentIcons.filter,
+        Icons.filter_alt_outlined,
         color: Colors.white,
       ),
       onPressed: () {},

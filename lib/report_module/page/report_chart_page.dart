@@ -1,9 +1,8 @@
 // ignore_for_file: must_be_immutable
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:package_reports/report_module/charts/charts.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
@@ -17,7 +16,7 @@ class ChartsReport extends StatelessWidget with Charts {
     controller = ReportChartController(reportFromJSONController: reportFromJSONController);
   }
   
-  final layout = GetIt.I.get<LayoutController>();
+  final LayoutController layout = LayoutController();
   late ReportChartController controller;
   ScrollController horizontalScroll = ScrollController();
   ScrollController verticalScroll = ScrollController();
@@ -29,68 +28,70 @@ class ChartsReport extends StatelessWidget with Charts {
     // double height = MediaQuery.of(context).size.height;
     // width = width < 800 ? height : width;
 
-    return ScaffoldPage(
-      header: Row(
-        children: [
-          IconButton(
-            icon: const Icon(FluentIcons.back),
-            onPressed: () => Navigator.pop(context),
-          ),
-          Text(
-            '$title [Gráficos]',
-            style: const TextStyle(
-              fontSize: 14,
+    return Scaffold(
+      appBar: AppBar(
+        leading: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () => Navigator.pop(context),
             ),
-          ),
-          const Expanded(child: SizedBox()),
-          IconButton(
-            onPressed: () => controller.getChart(chartNameSelected: 'barChartHorizontal'),
-            icon:const  Icon(FluentIcons.bar_chart_vertical_fill),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          IconButton(
-            onPressed: () => controller.getChart(chartNameSelected: 'sfCircularChart'),
-            icon: const Icon(FluentIcons.donut_chart),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          IconButton(
-            onPressed: () => controller.getChart(chartNameSelected: 'sfLineCartesianChart'),
-            icon: const Icon(FluentIcons.bar_chart4),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Observer(
-            builder: (_) => Visibility(
-              visible: controller.isVisibleChartsArea,
-              child: IconButton(
-                onPressed: () => controller.getChart(chartNameSelected: 'sfLineCartesianChartArea'),
-                icon: const Icon(FluentIcons.bar_chart_horizontal),
+            Text(
+              '$title [Gráficos]',
+              style: const TextStyle(
+                fontSize: 14,
               ),
             ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Observer(
-            builder: (_) => Visibility(
-              visible: controller.isVisibleChartsArea,
-              child: IconButton(
-                onPressed: () => controller.getChart(chartNameSelected: 'sfAreaCartesianChart'),
-                icon: const Icon(FluentIcons.charticulator_stack_radial),
+            const Expanded(child: SizedBox()),
+            IconButton(
+              onPressed: () => controller.getChart(chartNameSelected: 'barChartHorizontal'),
+              icon:const  Icon(Icons.bar_chart_sharp),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            IconButton(
+              onPressed: () => controller.getChart(chartNameSelected: 'sfCircularChart'),
+              icon: const Icon(Icons.pie_chart_rounded),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            IconButton(
+              onPressed: () => controller.getChart(chartNameSelected: 'sfLineCartesianChart'),
+              icon: const Icon(Icons.ssid_chart),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Observer(
+              builder: (_) => Visibility(
+                visible: controller.isVisibleChartsArea,
+                child: IconButton(
+                  onPressed: () => controller.getChart(chartNameSelected: 'sfLineCartesianChartArea'),
+                  icon: const Icon(Icons.stacked_line_chart_outlined),
+                ),
               ),
             ),
-          ),
-          const SizedBox(
-            width: 15,
-          ),
-        ],
+            const SizedBox(
+              width: 10,
+            ),
+            Observer(
+              builder: (_) => Visibility(
+                visible: controller.isVisibleChartsArea,
+                child: IconButton(
+                  onPressed: () => controller.getChart(chartNameSelected: 'sfAreaCartesianChart'),
+                  icon: const Icon(Icons.area_chart),
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+          ],
+        ),
       ),
-      content:
+      body:
         Stack(
           children: [
             ScrollConfiguration(
@@ -198,13 +199,10 @@ class ChartsReport extends StatelessWidget with Charts {
                                     width: 150,//layout.mobile ? layout.width * 0.29 : 200,
                                     height: 40,
                                     child: 
-                                    ComboBox<Map>(
-                                      value: controller.columnMetricSelected,
-                                      autofocus: false,
-                                      isExpanded: true,
+                                    PopupMenuButton(
                                       //focusColor: Colors.transparent,
-                                      items: controller.getColumnMetricsChart.map((value) {
-                                        return ComboBoxItem<Map>(
+                                      itemBuilder:(context) => controller.getColumnMetricsChart.map((value) {
+                                        return PopupMenuItem(
                                           value: value,
                                           child: Text(
                                             Features.formatarTextoPrimeirasLetrasMaiusculas(value['nomeFormatado']),
@@ -212,11 +210,6 @@ class ChartsReport extends StatelessWidget with Charts {
                                           ),
                                         );
                                       }).toList(),
-                                      onChanged: (selected) {
-                                        controller.columnMetricSelected = selected ?? {};
-                                        controller.columnOrderBySelected = selected ?? {};
-                                        controller.getChart(chartNameSelected: controller.chartNameSelected);
-                                      },
                                     ),
                                   ),
                                 ),
@@ -237,23 +230,17 @@ class ChartsReport extends StatelessWidget with Charts {
                                 builder: (_) => SizedBox(
                                   width: 150,//layout.mobile ? layout.width * 0.29 : 200,
                                   height: 40,
-                                  child: ComboBox<Map>(
-                                    value: controller.columnOrderBySelected,
-                                    autofocus: false,
-                                    isExpanded: true,
-                                    focusColor: Colors.transparent,
-                                    items: controller.getColumnOrderByChart.map((value) {
-                                      return ComboBoxItem<Map>(
-                                        value: value,
-                                        child: Text(
-                                          Features.formatarTextoPrimeirasLetrasMaiusculas(value['nomeFormatado']),
-                                          style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (selected) {
-                                      controller.columnOrderBySelected = selected ?? {};
-                                      controller.getChart(chartNameSelected: controller.chartNameSelected);
+                                  child: PopupMenuButton(
+                                    itemBuilder: (context) {
+                                      return controller.getColumnOrderByChart.map((value) {
+                                        return PopupMenuItem<Map>(
+                                          value: value,
+                                          child: Text(
+                                            Features.formatarTextoPrimeirasLetrasMaiusculas(value['nomeFormatado']),
+                                            style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
+                                          ),
+                                        );
+                                      }).toList();
                                     },
                                   ),
                                 ),
@@ -275,13 +262,9 @@ class ChartsReport extends StatelessWidget with Charts {
                                 builder: (_) => SizedBox(
                                   width: 150,//layout.mobile ? layout.width * 0.29 : 200,
                                   height: 40,
-                                  child: ComboBox<String>(
-                                    value: controller.orderby,
-                                    autofocus: false,
-                                    isExpanded: true,
-                                    focusColor: Colors.transparent,
-                                    items: ['', 'Crescente', 'Decrescente'].map((value) {
-                                      return ComboBoxItem<String>(
+                                  child: PopupMenuButton(
+                                    itemBuilder: (context) => ['', 'Crescente', 'Decrescente'].map((value) {
+                                      return PopupMenuItem(
                                         value: value,
                                         child: Text(
                                           Features.formatarTextoPrimeirasLetrasMaiusculas(value),
@@ -289,10 +272,10 @@ class ChartsReport extends StatelessWidget with Charts {
                                         ),
                                       );
                                     }).toList(),
-                                    onChanged: (value) {
-                                      controller.orderby = (value ?? '');
-                                      controller.getChart(chartNameSelected: controller.chartNameSelected);
-                                    },
+                                    // onChanged: (value) {
+                                    //   controller.orderby = (value ?? '');
+                                    //   controller.getChart(chartNameSelected: controller.chartNameSelected);
+                                    // },
                                   ),
                                 ),
                               ),
@@ -310,7 +293,7 @@ class ChartsReport extends StatelessWidget with Charts {
                 visible: controller.loading,
                 child: const Positioned(
                   bottom: 0,
-                  child: ProgressBar(),
+                  child: LinearProgressIndicator(),
                 ),
               ),
             ),

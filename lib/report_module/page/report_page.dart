@@ -1,16 +1,14 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
-import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/report_module/controller/report_to_xlsx_controller.dart';
 import 'package:package_reports/report_module/core/features.dart';
-import 'package:package_reports/report_module/page/filtros_page.dart';
 import 'package:package_reports/report_module/page/report_chart_page.dart';
 import 'package:package_reports/report_module/widget/texto.dart';
 import 'package:package_reports/report_module/widget/widgets.dart';
@@ -33,8 +31,7 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> with Rows {
   late ReportFromJSONController controller;
-  final layout = GetIt.I.get<LayoutController>();
-  FlyoutController menuController = FlyoutController();
+  final LayoutController layout = LayoutController();
   Widgets wp = Widgets();
   double _width = 0.0;
 
@@ -60,99 +57,85 @@ class _ReportPageState extends State<ReportPage> with Rows {
       color: Colors.white,
       child: PopScope(
       onPopInvoked: (value) => controller.willPopCallback,
-      child: ScaffoldPage(
-        header: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            if(widget.voltarComPop!)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10, left: 5),
-              child: IconButton(
-                icon: const Icon(FluentIcons.back), 
-                onPressed: (){
-                  Navigator.of(context).pop(true);
-                }
-              ),
-            ),
-            if(layout.isDesktop)
-              wp.wpHeader(
-                titulo: widget.title,
-                cor: widget.corTitulo ?? Colors.black,
-              )
-            else
+      child: Scaffold(
+        appBar: AppBar(
+          leading: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if(widget.voltarComPop!)
               Padding(
-                padding: const EdgeInsets.only(bottom: 10, left: 15),
-                child: Texto(
-                  texto: widget.title,
-                  cor: widget.corTitulo ?? Colors.black,
-                  tipo: TipoTexto.corpoNegrito,
+                padding: const EdgeInsets.only(bottom: 10, left: 5),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios), 
+                  onPressed: (){
+                    Navigator.of(context).pop(true);
+                  }
                 ),
               ),
-            Padding(
-              padding: layout.isDesktop ? const EdgeInsets.only(left: 10, right: 10) : const EdgeInsets.only(left: 5, right: 10, bottom: 10),
-              child: Wrap(
-                children: [
-                  Observer(
-                    builder: (_) => Visibility(
-                      visible: !controller.loading,
-                      child: IconButton(
-                        icon: Icon(
-                          FluentIcons.graph_symbol,
-                          color: widget.corTitulo ?? Colors.black,
-                          size: layout.isDesktop ? 20 : 15,
-                        ),
-                        onPressed: () async => await Navigator.push(
-                            context,
-                            FluentPageRoute(
-                              builder: (context) => ChartsReport(
-                                reportFromJSONController: controller,
-                                title: widget.title,
-                              ),
-                            ),
-                          ),
-                      ),
-                    ),
+              if(layout.isDesktop)
+                wp.wpHeader(
+                  titulo: widget.title,
+                  cor: widget.corTitulo ?? Colors.black,
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10, left: 15),
+                  child: Texto(
+                    texto: widget.title,
+                    cor: widget.corTitulo ?? Colors.black,
+                    tipo: TipoTexto.corpoNegrito,
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Observer(
-                    builder: (_) => Visibility(
-                      visible: (controller.dados.isNotEmpty && !controller.loading),
-                      child: IconButton(
-                        icon: Icon(
-                          FluentIcons.excel_document, 
-                          color: widget.corTitulo ?? Colors.black,
-                          size: layout.isDesktop ? 20 : 15,
-                        ),
-                        onPressed: () {
-                          ReportToXLSXController(title: widget.title, reportFromJSONController: controller);
-                        },
-                      ),
-                    ),
-                  ),
-                  Observer(
-                    builder: (_) => Visibility(
-                      visible: !controller.loading,
-                      child: FlyoutTarget(
-                        controller: menuController,
+                ),
+              Padding(
+                padding: layout.isDesktop ? const EdgeInsets.only(left: 10, right: 10) : const EdgeInsets.only(left: 5, right: 10, bottom: 10),
+                child: Wrap(
+                  children: [
+                    Observer(
+                      builder: (_) => Visibility(
+                        visible: !controller.loading,
                         child: IconButton(
                           icon: Icon(
-                            FluentIcons.filter,
+                            Icons.auto_graph,
                             color: widget.corTitulo ?? Colors.black,
                             size: layout.isDesktop ? 20 : 15,
                           ),
-                          onPressed: () => menuController.showFlyout(builder: (context) => FiltrosPage(functionAplicarFiltros: controller.getDados),)
+                          onPressed: () async => await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChartsReport(
+                                  reportFromJSONController: controller,
+                                  title: widget.title,
+                                ),
+                              ),
+                            ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Observer(
+                      builder: (_) => Visibility(
+                        visible: (controller.dados.isNotEmpty && !controller.loading),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.grid_on_outlined, 
+                            color: widget.corTitulo ?? Colors.black,
+                            size: layout.isDesktop ? 20 : 15,
+                          ),
+                          onPressed: () {
+                            ReportToXLSXController(title: widget.title, reportFromJSONController: controller);
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        content: Container(
+        body: Container(
           color: Colors.white,
           child: Observer(
             builder: (_) => Stack(
@@ -334,22 +317,21 @@ class _ReportPageState extends State<ReportPage> with Rows {
       children: [
         if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
           ...controller.colunas.map(
-            (element) => HoverButton(
-              onPressed: () => controller.setOrderBy(key: element['key'], order: element['order']),
-              builder: (context, state) {
-                return rowTextFormatted(
-                  width: controller.getWidthCol(
-                    key: element['key'],
-                  ),
-                  height: controller.getHeightColunasCabecalho,
-                  controller: controller,
+            (element) => InkWell(
+              onTap: () => controller.setOrderBy(key: element['key'], order: element['order']),
+              child: rowTextFormatted(
+                width: controller.getWidthCol(
                   key: element['key'],
-                  type: element['type'],
-                  value: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado'].trim()),
-                  isTitle: true,
-                  isSelected: element['isSelected'],
-                  order: element['order']);
-              },
+                ),
+                height: controller.getHeightColunasCabecalho,
+                controller: controller,
+                key: element['key'],
+                type: element['type'],
+                value: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado'].trim()),
+                isTitle: true,
+                isSelected: element['isSelected'],
+                order: element['order'],
+              ),
             ),
           ),
       ],
@@ -361,20 +343,21 @@ class _ReportPageState extends State<ReportPage> with Rows {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
-        HoverButton(
-          onPressed: () => controller.setOrderBy(key: controller.keyFreeze, order: element['order']),
-          builder: (context, state) => rowTextFormatted(
-              width: controller.getWidthCol(
-                key: controller.keyFreeze,
-              ),
-              height: controller.getHeightColunasCabecalho,
-              controller: controller,
+        InkWell(
+          onTap: () => controller.setOrderBy(key: controller.keyFreeze, order: element['order']),
+          child: rowTextFormatted(
+            width: controller.getWidthCol(
               key: controller.keyFreeze,
-              type: element['type'],
-              value: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado'].trim()),
-              isTitle: true,
-              isSelected: element['isSelected'],
-              order: element['order']),
+            ),
+            height: controller.getHeightColunasCabecalho,
+            controller: controller,
+            key: controller.keyFreeze,
+            type: element['type'],
+            value: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado'].trim()),
+            isTitle: true,
+            isSelected: element['isSelected'],
+            order: element['order'],
+          ),
         ),
       ],
     );
@@ -545,10 +528,10 @@ class _ReportPageState extends State<ReportPage> with Rows {
   }
 
   Widget exibirSelecaoDeColunasParaExporta ({required void Function()? onPressed, required String titulo}){
-    return ContentDialog(
+    return AlertDialog(
       title: Text(titulo),
       actions: [
-        Button(
+        TextButton(
           onPressed: onPressed, 
           child: const Text(
             "Exportar",
@@ -559,7 +542,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           )
         ),
 
-        Button(
+        TextButton(
           onPressed: (){
             Navigator.pop(context);
           }, 
@@ -572,14 +555,14 @@ class _ReportPageState extends State<ReportPage> with Rows {
         child: ListView(
           children: controller.colunas.map((e) {
             return Observer(
-              builder: (_) => Checkbox(
-                checked: e['selecionado'],
+              builder: (_) => CheckboxListTile(
+                value: e['selecionado'],
                 onChanged: (value){
                   setState(() {
                     e['selecionado'] = !e['selecionado'];
                   });
                 },
-                content: Text(
+                title: Text(
                   e.entries.first.value.toString().split('__')[0].replaceAll('_', ' ')
                 ),
               ),
@@ -589,8 +572,6 @@ class _ReportPageState extends State<ReportPage> with Rows {
       ),
     );
   }
-
-
 
 }
 
@@ -638,8 +619,11 @@ mixin Rows {
           Positioned(
             right: 0,
             bottom: 1,
-            child: Icon(order == 'asc' ? FluentIcons.up : FluentIcons.down,
-                size: 17, color: Colors.blue),
+            child: Icon(
+              order == 'asc' ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
+              size: 17, 
+              color: Colors.blue,
+            ),
           ),
       ],
     );

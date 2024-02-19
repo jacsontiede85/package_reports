@@ -1,6 +1,6 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:get_it/get_it.dart';
+
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/report_module/core/api_consumer.dart';
@@ -17,7 +17,7 @@ abstract class ReportFromJSONControllerBase with Store {
     getDados();
   }
 
-  final filtro = GetIt.I.get<Filtros>();
+  final Filtros filtro = Filtros();
 
   @observable
   List<dynamic> dados = [];
