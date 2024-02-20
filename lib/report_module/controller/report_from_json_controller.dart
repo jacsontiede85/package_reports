@@ -169,7 +169,7 @@ abstract class ReportFromJSONControllerBase with Store {
           try {
             value[key] = int.parse(value[key]);
           } catch (e) {
-            value[key] = 0;
+            value[key] = value[key].toString();
           }
         }
       }

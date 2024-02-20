@@ -263,26 +263,35 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                             controller.dados.length > 500
                                                 ? Flexible(child: rowsBuilder())
                                                 : Flexible(
-                                                    child: ListView(
-                                                      physics: const BouncingScrollPhysics(),
-                                                      controller: controller.verticalScroll,
-                                                      children: [
-                                                        Stack(
-                                                          children: [
-                                                            rows(),
-                                                            Observer(
-                                                              builder: (_) => Visibility(
-                                                                visible: controller.positionScroll > 200 && controller.visibleColElevated,
-                                                                child: Positioned(
-                                                                  top: 0,
-                                                                  left: controller.positionScroll,
-                                                                  child: rowsElevated(),
+                                                    child: ScrollConfiguration(
+                                                      behavior: ScrollConfiguration.of(context).copyWith(
+                                                        scrollbars: false,
+                                                        dragDevices: {
+                                                          PointerDeviceKind.touch,
+                                                          PointerDeviceKind.mouse,
+                                                        }
+                                                      ),
+                                                      child: ListView(
+                                                        physics: const BouncingScrollPhysics(),
+                                                        controller: controller.verticalScroll,
+                                                        children: [
+                                                          Stack(
+                                                            children: [
+                                                              rows(),
+                                                              Observer(
+                                                                builder: (_) => Visibility(
+                                                                  visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                                                                  child: Positioned(
+                                                                    top: 0,
+                                                                    left: controller.positionScroll,
+                                                                    child: rowsElevated(),
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                           
@@ -320,7 +329,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                       ),
                                     ),
                                   ],
-                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -329,7 +338,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 Center(
                   child: LoadingAnimationWidget.halfTriangleDot(
                     color: const Color(0xFFEE4E4E),
-                    size: 50,
+                    size: 40,
                   ),
                 ),
               ],
@@ -378,6 +387,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             width: controller.getWidthCol(
               key: controller.keyFreeze,
             ),
+            cor: Colors.white,
             height: controller.getHeightColunasCabecalho,
             controller: controller,
             key: controller.keyFreeze,
@@ -484,8 +494,9 @@ class _ReportPageState extends State<ReportPage> with Rows {
     return Container(
       decoration: const BoxDecoration(
         color: Colors.black38,
-        border: Border(top: BorderSide(color: Colors.blue, width: 0.4))
+        border: Border(top: BorderSide(color: Colors.blue, width: 1))
       ),
+      
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -536,6 +547,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
         rowTextFormatted(
           width: controller.getWidthCol(key: controller.keyFreeze,),
           height: 40,
+          cor: const Color.fromARGB(255, 65, 63, 63),
           controller: controller,
           key: controller.keyFreeze,
           type: controller.keyFreeze.toString().contains('__dontsum') ? String : element['type'],
@@ -636,11 +648,9 @@ mixin Rows {
             ),
             border: Border.all(color: Colors.purple.withOpacity(0.3), width: 0.25),
           ),
-          padding: EdgeInsets.only(left: 10, right: 10, bottom: isRodape ? 5 : 0),
-          alignment: (isTitle && isSelected && type != String)
-              ? Alignment.center
-              : (isTitle && type != String)
-                  ? Alignment.centerRight
+          padding: EdgeInsets.only(left: 5, right: 5, bottom: isRodape ? 5 : 0),
+          alignment: (isTitle)
+              ? Alignment.centerLeft
                   : type != String
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
