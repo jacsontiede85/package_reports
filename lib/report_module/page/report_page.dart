@@ -706,20 +706,22 @@ mixin Rows {
                 color: Colors.blueAccent,
               ),
               itemBuilder: (context) {
-                Set setItens = {};
-            
-                for(var valores in controller.dados){
-                  setItens.add(valores[key]);
-                }
-                List listOrdenada = setItens.toList()..sort();
 
-                return listOrdenada.map((e){
+                return controller.createlistaFiltrarLinhas(chave: key).map((e){
                   return PopupMenuItem(
-                    child: CheckboxListTile(
-                      value: false,
-                      title: Text(e.toString()),
-                      onChanged: (v){},
-                      controlAffinity: ListTileControlAffinity.leading,
+                    child: Observer(
+                      builder: (_) => CheckboxListTile(
+                        value: e['selecionado'],
+                        title: Text(e['valor'].toString()),
+                        onChanged: (v){
+                          controller.valorMarcadoNoFiltro = !controller.valorMarcadoNoFiltro;
+                          controller.marcarEdesmarcarFiltroSelecionado(
+                            valor: e['valor'],
+                            chave: key,
+                          );
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
                     )
                   );
                 }).toList();

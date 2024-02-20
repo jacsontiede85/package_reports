@@ -41,6 +41,41 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$listaFiltrarLinhasAtom = Atom(
+      name: 'ReportFromJSONControllerBase.listaFiltrarLinhas',
+      context: context);
+
+  @override
+  List<ObservableMap<String, dynamic>> get listaFiltrarLinhas {
+    _$listaFiltrarLinhasAtom.reportRead();
+    return super.listaFiltrarLinhas;
+  }
+
+  @override
+  set listaFiltrarLinhas(List<ObservableMap<String, dynamic>> value) {
+    _$listaFiltrarLinhasAtom.reportWrite(value, super.listaFiltrarLinhas, () {
+      super.listaFiltrarLinhas = value;
+    });
+  }
+
+  late final _$valorMarcadoNoFiltroAtom = Atom(
+      name: 'ReportFromJSONControllerBase.valorMarcadoNoFiltro',
+      context: context);
+
+  @override
+  bool get valorMarcadoNoFiltro {
+    _$valorMarcadoNoFiltroAtom.reportRead();
+    return super.valorMarcadoNoFiltro;
+  }
+
+  @override
+  set valorMarcadoNoFiltro(bool value) {
+    _$valorMarcadoNoFiltroAtom.reportWrite(value, super.valorMarcadoNoFiltro,
+        () {
+      super.valorMarcadoNoFiltro = value;
+    });
+  }
+
   late final _$loadingAtom =
       Atom(name: 'ReportFromJSONControllerBase.loading', context: context);
 
@@ -174,10 +209,27 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
   }
 
   @override
+  void marcarEdesmarcarFiltroSelecionado(
+      {required String valor, required String chave}) {
+    final _$actionInfo =
+        _$ReportFromJSONControllerBaseActionController.startAction(
+            name:
+                'ReportFromJSONControllerBase.marcarEdesmarcarFiltroSelecionado');
+    try {
+      return super
+          .marcarEdesmarcarFiltroSelecionado(valor: valor, chave: chave);
+    } finally {
+      _$ReportFromJSONControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 dados: ${dados},
 colunas: ${colunas},
+listaFiltrarLinhas: ${listaFiltrarLinhas},
+valorMarcadoNoFiltro: ${valorMarcadoNoFiltro},
 loading: ${loading},
 mostrarBarraPesquisar: ${mostrarBarraPesquisar},
 colunaSelecionadaParaExportacao: ${colunaSelecionadaParaExportacao},

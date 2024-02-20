@@ -28,6 +28,12 @@ abstract class ReportFromJSONControllerBase with Store {
   List<Map<String, dynamic>> colunas = [];
 
   @observable
+  List<ObservableMap<String, dynamic>> listaFiltrarLinhas = [];
+
+  @observable
+  bool valorMarcadoNoFiltro = false;
+
+  @observable
   bool loading = false;
 
   @observable
@@ -59,7 +65,6 @@ abstract class ReportFromJSONControllerBase with Store {
   }
 
   updatePosition({required double pos}) async {
-    //await Future.delayed(Duration(milliseconds: 500));
     if (pos == _position) positionScroll = _position;
     visibleColElevated = true;
   }
@@ -406,4 +411,34 @@ abstract class ReportFromJSONControllerBase with Store {
     colunas = colunas;
     dados = dados;
   }
+
+  List<ObservableMap<String, dynamic>> createlistaFiltrarLinhas({required String chave}){
+            
+    for(Map<String, dynamic> valores in dados){
+      bool existe = listaFiltrarLinhas.any((mapa) => mapa['valor'] == valores[chave]);
+      if (!existe) {
+        listaFiltrarLinhas.add(
+          ObservableMap<String, dynamic>.of({
+            "coluna" : chave,
+            "valor" : valores[chave], 
+            "selecionado" : false
+          })
+        );
+      }
+
+    }
+
+    return listaFiltrarLinhas.where((mapa) => mapa['coluna'] == chave).toList();
+  }
+
+  @action
+  void marcarEdesmarcarFiltroSelecionado ({required String valor, required String chave}){
+    int i = listaFiltrarLinhas.indexWhere((element) => element['valor'] == valor && element['coluna'] == chave);
+    listaFiltrarLinhas[i] = ObservableMap<String, dynamic>.of({
+      "coluna" : chave,
+      "valor" : valor,
+      "selecionado" : valorMarcadoNoFiltro
+    });
+  }
+
 }
