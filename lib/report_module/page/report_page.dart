@@ -53,289 +53,286 @@ class _ReportPageState extends State<ReportPage> with Rows {
     _width = layout.width;
     controller.sizeWidth = _width;
 
-    return Container(
-      color: Colors.white,
-      child: PopScope(
-        onPopInvoked: (value) => controller.willPopCallback,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.black87,
-            title: wp.wpHeader(
-              titulo: widget.title,
-              cor: widget.corTitulo ?? Colors.white,
+    return PopScope(
+      onPopInvoked: (value) => controller.willPopCallback,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black87,
+          title: wp.wpHeader(
+            titulo: widget.title,
+            cor: widget.corTitulo ?? Colors.white,
+          ),
+          leading: Visibility(
+            visible: widget.voltarComPop!,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              color: const Color.fromRGBO(255, 255, 255, 1),
+              onPressed: (){
+                Navigator.of(context).pop(true);
+              }
             ),
-            leading: Visibility(
-              visible: widget.voltarComPop!,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                color: const Color.fromRGBO(255, 255, 255, 1),
-                onPressed: (){
-                  Navigator.of(context).pop(true);
-                }
-              ),
-            ),
-            actions: [
-              Observer(
-                builder: (_) => Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: AnimatedContainer(
-                    height: 40,
-                    width: controller.mostrarBarraPesquisar ? 250 : 60,
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.all(5),
-                    child: SearchBar(
-                      hintText: 'Pesquisar',
-                      elevation: const MaterialStatePropertyAll(0),
-                      side: const MaterialStatePropertyAll(BorderSide(color: Colors.white, width: 0.25),),
-                      backgroundColor: const MaterialStatePropertyAll(Colors.black12),
-                      textStyle: MaterialStatePropertyAll(
-                        TextStyle(
-                          color: widget.corTitulo
-                        )
+          ),
+          actions: [
+            Observer(
+              builder: (_) => Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: AnimatedContainer(
+                  height: 40,
+                  width: controller.mostrarBarraPesquisar ? 250 : 60,
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.all(5),
+                  child: SearchBar(
+                    hintText: 'Pesquisar',
+                    elevation: const MaterialStatePropertyAll(0),
+                    side: const MaterialStatePropertyAll(BorderSide(color: Colors.white, width: 0.25),),
+                    backgroundColor: const MaterialStatePropertyAll(Colors.black12),
+                    textStyle: MaterialStatePropertyAll(
+                      TextStyle(
+                        color: widget.corTitulo
+                      )
+                    ),
+                    hintStyle: MaterialStatePropertyAll(
+                      TextStyle(
+                        color: widget.corTitulo?.withOpacity(0.7),
+                        fontWeight: FontWeight.normal
                       ),
-                      hintStyle: MaterialStatePropertyAll(
-                        TextStyle(
-                          color: widget.corTitulo?.withOpacity(0.7),
-                          fontWeight: FontWeight.normal
-                        ),
-                      ),
-                      leading: IconButton(
-                        onPressed: (){
-                          controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
-                        },
-                        icon: Icon(
-                          controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
-                          color: controller.mostrarBarraPesquisar ? widget.corTitulo?.withOpacity(0.7) : widget.corTitulo,
-                        )
-                      ),
+                    ),
+                    leading: IconButton(
+                      onPressed: (){
+                        controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
+                      },
+                      icon: Icon(
+                        controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
+                        color: controller.mostrarBarraPesquisar ? widget.corTitulo?.withOpacity(0.7) : widget.corTitulo,
+                      )
                     ),
                   ),
                 ),
               ),
-              Wrap(
-                children: [
-                  Observer(
-                    builder: (_) => Visibility(
-                      visible: !controller.loading,
-                      child: IconButton.outlined(
-                        icon: Icon(
-                          Icons.bar_chart,
-                          size: layout.isDesktop ? 20 : 15,
-                        ),
-                        color: widget.corTitulo ?? Colors.white,
-                        onPressed: () async => await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChartsReport(
-                                reportFromJSONController: controller,
-                                title: widget.title,
-                              ),
+            ),
+            Wrap(
+              children: [
+                Observer(
+                  builder: (_) => Visibility(
+                    visible: !controller.loading,
+                    child: IconButton.outlined(
+                      icon: Icon(
+                        Icons.bar_chart,
+                        size: layout.isDesktop ? 20 : 15,
+                      ),
+                      color: widget.corTitulo ?? Colors.white,
+                      onPressed: () async => await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChartsReport(
+                              reportFromJSONController: controller,
+                              title: widget.title,
                             ),
                           ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Observer(
-                    builder: (_) => Visibility(
-                      visible: (controller.dados.isNotEmpty && !controller.loading),
-                      child: IconButton.outlined(
-                        icon: Icon(
-                          Icons.grid_on_outlined, 
-                          size: layout.isDesktop ? 20 : 15,
                         ),
-                        color: widget.corTitulo ?? Colors.white,
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => exibirSelecaoDeColunasParaExporta(
-                              onPressed: (){
-                                ReportToXLSXController(title: widget.title, reportFromJSONController: controller);
-                                Navigator.pop(context);
-                              },
-                              titulo: 'Exportar para Excel'
-                            )             
-                          );
-                        },
-                      ),
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
-          body: Container(
-            color: Colors.white,
-            child: Observer(
-              builder: (_) => Stack(
-                children: [
-                  !controller.loading || controller.dados.isNotEmpty
-                        ? 
-                        ScrollConfiguration(
-                          behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-                            PointerDeviceKind.touch,
-                            PointerDeviceKind.mouse,
-                          }),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Observer(
+                  builder: (_) => Visibility(
+                    visible: (controller.dados.isNotEmpty && !controller.loading),
+                    child: IconButton.outlined(
+                      icon: Icon(
+                        Icons.grid_on_outlined, 
+                        size: layout.isDesktop ? 20 : 15,
+                      ),
+                      color: widget.corTitulo ?? Colors.white,
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => exibirSelecaoDeColunasParaExporta(
+                            onPressed: (){
+                              ReportToXLSXController(title: widget.title, reportFromJSONController: controller);
+                              Navigator.pop(context);
+                            },
+                            titulo: 'Exportar para Excel'
+                          )             
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        body: Container(
+          color: Colors.white,
+          child: Observer(
+            builder: (_) => Stack(
+              children: [
+                !controller.loading || controller.dados.isNotEmpty
+                      ? 
+                      ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+                          PointerDeviceKind.touch,
+                          PointerDeviceKind.mouse,
+                        }),
+                        child: AdaptiveScrollbar(
+                          controller: controller.verticalScroll,
+                          width: 8,
+                          underColor: Colors.white.withOpacity(0.1),
+                          sliderSpacing: const EdgeInsets.only(
+                            right: 0,
+                          ),
+                          sliderDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                          sliderActiveDecoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.0),
+                            color: Colors.black.withOpacity(0.5),
+                          ),
                           child: AdaptiveScrollbar(
-                            controller: controller.verticalScroll,
-                            width: 8,
+                            controller: controller.horizontalScroll,
+                            width: _width < 600 ? 10 : 8,
+                            position: ScrollbarPosition.bottom,
+                            underSpacing: const EdgeInsets.only(bottom: 15),
                             underColor: Colors.white.withOpacity(0.1),
                             sliderSpacing: const EdgeInsets.only(
                               right: 0,
                             ),
                             sliderDecoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
-                              color: Colors.black.withOpacity(0.6),
+                              color: Colors.black.withOpacity(0.5),
                             ),
                             sliderActiveDecoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12.0),
                               color: Colors.black.withOpacity(0.5),
                             ),
-                            child: AdaptiveScrollbar(
+                            child: SingleChildScrollView(
                               controller: controller.horizontalScroll,
-                              width: _width < 600 ? 10 : 8,
-                              position: ScrollbarPosition.bottom,
-                              underSpacing: const EdgeInsets.only(bottom: 15),
-                              underColor: Colors.white.withOpacity(0.1),
-                              sliderSpacing: const EdgeInsets.only(
-                                right: 0,
-                              ),
-                              sliderDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: Colors.black.withOpacity(0.5),
-                              ),
-                              sliderActiveDecoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.0),
-                                color: Colors.black.withOpacity(0.5),
-                              ),
-                              child: SingleChildScrollView(
-                                controller: controller.horizontalScroll,
-                                scrollDirection: Axis.horizontal,
-                                child: Container(
-                                  width: _width > controller.widthTable ? _width : controller.widthTable + 10,
-                                  alignment: Alignment.topLeft,
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        width: controller.widthTable,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: controller.loading? Colors.transparent : Colors.purple.withOpacity(0.3),
-                                            width: 0.1,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            if(controller.dados.isEmpty)
-                                              Text(
-                                                'Não há dados para os filtros selecionados...',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: layout.isDesktop ? 16 : 12,
-                                                  fontWeight: FontWeight.w600
-                                                ),
-                                              ),
-                                        
-                                            // TITULO DE COLUNAS
-                                            Container(
-                                              height: controller.getHeightColunasCabecalho,
-                                              color: Colors.grey[50],
-                                              child: Stack(
-                                                children: [
-                                                  colunas(),
-                                                  Observer(
-                                                    builder: (_) => Visibility(
-                                                      visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dados.length <= 500,
-                                                      child: Positioned(
-                                                        top: 0,
-                                                        left: controller.positionScroll,
-                                                        child: colunasElevated(),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            
-                                            // ROWS [DADOS]
-                                            if (controller.dados.isNotEmpty)
-                                              controller.dados.length > 500
-                                                  ? Flexible(child: rowsBuilder())
-                                                  : Flexible(
-                                                      child: ListView(
-                                                        physics: const BouncingScrollPhysics(),
-                                                        controller: controller.verticalScroll,
-                                                        children: [
-                                                          Stack(
-                                                            children: [
-                                                              rows(),
-                                                              Observer(
-                                                                builder: (_) => Visibility(
-                                                                  visible: controller.positionScroll > 200 && controller.visibleColElevated,
-                                                                  child: Positioned(
-                                                                    top: 0,
-                                                                    left: controller.positionScroll,
-                                                                    child: rowsElevated(),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                            
-                                            //deixar espaço para rodape
-                                            if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
-                                            const SizedBox(
-                                                height: 39,
-                                              ),
-                                          ],
+                              scrollDirection: Axis.horizontal,
+                              child: Container(
+                                width: _width > controller.widthTable ? _width : controller.widthTable + 10,
+                                alignment: Alignment.topLeft,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: controller.widthTable,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: controller.loading? Colors.transparent : Colors.purple.withOpacity(0.3),
+                                          width: 0.1,
                                         ),
                                       ),
-                                      Observer(
-                                        builder: (_) => Visibility(
-                                          visible: controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty,
-                                          child: Positioned(
-                                            bottom: 0,
-                                            right: 0,
-                                            left: 0,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          if(controller.dados.isEmpty)
+                                            Text(
+                                              'Não há dados para os filtros selecionados...',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: layout.isDesktop ? 16 : 12,
+                                                fontWeight: FontWeight.w600
+                                              ),
+                                            ),
+                                      
+                                          // TITULO DE COLUNAS
+                                          Container(
+                                            height: controller.getHeightColunasCabecalho,
+                                            color: Colors.grey[50],
                                             child: Stack(
                                               children: [
-                                                rodape(),
+                                                colunas(),
                                                 Observer(
                                                   builder: (_) => Visibility(
                                                     visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dados.length <= 500,
                                                     child: Positioned(
                                                       top: 0,
                                                       left: controller.positionScroll,
-                                                      child: rodapeElevated(),
+                                                      child: colunasElevated(),
                                                     ),
                                                   ),
                                                 ),
                                               ],
                                             ),
                                           ),
+                                          
+                                          // ROWS [DADOS]
+                                          if (controller.dados.isNotEmpty)
+                                            controller.dados.length > 500
+                                                ? Flexible(child: rowsBuilder())
+                                                : Flexible(
+                                                    child: ListView(
+                                                      physics: const BouncingScrollPhysics(),
+                                                      controller: controller.verticalScroll,
+                                                      children: [
+                                                        Stack(
+                                                          children: [
+                                                            rows(),
+                                                            Observer(
+                                                              builder: (_) => Visibility(
+                                                                visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                                                                child: Positioned(
+                                                                  top: 0,
+                                                                  left: controller.positionScroll,
+                                                                  child: rowsElevated(),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                          
+                                          //deixar espaço para rodape
+                                          if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
+                                          const SizedBox(
+                                              height: 39,
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                    Observer(
+                                      builder: (_) => Visibility(
+                                        visible: controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty,
+                                        child: Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          left: 0,
+                                          child: Stack(
+                                            children: [
+                                              rodape(),
+                                              Observer(
+                                                builder: (_) => Visibility(
+                                                  visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dados.length <= 500,
+                                                  child: Positioned(
+                                                    top: 0,
+                                                    left: controller.positionScroll,
+                                                    child: rodapeElevated(),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ],
                                     ),
-                                ),
+                                  ],
+                                  ),
                               ),
                             ),
                           ),
-                        ) :
-                  Center(
-                    child: LoadingAnimationWidget.halfTriangleDot(
-                      color: const Color(0xFFEE4E4E),
-                      size: 50,
-                    ),
+                        ),
+                      ) :
+                Center(
+                  child: LoadingAnimationWidget.halfTriangleDot(
+                    color: const Color(0xFFEE4E4E),
+                    size: 50,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -434,12 +431,10 @@ class _ReportPageState extends State<ReportPage> with Rows {
               List<Widget> row = [];
               val.forEach((key, value) {
                 Type type = value.runtimeType;
-                if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE'))
+                if(!key.toString().contains('__invisible') && !key.toString().contains('__isrodape'))
                   row.add(
                     rowTextFormatted(
-                      width: controller.getWidthCol(
-                        key: key,
-                      ),
+                      width: controller.getWidthCol(key: key,),
                       height: 35,
                       controller: controller,
                       key: key,
@@ -488,14 +483,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
   Widget rodape() {
     return Container(
       decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black,
-            offset: Offset(0, -2),
-            blurRadius: 10,
-            spreadRadius: 0.1,
-          ),
-        ]
+        color: Colors.black38,
+        border: Border(top: BorderSide(color: Colors.blue, width: 0.4))
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -507,11 +496,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 height: 40,
                 controller: controller,
                 key: element['key'],
-                type: element['key'].toString().contains('__DONTSUM') ? String : element['type'],
+                type: element['key'].toString().contains('__dontsum') ? String : element['type'],
                 value: controller.colunas.indexOf(element)==0
                     ? '${controller.dados.length}'
                     : element['type']==String ? ''
-                    : element['key'].toString().contains('__DONTSUM') ? ''
+                    : element['key'].toString().contains('__dontsum') ? ''
                     : element['vlrTotalDaColuna'],
                 isSelected: element['isSelected'],
                 isRodape: true,
@@ -521,9 +510,9 @@ class _ReportPageState extends State<ReportPage> with Rows {
           else
             ...controller.colunasRodapePerson.map((element) {
               for(var value in controller.dados){
-                if(element['key'].toString().contains('__ISRODAPE')){
+                if(element['key'].toString().contains('__isrodape')){
                   return rowTextComLable(
-                    width:controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().contains('__ISRODAPE')).length,
+                    width:controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().contains('__isrodape')).length,
                     height: 40,
                     controller: controller,
                     key: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado']),
@@ -549,7 +538,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           height: 40,
           controller: controller,
           key: controller.keyFreeze,
-          type: controller.keyFreeze.toString().contains('__DONTSUM') ? String : element['type'],
+          type: controller.keyFreeze.toString().contains('__dontsum') ? String : element['type'],
           value: '${controller.dados.length}',
           isSelected: element['isSelected'],
           isRodape: true,
@@ -640,10 +629,13 @@ mixin Rows {
           width: width,
           height: height,
           decoration: BoxDecoration(
-              color: cor ?? (isTitle
-                      ? Colors.grey[40] 
-                      : Colors.grey[10]),
-              border: Border.all(color: Colors.black.withOpacity(0.3), width: 0.1)),
+            color: cor ?? (
+              isTitle ? Colors.grey[40] 
+              : isRodape ? Colors.black54
+              : Colors.grey[300]
+            ),
+            border: Border.all(color: Colors.purple.withOpacity(0.3), width: 0.25),
+          ),
           padding: EdgeInsets.only(left: 10, right: 10, bottom: isRodape ? 5 : 0),
           alignment: (isTitle && isSelected && type != String)
               ? Alignment.center
@@ -667,20 +659,64 @@ mixin Rows {
             style: TextStyle(
               fontWeight: isRodape || isTitle ? FontWeight.bold : FontWeight.normal,
               fontSize: fontSize,
-              color: Colors.black,
+              color: isRodape ? Colors.white : Colors.black,
             ),
           ),
         ),
-        if (isTitle && isSelected)
+    
+        if(isTitle && isSelected)
           Positioned(
-            right: 0,
-            bottom: 1,
-            child: Icon(
-              order == 'asc' ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
-              size: 17, 
-              color: Colors.blue,
+            right: 30,
+            bottom: -10,
+            child: IconButton(
+              icon:Icon(
+                order=='asc' ? Icons.arrow_upward : Icons.arrow_downward,
+                size: 17,
+                color: Colors.blueAccent,
+              ),
+              onPressed: null,
             ),
           ),
+
+        if(isTitle)
+          Positioned(
+            right: 0,
+            bottom: -10,
+            child: PopupMenuButton(
+              tooltip: "",
+              splashRadius: 1,
+              position: PopupMenuPosition.under,
+              constraints: const BoxConstraints(
+                maxHeight: 400,
+                minWidth: 90,
+              ),
+              icon: const Icon(
+                Icons.filter_alt_outlined,
+                size: 17,
+                color: Colors.blueAccent,
+              ),
+              itemBuilder: (context) {
+                Set setItens = {};
+            
+                for(var valores in controller.dados){
+                  setItens.add(valores[key]);
+                }
+                List listOrdenada = setItens.toList()..sort();
+
+                return listOrdenada.map((e){
+                  return PopupMenuItem(
+                    child: CheckboxListTile(
+                      value: false,
+                      title: Text(e.toString()),
+                      onChanged: (v){},
+                      controlAffinity: ListTileControlAffinity.leading,
+                    )
+                  );
+                }).toList();
+              },
+            ),
+          )
+
       ],
     );
   }
@@ -700,7 +736,7 @@ mixin Rows {
           height: height,
           decoration: BoxDecoration(
             color: Colors.grey,
-            border: Border.all(color: Colors.purple.withOpacity(0.5), width: 0.1),
+            border: Border.all(color: Colors.purple.withOpacity(0.5), width: 0.25),
           ),
           padding: const EdgeInsets.only(
               left: 10,

@@ -112,7 +112,7 @@ abstract class ReportFromJSONControllerBase with Store {
     List keys = [];
     for(var value in dados){
       for(var key in value.keys)
-        if(key.toString().contains('__LOCK'))
+        if(key.toString().contains('__lock'))
           keys.add(key);
     }
 
@@ -181,13 +181,13 @@ abstract class ReportFromJSONControllerBase with Store {
     try {
 
       for (var key in dados[0].keys) {
-        if (key.toString().contains('__ISRODAPE')){
+        if (key.toString().contains('__isrodape')){
 
           colunasRodapePerson.add(
             ObservableMap.of({
               'key': key,
               'nomeFormatado': getNomeColunaFormatado(text: key),
-              'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
+              'type': key.toString().contains('__int_string') ? String : getType(dados[0][key]),
               'order': 'asc',
               'isSelected': false,
               'vlrTotalDaColuna': 0.0,
@@ -197,13 +197,13 @@ abstract class ReportFromJSONControllerBase with Store {
           );
           
         }
-        else if (!key.toString().contains('__INVISIBLE')){
+        else if (!key.toString().contains('__invisible')){
 
           colunas.add(
             ObservableMap.of({
               'key': key,
               'nomeFormatado': getNomeColunaFormatado(text: key),
-              'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
+              'type': key.toString().contains('__int_string') ? String : getType(dados[0][key]),
               'order': 'asc',
               'isSelected': false,
               'vlrTotalDaColuna': 0.0,
@@ -230,8 +230,8 @@ abstract class ReportFromJSONControllerBase with Store {
           for (var key in row.keys) {
             if (key == col['key']) {
               try{
-                if(key.toString().contains('__SIZEW')){
-                  var temp = key.toString().split('__SIZEW');
+                if(key.toString().contains('__sizew')){
+                  var temp = key.toString().split('__sizew');
                   col['widthCol'] = double.parse(temp[1]);
                 } else {
                   if (col['type'] == String) {
