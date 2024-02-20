@@ -639,7 +639,7 @@ mixin Rows {
     return Stack(
       children: [
         Container(
-          width: width,
+          width: width * 1.10,
           height: height,
           decoration: BoxDecoration(
             color: cor ?? (
@@ -702,13 +702,14 @@ mixin Rows {
                 minWidth: 90,
               ),
               icon: const Icon(
-                Icons.filter_alt_outlined,
-                size: 17,
+                Icons.arrow_drop_down_outlined,
+                size: 15,
                 color: Colors.blueAccent,
               ),
               itemBuilder: (context) {
                 return controller.createlistaFiltrarLinhas(chave: key).map((e){
                   return PopupMenuItem(
+                    padding: EdgeInsets.zero,
                     child: Observer(
                       builder: (_) => CheckboxListTile(
                         value: e.selecionado,

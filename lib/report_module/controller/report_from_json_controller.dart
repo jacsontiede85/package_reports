@@ -400,11 +400,11 @@ abstract class ReportFromJSONControllerBase with Store {
       coluna['widthCol'] = widthCelula;
       w += widthCelula;
     }
-    widthTable = w + 1; // +1 é referente a largura de cada linha de celula (1 pixel)
+    widthTable = (w + 1) * 1.1; // +1 é referente a largura de cada linha de celula (1 pixel)
   }
 
   //exibir botão de grafico
-  bool get isVisibleButtomCharts => /*(colunas.where((element) => element['type'] != String).toList().isNotEmpty) && */ (dados.isNotEmpty && !loading);
+  bool get isVisibleButtomCharts => (dados.isNotEmpty && !loading);
 
   //forçar atualização de tela
   notify() {
