@@ -46,13 +46,13 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
       context: context);
 
   @override
-  List<ObservableMap<String, dynamic>> get listaFiltrarLinhas {
+  List<ColunasModel> get listaFiltrarLinhas {
     _$listaFiltrarLinhasAtom.reportRead();
     return super.listaFiltrarLinhas;
   }
 
   @override
-  set listaFiltrarLinhas(List<ObservableMap<String, dynamic>> value) {
+  set listaFiltrarLinhas(List<ColunasModel> value) {
     _$listaFiltrarLinhasAtom.reportWrite(value, super.listaFiltrarLinhas, () {
       super.listaFiltrarLinhas = value;
     });
@@ -203,21 +203,6 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
         .startAction(name: 'ReportFromJSONControllerBase.setOrderBy');
     try {
       return super.setOrderBy(key: key, order: order);
-    } finally {
-      _$ReportFromJSONControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void marcarEdesmarcarFiltroSelecionado(
-      {required String valor, required String chave}) {
-    final _$actionInfo =
-        _$ReportFromJSONControllerBaseActionController.startAction(
-            name:
-                'ReportFromJSONControllerBase.marcarEdesmarcarFiltroSelecionado');
-    try {
-      return super
-          .marcarEdesmarcarFiltroSelecionado(valor: valor, chave: chave);
     } finally {
       _$ReportFromJSONControllerBaseActionController.endAction(_$actionInfo);
     }

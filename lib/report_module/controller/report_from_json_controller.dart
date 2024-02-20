@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/report_module/core/api_consumer.dart';
 import 'package:package_reports/report_module/core/filtros.dart';
+import 'package:package_reports/report_module/model/filtrar_colunas_model.dart';
 part 'report_from_json_controller.g.dart';
 
 class ReportFromJSONController = ReportFromJSONControllerBase with _$ReportFromJSONController;
@@ -28,7 +29,7 @@ abstract class ReportFromJSONControllerBase with Store {
   List<Map<String, dynamic>> colunas = [];
 
   @observable
-  List<ObservableMap<String, dynamic>> listaFiltrarLinhas = [];
+  List<ColunasModel> listaFiltrarLinhas = [];
 
   @observable
   bool valorMarcadoNoFiltro = false;
@@ -117,7 +118,7 @@ abstract class ReportFromJSONControllerBase with Store {
     List keys = [];
     for(var value in dados){
       for(var key in value.keys)
-        if(key.toString().contains('__lock'))
+        if(key.toString().contains('__LOCK'))
           keys.add(key);
     }
 
@@ -148,8 +149,8 @@ abstract class ReportFromJSONControllerBase with Store {
 
     for (var value in dados) {
       for (var key in value.keys) {
-        if (key.toString().contains('__string') || key.toString().contains('__int_string')) continue;
-        if (key.toString().contains('__int')) {
+        if (key.toString().contains('__STRING') || key.toString().contains('__INT_STRING')) continue;
+        if (key.toString().contains('__INT')) {
           try {
             var val = double.parse(value[key]).floor();
             value[key] = val;
@@ -158,7 +159,7 @@ abstract class ReportFromJSONControllerBase with Store {
           }
           continue;
         }
-        if (key.toString().contains('__double')) {
+        if (key.toString().contains('__DOUBLE')) {
           try {
             value[key] = double.parse(value[key]);
           } catch (e) {
@@ -186,13 +187,13 @@ abstract class ReportFromJSONControllerBase with Store {
     try {
 
       for (var key in dados[0].keys) {
-        if (key.toString().contains('__isrodape')){
+        if (key.toString().contains('__ISRODAPE')){
 
           colunasRodapePerson.add(
             ObservableMap.of({
               'key': key,
               'nomeFormatado': getNomeColunaFormatado(text: key),
-              'type': key.toString().contains('__int_string') ? String : getType(dados[0][key]),
+              'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
               'order': 'asc',
               'isSelected': false,
               'vlrTotalDaColuna': 0.0,
@@ -202,13 +203,13 @@ abstract class ReportFromJSONControllerBase with Store {
           );
           
         }
-        else if (!key.toString().contains('__invisible')){
+        else if (!key.toString().contains('__INVISIBLE')){
 
           colunas.add(
             ObservableMap.of({
               'key': key,
               'nomeFormatado': getNomeColunaFormatado(text: key),
-              'type': key.toString().contains('__int_string') ? String : getType(dados[0][key]),
+              'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
               'order': 'asc',
               'isSelected': false,
               'vlrTotalDaColuna': 0.0,
@@ -235,8 +236,8 @@ abstract class ReportFromJSONControllerBase with Store {
           for (var key in row.keys) {
             if (key == col['key']) {
               try{
-                if(key.toString().contains('__sizew')){
-                  var temp = key.toString().split('__sizew');
+                if(key.toString().contains('__SIZEW')){
+                  var temp = key.toString().split('__SIZEW');
                   col['widthCol'] = double.parse(temp[1]);
                 } else {
                   if (col['type'] == String) {
@@ -281,16 +282,16 @@ abstract class ReportFromJSONControllerBase with Store {
 
   //retornar nome de coluna formatado
   getNomeColunaFormatado({required String text}) {
-    text = text.toString().replaceAll('__perc', '_%');
-    text = text.toString().replaceAll('__int_string', '');
-    text = text.toString().replaceAll('__string', '');
-    text = text.toString().replaceAll('__double', '');
-    text = text.toString().replaceAll('__int', '');
-    text = text.toString().replaceAll('__no_metrics', '');
-    text = text.toString().replaceAll('__nochartarea', '');
-    text = text.toString().replaceAll('__invisible', '');
-    text = text.toString().replaceAll('__dontsum', '');
-    text = text.toString().replaceAll('__freeze', '');
+    text = text.toString().replaceAll('__PERC', '_%');
+    text = text.toString().replaceAll('__INT_STRING', '');
+    text = text.toString().replaceAll('__STRING', '');
+    text = text.toString().replaceAll('__DOUBLE', '');
+    text = text.toString().replaceAll('__INT', '');
+    text = text.toString().replaceAll('__NO_METRICS', '');
+    text = text.toString().replaceAll('__NOCHARTAREA', '');
+    text = text.toString().replaceAll('__INVISIBLE', '');
+    text = text.toString().replaceAll('__DONTSUM', '');
+    text = text.toString().replaceAll('__FREEZE', '');
     var temp = text.split('__');
     text = temp[0];
     text = text.toString().replaceAll('_', ' ');
@@ -323,11 +324,11 @@ abstract class ReportFromJSONControllerBase with Store {
           return a[key].compareTo(b[key]);
         }
       } else {
-        if (order == 'asc') if (key.toString().contains('__int_string'))
+        if (order == 'asc') if (key.toString().contains('__INT_STRING'))
           return int.parse(a[key]).compareTo(int.parse(b[key]));
         else
           return a[key].compareTo(b[key]);
-        else if (key.toString().contains('__int_string'))
+        else if (key.toString().contains('__INT_STRING'))
           return int.parse(b[key]).compareTo(int.parse(a[key]));
         else
           return b[key].compareTo(a[key]);
@@ -339,14 +340,14 @@ abstract class ReportFromJSONControllerBase with Store {
   getColunaElevada() {
     for (var val in dados) {
       for (var key in val.keys) {
-        if (key.toString().contains('__freeze')) {
+        if (key.toString().contains('__FREEZE')) {
           keyFreeze = key;
           break;
         }
       }
       if (keyFreeze.isEmpty)
         for (var key in val.keys) {
-          if ((val[key].runtimeType == String || key.toString().contains('__no_metrics')) && '${val[key]}'.length > 5 && !key.toString().contains('__invisible')) {
+          if ((val[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && '${val[key]}'.length > 5 && !key.toString().contains('__INVISIBLE')) {
             keyFreeze = key;
             break;
           }
@@ -412,33 +413,23 @@ abstract class ReportFromJSONControllerBase with Store {
     dados = dados;
   }
 
-  List<ObservableMap<String, dynamic>> createlistaFiltrarLinhas({required String chave}){
+  List<ColunasModel> createlistaFiltrarLinhas({required String chave}){
             
     for(Map<String, dynamic> valores in dados){
-      bool existe = listaFiltrarLinhas.any((mapa) => mapa['valor'] == valores[chave]);
+      bool existe = listaFiltrarLinhas.any((mapa) => mapa.valor == valores[chave].toString() && mapa.coluna == chave);
       if (!existe) {
         listaFiltrarLinhas.add(
-          ObservableMap<String, dynamic>.of({
-            "coluna" : chave,
-            "valor" : valores[chave], 
-            "selecionado" : false
-          })
+          ColunasModel(
+            coluna: chave,
+            valor: valores[chave].toString(), 
+            selecionado: false
+          )
         );
       }
 
     }
 
-    return listaFiltrarLinhas.where((mapa) => mapa['coluna'] == chave).toList();
-  }
-
-  @action
-  void marcarEdesmarcarFiltroSelecionado ({required String valor, required String chave}){
-    int i = listaFiltrarLinhas.indexWhere((element) => element['valor'] == valor && element['coluna'] == chave);
-    listaFiltrarLinhas[i] = ObservableMap<String, dynamic>.of({
-      "coluna" : chave,
-      "valor" : valor,
-      "selecionado" : valorMarcadoNoFiltro
-    });
+    return listaFiltrarLinhas.where((mapa) => mapa.coluna == chave).toList();
   }
 
 }

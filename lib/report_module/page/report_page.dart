@@ -441,7 +441,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               List<Widget> row = [];
               val.forEach((key, value) {
                 Type type = value.runtimeType;
-                if(!key.toString().contains('__invisible') && !key.toString().contains('__isrodape'))
+                if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE'))
                   row.add(
                     rowTextFormatted(
                       width: controller.getWidthCol(key: key,),
@@ -507,11 +507,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 height: 40,
                 controller: controller,
                 key: element['key'],
-                type: element['key'].toString().contains('__dontsum') ? String : element['type'],
+                type: element['key'].toString().contains('__DONTSUM') ? String : element['type'],
                 value: controller.colunas.indexOf(element)==0
                     ? '${controller.dados.length}'
                     : element['type']==String ? ''
-                    : element['key'].toString().contains('__dontsum') ? ''
+                    : element['key'].toString().contains('__DONTSUM') ? ''
                     : element['vlrTotalDaColuna'],
                 isSelected: element['isSelected'],
                 isRodape: true,
@@ -521,9 +521,9 @@ class _ReportPageState extends State<ReportPage> with Rows {
           else
             ...controller.colunasRodapePerson.map((element) {
               for(var value in controller.dados){
-                if(element['key'].toString().contains('__isrodape')){
+                if(element['key'].toString().contains('__ISRODAPE')){
                   return rowTextComLable(
-                    width:controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().contains('__isrodape')).length,
+                    width:controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().contains('__ISRODAPE')).length,
                     height: 40,
                     controller: controller,
                     key: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado']),
@@ -550,7 +550,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           cor: const Color.fromARGB(255, 65, 63, 63),
           controller: controller,
           key: controller.keyFreeze,
-          type: controller.keyFreeze.toString().contains('__dontsum') ? String : element['type'],
+          type: controller.keyFreeze.toString().contains('__DONTSUM') ? String : element['type'],
           value: '${controller.dados.length}',
           isSelected: element['isSelected'],
           isRodape: true,
@@ -633,6 +633,7 @@ mixin Rows {
     bool isSelected = false, 
     String order = 'asc', 
     Color? cor,
+    Function(bool?)? onChanged
   }) {
     double fontSize = 12;
     return Stack(
@@ -706,19 +707,14 @@ mixin Rows {
                 color: Colors.blueAccent,
               ),
               itemBuilder: (context) {
-
                 return controller.createlistaFiltrarLinhas(chave: key).map((e){
                   return PopupMenuItem(
                     child: Observer(
                       builder: (_) => CheckboxListTile(
-                        value: e['selecionado'],
-                        title: Text(e['valor'].toString()),
+                        value: e.selecionado,
+                        title: Text(e.valor.toString()),
                         onChanged: (v){
-                          controller.valorMarcadoNoFiltro = !controller.valorMarcadoNoFiltro;
-                          controller.marcarEdesmarcarFiltroSelecionado(
-                            valor: e['valor'],
-                            chave: key,
-                          );
+                          e.selecionado = !e.selecionado;
                         },
                         controlAffinity: ListTileControlAffinity.leading,
                       ),
