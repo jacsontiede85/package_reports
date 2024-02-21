@@ -34,6 +34,15 @@ abstract class ReportChartControllerBase with Store, Charts{
   @observable
   bool loading = false;
 
+  @observable
+  String metricaSelecionada = '';
+
+  @observable
+  String ordenacaoSelecionada = '';
+
+  @observable
+  String tipoOrdenacaoSelecionada = '';
+
   //selecionar uma coluna de metrica e exbir o grafico padrao ao carregar tela
   Future<void> load() async {
     loading = true;
@@ -44,34 +53,40 @@ abstract class ReportChartControllerBase with Store, Charts{
   }
 
   //retornar colunas de metricas para dropdown
-  List<Map> get getColumnMetricsChart => reportFromJSONController.colunas.where((element) => element['type'] != String && !element['key'].toString().contains('__no_metrics')).toList();
+  List<Map> get getColumnMetricsChart => reportFromJSONController.colunas.where((element) => element['type'] != String && !element['key'].toString().contains('__NO_METRICS')).toList();
 
   //retornar colunas de metricas para dropdown de ordenação
   List<Map> get getColumnOrderByChart => [...reportFromJSONController.colunas].toList();
-  // reportFromJSONController.colunas.where((element) =>
-  //   element['type'] == String && element['key'].toString().contains('__no_metrics')
-  // ).toList();
 
   //ativar ou desativar graficos de ared
-  bool get isVisibleChartsArea => getColumnMetricsChart.where((value) => value['type'] != String && !value['key'].contains('__nochartarea')).toList().length > 1;
+  bool get isVisibleChartsArea => getColumnMetricsChart.where((value) => value['type'] != String && !value['key'].contains('__NOCHARTAREA')).toList().length > 1;
 
   @action
   getChart({required String chartNameSelected}) async {
     loading = true;
     this.chartNameSelected = chartNameSelected;
     await Future.delayed(const Duration(seconds: 1));
-    if (chartNameSelected == 'sfLineCartesianChart') //Analise de dados de colunas (vertical)
+    
+    // ? Analise de dados de colunas (vertical)
+    if (chartNameSelected == 'sfLineCartesianChart')
       chartSelected = sfLineCartesianChart(dados: _getListChartData());
-    else if (chartNameSelected == 'barChartHorizontal') //Analise de dados de colunas (vertical)
+    
+    // ? Analise de dados de colunas (vertical)
+    else if (chartNameSelected == 'barChartHorizontal') 
       chartSelected = barChartHorizontal(dados: _getListChartData());
-    else if (chartNameSelected == 'sfCircularChart') //Analise de dados de colunas (vertical)
+
+    // ? Analise de dados de colunas (vertical)
+    else if (chartNameSelected == 'sfCircularChart')
       chartSelected = sfCircularChart(
         dados: _getListChartData(),
       );
-    else if (chartNameSelected == 'pieChart') //Analise de dados de colunas (vertical)
+    
+    // ? Analise de dados de colunas (vertical)
+    else if (chartNameSelected == 'pieChart')
       chartSelected = pieChart(dados: _getListChartData(), centerSpaceRadius: 50, radius: 200);
+
     else if (chartNameSelected == 'sfLineCartesianChartArea') {
-      //Analise de dados na horizontal (ex.: mes 1, mes2, ... total)
+      // ? Analise de dados na horizontal (ex.: mes 1, mes2, ... total)
       List<Widget> charts = [];
       for (var listChartdata in _getListChartData()) charts.add(sfLineCartesianChart(dados: listChartdata));
       chartSelected = Column(
@@ -98,7 +113,8 @@ abstract class ReportChartControllerBase with Store, Charts{
   _getListChartData({bool listaDeTotaisDeRodape = false}) {
     var keySelected = columnMetricSelected['key'];
 
-    if (orderby.isNotEmpty) setOrderBy(key: columnOrderBySelected['key'], order: orderby == 'Decrescente' ? 'desc' : 'asc');
+    if (orderby.isNotEmpty) 
+      setOrderBy(key: columnOrderBySelected['key'], order: orderby == 'Decrescente' ? 'desc' : 'asc');
 
     List<Color> cores = _randonColors(length: reportFromJSONController.dados.length);
 
@@ -106,8 +122,19 @@ abstract class ReportChartControllerBase with Store, Charts{
       List<ChartData> temp = [];
       for (var col in reportFromJSONController.colunas) {
         String nome = '';
-        if (col['type'] == String || col['key'].contains('__no_metrics')) nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}... ' : '${col['key']} ';
-        if (col['type'] != String && !col['key'].contains('__no_metrics') && !col['key'].contains('__nochartarea')) temp.add(ChartData(title: nome, nome: col['nomeFormatado'], valor: col['vlrTotalDaColuna'], type: col['type'], perc: 100, color: const Color.fromARGB(255, 29, 27, 27)));
+        if (col['type'] == String || col['key'].contains('__NO_METRICS')) 
+          nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}... ' : '${col['key']} ';
+        if (col['type'] != String && !col['key'].contains('__NO_METRICS') && !col['key'].contains('__NOCHARTAREA'))
+          temp.add(
+            ChartData(
+              title: nome, 
+              nome: col['nomeFormatado'], 
+              valor: col['vlrTotalDaColuna'], 
+              type: col['type'], 
+              perc: 100, 
+              color: const Color.fromARGB(255, 29, 27, 27),
+            )
+          );
       }
       return temp;
     } else if (chartNameSelected == 'sfLineCartesianChartArea' || chartNameSelected == 'sfAreaCartesianChart') {
@@ -115,11 +142,11 @@ abstract class ReportChartControllerBase with Store, Charts{
       for (var value in reportFromJSONController.dados) {
         List<ChartData> temp = [];
         String nome = '';
-        for (var key in value.keys) if (value[key].runtimeType == String || key.toString().contains('__no_metrics')) nome += '${value[key]}'.length > 20 ? '${'${value[key]}'.substring(0, 20)}... ' : '${value[key]} ';
+        for (var key in value.keys) if (value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) nome += '${value[key]}'.length > 20 ? '${'${value[key]}'.substring(0, 20)}... ' : '${value[key]} ';
 
         var cor = cores.isEmpty ? null : cores[reportFromJSONController.dados.indexOf(value)];
         for (var col in getColumnMetricsChart) {
-          if (value['type'] != String && !col['key'].contains('__nochartarea')) {
+          if (value['type'] != String && !col['key'].contains('__NOCHARTAREA')) {
             temp.add(ChartData(title: nome, nome: reportFromJSONController.getNomeColunaFormatado(text: col['key']), valor: value[col['key']].runtimeType == int ? double.parse(value[col['key']].toString()) : value[col['key']], type: value[col['key']].runtimeType, perc: 0, color: cor));
           }
         }
@@ -131,7 +158,7 @@ abstract class ReportChartControllerBase with Store, Charts{
       List<ChartData> temp = [];
       for (var value in reportFromJSONController.dados) {
         String nome = '';
-        for (var key in value.keys) if (value[key].runtimeType == String || key.toString().contains('__no_metrics')) nome += '${value[key]}'.length > 12 ? '${'${value[key]}'.substring(0, 12)}... ' : '${value[key]} ';
+        for (var key in value.keys) if (value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) nome += '${value[key]}'.length > 12 ? '${'${value[key]}'.substring(0, 12)}... ' : '${value[key]} ';
 
         double vlrTotalDaColuna = 0.0;
         for (var col in reportFromJSONController.colunas) if (col['key'] == keySelected) vlrTotalDaColuna = col['vlrTotalDaColuna'];
@@ -154,11 +181,42 @@ abstract class ReportChartControllerBase with Store, Charts{
     List<int> listIndex = [];
     for (var i = 0; i < length; i++) {
       int index = rng.nextInt(ColorData.cores.length - 1);
-      // ignore: prefer_is_empty
-      if (i < ColorData.cores.length) while (listIndex.where((element) => element == index).toList().length > 0) index = rng.nextInt(ColorData.cores.length - 1);
+      if (i < ColorData.cores.length) while (listIndex.where((element) => element == index).toList().isEmpty) index = rng.nextInt(ColorData.cores.length - 1);
       listIndex.add(index);
       cores.add(ColorData.cores[index]);
     }
     return cores;
   }
+
+  List<Map<String, dynamic>> getTodosOsTiposGraficos (){
+    List<Map<String, dynamic>> opcoesDeGraficos = [
+      {
+        "nome" : "Barras",
+        "icone" : Icons.bar_chart_sharp,
+        "funcao" : () => getChart(chartNameSelected: 'barChartHorizontal')
+      },
+      {
+        "nome" : "Circular",
+        "icone" : Icons.pie_chart_rounded,
+        "funcao" : () => getChart(chartNameSelected: 'sfCircularChart')
+      },
+      {
+        "nome" : "Linhas",
+        "icone" : Icons.ssid_chart,
+        "funcao" : () => getChart(chartNameSelected: 'sfLineCartesianChart')
+      },
+      {
+        "nome" : "Linhas duplas",
+        "icone" : Icons.stacked_line_chart_outlined,
+        "funcao" : () => getChart(chartNameSelected: 'sfLineCartesianChartArea')
+      },
+      {
+        "nome" : "Area",
+        "icone" : Icons.area_chart,
+        "funcao" : () => getChart(chartNameSelected: 'sfAreaCartesianChart')
+      },
+    ];
+    return opcoesDeGraficos;
+  }
+
 }

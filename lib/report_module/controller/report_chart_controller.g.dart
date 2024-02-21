@@ -108,6 +108,57 @@ mixin _$ReportChartController on ReportChartControllerBase, Store {
     });
   }
 
+  late final _$metricaSelecionadaAtom = Atom(
+      name: 'ReportChartControllerBase.metricaSelecionada', context: context);
+
+  @override
+  String get metricaSelecionada {
+    _$metricaSelecionadaAtom.reportRead();
+    return super.metricaSelecionada;
+  }
+
+  @override
+  set metricaSelecionada(String value) {
+    _$metricaSelecionadaAtom.reportWrite(value, super.metricaSelecionada, () {
+      super.metricaSelecionada = value;
+    });
+  }
+
+  late final _$ordenacaoSelecionadaAtom = Atom(
+      name: 'ReportChartControllerBase.ordenacaoSelecionada', context: context);
+
+  @override
+  String get ordenacaoSelecionada {
+    _$ordenacaoSelecionadaAtom.reportRead();
+    return super.ordenacaoSelecionada;
+  }
+
+  @override
+  set ordenacaoSelecionada(String value) {
+    _$ordenacaoSelecionadaAtom.reportWrite(value, super.ordenacaoSelecionada,
+        () {
+      super.ordenacaoSelecionada = value;
+    });
+  }
+
+  late final _$tipoOrdenacaoSelecionadaAtom = Atom(
+      name: 'ReportChartControllerBase.tipoOrdenacaoSelecionada',
+      context: context);
+
+  @override
+  String get tipoOrdenacaoSelecionada {
+    _$tipoOrdenacaoSelecionadaAtom.reportRead();
+    return super.tipoOrdenacaoSelecionada;
+  }
+
+  @override
+  set tipoOrdenacaoSelecionada(String value) {
+    _$tipoOrdenacaoSelecionadaAtom
+        .reportWrite(value, super.tipoOrdenacaoSelecionada, () {
+      super.tipoOrdenacaoSelecionada = value;
+    });
+  }
+
   late final _$getChartAsyncAction =
       AsyncAction('ReportChartControllerBase.getChart', context: context);
 
@@ -125,7 +176,10 @@ orderby: ${orderby},
 chartSelected: ${chartSelected},
 columnMetricSelected: ${columnMetricSelected},
 columnOrderBySelected: ${columnOrderBySelected},
-loading: ${loading}
+loading: ${loading},
+metricaSelecionada: ${metricaSelecionada},
+ordenacaoSelecionada: ${ordenacaoSelecionada},
+tipoOrdenacaoSelecionada: ${tipoOrdenacaoSelecionada}
     ''';
   }
 }

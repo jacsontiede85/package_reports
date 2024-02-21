@@ -54,50 +54,39 @@ class _ChartsReportState extends State<ChartsReport> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(
-            onPressed: () => widget.controller.getChart(chartNameSelected: 'barChartHorizontal'),
-            icon:const  Icon(Icons.bar_chart_sharp),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          IconButton(
-            onPressed: () => widget.controller.getChart(chartNameSelected: 'sfCircularChart'),
-            icon: const Icon(Icons.pie_chart_rounded),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          IconButton(
-            onPressed: () => widget.controller.getChart(chartNameSelected: 'sfLineCartesianChart'),
-            icon: const Icon(Icons.ssid_chart),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Observer(
-            builder: (_) => Visibility(
-              visible: widget.controller.isVisibleChartsArea,
-              child: IconButton(
-                onPressed: () => widget.controller.getChart(chartNameSelected: 'sfLineCartesianChartArea'),
-                icon: const Icon(Icons.stacked_line_chart_outlined),
-              ),
+          Visibility(
+            visible: layout.isDesktop,
+            replacement: PopupMenuButton(
+              tooltip: 'Graficos',
+              itemBuilder: (context) {
+                return widget.controller.getTodosOsTiposGraficos().map((value){
+                  return PopupMenuItem(
+                    onTap: value['funcao'],
+                    child: Row(
+                      children: [
+                        Icon(
+                          value['icone'],
+                          color: Colors.black,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left:5),
+                          child: Text(value['nome']),
+                        )
+                      ],
+                    ),
+                  );
+                }).toList();              
+              },
             ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Observer(
-            builder: (_) => Visibility(
-              visible: widget.controller.isVisibleChartsArea,
-              child: IconButton(
-                onPressed: () => widget.controller.getChart(chartNameSelected: 'sfAreaCartesianChart'),
-                icon: const Icon(Icons.area_chart),
-              ),
+            child: Wrap(
+              spacing: 15,
+              children: widget.controller.getTodosOsTiposGraficos().map((e) {
+                return IconButton(
+                  onPressed: e['funcao'], 
+                  icon: Icon(e['icone'])
+                );
+              }).toList(),
             ),
-          ),
-          const SizedBox(
-            width: 15,
           ),
         ],
       ),
@@ -191,14 +180,14 @@ class _ChartsReportState extends State<ChartsReport> {
                     builder: (_) => Visibility(
                       visible: !widget.controller.loading,
                       child: Wrap(
-                        spacing: 10,
+                        spacing: 30,
                         runSpacing: 10,
                         children: [
                           if (widget.controller.getColumnMetricsChart.length > 1 && widget.controller.chartNameSelected != 'sfLineCartesianChartArea' && widget.controller.chartNameSelected != 'sfAreaCartesianChart')
                             Observer(
                               builder: (_) => PopupMenuButton(
                                 child: Text(
-                                  'Selecione uma métrica:',
+                                  'Selecione uma métrica: ${widget.controller.metricaSelecionada}',
                                   style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
                                 ),
                                 itemBuilder:(context) => widget.controller.getColumnMetricsChart.map((value) {
@@ -210,17 +199,17 @@ class _ChartsReportState extends State<ChartsReport> {
                                         fontSize: layout.isDesktop ? 14 : 10,
                                       ),
                                     ),
+                                    onTap: () {
+                                      widget.controller.metricaSelecionada = value['nomeFormatado'];
+                                    },
                                   );
                                 }).toList(),
                               ),
                             ),
-                          const SizedBox(
-                            width: 20,
-                          ),
                           Observer(
                             builder: (_) => PopupMenuButton(
                               child: Text(
-                                'Ordernar por:',
+                                'Ordernar por: ${widget.controller.ordenacaoSelecionada}',
                                 style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
                               ),
                               itemBuilder: (context) {
@@ -231,27 +220,30 @@ class _ChartsReportState extends State<ChartsReport> {
                                       Features.formatarTextoPrimeirasLetrasMaiusculas(value['nomeFormatado']),
                                       style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
                                     ),
+                                    onTap: () {
+                                      widget.controller.ordenacaoSelecionada = value['nomeFormatado'];
+                                    },
                                   );
                                 }).toList();
                               },
                             ),
                           ),
-                          const SizedBox(
-                            width: 20,
-                          ),
                           Observer(
                             builder: (_) => PopupMenuButton(
                               child: Text(
-                                'Tipo ordenação:',
+                                'Tipo ordenação: ${widget.controller.tipoOrdenacaoSelecionada}',
                                 style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
                               ),
-                              itemBuilder: (context) => ['', 'Crescente', 'Decrescente'].map((value) {
+                              itemBuilder: (context) => ['Crescente', 'Decrescente'].map((value) {
                                 return PopupMenuItem(
                                   value: value,
                                   child: Text(
                                     Features.formatarTextoPrimeirasLetrasMaiusculas(value),
                                     style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
                                   ),
+                                  onTap: () {
+                                    widget.controller.tipoOrdenacaoSelecionada = value;
+                                  },
                                 );
                               }).toList(),
                             ),
