@@ -14,14 +14,29 @@ abstract class ReportFromJSONControllerBase with Store {
 
   late String nomeFunction;
   late double sizeWidth;
-  ReportFromJSONControllerBase({required this.nomeFunction, required this.sizeWidth}) {
-    getDados();
+  late bool isToGetDadosNaEntrada;
+  late Map<String, dynamic> body;
+
+  ReportFromJSONControllerBase({
+    required this.nomeFunction, 
+    required this.sizeWidth,
+    required this.isToGetDadosNaEntrada,
+    required this.body
+  }) {
+    if(isToGetDadosNaEntrada){
+      getConfig();
+      getDados();
+    }
+      
   }
 
   final Filtros filtro = Filtros();
 
   @observable
-  List<dynamic> dados = [];
+  List dados = [];
+
+  @observable
+  Map<String, dynamic> configPagina = {};
 
   String keyFreeze = ''; // chave da coluna que será congelada (elevated)
 
@@ -108,12 +123,23 @@ abstract class ReportFromJSONControllerBase with Store {
   }
 
   //BUSCAR DADOS PARA MONTAGEM DO RELATORIO
+
+  void getConfig() async {
+    var response = await API().getConfigApi(
+      function: nomeFunction
+    );
+
+    configPagina = response;
+  }
+
   getDados() async {
     keyFreeze = "";
     if (_listenerStarted) _removeListener();
     loading = true;
     dados = [];
-    dados = await API().getDataReportApi(function: nomeFunction);
+    var response = await API().getDataReportApi(function: nomeFunction);
+
+    dados = response[0];
 
     List keys = [];
     for(var value in dados){

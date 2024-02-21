@@ -35,51 +35,54 @@ mixin Charts{
         ),
       );
 
-  Widget barChartHorizontal({required List<ChartData> dados, Color? color, bool? isTransposed, String? numberFormatSymbol})=>
-      SfCartesianChart(
-          margin: const EdgeInsets.only(top: 20, right: 20),
-          plotAreaBorderWidth: 0.5,
-          enableAxisAnimation: true,
-          legend: const Legend(isVisible: false),
-          isTransposed: isTransposed??false,
-          primaryXAxis: const CategoryAxis(
-            labelStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
-            majorGridLines: MajorGridLines(width: 0),
-            isInversed: true,
+  Widget barChartHorizontal({
+    required List<ChartData> dados, 
+    Color? color, 
+    bool? isTransposed, 
+    String? numberFormatSymbol
+  }) {
+    return SfCartesianChart(
+      margin: const EdgeInsets.only(top: 20, right: 20),
+      plotAreaBorderWidth: 0.5,
+      enableAxisAnimation: true,
+      legend: const Legend(isVisible: false),
+      isTransposed: isTransposed??false,
+      primaryXAxis: const CategoryAxis(
+        labelStyle: TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
+        majorGridLines: MajorGridLines(width: 0),
+        isInversed: true,
+      ),
+      primaryYAxis: NumericAxis(
+        majorGridLines: const MajorGridLines(width: 1),
+        numberFormat: NumberFormat.compactCurrency(symbol: numberFormatSymbol??''),
+        minimum: 0,
+        rangePadding: ChartRangePadding.auto,
+      ),
+      series: [
+        BarSeries<ChartData, String>(
+          dataSource: dados,
+          xValueMapper: (ChartData data, _) => data.nome,
+          yValueMapper: (ChartData data, _) => data.valor,
+          pointColorMapper: (ChartData data, _) => data.color??color,
+          width: 0.5,
+          spacing: 0.2,
+          borderRadius: const BorderRadius.all(Radius.circular(11)),
+          enableTooltip: true,
+          dataLabelMapper: (ChartData data, _) =>
+              data.type == int
+              ? '${numberFormatSymbol??''}${Features.toFormatNumber(data.valor.toString(), qtCasasDecimais: 0)}'
+              : '${numberFormatSymbol??'R\$ '}${Features.toFormatNumber(data.valor.toString())}',
+          dataLabelSettings: DataLabelSettings(
+              isVisible: true,
+              alignment: ChartAlignment.center,
+              textStyle: const TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
+              labelAlignment: ChartDataLabelAlignment.auto,
+              angle: isTransposed??false ? 0 : 0
           ),
-          primaryYAxis: NumericAxis(
-            majorGridLines: const MajorGridLines(width: 1),
-            numberFormat: NumberFormat.compactCurrency(symbol: numberFormatSymbol??''),
-            minimum: 0,
-            rangePadding: ChartRangePadding.auto,
-          ),
-          // tooltipBehavior: TooltipBehavior(enable: false),
-          series: [
-            BarSeries<ChartData, String>(
-              dataSource: dados,
-              xValueMapper: (ChartData data, _) => data.nome,
-              yValueMapper: (ChartData data, _) => data.valor,
-              pointColorMapper: (ChartData data, _) => data.color??color,
-              // Width of the bars
-              width: 0.5,
-              // Spacing between the bars
-              spacing: 0.2,
-              borderRadius: const BorderRadius.all(Radius.circular(11)),
-              enableTooltip: true,
-              dataLabelMapper: (ChartData data, _) =>
-                  data.type == int
-                  ? '${numberFormatSymbol??''}${Features.toFormatNumber(data.valor.toString(), qtCasasDecimais: 0)}'
-                  : '${numberFormatSymbol??'R\$ '}${Features.toFormatNumber(data.valor.toString())}',
-              dataLabelSettings: DataLabelSettings(
-                  isVisible: true,
-                  alignment: ChartAlignment.center,
-                  textStyle: const TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
-                  labelAlignment: ChartDataLabelAlignment.auto,
-                  angle: isTransposed??false ? 0 : 0
-              ),
-            )
-          ]
-      );
+        ),
+      ],
+    );
+  }
 
   Widget sfLineCartesianChart({List<ChartData>? dados, List<List<ChartData>>? dadosList})=>
       dados==null && dadosList==null
@@ -158,7 +161,6 @@ mixin Charts{
                       ),
                 ]
             ),
-            const SizedBox(height: 30,),
           ],
         );
 

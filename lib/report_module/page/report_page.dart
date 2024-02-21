@@ -13,16 +13,16 @@ import 'package:package_reports/report_module/page/report_chart_page.dart';
 import 'package:package_reports/report_module/widget/widgets.dart';
 
 class ReportPage extends StatefulWidget {
-  final String title;
   final String function;
   final bool? voltarComPop;
   final Color? corTitulo;
+  final Map<String, dynamic> body;
   const ReportPage({
-    super.key, 
-    required this.title,
+    super.key,
     required this.function,
     this.voltarComPop = false,
     this.corTitulo = Colors.white,
+    required this.body
   });
 
   @override
@@ -38,7 +38,12 @@ class _ReportPageState extends State<ReportPage> with Rows {
   @override
   void initState() {
     super.initState();
-    controller = ReportFromJSONController(nomeFunction: widget.function, sizeWidth: _width);
+    controller = ReportFromJSONController(
+      nomeFunction: widget.function, 
+      sizeWidth: _width,
+      isToGetDadosNaEntrada: true,
+      body: widget.body,
+    );
   }
 
   @override
@@ -58,9 +63,14 @@ class _ReportPageState extends State<ReportPage> with Rows {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black87,
-          title: wp.wpHeader(
-            titulo: widget.title,
-            cor: widget.corTitulo ?? Colors.white,
+          title: Observer(
+            builder: (_) => Visibility(
+              visible: controller.configPagina.isNotEmpty,
+              child: wp.wpHeader(
+                titulo: controller.configPagina['name'].toString(),
+                cor: widget.corTitulo ?? Colors.white,
+              ),
+            ),
           ),
           leading: Visibility(
             visible: widget.voltarComPop!,
@@ -126,7 +136,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           MaterialPageRoute(
                             builder: (context) => ChartsReport(
                               reportFromJSONController: controller,
-                              title: widget.title,
+                              title: controller.configPagina['name'],
                             ),
                           ),
                         ),
@@ -150,7 +160,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           context: context,
                           builder: (context) => exibirSelecaoDeColunasParaExporta(
                             onPressed: (){
-                              ReportToXLSXController(title: widget.title, reportFromJSONController: controller);
+                              ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller);
                               Navigator.pop(context);
                             },
                             titulo: 'Exportar para Excel'

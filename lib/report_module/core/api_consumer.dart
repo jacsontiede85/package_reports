@@ -93,4 +93,21 @@ class API with Settings{
     }
   }
 
+  Future<Map<String, dynamic>> getConfigApi({required String function,}) async {
+
+    http.Response response = await http.get(
+      Uri.parse('${Settings.enderecoRepositorio}/$function'),
+    );
+
+    try {
+      return jsonDecode(response.body);
+    } catch (e) {
+      return 
+      {
+        'status_code': response.statusCode,
+        'mensagem': 'Dados não encontrado! Verifique os filtros selecionados e tente novamente.\nCatch message nerd: $e',
+      };
+    }
+  }
+
 }

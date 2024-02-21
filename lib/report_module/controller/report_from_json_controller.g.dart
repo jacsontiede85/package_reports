@@ -25,6 +25,22 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$configPaginaAtom =
+      Atom(name: 'ReportFromJSONControllerBase.configPagina', context: context);
+
+  @override
+  Map<String, dynamic> get configPagina {
+    _$configPaginaAtom.reportRead();
+    return super.configPagina;
+  }
+
+  @override
+  set configPagina(Map<String, dynamic> value) {
+    _$configPaginaAtom.reportWrite(value, super.configPagina, () {
+      super.configPagina = value;
+    });
+  }
+
   late final _$colunasAtom =
       Atom(name: 'ReportFromJSONControllerBase.colunas', context: context);
 
@@ -212,6 +228,7 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
   String toString() {
     return '''
 dados: ${dados},
+configPagina: ${configPagina},
 colunas: ${colunas},
 listaFiltrarLinhas: ${listaFiltrarLinhas},
 valorMarcadoNoFiltro: ${valorMarcadoNoFiltro},
