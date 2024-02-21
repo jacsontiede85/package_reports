@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/report_module/core/api_consumer.dart';
-import 'package:package_reports/report_module/core/filtros.dart';
+import 'package:package_reports/filtro_module/model/filtros.dart';
 import 'package:package_reports/report_module/model/filtrar_colunas_model.dart';
 part 'report_from_json_controller.g.dart';
 
