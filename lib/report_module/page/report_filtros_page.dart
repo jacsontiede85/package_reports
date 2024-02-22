@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 
 class FiltrosReport {
   FiltrosReport({
@@ -7,17 +8,11 @@ class FiltrosReport {
   }) {
     context = context;
     function = function;
-    filtros = IconButton(
-      icon: const Icon(
-        Icons.filter_alt_outlined,
-        color: Colors.white,
-      ),
-      onPressed: () {},
-    );
   }
   late BuildContext context;
   late Function function;
-  late Widget filtros;
+  FiltroController controlerFiltro = FiltroController(
+    mapaFiltrosWidget: {},
+  );
 
-  Widget get getFiltros => filtros;
 }

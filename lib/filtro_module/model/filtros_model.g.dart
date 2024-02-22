@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'filtro_controller.dart';
+part of 'filtros_model.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,27 +8,27 @@ part of 'filtro_controller.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$FiltroController on FiltroControllerBase, Store {
-  late final _$listaFiltrosAtom =
-      Atom(name: 'FiltroControllerBase.listaFiltros', context: context);
+mixin _$FiltrosModel on FiltrosModelBase, Store {
+  late final _$selecionadoAtom =
+      Atom(name: 'FiltrosModelBase.selecionado', context: context);
 
   @override
-  List<FiltrosModel> get listaFiltros {
-    _$listaFiltrosAtom.reportRead();
-    return super.listaFiltros;
+  bool get selecionado {
+    _$selecionadoAtom.reportRead();
+    return super.selecionado;
   }
 
   @override
-  set listaFiltros(List<FiltrosModel> value) {
-    _$listaFiltrosAtom.reportWrite(value, super.listaFiltros, () {
-      super.listaFiltros = value;
+  set selecionado(bool value) {
+    _$selecionadoAtom.reportWrite(value, super.selecionado, () {
+      super.selecionado = value;
     });
   }
 
   @override
   String toString() {
     return '''
-listaFiltros: ${listaFiltros}
+selecionado: ${selecionado}
     ''';
   }
 }
