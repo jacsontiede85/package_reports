@@ -13,13 +13,13 @@ mixin _$FiltroController on FiltroControllerBase, Store {
       Atom(name: 'FiltroControllerBase.listaFiltros', context: context);
 
   @override
-  List<FiltrosModel> get listaFiltros {
+  List<Map<int, List<FiltrosModel>>> get listaFiltros {
     _$listaFiltrosAtom.reportRead();
     return super.listaFiltros;
   }
 
   @override
-  set listaFiltros(List<FiltrosModel> value) {
+  set listaFiltros(List<Map<int, List<FiltrosModel>>> value) {
     _$listaFiltrosAtom.reportWrite(value, super.listaFiltros, () {
       super.listaFiltros = value;
     });

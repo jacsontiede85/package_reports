@@ -12,4 +12,10 @@ abstract class FiltrosModelBase with Store {
   @observable
   bool selecionado = false;
 
+  FiltrosModelBase.fromJson(Map<String, dynamic> json){
+    codigo = json['codigo'];
+    titulo = json['titulo'];
+    subtitulo = json['subtitulo'];
+  }
+
 }

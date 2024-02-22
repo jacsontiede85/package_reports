@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:package_reports/filtro_module/page/filtros_page.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/report_module/controller/report_to_xlsx_controller.dart';
@@ -121,6 +122,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               ),
             ),
             Wrap(
+              spacing: 10,
               children: [
                 Observer(
                   builder: (_) => Visibility(
@@ -143,9 +145,6 @@ class _ReportPageState extends State<ReportPage> with Rows {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
                 Observer(
                   builder: (_) => Visibility(
                     visible: (controller.dados.isNotEmpty && !controller.loading),
@@ -167,6 +166,32 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           )             
                         );
                       },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right:5),
+                  child: Observer(
+                    builder: (_) => Visibility(
+                      visible: (controller.dados.isNotEmpty && !controller.loading),
+                      child: IconButton.outlined(
+                        icon: Icon(
+                          Icons.filter_alt_outlined, 
+                          size: layout.isDesktop ? 20 : 15,
+                        ),
+                        color: widget.corTitulo ?? Colors.white,
+                        onPressed: () {
+                          wp.navigator(
+                            pagina: FiltrosReportPage(
+                              context: context,
+                              mapaFiltros: controller.configPagina['filtros'],
+                              indexPagina: controller.configPagina['indexPage'],
+                            ), 
+                            context: context, 
+                            layout: layout,
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),

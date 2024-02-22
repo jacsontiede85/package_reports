@@ -20,9 +20,8 @@ class Widgets{
     Function()? onTap, 
     bool isToShowFiltroNoMeio = false, 
     required dynamic layout, 
-    required dynamic theme
   }) async{
-    if(layout.mobile || layout.tablet){
+    if(1==1){
       await Navigator.push(
         context, 
         MaterialPageRoute(
@@ -70,7 +69,7 @@ class Widgets{
             ),
           );
           await showDialog<void>(
-            barrierColor: theme.themeDarkAtivo ? Colors.white.withOpacity(0.2) : Colors.black54.withOpacity(0.4),
+            barrierColor: Colors.black54.withOpacity(0.4),
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context)=> widgetContrucao

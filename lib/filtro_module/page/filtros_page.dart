@@ -1,17 +1,137 @@
 import 'package:flutter/material.dart';
+import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
+import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 
-class FiltrosPage extends StatefulWidget {
-  final Function functionAplicarFiltros;
-
-  const FiltrosPage({super.key, required this.functionAplicarFiltros,});
+class FiltrosReportPage extends StatefulWidget {
+  
+  final BuildContext context;
+  final Map<String, dynamic> mapaFiltros;
+  final int indexPagina;
+  
+  const FiltrosReportPage({
+    super.key,
+    required this.context,
+    required this.mapaFiltros,
+    required this.indexPagina,
+  });  
 
   @override
-  State<FiltrosPage> createState() => _FiltrosPageState();
+  State<FiltrosReportPage> createState() => _FiltrosReportPageState();
 }
 
-class _FiltrosPageState extends State<FiltrosPage> {
+class _FiltrosReportPageState extends State<FiltrosReportPage> {
+  
+  late FiltroController controllerFiltro = FiltroController(
+    mapaFiltrosWidget: widget.mapaFiltros,
+    indexPagina: widget.indexPagina
+  );
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(),
+      body: Center(
+        child: Column(
+          children: controllerFiltro.listaFiltrosParaConstruirTela.map((value) {
+            if(value.keys.first == widget.indexPagina){
+              return Visibility(
+                visible: value[widget.indexPagina]!.isVisivel,
+                child: cardFiltroGeral(
+                  context: context,
+                  filtrosDados: value[widget.indexPagina]!,
+                  onTap: () => controllerFiltro.funcaoBuscarDadosDeCadaFiltro(valor: value[widget.indexPagina]!),
+                ),
+              );              
+            }
+            else{
+              return Container();
+            }
+          }).toList(),
+        ),
+      ),
+    );
   }
 }
+
+  Widget card({required List<Widget> widgetList}) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: widgetList),
+        ),
+      ),
+    );
+  }
+
+  Widget cardFiltroGeral({
+    required BuildContext context, 
+    required FiltrosWidgetModel filtrosDados,
+    required void Function()? onTap,
+    // required Function functionGetDados, 
+    // required Function functionAtuaizarCadSelecionados, 
+    // required String codSelecionado, 
+    // required Function functionGetDadosTotal, 
+    // required List<Widget> selecWidgets,
+    dynamic theme,
+    bool isToShowFiltroNoMeio = false
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: card(
+        widgetList: [
+          Text(
+            filtrosDados.nome.toUpperCase(),
+            style: const TextStyle(
+              fontSize: 14.0, 
+              color: Colors.black, 
+              fontWeight: FontWeight.w600,
+            ),
+            textAlign: TextAlign.left,
+          ),
+          // subtitulo == null
+          //     ? const SizedBox(height: 0)
+          //     : Container(
+          //         alignment: Alignment.topLeft,
+          //         child: Row(
+          //           children: [
+          //             Expanded(
+          //               flex: 2,
+          //               child: Text(
+          //                 subtitulo,
+          //                 style: const TextStyle(
+          //                   fontSize: 9.0, 
+          //                   color: Colors.black,
+          //                 ),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          const SizedBox(
+            height: 5,
+          ),
+          Stack(
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
+                child: const Column(
+                  children: [
+                    Wrap(
+                      spacing: 2.0, 
+                      direction: Axis.horizontal, 
+                      children: [],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+

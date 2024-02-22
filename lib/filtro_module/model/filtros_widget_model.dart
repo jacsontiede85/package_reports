@@ -17,8 +17,12 @@ class FiltrosWidgetModel {
   });
 
   FiltrosWidgetModel.fromJson(Map<String, dynamic> json){
-    nome = json['NOME'];
-    isVisivel = json['EXIBIR'];
+    nome = json['nome'];
+    isVisivel = json['exibir'];
+    tipoWidget = json['tipo'];
+    funcaoPrincipal = json['funcao'];
+    bancoBuscarFiltros = json['banco'];
+    arquivoQuery = json['arquivoquery'];
   }
 
 }

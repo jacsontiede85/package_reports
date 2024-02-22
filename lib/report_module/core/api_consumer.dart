@@ -19,13 +19,13 @@ class API with Settings{
     String payload64 = base64Encode(utf8.encode(jsonEncode(payload)));
 
     //assinatura
-    var hmac = Hmac(sha256, 'Settings.secret'.codeUnits);
+    var hmac = Hmac(sha256, 'tisa098*'.codeUnits);
     var digest = hmac.convert("$header64.$payload64".codeUnits);
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
-
+    
     var res = await http.post(
-      Uri.parse(Settings.enderecoRepositorio),
+      Uri.parse("${Settings.enderecoRepositorio}repository/"),
       body: {
         'connection': banco,
         'token': token,
