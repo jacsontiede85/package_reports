@@ -98,7 +98,7 @@ abstract class ReportFromJSONControllerBase with Store {
       if(count == temp.length) key["isFiltered"] = true;
       else key["isFiltered"] = false;  
       
-  
+      if(searchString.isNotEmpty) filterList();
   
     }
   }
