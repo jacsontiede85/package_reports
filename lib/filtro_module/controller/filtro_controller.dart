@@ -35,9 +35,10 @@ abstract class FiltroControllerBase with Store {
     }); 
   }
 
-  funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor}) async {
+  funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required int indexFiltro}) async {
     try{
       loadingItensFiltors = true;
+      
       var response = await API().jwtSendJson(
         banco: valor.bancoBuscarFiltros,
         dados: {
@@ -48,7 +49,17 @@ abstract class FiltroControllerBase with Store {
       );
       List dados = jsonDecode(response);
       
-      listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();      
+      listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
+
+      for(FiltrosModel itens in listaFiltros){
+        for(FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados){
+          if(itens.codigo == itensSelecionados.codigo){
+            itens = itensSelecionados;
+            listaFiltros[listaFiltros.indexOf(itens)] = itens;
+          }
+        }
+      }
+
     }finally{
       loadingItensFiltors = false;
     }

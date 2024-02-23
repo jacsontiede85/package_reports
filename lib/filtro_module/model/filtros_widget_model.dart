@@ -9,7 +9,7 @@ class FiltrosWidgetModel {
   String tipoWidget = '';
   bool isVisivel = false;
 
-  List<FiltrosModel> itensSelecionados = [];
+  Set<FiltrosModel> itensSelecionados = {};
 
   FiltrosWidgetModel({
     this.nome = '',

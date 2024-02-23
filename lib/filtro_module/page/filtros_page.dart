@@ -47,7 +47,10 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                   context: context,
                   filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
                   onTap: () async {
-                    controllerFiltro.funcaoBuscarDadosDeCadaFiltro(valor: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!);
+                    controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
+                      valor:controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
+                      indexFiltro: index
+                    );
                       wp.navigator(
                         context: context,
                         pagina: ItensFiltro(

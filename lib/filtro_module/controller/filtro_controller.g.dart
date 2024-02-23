@@ -43,11 +43,28 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$loadingItensFiltorsAtom =
+      Atom(name: 'FiltroControllerBase.loadingItensFiltors', context: context);
+
+  @override
+  bool get loadingItensFiltors {
+    _$loadingItensFiltorsAtom.reportRead();
+    return super.loadingItensFiltors;
+  }
+
+  @override
+  set loadingItensFiltors(bool value) {
+    _$loadingItensFiltorsAtom.reportWrite(value, super.loadingItensFiltors, () {
+      super.loadingItensFiltors = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 listaFiltros: ${listaFiltros},
-listaFiltrosParaConstruirTela: ${listaFiltrosParaConstruirTela}
+listaFiltrosParaConstruirTela: ${listaFiltrosParaConstruirTela},
+loadingItensFiltors: ${loadingItensFiltors}
     ''';
   }
 }

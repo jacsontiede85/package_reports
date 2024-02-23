@@ -18,4 +18,9 @@ abstract class FiltrosModelBase with Store {
     subtitulo = json['subtitulo'];
   }
 
+  @override
+  bool operator == (other) => other is FiltrosModelBase && codigo == other.codigo;
+  
+  @override
+  int get hashCode => codigo.hashCode;
 }
