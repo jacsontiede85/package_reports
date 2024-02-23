@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
@@ -22,27 +21,56 @@ abstract class FiltroControllerBase with Store {
   late int indexPagina = 0;
 
   @observable
-  List<Map<int, List<FiltrosModel>>> listaFiltros = [];
+  List<FiltrosModel> listaFiltros = [];
 
+  @observable
   List<Map<int ,FiltrosWidgetModel>> listaFiltrosParaConstruirTela = [];
 
+  @observable
+  bool loadingItensFiltors = false;
+
   void getDadosCriarFiltros () async {
-    mapaFiltrosWidget.forEach((key, value) { 
+    mapaFiltrosWidget.forEach((key, value) {
       listaFiltrosParaConstruirTela.add({ indexPagina : FiltrosWidgetModel.fromJson(value)});
     }); 
   }
 
-  funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor}) async {
-    var response = await API().jwtSendJson(
-      banco: valor.bancoBuscarFiltros,
-      dados: {
-        "arquivo" : valor.arquivoQuery,
-        "function" : valor.funcaoPrincipal,
-        "matricula" : "3312",
+  funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required int indexFiltro}) async {
+    try{
+      loadingItensFiltors = true;
+      
+      var response = await API().jwtSendJson(
+        banco: valor.bancoBuscarFiltros,
+        dados: {
+          "arquivo" : valor.arquivoQuery,
+          "function" : valor.funcaoPrincipal,
+          "matricula" : "3312",
+        }
+      );
+      List dados = jsonDecode(response);
+      
+      listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
+
+      for(FiltrosModel itens in listaFiltros){
+        for(FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados){
+          if(itens.codigo == itensSelecionados.codigo){
+            itens = itensSelecionados;
+            listaFiltros[listaFiltros.indexOf(itens)] = itens;
+          }
+        }
       }
-    );
-    List dados = jsonDecode(response);
-    listaFiltros.add({ indexPagina : dados.map((e) => FiltrosModel.fromJson(e)).toList()});
+
+    }finally{
+      loadingItensFiltors = false;
+    }
+  }
+
+  adicionarItensSelecionado ({required int indexFiltro, required FiltrosModel itens}){
+    if(itens.selecionado){
+      listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados.add(itens);
+    }else{
+      listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados.remove(itens);
+    }
   }
 
 }

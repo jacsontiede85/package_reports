@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
+import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
+import 'package:package_reports/report_module/controller/layout_controller.dart';
+import 'package:package_reports/report_module/widget/widgets.dart';
 
 class FiltrosReportPage extends StatefulWidget {
   
@@ -26,27 +29,46 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
     indexPagina: widget.indexPagina
   );
 
+  Widgets wp = Widgets();
+  LayoutController layout = LayoutController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: Column(
-          children: controllerFiltro.listaFiltrosParaConstruirTela.map((value) {
-            if(value.keys.first == widget.indexPagina){
+        child: ListView.builder(
+          itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
+          itemBuilder: (context, index) {
+            if(controllerFiltro.listaFiltrosParaConstruirTela[index].keys.first == widget.indexPagina){
               return Visibility(
-                visible: value[widget.indexPagina]!.isVisivel,
+                visible: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!.isVisivel,
                 child: cardFiltroGeral(
                   context: context,
-                  filtrosDados: value[widget.indexPagina]!,
-                  onTap: () => controllerFiltro.funcaoBuscarDadosDeCadaFiltro(valor: value[widget.indexPagina]!),
+                  filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
+                  onTap: () async {
+                    controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
+                      valor:controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
+                      indexFiltro: index
+                    );
+                      wp.navigator(
+                        context: context,
+                        pagina: ItensFiltro(
+                          controller: controllerFiltro,
+                          indexDapagina: widget.indexPagina,
+                          indexDOFiltro: index,
+                        ),
+                        isToShowFiltroNoMeio: true,
+                        layout: layout
+                      );
+                  },
                 ),
               );              
             }
             else{
               return Container();
             }
-          }).toList(),
+          },
         ),
       ),
     );

@@ -1,3 +1,5 @@
+import 'package:package_reports/filtro_module/model/filtros_model.dart';
+
 class FiltrosWidgetModel {
 
   String nome = '';  
@@ -6,6 +8,8 @@ class FiltrosWidgetModel {
   String bancoBuscarFiltros = '';
   String tipoWidget = '';
   bool isVisivel = false;
+
+  Set<FiltrosModel> itensSelecionados = {};
 
   FiltrosWidgetModel({
     this.nome = '',
