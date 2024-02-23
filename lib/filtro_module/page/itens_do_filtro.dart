@@ -30,15 +30,15 @@ class ItensFiltro extends StatelessWidget {
         ),
       ),
       body: ListView.builder(
-        itemCount: controller.listaFiltros[0][indexDapagina]!.length,
+        itemCount: controller.listaFiltros.length,
         itemBuilder: (context, index) {
           return Observer(
             builder: (_) => CheckboxListTile(
-              value: controller.listaFiltros[0][indexDapagina]![index].selecionado,
+              value: controller.listaFiltros[index].selecionado,
               onChanged: (valor){
-                controller.listaFiltros[0][indexDapagina]![index].selecionado = !controller.listaFiltros[0][indexDapagina]![index].selecionado;
+                controller.listaFiltros[index].selecionado = !controller.listaFiltros[index].selecionado;
               },
-              title: Text(controller.listaFiltros[0][indexDapagina]![index].titulo),
+              title: Text(controller.listaFiltros[index].titulo),
               controlAffinity: ListTileControlAffinity.leading,
             ),
           );

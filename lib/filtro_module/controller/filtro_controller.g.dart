@@ -13,22 +13,41 @@ mixin _$FiltroController on FiltroControllerBase, Store {
       Atom(name: 'FiltroControllerBase.listaFiltros', context: context);
 
   @override
-  List<Map<int, List<FiltrosModel>>> get listaFiltros {
+  List<FiltrosModel> get listaFiltros {
     _$listaFiltrosAtom.reportRead();
     return super.listaFiltros;
   }
 
   @override
-  set listaFiltros(List<Map<int, List<FiltrosModel>>> value) {
+  set listaFiltros(List<FiltrosModel> value) {
     _$listaFiltrosAtom.reportWrite(value, super.listaFiltros, () {
       super.listaFiltros = value;
+    });
+  }
+
+  late final _$listaFiltrosParaConstruirTelaAtom = Atom(
+      name: 'FiltroControllerBase.listaFiltrosParaConstruirTela',
+      context: context);
+
+  @override
+  List<Map<int, FiltrosWidgetModel>> get listaFiltrosParaConstruirTela {
+    _$listaFiltrosParaConstruirTelaAtom.reportRead();
+    return super.listaFiltrosParaConstruirTela;
+  }
+
+  @override
+  set listaFiltrosParaConstruirTela(List<Map<int, FiltrosWidgetModel>> value) {
+    _$listaFiltrosParaConstruirTelaAtom
+        .reportWrite(value, super.listaFiltrosParaConstruirTela, () {
+      super.listaFiltrosParaConstruirTela = value;
     });
   }
 
   @override
   String toString() {
     return '''
-listaFiltros: ${listaFiltros}
+listaFiltros: ${listaFiltros},
+listaFiltrosParaConstruirTela: ${listaFiltrosParaConstruirTela}
     ''';
   }
 }

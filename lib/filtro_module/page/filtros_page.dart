@@ -30,7 +30,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
   );
 
   Widgets wp = Widgets();
-  final LayoutController layout = LayoutController();
+  LayoutController layout = LayoutController();
 
   @override
   Widget build(BuildContext context) {

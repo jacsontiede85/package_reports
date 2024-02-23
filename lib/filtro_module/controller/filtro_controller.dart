@@ -21,7 +21,7 @@ abstract class FiltroControllerBase with Store {
   late int indexPagina = 0;
 
   @observable
-  List<Map<int, List<FiltrosModel>>> listaFiltros = [];
+  List<FiltrosModel> listaFiltros = [];
 
   @observable
   List<Map<int ,FiltrosWidgetModel>> listaFiltrosParaConstruirTela = [];
@@ -43,7 +43,7 @@ abstract class FiltroControllerBase with Store {
     );
     List dados = jsonDecode(response);
     
-    listaFiltros.add({ indexPagina : dados.map((e) => FiltrosModel.fromJson(e)).toList()});
+    listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
   }
 
 }
