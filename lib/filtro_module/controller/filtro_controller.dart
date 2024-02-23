@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
@@ -24,6 +23,7 @@ abstract class FiltroControllerBase with Store {
   @observable
   List<Map<int, List<FiltrosModel>>> listaFiltros = [];
 
+  @observable
   List<Map<int ,FiltrosWidgetModel>> listaFiltrosParaConstruirTela = [];
 
   void getDadosCriarFiltros () async {
@@ -42,6 +42,7 @@ abstract class FiltroControllerBase with Store {
       }
     );
     List dados = jsonDecode(response);
+    
     listaFiltros.add({ indexPagina : dados.map((e) => FiltrosModel.fromJson(e)).toList()});
   }
 
