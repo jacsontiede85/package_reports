@@ -26,24 +26,40 @@ abstract class FiltroControllerBase with Store {
   @observable
   List<Map<int ,FiltrosWidgetModel>> listaFiltrosParaConstruirTela = [];
 
+  @observable
+  bool loadingItensFiltors = false;
+
   void getDadosCriarFiltros () async {
-    mapaFiltrosWidget.forEach((key, value) { 
+    mapaFiltrosWidget.forEach((key, value) {
       listaFiltrosParaConstruirTela.add({ indexPagina : FiltrosWidgetModel.fromJson(value)});
     }); 
   }
 
   funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor}) async {
-    var response = await API().jwtSendJson(
-      banco: valor.bancoBuscarFiltros,
-      dados: {
-        "arquivo" : valor.arquivoQuery,
-        "function" : valor.funcaoPrincipal,
-        "matricula" : "3312",
-      }
-    );
-    List dados = jsonDecode(response);
-    
-    listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
+    try{
+      loadingItensFiltors = true;
+      var response = await API().jwtSendJson(
+        banco: valor.bancoBuscarFiltros,
+        dados: {
+          "arquivo" : valor.arquivoQuery,
+          "function" : valor.funcaoPrincipal,
+          "matricula" : "3312",
+        }
+      );
+      List dados = jsonDecode(response);
+      
+      listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();      
+    }finally{
+      loadingItensFiltors = false;
+    }
+  }
+
+  adicionarItensSelecionado ({required int indexFiltro, required FiltrosModel itens}){
+    if(itens.selecionado){
+      listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados.add(itens);
+    }else{
+      listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados.remove(itens);
+    }
   }
 
 }
