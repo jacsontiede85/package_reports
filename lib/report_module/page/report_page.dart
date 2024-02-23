@@ -36,6 +36,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
   Widgets wp = Widgets();
   double _width = 0.0;
 
+  setStatee(Function fn){setState(() {fn();});}
+
   @override
   void initState() {
     super.initState();
@@ -117,6 +119,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
                         color: controller.mostrarBarraPesquisar ? widget.corTitulo?.withOpacity(0.7) : widget.corTitulo,
                       )
                     ),
+                    onChanged: (value) {
+                      controller.searchString = value;
+                      controller.filterList();
+                      setState(() {});
+                    },
                   ),
                 ),
               ),
@@ -147,7 +154,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 ),
                 Observer(
                   builder: (_) => Visibility(
-                    visible: (controller.dados.isNotEmpty && !controller.loading),
+                    visible: (controller.dadosFiltered().isNotEmpty && !controller.loading),
                     child: IconButton.outlined(
                       icon: Icon(
                         Icons.grid_on_outlined, 
@@ -173,7 +180,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   padding: const EdgeInsets.only(right:5),
                   child: Observer(
                     builder: (_) => Visibility(
-                      visible: (controller.dados.isNotEmpty && !controller.loading),
+                      visible: (controller.dadosFiltered().isNotEmpty && !controller.loading),
                       child: IconButton.outlined(
                         icon: Icon(
                           Icons.filter_alt_outlined, 
@@ -204,7 +211,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           child: Observer(
             builder: (_) => Stack(
               children: [
-                !controller.loading || controller.dados.isNotEmpty
+                !controller.loading || controller.dadosFiltered().isNotEmpty
                       ? 
                       ScrollConfiguration(
                         behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
@@ -262,7 +269,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          if(controller.dados.isEmpty)
+                                          if(controller.dadosFiltered().isEmpty)
                                             Text(
                                               'Não há dados para os filtros selecionados...',
                                               style: TextStyle(
@@ -281,7 +288,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                                 colunas(),
                                                 Observer(
                                                   builder: (_) => Visibility(
-                                                    visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dados.length <= 500,
+                                                    visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dadosFiltered().length <= 500,
                                                     child: Positioned(
                                                       top: 0,
                                                       left: controller.positionScroll,
@@ -294,8 +301,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                           ),
                                           
                                           // ROWS [DADOS]
-                                          if (controller.dados.isNotEmpty)
-                                            controller.dados.length > 500
+                                          if (controller.dadosFiltered().isNotEmpty)
+                                            controller.dadosFiltered().length > 500
                                                 ? Flexible(child: rowsBuilder())
                                                 : Flexible(
                                                     child: ScrollConfiguration(
@@ -350,7 +357,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                               rodape(),
                                               Observer(
                                                 builder: (_) => Visibility(
-                                                  visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dados.length <= 500,
+                                                  visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dadosFiltered().length <= 500,
                                                   child: Positioned(
                                                     top: 0,
                                                     left: controller.positionScroll,
@@ -404,6 +411,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 isTitle: true,
                 isSelected: element['isSelected'],
                 order: element['order'],
+                setStateRows: setStatee
               ),
             ),
           ),
@@ -431,6 +439,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             isTitle: true,
             isSelected: element['isSelected'],
             order: element['order'],
+            setStateRows: setStatee
           ),
         ),
       ],
@@ -438,16 +447,16 @@ class _ReportPageState extends State<ReportPage> with Rows {
   }
 
   Widget rowsBuilder() => ListView.builder(
-        itemCount: controller.dados.length,
+        itemCount: controller.dadosFiltered().length,
         physics: const BouncingScrollPhysics(),
         controller: controller.verticalScroll,
         itemBuilder: (BuildContext context, int index) {
-          var val = controller.dados[index];
-          List<Widget> row = [];
+          var val = controller.dadosFiltered()[index];
+          controller.row = [];
           val.forEach((key, value) {
             Type type = value.runtimeType;
             if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE'))
-              row.add(
+              controller.row.add(
                 rowTextFormatted(
                   width: controller.getWidthCol(
                     key: key,
@@ -457,27 +466,28 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   key: key,
                   type: type,
                   value: value,
-                  cor: controller.dados.indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
+                  cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
+                  setStateRows: setStatee
                 ),
               );
           });
           return Row(
-            children: row,
+            children: controller.row,
           );
         },
       );
 
-  Widget rows() => controller.dados.isEmpty
+  Widget rows() => controller.dadosFiltered().isEmpty
       ? const SizedBox()
       : Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            ...controller.dados.map((val) {
-              List<Widget> row = [];
+            ...controller.dadosFiltered().map((val) {
+              controller.row = [];
               val.forEach((key, value) {
                 Type type = value.runtimeType;
                 if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE'))
-                  row.add(
+                  controller.row.add(
                     rowTextFormatted(
                       width: controller.getWidthCol(key: key,),
                       height: 35,
@@ -485,27 +495,28 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       key: key,
                       type: type,
                       value: value,
-                      cor: controller.dados.indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
+                      cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
+                      setStateRows: setStatee
                     ),
                   );
               });
               return Row(
-                children: row,
+                children: controller.row,
               );
             }),
           ],
         );
 
-  Widget rowsElevated() => controller.dados.isEmpty
+  Widget rowsElevated() => controller.dadosFiltered().isEmpty
       ? const SizedBox()
       : Column(
           mainAxisSize: MainAxisSize.max,
           children: [
             if (controller.keyFreeze.isNotEmpty)
-              ...controller.dados.map((map) {
-                int index = controller.dados.indexOf(map);
-                List<Widget> row = [];
-                row.add(
+              ...controller.dadosFiltered().map((map) {
+                int index = controller.dadosFiltered().indexOf(map);
+                controller.row = [];
+                controller.row.add(
                   rowTextFormatted(
                     width: controller.getWidthCol(
                       key: controller.keyFreeze,
@@ -516,10 +527,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
                     type: String,
                     value: map[controller.keyFreeze],
                     cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
+                    setStateRows: setStatee
                   ),
                 );
                 return Row(
-                  children: row,
+                  children: controller.row,
                 );
               }),
           ],
@@ -544,18 +556,19 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 key: element['key'],
                 type: element['key'].toString().contains('__DONTSUM') ? String : element['type'],
                 value: controller.colunas.indexOf(element)==0
-                    ? '${controller.dados.length}'
+                    ? '${controller.dadosFiltered().length}'
                     : element['type']==String ? ''
                     : element['key'].toString().contains('__DONTSUM') ? ''
                     : element['vlrTotalDaColuna'],
                 isSelected: element['isSelected'],
                 isRodape: true,
                 order: element['order'],
+                setStateRows: setStatee
               ),
             )
           else
             ...controller.colunasRodapePerson.map((element) {
-              for(var value in controller.dados){
+              for(var value in controller.dadosFiltered()){
                 if(element['key'].toString().contains('__ISRODAPE')){
                   return rowTextComLable(
                     width:controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().contains('__ISRODAPE')).length,
@@ -586,10 +599,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
           controller: controller,
           key: controller.keyFreeze,
           type: controller.keyFreeze.toString().contains('__DONTSUM') ? String : element['type'],
-          value: '${controller.dados.length}',
+          value: '${controller.dadosFiltered().length}',
           isSelected: element['isSelected'],
           isRodape: true,
           order: element['order'],
+          setStateRows: setStatee
         ),
       ],
     );
@@ -668,7 +682,7 @@ mixin Rows {
     bool isSelected = false, 
     String order = 'asc', 
     Color? cor,
-    Function(bool?)? onChanged
+    required Function setStateRows
   }) {
     double fontSize = 12;
     return Stack(
@@ -749,8 +763,20 @@ mixin Rows {
                       builder: (_) => CheckboxListTile(
                         value: e.selecionado,
                         title: Text(e.valor.toString()),
-                        onChanged: (v){
+                        onChanged: (v) {
                           e.selecionado = !e.selecionado;
+                          setStateRows((){
+                            if(e.selecionado)
+                              controller.filtrosSelected.add(
+                                {
+                                  "coluna": e.coluna,
+                                  "valor": e.valor
+                                }
+                              );
+                            else controller.filtrosSelected.removeWhere((element) => element['coluna'] == e.coluna && element['valor'] == e.valor);
+                            controller.getTheSelectedFilteredRows();
+                            controller.dadosFiltered();
+                          });
                         },
                         controlAffinity: ListTileControlAffinity.leading,
                       ),

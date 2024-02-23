@@ -25,6 +25,22 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$searchStringAtom =
+      Atom(name: 'ReportFromJSONControllerBase.searchString', context: context);
+
+  @override
+  String get searchString {
+    _$searchStringAtom.reportRead();
+    return super.searchString;
+  }
+
+  @override
+  set searchString(String value) {
+    _$searchStringAtom.reportWrite(value, super.searchString, () {
+      super.searchString = value;
+    });
+  }
+
   late final _$configPaginaAtom =
       Atom(name: 'ReportFromJSONControllerBase.configPagina', context: context);
 
@@ -228,6 +244,7 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
   String toString() {
     return '''
 dados: ${dados},
+searchString: ${searchString},
 configPagina: ${configPagina},
 colunas: ${colunas},
 listaFiltrarLinhas: ${listaFiltrarLinhas},

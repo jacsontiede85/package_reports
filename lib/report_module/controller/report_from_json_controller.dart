@@ -32,6 +32,80 @@ abstract class ReportFromJSONControllerBase with Store {
   List dados = [];
 
   @observable
+  String searchString = "";
+
+  List dadosFiltered (){
+    try{
+      if(filtrosSelected.isNotEmpty || searchString.isNotEmpty)
+        return dados.where((element) => element['isFiltered']).toList();
+      else
+        return dados;
+    }catch(e){
+      return dados;
+    }
+  }
+
+  filterList(){
+    if(searchString.isNotEmpty)
+      if(filtrosSelected.isNotEmpty){
+        for(var key in dados){
+          if(key['isFiltered']){
+            int count = 0;
+            for(var value in key.values){
+              if(value.toString().toLowerCase().contains(searchString.toLowerCase())){
+                count++;
+                break;
+              }
+            }
+
+            if(count > 0) key["isFiltered"] = true;
+            else key["isFiltered"] = false; 
+          }
+        }
+      }else{
+        for(var key in dados){
+          int count = 0;
+          for(var value in key.values){
+            if(value.toString().toLowerCase().contains(searchString.toLowerCase())){
+              count++;
+              break;
+            }
+          }
+          
+          if(count > 0) key["isFiltered"] = true;
+          else key["isFiltered"] = false; 
+        }
+      }
+    else getTheSelectedFilteredRows();
+  }
+
+  getTheSelectedFilteredRows(){
+  
+    Set temp = {};
+    for (var element in filtrosSelected) {temp.add(element["coluna"]);}
+
+    for(var key in dados){
+      int count = 0;
+      for(var value in temp){
+        if(filtrosSelected.any((element) {
+          if(element["coluna"] == value) 
+          return element["valor"].toString() == key[value].toString();
+          else return false;
+        }))
+          count++;
+      }
+
+      if(count == temp.length) key["isFiltered"] = true;
+      else key["isFiltered"] = false;  
+      
+  
+  
+    }
+  }
+  
+  List<Map<String, dynamic>> filtrosSelected = [];
+
+  @observable
   Map<String, dynamic> configPagina = {};
 
   String keyFreeze = ''; // chave da coluna que será congelada (elevated)
@@ -136,9 +210,12 @@ abstract class ReportFromJSONControllerBase with Store {
     var response = await API().getDataReportApi(function: nomeFunction);
 
     dados = response[0];
+    
+
 
     List keys = [];
     for(var value in dados){
+      value['isFiltered'] = false;
       for(var key in value.keys)
         if(key.toString().contains('__LOCK'))
           keys.add(key);
@@ -207,10 +284,9 @@ abstract class ReportFromJSONControllerBase with Store {
     colunas.clear();
     colunasRodapePerson.clear();
     try {
-
+        
       for (var key in dados[0].keys) {
         if (key.toString().contains('__ISRODAPE')){
-
           colunasRodapePerson.add(
             ObservableMap.of({
               'key': key,
@@ -226,20 +302,18 @@ abstract class ReportFromJSONControllerBase with Store {
           
         }
         else if (!key.toString().contains('__INVISIBLE')){
-
-          colunas.add(
-            ObservableMap.of({
-              'key': key,
-              'nomeFormatado': getNomeColunaFormatado(text: key),
-              'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
-              'order': 'asc',
-              'isSelected': false,
-              'vlrTotalDaColuna': 0.0,
-              'widthCol': 0.0,
-              'selecionado' : colunaSelecionadaParaExportacao,
-            })
-          );
-          
+            colunas.add(
+              ObservableMap.of({
+                'key': key,
+                'nomeFormatado': getNomeColunaFormatado(text: key),
+                'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
+                'order': 'asc',
+                'isSelected': false,
+                'vlrTotalDaColuna': 0.0,
+                'widthCol': 0.0,
+                'selecionado' : colunaSelecionadaParaExportacao,
+              })
+            );
         }
 
       }
@@ -277,6 +351,7 @@ abstract class ReportFromJSONControllerBase with Store {
               }
             }
           }
+
       getWidthTable();
       setOrderBy(key: colunas[0]['key'], order: 'asc');
       getColunaElevada();
@@ -287,6 +362,8 @@ abstract class ReportFromJSONControllerBase with Store {
     notify();
     _startListener();
   }
+
+  List<Widget> row = [];
 
   //retornar o tipo de dados
   getType(value) {
@@ -453,5 +530,7 @@ abstract class ReportFromJSONControllerBase with Store {
 
     return listaFiltrarLinhas.where((mapa) => mapa.coluna == chave).toList();
   }
+
+
 
 }
