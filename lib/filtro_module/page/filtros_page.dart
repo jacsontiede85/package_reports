@@ -35,7 +35,17 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.black87,
+        title: wp.wpHeader(titulo: 'Filtros'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          color: const Color.fromRGBO(255, 255, 255, 1),
+          onPressed: (){
+            Navigator.of(context).pop(true);
+          }
+        ),
+      ),
       body: Center(
         child: ListView.builder(
           itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
@@ -56,7 +66,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                         pagina: ItensFiltro(
                           controller: controllerFiltro,
                           indexDapagina: widget.indexPagina,
-                          indexDOFiltro: index,
+                          indexDoFiltro: index,
                         ),
                         isToShowFiltroNoMeio: true,
                         layout: layout
