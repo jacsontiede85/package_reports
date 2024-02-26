@@ -121,7 +121,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                     ),
                     onChanged: (value) {
                       controller.searchString = value;
-                      controller.filterList();
+                      controller.filterListFromSearch();
                       setState(() {});
                     },
                   ),
@@ -269,15 +269,6 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          if(controller.dadosFiltered().isEmpty)
-                                            Text(
-                                              'Não há dados para os filtros selecionados...',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: layout.isDesktop ? 16 : 12,
-                                                fontWeight: FontWeight.w600
-                                              ),
-                                            ),
                                       
                                           // TITULO DE COLUNAS
                                           Container(
@@ -298,6 +289,16 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                                 ),
                                               ],
                                             ),
+                                          ),
+
+                                          if(controller.dadosFiltered().isEmpty)
+                                            Text(
+                                              'Não há dados para os filtros selecionados...',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: layout.isDesktop ? 16 : 12,
+                                                fontWeight: FontWeight.w600
+                                              ),
                                           ),
                                           
                                           // ROWS [DADOS]
@@ -336,6 +337,9 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                                       ),
                                                     ),
                                                   ),
+
+                                          if(controller.dadosFiltered().isEmpty)
+                                            const Expanded(child: SizedBox()),
                                           
                                           //deixar espaço para rodape
                                           if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
@@ -411,7 +415,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 isTitle: true,
                 isSelected: element['isSelected'],
                 order: element['order'],
-                setStateRows: setStatee
+                setStateRows: setStatee,
+                isFiltered: element['isFiltered'],
               ),
             ),
           ),
@@ -682,112 +687,133 @@ mixin Rows {
     bool isSelected = false, 
     String order = 'asc', 
     Color? cor,
+    bool isFiltered = false,
     required Function setStateRows
   }) {
     double fontSize = 12;
-    return Stack(
-      children: [
-        Container(
-          width: width * 1.10,
-          height: height,
-          decoration: BoxDecoration(
-            color: cor ?? (
-              isTitle ? Colors.grey[40] 
-              : isRodape ? Colors.black54
-              : Colors.grey[300]
-            ),
-            border: Border.all(color: Colors.purple.withOpacity(0.3), width: 0.25),
-          ),
-          padding: EdgeInsets.only(left: 5, right: 5, bottom: isRodape ? 5 : 0),
-          alignment: (isTitle)
-              ? Alignment.centerLeft
-                  : type != String
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-          child: Text(
-            type == DateTime
-                ? value.toString()
-                : type == String || isTitle
-                    ? Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString().replaceAll('_', ' '))
-                    : type == double
-                        ? Features.toFormatNumber(value.toString().replaceAll('_', ' '))
-                        : type == int
-                            ? Features.toFormatInteger(
-                                value.toString().replaceAll('_', ' '),
-                              )
-                            : value.toString(),
-            style: TextStyle(
-              fontWeight: isRodape || isTitle ? FontWeight.bold : FontWeight.normal,
-              fontSize: fontSize,
-              color: isRodape ? Colors.white : Colors.black,
-            ),
-          ),
-        ),
-    
-        if(isTitle && isSelected)
-          Positioned(
-            right: 30,
-            bottom: -10,
-            child: IconButton(
-              icon:Icon(
-                order=='asc' ? Icons.arrow_upward : Icons.arrow_downward,
-                size: 17,
-                color: Colors.blueAccent,
+    return MouseRegion(
+      // onEnter: isTitle ? (event) {
+      //   for (var element in controller.colunas) {
+      //     if(key == element["key"]){
+      //       element["isFiltered"] = true;
+      //       break;
+      //     }
+      //   }
+      // } : null,
+      // onExit: isTitle ? (event) {
+      //   for (var element in controller.colunas) {
+      //     if(key == element["key"]){
+      //       element["isFiltered"] = false;
+      //       break;
+      //     }
+      //   }
+      // } : null,
+      child: Stack(
+        children: [
+          Container(
+            width: width * 1.10,
+            height: height,
+            decoration: BoxDecoration(
+              color: cor ?? (
+                isTitle ? Colors.grey[40] 
+                : isRodape ? Colors.black54
+                : Colors.grey[300]
               ),
-              onPressed: null,
+              border: Border.all(color: Colors.purple.withOpacity(0.3), width: 0.25),
+            ),
+            padding: EdgeInsets.only(left: 5, right: 5, bottom: isRodape ? 5 : 0),
+            alignment: (isTitle)
+                ? Alignment.centerLeft
+                    : type != String
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+            child: Text(
+              type == DateTime
+                  ? value.toString()
+                  : type == String || isTitle
+                      ? Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString().replaceAll('_', ' '))
+                      : type == double
+                          ? Features.toFormatNumber(value.toString().replaceAll('_', ' '))
+                          : type == int
+                              ? Features.toFormatInteger(
+                                  value.toString().replaceAll('_', ' '),
+                                )
+                              : value.toString(),
+              style: TextStyle(
+                fontWeight: isRodape || isTitle ? FontWeight.bold : FontWeight.normal,
+                fontSize: fontSize,
+                color: isRodape ? Colors.white : Colors.black,
+              ),
             ),
           ),
-
-        if(isTitle)
-          Positioned(
-            right: 0,
-            bottom: -10,
-            child: PopupMenuButton(
-              tooltip: "",
-              splashRadius: 1,
-              position: PopupMenuPosition.under,
-              constraints: const BoxConstraints(
-                maxHeight: 400,
-                minWidth: 90,
+      
+          if(isTitle && isSelected)
+            Positioned(
+              left: 0,
+              bottom: -10,
+              child: IconButton(
+                icon:Icon(
+                  order=='asc' ? Icons.arrow_upward : Icons.arrow_downward,
+                  size: 17,
+                  color: Colors.blueAccent,
+                ),
+                onPressed: null,
               ),
-              icon: const Icon(
-                Icons.arrow_drop_down_outlined,
-                size: 15,
-                color: Colors.blueAccent,
-              ),
-              itemBuilder: (context) {
-                return controller.createlistaFiltrarLinhas(chave: key).map((e){
-                  return PopupMenuItem(
-                    padding: EdgeInsets.zero,
-                    child: Observer(
-                      builder: (_) => CheckboxListTile(
-                        value: e.selecionado,
-                        title: Text(e.valor.toString()),
-                        onChanged: (v) {
-                          e.selecionado = !e.selecionado;
-                          setStateRows((){
-                            if(e.selecionado)
-                              controller.filtrosSelected.add(
-                                {
-                                  "coluna": e.coluna,
-                                  "valor": e.valor
-                                }
-                              );
-                            else controller.filtrosSelected.removeWhere((element) => element['coluna'] == e.coluna && element['valor'] == e.valor);
-                            controller.getTheSelectedFilteredRows();
-                            controller.dadosFiltered();
-                          });
-                        },
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                    )
-                  );
-                }).toList();
-              },
             ),
-          )
-
-      ],
+      
+          if(isTitle)
+            Positioned(
+              right: 0,
+              bottom: -10,
+              child: PopupMenuButton(
+                tooltip: "",
+                splashRadius: 1,
+                position: PopupMenuPosition.under,
+                constraints: const BoxConstraints(
+                  maxHeight: 400,
+                  minWidth: 90,
+                ),
+                icon: const Icon(
+                  Icons.arrow_drop_down_outlined,
+                  size: 15,
+                  color: Colors.blueAccent,
+                ),
+                itemBuilder: (context) {
+                  return controller.createlistaFiltrarLinhas(chave: key).map((e){
+                    return PopupMenuItem(
+                      padding: EdgeInsets.zero,
+                      child: Observer(
+                        builder: (_) => CheckboxListTile(
+                          value: e.selecionado,
+                          title: Text(e.valor.toString()),
+                          onChanged: (v) {
+                            e.selecionado = !e.selecionado;
+                            if(e.selecionado) controller.colunasFiltradas.add(e.coluna);
+                            else controller.colunasFiltradas.removeWhere((element) => element == e.coluna);
+                            setStateRows((){
+                              if(e.selecionado)
+                                controller.filtrosSelected.add(
+                                  {
+                                    "coluna": e.coluna,
+                                    "valor": e.valor
+                                  }
+                                );
+                              else controller.filtrosSelected.removeWhere((element) => element['coluna'] == e.coluna && element['valor'] == e.valor);
+                              controller.getTheSelectedFilteredRows();
+                              controller.dadosFiltered();
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
+                        ),
+                      )
+                    );
+                  }).toList();
+                },
+              ),
+            )
+      
+        ],
+      ),
     );
   }
 
