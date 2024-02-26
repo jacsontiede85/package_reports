@@ -59,12 +59,46 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$dtinicioAtom =
+      Atom(name: 'FiltroControllerBase.dtinicio', context: context);
+
+  @override
+  String get dtinicio {
+    _$dtinicioAtom.reportRead();
+    return super.dtinicio;
+  }
+
+  @override
+  set dtinicio(String value) {
+    _$dtinicioAtom.reportWrite(value, super.dtinicio, () {
+      super.dtinicio = value;
+    });
+  }
+
+  late final _$dtfimAtom =
+      Atom(name: 'FiltroControllerBase.dtfim', context: context);
+
+  @override
+  String get dtfim {
+    _$dtfimAtom.reportRead();
+    return super.dtfim;
+  }
+
+  @override
+  set dtfim(String value) {
+    _$dtfimAtom.reportWrite(value, super.dtfim, () {
+      super.dtfim = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 listaFiltros: ${listaFiltros},
 listaFiltrosParaConstruirTela: ${listaFiltrosParaConstruirTela},
-loadingItensFiltors: ${loadingItensFiltors}
+loadingItensFiltors: ${loadingItensFiltors},
+dtinicio: ${dtinicio},
+dtfim: ${dtfim}
     ''';
   }
 }

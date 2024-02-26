@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 
 class ItensFiltro extends StatelessWidget {
@@ -95,8 +96,11 @@ class ItensFiltro extends StatelessWidget {
       body: Observer(
         builder: (_) => Visibility(
           visible: !controller.loadingItensFiltors,
-          replacement: const Center(
-            child: CircularProgressIndicator(),
+          replacement: Center(
+            child: LoadingAnimationWidget.halfTriangleDot(
+              color: const Color(0xFFEE4E4E),
+              size: 40,
+            ),
           ),
           child: ListView.builder(
             itemCount: controller.listaFiltros.length,

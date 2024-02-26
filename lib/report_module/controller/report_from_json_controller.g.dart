@@ -41,6 +41,38 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$isFilterVisibleAtom = Atom(
+      name: 'ReportFromJSONControllerBase.isFilterVisible', context: context);
+
+  @override
+  bool get isFilterVisible {
+    _$isFilterVisibleAtom.reportRead();
+    return super.isFilterVisible;
+  }
+
+  @override
+  set isFilterVisible(bool value) {
+    _$isFilterVisibleAtom.reportWrite(value, super.isFilterVisible, () {
+      super.isFilterVisible = value;
+    });
+  }
+
+  late final _$colunasFiltradasAtom = Atom(
+      name: 'ReportFromJSONControllerBase.colunasFiltradas', context: context);
+
+  @override
+  Set<String> get colunasFiltradas {
+    _$colunasFiltradasAtom.reportRead();
+    return super.colunasFiltradas;
+  }
+
+  @override
+  set colunasFiltradas(Set<String> value) {
+    _$colunasFiltradasAtom.reportWrite(value, super.colunasFiltradas, () {
+      super.colunasFiltradas = value;
+    });
+  }
+
   late final _$configPaginaAtom =
       Atom(name: 'ReportFromJSONControllerBase.configPagina', context: context);
 
@@ -245,6 +277,8 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     return '''
 dados: ${dados},
 searchString: ${searchString},
+isFilterVisible: ${isFilterVisible},
+colunasFiltradas: ${colunasFiltradas},
 configPagina: ${configPagina},
 colunas: ${colunas},
 listaFiltrarLinhas: ${listaFiltrarLinhas},

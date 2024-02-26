@@ -64,28 +64,27 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
           itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
           itemBuilder: (context, index) {
             if(controllerFiltro.listaFiltrosParaConstruirTela[index].keys.first == widget.indexPagina){
-              return Visibility(
-                visible: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!.isVisivel,
-                child: cardFiltroGeral(
-                  context: context,
-                  filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
-                  onTap: () async {
-                    controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
-                      valor:controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
-                      indexFiltro: index
+              return switchQualTipoDeFiltroExibir(
+                context: context,
+                filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
+                dataInicio: controllerFiltro.dtinicio,
+                dataFim: controllerFiltro.dtfim,
+                onTap: () async {
+                  controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
+                    valor:controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
+                    indexFiltro: index
+                  );
+                    wp.navigator(
+                      context: context,
+                      pagina: ItensFiltro(
+                        controller: controllerFiltro,
+                        indexDapagina: widget.indexPagina,
+                        indexDoFiltro: index,
+                      ),
+                      isToShowFiltroNoMeio: true,
+                      layout: layout
                     );
-                      wp.navigator(
-                        context: context,
-                        pagina: ItensFiltro(
-                          controller: controllerFiltro,
-                          indexDapagina: widget.indexPagina,
-                          indexDoFiltro: index,
-                        ),
-                        isToShowFiltroNoMeio: true,
-                        layout: layout
-                      );
-                  },
-                ),
+                },
               );              
             }
             else{
@@ -104,9 +103,62 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.start, children: widgetList),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start, 
+            children: widgetList,
+          ),
         ),
       ),
+    );
+  }
+
+  Widget selecaoDePeriodo ({
+    required FiltrosWidgetModel filtrosDados,
+    required BuildContext context,
+    required String dataInicio,
+    required String dataFim
+  }){
+    return card(
+      widgetList: [
+        Text(
+          filtrosDados.nome.toUpperCase(),
+          style: const TextStyle(
+            fontSize: 14.0, 
+            color: Colors.black, 
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.left,
+        ),
+        ButtonBar(
+          alignment: MainAxisAlignment.start, 
+          mainAxisSize: MainAxisSize.max,
+          buttonPadding: const EdgeInsets.all(10),
+          children: [
+            TextButton.icon(
+              icon: const Icon(Icons.calendar_today),
+              label: Text(
+                dataInicio,
+                style: const TextStyle(fontSize: 17),
+              ),
+              onPressed: () {},
+            ),
+            TextButton.icon(
+              icon: const Icon(Icons.calendar_today),
+              label: Text(
+                dataFim,
+                style: const TextStyle(fontSize: 17),
+              ),
+              onPressed: () {},
+            ),
+            PopupMenuButton(
+              itemBuilder: (context) {
+                return [const PopupMenuItem(child: Text("Datas"))];
+              },
+            )
+          ],
+        ),
+      ]
     );
   }
 
@@ -180,3 +232,24 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
     );
   }
 
+
+  Widget switchQualTipoDeFiltroExibir ({
+    required BuildContext context,
+    required FiltrosWidgetModel filtrosDados,
+    required void Function()? onTap,
+    required String dataInicio,
+    required String dataFim
+  }){
+    Widget retornoFuncao = const SizedBox();
+    switch(filtrosDados.tipoWidget){
+      case "checkbox" :
+      retornoFuncao = cardFiltroGeral(context: context, filtrosDados: filtrosDados, onTap: onTap);
+      break;
+
+      case "datapicker" : 
+      retornoFuncao = selecaoDePeriodo(filtrosDados: filtrosDados, context: context, dataFim: dataInicio, dataInicio: dataFim);
+      break;
+
+    }
+    return retornoFuncao;
+  }

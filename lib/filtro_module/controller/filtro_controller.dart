@@ -31,6 +31,9 @@ abstract class FiltroControllerBase with Store {
   @observable
   bool loadingItensFiltors = false;
 
+  @observable
+  String dtinicio = '', dtfim = '';
+
   void getDadosCriarFiltros () async {
     mapaFiltrosWidget.forEach((key, value) {
       listaFiltrosParaConstruirTela.add({ indexPagina : FiltrosWidgetModel.fromJson(value, key)});
@@ -79,11 +82,12 @@ abstract class FiltroControllerBase with Store {
     Map<String, dynamic> novoBody = {};
 
     for(Map<int, FiltrosWidgetModel> valores in listaFiltrosParaConstruirTela){
-      novoBody .addAll(valores[indexPagina]!.toJsonItensSelecionados());
+      novoBody.addAll(valores[indexPagina]!.toJsonItensSelecionados());
     }
     controllerReports.body = novoBody;
-    
     // await controllerReports.getDados();
   }
+
+
 
 }

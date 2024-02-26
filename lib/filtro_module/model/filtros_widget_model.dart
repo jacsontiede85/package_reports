@@ -8,7 +8,6 @@ class FiltrosWidgetModel {
   String funcaoPrincipal = '';
   String bancoBuscarFiltros = '';
   String tipoWidget = '';
-  bool isVisivel = false;
 
   Set<FiltrosModel> itensSelecionados = {};
 
@@ -19,17 +18,15 @@ class FiltrosWidgetModel {
     this.funcaoPrincipal = '',
     this.bancoBuscarFiltros = '',
     this.tipoWidget = '',
-    this.isVisivel = false,
   });
 
   FiltrosWidgetModel.fromJson(Map<String, dynamic> json, String key){
     tipoFiltro = key;
     nome = json['nome'];
-    isVisivel = json['exibir'];
     tipoWidget = json['tipo'];
-    funcaoPrincipal = json['funcao'];
-    bancoBuscarFiltros = json['banco'];
-    arquivoQuery = json['arquivoquery'];
+    funcaoPrincipal = json['funcao'] ?? '';
+    bancoBuscarFiltros = json['banco'] ?? '';
+    arquivoQuery = json['arquivoquery'] ?? '';
   }
 
   Map<String, List<Map<String, dynamic>>> toJsonItensSelecionados() {
@@ -40,7 +37,7 @@ class FiltrosWidgetModel {
       json.add(item.toJson());
       mapItensSelecionados.addAll({ tipoFiltro: json});
     }
-    
+
     return mapItensSelecionados;
   }
 
