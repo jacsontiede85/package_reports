@@ -34,76 +34,13 @@ abstract class ReportFromJSONControllerBase with Store {
   @observable
   String searchString = "";
 
-  List dadosFiltered (){
-    try{
-      if(filtrosSelected.isNotEmpty || searchString.isNotEmpty)
-        return dados.where((element) => element['isFiltered']).toList();
-      else
-        return dados;
-    }catch(e){
-      return dados;
-    }
-  }
-
-  filterList(){
-    if(searchString.isNotEmpty)
-      if(filtrosSelected.isNotEmpty){
-        for(var key in dados){
-          if(key['isFiltered']){
-            int count = 0;
-            for(var value in key.values){
-              if(value.toString().toLowerCase().contains(searchString.toLowerCase())){
-                count++;
-                break;
-              }
-            }
-
-            if(count > 0) key["isFiltered"] = true;
-            else key["isFiltered"] = false; 
-          }
-        }
-      }else{
-        for(var key in dados){
-          int count = 0;
-          for(var value in key.values){
-            if(value.toString().toLowerCase().contains(searchString.toLowerCase())){
-              count++;
-              break;
-            }
-          }
-          
-          if(count > 0) key["isFiltered"] = true;
-          else key["isFiltered"] = false; 
-        }
-      }
-    else getTheSelectedFilteredRows();
-  }
-
-  getTheSelectedFilteredRows(){
-  
-    Set temp = {};
-    for (var element in filtrosSelected) {temp.add(element["coluna"]);}
-
-    for(var key in dados){
-      int count = 0;
-      for(var value in temp){
-        if(filtrosSelected.any((element) {
-          if(element["coluna"] == value) 
-          return element["valor"].toString() == key[value].toString();
-          else return false;
-        }))
-          count++;
-      }
-
-      if(count == temp.length) key["isFiltered"] = true;
-      else key["isFiltered"] = false;  
-      
-      if(searchString.isNotEmpty) filterList();
-  
-    }
-  }
+  @observable
+  bool isFilterVisible = false;
   
   List<Map<String, dynamic>> filtrosSelected = [];
+
+  @observable
+  Set<String> colunasFiltradas = {};
 
   @observable
   Map<String, dynamic> configPagina = {};
@@ -207,6 +144,8 @@ abstract class ReportFromJSONControllerBase with Store {
     if (_listenerStarted) _removeListener();
     loading = true;
     dados = [];
+    filtrosSelected = [];
+    colunasFiltradas = {};
     var response = await API().getDataReportApi(function: nomeFunction);
 
     dados = response[0];
@@ -312,6 +251,7 @@ abstract class ReportFromJSONControllerBase with Store {
                 'vlrTotalDaColuna': 0.0,
                 'widthCol': 0.0,
                 'selecionado' : colunaSelecionadaParaExportacao,
+                'isFiltered': false
               })
             );
         }
@@ -531,6 +471,101 @@ abstract class ReportFromJSONControllerBase with Store {
     return listaFiltrarLinhas.where((mapa) => mapa.coluna == chave).toList();
   }
 
+  
 
+  //inicio filtro de das colunas e da barra de pesquisa
+  List dadosFiltered (){
+    try{
+      if(filtrosSelected.isNotEmpty || searchString.isNotEmpty)
+        return dados.where((element) => element['isFiltered']).toList();
+      else
+        return dados;
+    }catch(e){
+      return dados;
+    }
+  }
+
+  filterListFromSearch(){
+    if(searchString.isNotEmpty)
+      if(filtrosSelected.isNotEmpty){
+        if(dados.any((element) => element['isFiltered']))
+          for(var key in dados){
+            if(key['isFiltered']){
+              int count = 0;
+              for(var value in key.values){
+                if(value.toString().toLowerCase().contains(searchString.toLowerCase())){
+                  count++;
+                  break;
+                }
+              }
+              if(count > 0) key["isFiltered"] = true;
+              else key["isFiltered"] = false; 
+            }
+          }
+        else getTheSelectedFilteredRows();
+      }else{
+        for(var key in dados){
+          int count = 0;
+          for(var value in key.values){
+            if(value.toString().toLowerCase().contains(searchString.toLowerCase())){
+              count++;
+              break;
+            }
+          }
+          if(count > 0) key["isFiltered"] = true;
+          else key["isFiltered"] = false; 
+        }
+      }
+    else getTheSelectedFilteredRows();
+
+
+      for (var col in colunas){
+        col['vlrTotalDaColuna'] = 0; 
+        for (var row in dados)
+          for (var key in row.keys)
+            if (key == col['key']) {
+              if (col['type'] != String) col['vlrTotalDaColuna'] += row['isFiltered'] ? row[key] : 0;
+            }
+
+        for(var value in colunasFiltradas)
+          if(col["key"] == value) col["isFiltered"] = true;
+          else col["isFiltered"] = false;
+      }
+  }
+
+  getTheSelectedFilteredRows(){
+    Set temp = {};
+    for (var element in filtrosSelected) {temp.add(element["coluna"]);}
+
+    for(var key in dados){
+      int count = 0;
+      for(var value in temp){
+        if(filtrosSelected.any((element) {
+          if(element["coluna"] == value) 
+          return element["valor"].toString() == key[value].toString();
+          else return false;
+        }))
+          count++;
+      }
+
+      if(count == temp.length) key["isFiltered"] = true;
+      else key["isFiltered"] = false;  
+      
+      if(searchString.isNotEmpty) filterListFromSearch();
+    }
+
+      for (var col in colunas){
+        col['vlrTotalDaColuna'] = 0; 
+        for (var row in dados)
+          for (var key in row.keys)
+            if (key == col['key']) {
+              if (col['type'] != String) col['vlrTotalDaColuna'] += row['isFiltered'] ? row[key] : 0;
+            }
+
+        for(var value in colunasFiltradas)
+          if(col["key"] == value) col["isFiltered"] = true;
+          else col["isFiltered"] = false;
+      }
+  }
 
 }
