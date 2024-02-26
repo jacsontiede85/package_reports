@@ -25,19 +25,35 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
-  late final _$searchStringAtom =
-      Atom(name: 'ReportFromJSONControllerBase.searchString', context: context);
+  late final _$isFilterVisibleAtom = Atom(
+      name: 'ReportFromJSONControllerBase.isFilterVisible', context: context);
 
   @override
-  String get searchString {
-    _$searchStringAtom.reportRead();
-    return super.searchString;
+  bool get isFilterVisible {
+    _$isFilterVisibleAtom.reportRead();
+    return super.isFilterVisible;
   }
 
   @override
-  set searchString(String value) {
-    _$searchStringAtom.reportWrite(value, super.searchString, () {
-      super.searchString = value;
+  set isFilterVisible(bool value) {
+    _$isFilterVisibleAtom.reportWrite(value, super.isFilterVisible, () {
+      super.isFilterVisible = value;
+    });
+  }
+
+  late final _$colunasFiltradasAtom = Atom(
+      name: 'ReportFromJSONControllerBase.colunasFiltradas', context: context);
+
+  @override
+  Set<String> get colunasFiltradas {
+    _$colunasFiltradasAtom.reportRead();
+    return super.colunasFiltradas;
+  }
+
+  @override
+  set colunasFiltradas(Set<String> value) {
+    _$colunasFiltradasAtom.reportWrite(value, super.colunasFiltradas, () {
+      super.colunasFiltradas = value;
     });
   }
 
@@ -244,7 +260,8 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
   String toString() {
     return '''
 dados: ${dados},
-searchString: ${searchString},
+isFilterVisible: ${isFilterVisible},
+colunasFiltradas: ${colunasFiltradas},
 configPagina: ${configPagina},
 colunas: ${colunas},
 listaFiltrarLinhas: ${listaFiltrarLinhas},

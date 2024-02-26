@@ -86,6 +86,22 @@ class _ReportPageState extends State<ReportPage> with Rows {
             ),
           ),
           actions: [
+            Visibility(
+              visible: controller.colunasFiltradas.isNotEmpty || controller.searchString.text.isNotEmpty,
+              child: InkWell(
+                onTap: () {
+                  controller.clearFiltros();
+                  setState(() {});
+                },
+                child: const Row(
+                  children: [
+                    Icon(Icons.close, color: Colors.red,),
+                    Text("Limpar Filtros", style: TextStyle(color: Colors.white),)
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 30,),
             Observer(
               builder: (_) => Padding(
                 padding: const EdgeInsets.only(right: 10),
@@ -95,6 +111,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.all(5),
                   child: SearchBar(
+                    controller: controller.searchString,
                     hintText: 'Pesquisar',
                     elevation: const MaterialStatePropertyAll(0),
                     side: const MaterialStatePropertyAll(BorderSide(color: Colors.white, width: 0.25),),
@@ -120,7 +137,6 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       )
                     ),
                     onChanged: (value) {
-                      controller.searchString = value;
                       controller.filterListFromSearch();
                       setState(() {});
                     },
@@ -304,40 +320,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                           
                                           // ROWS [DADOS]
                                           if (controller.dadosFiltered().isNotEmpty)
-                                            controller.dadosFiltered().length > 500
-                                                ? Flexible(child: rowsBuilder())
-                                                : Flexible(
-                                                    child: ScrollConfiguration(
-                                                      behavior: ScrollConfiguration.of(context).copyWith(
-                                                        scrollbars: false,
-                                                        dragDevices: {
-                                                          PointerDeviceKind.touch,
-                                                          PointerDeviceKind.mouse,
-                                                        }
-                                                      ),
-                                                      child: ListView(
-                                                        physics: const BouncingScrollPhysics(),
-                                                        controller: controller.verticalScroll,
-                                                        children: [
-                                                          Stack(
-                                                            children: [
-                                                              rows(),
-                                                              Observer(
-                                                                builder: (_) => Visibility(
-                                                                  visible: controller.positionScroll > 200 && controller.visibleColElevated,
-                                                                  child: Positioned(
-                                                                    top: 0,
-                                                                    left: controller.positionScroll,
-                                                                    child: rowsElevated(),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
+                                            Flexible(child: rowsBuilder()),
 
                                           if(controller.dadosFiltered().isEmpty)
                                             const Expanded(child: SizedBox()),
@@ -419,7 +402,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 setStateRows: setStatee,
                 isFiltered: element['isFiltered'],
               ),
-            ),
+            )
           ),
       ],
     );
@@ -461,7 +444,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           controller.row = [];
           val.forEach((key, value) {
             Type type = value.runtimeType;
-            if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE'))
+            if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
               controller.row.add(
                 rowTextFormatted(
                   width: controller.getWidthCol(
@@ -474,14 +457,42 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   value: value,
                   cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
                   setStateRows: setStatee
-                ),
+                )
               );
           });
-          return Row(
-            children: controller.row,
+          return Stack(
+            children: [
+              Row(
+                children: controller.row,
+              ),
+              
+               Observer(
+                builder: (_) => Visibility(
+                  visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                  child: Positioned(
+                    top: 0,
+                    left: controller.positionScroll,
+                    child: rowTextFormatted(
+                      width: controller.getWidthCol(
+                        key: controller.keyFreeze,
+                      ),
+                      height: 35,
+                      controller: controller,
+                      key: controller.keyFreeze,
+                      type: String,
+                      value: val[controller.keyFreeze],
+                      cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
+                      setStateRows: setStatee
+                    ),
+                  ),
+                ),
+              ),
+
+            ],
           );
         },
       );
+
 
   Widget rows() => controller.dadosFiltered().isEmpty
       ? const SizedBox()
@@ -492,7 +503,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               controller.row = [];
               val.forEach((key, value) {
                 Type type = value.runtimeType;
-                if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE'))
+                if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
                   controller.row.add(
                     rowTextFormatted(
                       width: controller.getWidthCol(key: key,),
@@ -692,129 +703,110 @@ mixin Rows {
     required Function setStateRows
   }) {
     double fontSize = 12;
-    return MouseRegion(
-      // onEnter: isTitle ? (event) {
-      //   for (var element in controller.colunas) {
-      //     if(key == element["key"]){
-      //       element["isFiltered"] = true;
-      //       break;
-      //     }
-      //   }
-      // } : null,
-      // onExit: isTitle ? (event) {
-      //   for (var element in controller.colunas) {
-      //     if(key == element["key"]){
-      //       element["isFiltered"] = false;
-      //       break;
-      //     }
-      //   }
-      // } : null,
-      child: Stack(
-        children: [
-          Container(
-            width: width * 1.10,
-            height: height,
-            decoration: BoxDecoration(
-              color: cor ?? (
-                isTitle ? Colors.grey[40] 
-                : isRodape ? Colors.black54
-                : Colors.grey[300]
-              ),
-              border: Border.all(color: Colors.purple.withOpacity(0.3), width: 0.25),
+    return Stack(
+      children: [
+        Container(
+          width: width * 1.10,
+          height: height,
+          decoration: BoxDecoration(
+            color: cor ?? (
+              isTitle ? Colors.grey[40] 
+              : isRodape ? Colors.black54
+              : Colors.grey[300]
             ),
-            padding: EdgeInsets.only(left: 5, right: 5, bottom: isRodape ? 5 : 0),
-            alignment: (isTitle)
-                ? Alignment.centerLeft
-                    : type != String
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-            child: Text(
-              type == DateTime
-                  ? value.toString()
-                  : type == String || isTitle
-                      ? Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString().replaceAll('_', ' '))
-                      : type == double
-                          ? Features.toFormatNumber(value.toString().replaceAll('_', ' '))
-                          : type == int
-                              ? Features.toFormatInteger(
-                                  value.toString().replaceAll('_', ' '),
-                                )
-                              : value.toString(),
-              style: TextStyle(
-                fontWeight: isRodape || isTitle ? FontWeight.bold : FontWeight.normal,
-                fontSize: fontSize,
-                color: isRodape ? Colors.white : Colors.black,
-              ),
+            border: Border.all(color: Colors.purple.withOpacity(0.3), width: 0.25),
+          ),
+          padding: EdgeInsets.only(left: 5, right: 5, bottom: isRodape ? 5 : 0),
+          alignment: (isTitle)
+              ? Alignment.centerLeft
+                  : type != String
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+          child: Text(
+            type == DateTime
+                ? value.toString()
+                : type == String || isTitle
+                    ? Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString().replaceAll('_', ' '))
+                    : type == double
+                        ? Features.toFormatNumber(value.toString().replaceAll('_', ' '))
+                        : type == int
+                            ? Features.toFormatInteger(
+                                value.toString().replaceAll('_', ' '),
+                              )
+                            : value.toString(),
+            style: TextStyle(
+              fontWeight: isRodape || isTitle ? FontWeight.bold : FontWeight.normal,
+              fontSize: fontSize,
+              color: isRodape ? Colors.white : Colors.black,
             ),
           ),
-      
-          if(isTitle && isSelected)
-            Positioned(
-              left: 0,
-              bottom: -10,
-              child: IconButton(
-                icon:Icon(
-                  order=='asc' ? Icons.arrow_upward : Icons.arrow_downward,
-                  size: 17,
-                  color: Colors.blueAccent,
-                ),
-                onPressed: null,
+        ),
+    
+        if(isTitle && isSelected)
+          Positioned(
+            left: 0,
+            bottom: -10,
+            child: IconButton(
+              icon:Icon(
+                order=='asc' ? Icons.arrow_upward : Icons.arrow_downward,
+                size: 17,
+                color: Colors.blueAccent,
               ),
+              onPressed: null,
             ),
-      
-          if(isTitle)
-            Positioned(
-              right: 0,
-              bottom: -10,
-              child: PopupMenuButton(
-                tooltip: "",
-                splashRadius: 1,
-                position: PopupMenuPosition.under,
-                constraints: const BoxConstraints(
-                  maxHeight: 400,
-                  minWidth: 90,
-                ),
-                icon: const Icon(
-                  Icons.arrow_drop_down_outlined,
-                  size: 15,
-                  color: Colors.blueAccent,
-                ),
-                itemBuilder: (context) {
-                  return controller.createlistaFiltrarLinhas(chave: key).map((e){
-                    return PopupMenuItem(
-                      padding: EdgeInsets.zero,
-                      child: Observer(
-                        builder: (_) => CheckboxListTile(
-                          value: e.selecionado,
-                          title: Text(e.valor.toString()),
-                          onChanged: (v) {
-                            e.selecionado = !e.selecionado;
-                            if(e.selecionado) controller.colunasFiltradas.add(e.coluna);
-                            else controller.colunasFiltradas.removeWhere((element) => element == e.coluna);
-                            setStateRows((){
-                              if(e.selecionado)
-                                controller.filtrosSelected.add(
-                                  {
-                                    "coluna": e.coluna,
-                                    "valor": e.valor
-                                  }
-                                );
-                              else controller.filtrosSelected.removeWhere((element) => element['coluna'] == e.coluna && element['valor'] == e.valor);
-                              controller.getTheSelectedFilteredRows();
-                              controller.dadosFiltered();
-                            });
-                          },
-                          controlAffinity: ListTileControlAffinity.leading,
-                        ),
-                      )
-                    );
-                  }).toList();
-                },
+          ),
+    
+        if(isTitle)
+          Positioned(
+            right: 0,
+            bottom: -10,
+            child: PopupMenuButton(
+              tooltip: "",
+              splashRadius: 1,
+              position: PopupMenuPosition.under,
+              constraints: const BoxConstraints(
+                maxHeight: 400,
+                minWidth: 90,
               ),
-            )
-      
-        ],
-      ),
+              icon: Icon(
+                isFiltered ? Icons.filter_alt_outlined : Icons.arrow_drop_down_outlined,
+                size: 22,
+                color: isFiltered ? Colors.blue : Colors.grey,
+              ),
+              itemBuilder: (context) {
+                return controller.createlistaFiltrarLinhas(chave: key).map((e){
+                  return PopupMenuItem(
+                    padding: EdgeInsets.zero,
+                    child: Observer(
+                      builder: (_) => CheckboxListTile(
+                        value: e.selecionado,
+                        title: Text(e.valor.toString()),
+                        onChanged: (v) {
+                          e.selecionado = !e.selecionado;
+                          if(e.selecionado) controller.colunasFiltradas.add(e.coluna);
+                          else controller.colunasFiltradas.removeWhere((element) => element == e.coluna);
+                          setStateRows((){
+                            if(e.selecionado)
+                              controller.filtrosSelected.add(
+                                {
+                                  "coluna": e.coluna,
+                                  "valor": e.valor
+                                }
+                              );
+                            else controller.filtrosSelected.removeWhere((element) => element['coluna'] == e.coluna && element['valor'] == e.valor);
+                            controller.getTheSelectedFilteredRows();
+                            controller.dadosFiltered();
+                          });
+                        },
+                        controlAffinity: ListTileControlAffinity.leading,
+                      ),
+                    )
+                  );
+                }).toList();
+              },
+            ),
+          )
+      ],
     );
   }
 

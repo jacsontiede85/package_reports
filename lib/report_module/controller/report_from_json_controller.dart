@@ -1,6 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/report_module/core/api_consumer.dart';
@@ -31,8 +32,7 @@ abstract class ReportFromJSONControllerBase with Store {
   @observable
   List dados = [];
 
-  @observable
-  String searchString = "";
+  TextEditingController searchString = TextEditingController();
 
   @observable
   bool isFilterVisible = false;
@@ -148,8 +148,7 @@ abstract class ReportFromJSONControllerBase with Store {
     colunasFiltradas = {};
     var response = await API().getDataReportApi(function: nomeFunction);
 
-    dados = response[0];
-    
+    dados = response;
 
 
     List keys = [];
@@ -240,7 +239,7 @@ abstract class ReportFromJSONControllerBase with Store {
           );
           
         }
-        else if (!key.toString().contains('__INVISIBLE')){
+        else if (!key.toString().contains('__INVISIBLE') && !key.toString().contains('isFiltered')){
             colunas.add(
               ObservableMap.of({
                 'key': key,
@@ -386,7 +385,7 @@ abstract class ReportFromJSONControllerBase with Store {
       }
       if (keyFreeze.isEmpty)
         for (var key in val.keys) {
-          if ((val[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && '${val[key]}'.length > 5 && !key.toString().contains('__INVISIBLE')) {
+          if ((val[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && '${val[key]}'.length > 5 && !key.toString().contains('__INVISIBLE') && !key.toString().contains('isFiltered')) {
             keyFreeze = key;
             break;
           }
@@ -468,7 +467,17 @@ abstract class ReportFromJSONControllerBase with Store {
 
     }
 
-    return listaFiltrarLinhas.where((mapa) => mapa.coluna == chave).toList();
+    List<ColunasModel> temp = listaFiltrarLinhas.where((mapa) => mapa.coluna == chave).toList();
+
+    temp.sort((a, b) {
+      try{
+        return double.parse(a.valor).compareTo(double.parse(b.valor));
+      }catch(e){
+        return a.valor.compareTo(b.valor);
+      }
+    });
+
+    return temp.toList();
   }
 
   
@@ -476,7 +485,7 @@ abstract class ReportFromJSONControllerBase with Store {
   //inicio filtro de das colunas e da barra de pesquisa
   List dadosFiltered (){
     try{
-      if(filtrosSelected.isNotEmpty || searchString.isNotEmpty)
+      if(filtrosSelected.isNotEmpty || searchString.text.isNotEmpty)
         return dados.where((element) => element['isFiltered']).toList();
       else
         return dados;
@@ -486,14 +495,14 @@ abstract class ReportFromJSONControllerBase with Store {
   }
 
   filterListFromSearch(){
-    if(searchString.isNotEmpty)
+    if(searchString.text.isNotEmpty)
       if(filtrosSelected.isNotEmpty){
         if(dados.any((element) => element['isFiltered']))
           for(var key in dados){
             if(key['isFiltered']){
               int count = 0;
               for(var value in key.values){
-                if(value.toString().toLowerCase().contains(searchString.toLowerCase())){
+                if(value.toString().toLowerCase().contains(searchString.text.toLowerCase())){
                   count++;
                   break;
                 }
@@ -507,7 +516,7 @@ abstract class ReportFromJSONControllerBase with Store {
         for(var key in dados){
           int count = 0;
           for(var value in key.values){
-            if(value.toString().toLowerCase().contains(searchString.toLowerCase())){
+            if(value.toString().toLowerCase().contains(searchString.text.toLowerCase())){
               count++;
               break;
             }
@@ -551,7 +560,7 @@ abstract class ReportFromJSONControllerBase with Store {
       if(count == temp.length) key["isFiltered"] = true;
       else key["isFiltered"] = false;  
       
-      if(searchString.isNotEmpty) filterListFromSearch();
+      if(searchString.text.isNotEmpty) filterListFromSearch();
     }
 
       for (var col in colunas){
@@ -562,10 +571,22 @@ abstract class ReportFromJSONControllerBase with Store {
               if (col['type'] != String) col['vlrTotalDaColuna'] += row['isFiltered'] ? row[key] : 0;
             }
 
-        for(var value in colunasFiltradas)
-          if(col["key"] == value) col["isFiltered"] = true;
-          else col["isFiltered"] = false;
+        if(colunasFiltradas.any((element) => element == col["key"]))
+          col["isFiltered"] = true;
+        else col["isFiltered"] = false;
       }
+  }
+
+  clearFiltros(){
+    searchString.clear();
+    filtrosSelected = [];
+    colunasFiltradas = {};
+    
+    for(var value in listaFiltrarLinhas) value.selecionado = false;
+    for(var value in dados) value["isFiltered"] = false;
+    for(var value in colunas) 
+      if(colunasFiltradas.any((element) => element == value["key"])) value["isFiltered"] = true;
+      else value["isFiltered"] = false;
   }
 
 }
