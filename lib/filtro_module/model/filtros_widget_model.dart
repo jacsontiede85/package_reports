@@ -2,6 +2,7 @@ import 'package:package_reports/filtro_module/model/filtros_model.dart';
 
 class FiltrosWidgetModel {
 
+  String tipoFiltro = '';
   String nome = '';  
   String arquivoQuery = '';  
   String funcaoPrincipal = '';
@@ -12,6 +13,7 @@ class FiltrosWidgetModel {
   Set<FiltrosModel> itensSelecionados = {};
 
   FiltrosWidgetModel({
+    this.tipoFiltro = '',
     this.nome = '',
     this.arquivoQuery = '',
     this.funcaoPrincipal = '',
@@ -20,7 +22,8 @@ class FiltrosWidgetModel {
     this.isVisivel = false,
   });
 
-  FiltrosWidgetModel.fromJson(Map<String, dynamic> json){
+  FiltrosWidgetModel.fromJson(Map<String, dynamic> json, String key){
+    tipoFiltro = key;
     nome = json['nome'];
     isVisivel = json['exibir'];
     tipoWidget = json['tipo'];
@@ -28,5 +31,14 @@ class FiltrosWidgetModel {
     bancoBuscarFiltros = json['banco'];
     arquivoQuery = json['arquivoquery'];
   }
+
+  Map<String, dynamic> toJsonItensSelecionados() {
+    Map<String, dynamic> mapItensSelecionados = <String, dynamic>{};
+    for(FiltrosModel item in itensSelecionados){
+      mapItensSelecionados.addAll( mapItensSelecionados[tipoFiltro] = item.toJson());
+    }
+    return mapItensSelecionados;
+  }
+
 
 }

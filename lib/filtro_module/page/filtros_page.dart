@@ -3,6 +3,7 @@ import 'package:package_reports/filtro_module/controller/filtro_controller.dart'
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
+import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/report_module/widget/widgets.dart';
 
 class FiltrosReportPage extends StatefulWidget {
@@ -10,12 +11,14 @@ class FiltrosReportPage extends StatefulWidget {
   final BuildContext context;
   final Map<String, dynamic> mapaFiltros;
   final int indexPagina;
+  final ReportFromJSONController reportController;
   
   const FiltrosReportPage({
     super.key,
     required this.context,
     required this.mapaFiltros,
     required this.indexPagina,
+    required this.reportController,
   });  
 
   @override
@@ -26,9 +29,10 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
   
   late FiltroController controllerFiltro = FiltroController(
     mapaFiltrosWidget: widget.mapaFiltros,
-    indexPagina: widget.indexPagina
+    indexPagina: widget.indexPagina,
+    controllerReports: widget.reportController
   );
-
+  
   Widgets wp = Widgets();
   LayoutController layout = LayoutController();
 
@@ -45,6 +49,15 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
             Navigator.of(context).pop(true);
           }
         ),
+        actions: [
+          ElevatedButton(
+            child: const Text("Aplicar"),
+            onPressed: () async {
+              Navigator.of(context).pop(true);
+              await controllerFiltro.criarNovoBody();
+            },
+          ),
+        ],
       ),
       body: Center(
         child: ListView.builder(
