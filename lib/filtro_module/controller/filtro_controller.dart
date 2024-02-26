@@ -76,8 +76,14 @@ abstract class FiltroControllerBase with Store {
   }
 
   criarNovoBody() async {
-    controllerReports.body = listaFiltrosParaConstruirTela[0][indexPagina]!.toJsonItensSelecionados();
-    await controllerReports.getDados();
+    Map<String, dynamic> novoBody = {};
+
+    for(Map<int, FiltrosWidgetModel> valores in listaFiltrosParaConstruirTela){
+      novoBody .addAll(valores[indexPagina]!.toJsonItensSelecionados());
+    }
+    controllerReports.body = novoBody;
+    
+    // await controllerReports.getDados();
   }
 
 }

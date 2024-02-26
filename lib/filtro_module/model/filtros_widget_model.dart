@@ -32,11 +32,15 @@ class FiltrosWidgetModel {
     arquivoQuery = json['arquivoquery'];
   }
 
-  Map<String, dynamic> toJsonItensSelecionados() {
-    Map<String, dynamic> mapItensSelecionados = <String, dynamic>{};
+  Map<String, List<Map<String, dynamic>>> toJsonItensSelecionados() {
+    Map<String, List<Map<String, dynamic>>> mapItensSelecionados = <String, List<Map<String, dynamic>>>{};
+    List<Map<String, dynamic>> json = [];
+
     for(FiltrosModel item in itensSelecionados){
-      mapItensSelecionados.addAll( mapItensSelecionados[tipoFiltro] = item.toJson());
+      json.add(item.toJson());
+      mapItensSelecionados.addAll({ tipoFiltro: json});
     }
+    
     return mapItensSelecionados;
   }
 
