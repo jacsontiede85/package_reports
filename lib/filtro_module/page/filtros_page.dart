@@ -4,6 +4,7 @@ import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
+import 'package:package_reports/report_module/core/settings.dart';
 import 'package:package_reports/report_module/widget/widgets.dart';
 
 class FiltrosReportPage extends StatefulWidget {
@@ -123,12 +124,21 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
       widgetList: [
         Text(
           filtrosDados.nome.toUpperCase(),
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14.0, 
-            color: Colors.black, 
-            fontWeight: FontWeight.w600,
+            color: Colors.green[700], 
+            fontWeight: FontWeight.w800,
           ),
           textAlign: TextAlign.left,
+        ),
+        SizedBox(
+          width: 250,
+          child: CheckboxListTile(
+            value: false, 
+            title: const Text('Data faturamento'),
+            controlAffinity: ListTileControlAffinity.leading,
+            onChanged: (c){},
+          ),
         ),
         ButtonBar(
           alignment: MainAxisAlignment.start, 
@@ -141,7 +151,9 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                 dataInicio,
                 style: const TextStyle(fontSize: 17),
               ),
-              onPressed: () {},
+              onPressed: () async {
+                dataInicio = await Settings().selectDate(context: context);
+              },
             ),
             TextButton.icon(
               icon: const Icon(Icons.calendar_today),
@@ -149,7 +161,9 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                 dataFim,
                 style: const TextStyle(fontSize: 17),
               ),
-              onPressed: () {},
+              onPressed: () async {
+                dataFim = await Settings().selectDate(context: context);
+              },
             ),
             PopupMenuButton(
               itemBuilder: (context) {
@@ -180,10 +194,10 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
         widgetList: [
           Text(
             filtrosDados.nome.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14.0, 
-              color: Colors.black, 
-              fontWeight: FontWeight.w600,
+              color: Colors.green[700], 
+              fontWeight: FontWeight.w800,
             ),
             textAlign: TextAlign.left,
           ),
