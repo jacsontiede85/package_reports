@@ -25,22 +25,6 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
-  late final _$searchStringAtom =
-      Atom(name: 'ReportFromJSONControllerBase.searchString', context: context);
-
-  @override
-  String get searchString {
-    _$searchStringAtom.reportRead();
-    return super.searchString;
-  }
-
-  @override
-  set searchString(String value) {
-    _$searchStringAtom.reportWrite(value, super.searchString, () {
-      super.searchString = value;
-    });
-  }
-
   late final _$isFilterVisibleAtom = Atom(
       name: 'ReportFromJSONControllerBase.isFilterVisible', context: context);
 
@@ -276,7 +260,6 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
   String toString() {
     return '''
 dados: ${dados},
-searchString: ${searchString},
 isFilterVisible: ${isFilterVisible},
 colunasFiltradas: ${colunasFiltradas},
 configPagina: ${configPagina},
