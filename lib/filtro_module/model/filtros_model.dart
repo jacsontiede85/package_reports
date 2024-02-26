@@ -18,6 +18,14 @@ abstract class FiltrosModelBase with Store {
     subtitulo = json['subtitulo'];
   }
 
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> data = <String, dynamic>{};
+    data['codigo'] = codigo;
+    data['titulo'] = titulo;
+    data['subtitulo'] = subtitulo;
+    return data;
+  }
+
   @override
   bool operator == (other) => other is FiltrosModelBase && codigo == other.codigo;
   

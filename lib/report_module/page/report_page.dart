@@ -193,6 +193,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                               context: context,
                               mapaFiltros: controller.configPagina['filtros'],
                               indexPagina: controller.configPagina['indexPage'],
+                              reportController: controller,
                             ), 
                             context: context, 
                             layout: layout,

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
+import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/report_module/core/api_consumer.dart';
 part 'filtro_controller.g.dart';
 
@@ -9,16 +10,17 @@ class FiltroController = FiltroControllerBase with _$FiltroController;
 
 abstract class FiltroControllerBase with Store {
 
+  Map<String, dynamic> mapaFiltrosWidget = {};
+  int indexPagina = 0;
+  late ReportFromJSONController controllerReports;
+
   FiltroControllerBase({
     required this.mapaFiltrosWidget,
     required this.indexPagina,
+    required this.controllerReports,
   }){
     getDadosCriarFiltros();
   }
-
-  late Map<String, dynamic> mapaFiltrosWidget = {};
-
-  late int indexPagina = 0;
 
   @observable
   List<FiltrosModel> listaFiltros = [];
@@ -31,11 +33,11 @@ abstract class FiltroControllerBase with Store {
 
   void getDadosCriarFiltros () async {
     mapaFiltrosWidget.forEach((key, value) {
-      listaFiltrosParaConstruirTela.add({ indexPagina : FiltrosWidgetModel.fromJson(value)});
-    }); 
+      listaFiltrosParaConstruirTela.add({ indexPagina : FiltrosWidgetModel.fromJson(value, key)});
+    });
   }
 
-  funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required int indexFiltro}) async {
+  void funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required int indexFiltro}) async {
     try{
       loadingItensFiltors = true;
       
@@ -71,6 +73,11 @@ abstract class FiltroControllerBase with Store {
     }else{
       listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados.remove(itens);
     }
+  }
+
+  criarNovoBody() async {
+    controllerReports.body = listaFiltrosParaConstruirTela[0][indexPagina]!.toJsonItensSelecionados();
+    await controllerReports.getDados();
   }
 
 }

@@ -5,13 +5,13 @@ import 'package:package_reports/filtro_module/controller/filtro_controller.dart'
 class ItensFiltro extends StatelessWidget {
   final FiltroController controller;
   final int indexDapagina;
-  final int indexDOFiltro;
+  final int indexDoFiltro;
 
   const ItensFiltro({
     super.key,
     required this.controller,
     required this.indexDapagina,
-    required this.indexDOFiltro,
+    required this.indexDoFiltro,
   });
 
   @override
@@ -20,7 +20,7 @@ class ItensFiltro extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black87,
         title: Text(
-          controller.listaFiltrosParaConstruirTela[indexDOFiltro][indexDapagina]!.nome,
+          controller.listaFiltrosParaConstruirTela[indexDoFiltro][indexDapagina]!.nome,
           style: const TextStyle(
             color: Colors.white
           ),
@@ -106,9 +106,17 @@ class ItensFiltro extends StatelessWidget {
                   value: controller.listaFiltros[index].selecionado,
                   onChanged: (valor){
                     controller.listaFiltros[index].selecionado = !controller.listaFiltros[index].selecionado;
-                    controller.adicionarItensSelecionado(indexFiltro: indexDOFiltro, itens: controller.listaFiltros[index]);
+                    controller.adicionarItensSelecionado(indexFiltro: indexDoFiltro, itens: controller.listaFiltros[index]);
                   },
                   title: Text(controller.listaFiltros[index].titulo),
+                  subtitle: Text(
+                    controller.listaFiltros[index].subtitulo,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: Color.fromARGB(197, 209, 158, 5),
+                    ),
+                  ),
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
               );
