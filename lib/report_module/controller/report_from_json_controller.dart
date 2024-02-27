@@ -15,13 +15,17 @@ abstract class ReportFromJSONControllerBase with Store {
   late String nomeFunction;
   late double sizeWidth;
   late bool isToGetDadosNaEntrada;
-  late Map<String, dynamic> body;
+  Map<String, dynamic> body = {
+    "matricula" : "3312",
+    "indexPage" : 0,
+    "database" : "atacado"
+  };
 
   ReportFromJSONControllerBase({
     required this.nomeFunction, 
     required this.sizeWidth,
     required this.isToGetDadosNaEntrada,
-    required this.body
+    required body
   }) {
     if(isToGetDadosNaEntrada){
       getConfig();
@@ -144,12 +148,16 @@ abstract class ReportFromJSONControllerBase with Store {
     if (_listenerStarted) _removeListener();
     loading = true;
     dados = [];
+    listaFiltrarLinhas = [];
     filtrosSelected = [];
     colunasFiltradas = {};
-    var response = await API().getDataReportApi(function: nomeFunction);
+    var response = await API().getDataReportApi(
+      isContentTypeApplicationJson: true, 
+      urlreports: nomeFunction, 
+      body: body,
+    );
 
     dados = response;
-
 
     List keys = [];
     for(var value in dados){

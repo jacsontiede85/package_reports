@@ -1,4 +1,6 @@
 
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -43,4 +45,16 @@ mixin class Settings{
     return formatarDataPadraoBR("${DateTime.now().toLocal()}");
   }
 
+}
+
+void printW(text) {
+  print('\x1B[33m$text\x1B[0m');
+}
+
+void printE(text) {
+  print('\x1B[31m$text\x1B[0m');
+}
+
+void printO(text) {
+  print('\x1b[32m$text\x1B[0m');
 }

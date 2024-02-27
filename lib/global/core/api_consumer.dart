@@ -37,59 +37,74 @@ class API with Settings{
       return "";
     }
   }
+  
+  Future<List> getDataReportApi({
+    required String urlreports, 
+    Map<String, dynamic>? body, 
+    bool isContentTypeApplicationJson = false
+  }) async {
 
-  Future<List> getDataReportApi({required String function,}) async {
+    if(isContentTypeApplicationJson){
+      var response = await getDataReportApiJWT(dados: body, url: urlreports);
+      return jsonDecode(response);
+    } else {
+      http.Response response = await http.post(
+        Uri.parse('${Settings.enderecoRepositorio}$urlreports'),
+        body: body,
+      );
 
-    http.Response response = await http.post(
-      Uri.parse('${Settings.enderecoRepositorio}/$function'),
-      body: {
-        "url-reports" : function,
-        "banco": "atacado",
-        "dtinicio": "19/02/2024",
-        "dtfim": "20/02/2024",
-        "exibirCardDataFaturamento": "",
-        "exibirOpcaoRCASemVendas" :"",
-        "rcaAtivosInativos" :"",
-        "filial": "1,7,8",
-        "supervisor": "15",
-        "matricula": "3312",
-        "posicao": "",
-        "pcpedi_numped": "",
-        "pcclient_codcli": "",
-        "pcclient_codcliprinc": "",
-        "pcusuari_codusur": "",
-        "pcplpag_codplpag": "",
-        "pcpraca_codpraca": "",
-        "pcregiao_numregiao": "",
-        "pccob_codcob": "",
-        "pcprodut_codprod": "",
-        "pcprodut_codprodprinc": "",
-        "pcpraca_rota": "",
-        "pcsecao_codsec": "",
-        "pcdepto_codepto": "",
-        "pcativi_codativ": "",
-        "pccidade_codcidade": "",
-        "pcfornec_codfornec": "",
-        "pcclient_estcob": "",
-        "pcpedc_origemped": "",
-        "pcmarca_codmarca": "",
-        "pcpedido_tipobonific": "",
-        "rankingRuptura": "",
-        "pcprodut_classe":"",
-        "mes_campanha": "",
-        "comprador": "",
+      try {
+        return jsonDecode(response.body);
+      } catch (e) {
+        return [
+          {
+            'status_code': response.statusCode,
+            'mensagem': 'Dados não encontrado! Verifique os filtros selecionados e tente novamente.\nCatch message nerd: $e',
+          }
+        ];
+      }
+    }
+  }
+
+  
+  Future<String> getDataReportApiJWT({String? banco, Map? dados, String? url}) async {
+    //header
+    var header = {
+      "alg": "HS256",
+      "typ": "JWT",
+    };
+    String header64 = base64Encode(jsonEncode(header).codeUnits);
+
+    //payload
+    var payload = dados;
+    String payload64 = base64Encode(utf8.encode(jsonEncode(payload))); //utf8.encode para caracteres especiais
+
+    //assinatura
+    String secret = "tisa098*";
+    var hmac = Hmac(sha256, secret.codeUnits);
+    var digest = hmac.convert("$header64.$payload64".codeUnits);
+    String sign = base64Encode(digest.bytes);
+    String token = "$header64.$payload64.$sign";
+
+    var res = await http.post(
+      Uri.parse("${Settings.enderecoRepositorio}$url"),
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: jsonEncode({
+        'connection': banco,
+        'token': token
+      })
     );
     
-    try {
-      return jsonDecode(response.body);
-    } catch (e) {
-      return [
-        {
-          'status_code': response.statusCode,
-          'mensagem': 'Dados não encontrado! Verifique os filtros selecionados e tente novamente.\nCatch message nerd: $e',
-        }
-      ];
+    // printW(res.body);
+
+    if (res.statusCode == 200) {
+      return res.body.replaceAll("null", '""');
+    } else {
+      // printE('Erro de API ${res.statusCode} (jwtSendJson)');
+      // printE("LINK: ${Settings.enderecoRepositorio}");
+      return "";
     }
   }
 
