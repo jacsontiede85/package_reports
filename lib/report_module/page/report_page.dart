@@ -462,8 +462,13 @@ class _ReportPageState extends State<ReportPage> with Rows {
           });
           return Stack(
             children: [
-              Row(
-                children: controller.row,
+              InkWell(
+                onDoubleTap: (){
+                  controller.getNovaPage(mapaGetNovaPage:controller.configPagina);
+                },
+                child: Row(
+                  children: controller.row,
+                ),
               ),
               
                Observer(
@@ -494,35 +499,41 @@ class _ReportPageState extends State<ReportPage> with Rows {
       );
 
 
-  Widget rows() => controller.dadosFiltered().isEmpty
-      ? const SizedBox()
-      : Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            ...controller.dadosFiltered().map((val) {
-              controller.row = [];
-              val.forEach((key, value) {
-                Type type = value.runtimeType;
-                if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
-                  controller.row.add(
-                    rowTextFormatted(
-                      width: controller.getWidthCol(key: key,),
-                      height: 35,
-                      controller: controller,
-                      key: key,
-                      type: type,
-                      value: value,
-                      cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
-                      setStateRows: setStatee
-                    ),
-                  );
-              });
-              return Row(
-                children: controller.row,
-              );
-            }),
-          ],
-        );
+  // Widget rows() => controller.dadosFiltered().isEmpty
+  //     ? const SizedBox()
+  //     : Column(
+  //         mainAxisSize: MainAxisSize.max,
+  //         children: [
+  //           ...controller.dadosFiltered().map((val) {
+  //             controller.row = [];
+  //             val.forEach((key, value) {
+  //               Type type = value.runtimeType;
+  //               if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
+  //                 controller.row.add(
+  //                   rowTextFormatted(
+  //                     width: controller.getWidthCol(key: key,),
+  //                     height: 35,
+  //                     controller: controller,
+  //                     key: key,
+  //                     type: type,
+  //                     value: value,
+  //                     cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
+  //                     setStateRows: setStatee
+  //                   ),
+  //                 );
+  //             });
+  //             return InkWell(
+  //               onDoubleTap: (){
+  //                 printW('dsajkflsd');
+  //                 // controller.getNovaPage(mapaGetNovaPage:controller.configPagina);
+  //               },
+  //               child: Row(
+  //                 children: controller.row,
+  //               ),
+  //             );
+  //           }),
+  //         ],
+  //       );
 
   Widget rowsElevated() => controller.dadosFiltered().isEmpty
       ? const SizedBox()

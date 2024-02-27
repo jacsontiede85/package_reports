@@ -86,10 +86,8 @@ abstract class FiltroControllerBase with Store {
       novoBody.addAll(valores[indexPagina]!.toJsonItensSelecionados());
     }
     controllerReports.body.addAll(novoBody);
-    printO(controllerReports.body);
     await controllerReports.getDados();
   }
-
 
 
 }

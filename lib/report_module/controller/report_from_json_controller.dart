@@ -597,4 +597,7 @@ abstract class ReportFromJSONControllerBase with Store {
       else value["isFiltered"] = false;
   }
 
+  void getNovaPage({required Map<String, dynamic> mapaGetNovaPage}){
+    configPagina = mapaGetNovaPage['page'];
+  }
 }

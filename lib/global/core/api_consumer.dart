@@ -86,6 +86,7 @@ class API with Settings{
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
 
+    // printO(token);
     var res = await http.post(
       Uri.parse("${Settings.enderecoRepositorio}$url"),
       headers: {
