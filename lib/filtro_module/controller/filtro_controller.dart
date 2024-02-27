@@ -3,8 +3,8 @@ import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
-import 'package:package_reports/report_module/core/api_consumer.dart';
-import 'package:package_reports/report_module/core/settings.dart';
+import 'package:package_reports/global/core/api_consumer.dart';
+import 'package:package_reports/global/core/settings.dart';
 part 'filtro_controller.g.dart';
 
 class FiltroController = FiltroControllerBase with _$FiltroController;

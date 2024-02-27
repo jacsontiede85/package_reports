@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:open_filex/open_filex.dart';
-import 'package:package_reports/report_module/core/features.dart';
+import 'package:package_reports/global/core/features.dart';
 import 'package:path_provider/path_provider.dart';
 import 'report_from_json_controller.dart';
-import '../widget/xlsx_widget.dart';
+import '../../global/widget/xlsx_widget.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 import 'package:universal_html/html.dart' show AnchorElement;
 

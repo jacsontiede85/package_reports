@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
-import 'package:package_reports/report_module/core/settings.dart';
+import 'package:package_reports/global/core/settings.dart';
 import 'dart:convert';
 
 class API with Settings{

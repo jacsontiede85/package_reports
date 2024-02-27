@@ -6,8 +6,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:package_reports/report_module/charts/charts.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
-import 'package:package_reports/report_module/core/features.dart';
-import 'package:package_reports/report_module/widget/widgets.dart';
+import 'package:package_reports/global/core/features.dart';
+import 'package:package_reports/global/widget/widgets.dart';
 import '../controller/report_chart_controller.dart';
 
 class ChartsReport extends StatefulWidget with Charts {

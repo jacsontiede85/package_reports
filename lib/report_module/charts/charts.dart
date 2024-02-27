@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:package_reports/report_module/core/features.dart';
+import 'package:package_reports/global/core/features.dart';
 import '../charts/chart_data.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:fl_chart/fl_chart.dart';
