@@ -47,14 +47,13 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             IconButton.filledTonal(
               icon: const Icon(CupertinoIcons.doc),
-              onPressed: () async {
+              onPressed: () {
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
-                    builder: (context) => const ReportPage(
+                    builder: (context) => ReportPage(
                       voltarComPop: true,
                       function: 'repositorio/reports/query/compras/assistente_compras_report.php',
-                      body: {},
                     ),
                   )
                 );

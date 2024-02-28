@@ -86,7 +86,6 @@ class API with Settings{
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
 
-    // printO(token);
     var res = await http.post(
       Uri.parse("${Settings.enderecoRepositorio}$url"),
       headers: {
@@ -97,8 +96,6 @@ class API with Settings{
         'token': token
       })
     );
-    
-    // printW(res.body);
 
     if (res.statusCode == 200) {
       return res.body.replaceAll("null", '""');
@@ -112,9 +109,8 @@ class API with Settings{
   Future<Map<String, dynamic>> getConfigApi({required String function,}) async {
 
     http.Response response = await http.get(
-      Uri.parse('${Settings.enderecoRepositorio}/$function'),
+      Uri.parse('${Settings.enderecoRepositorio}$function'),
     );
-
     try {
       return jsonDecode(response.body);
     } catch (e) {

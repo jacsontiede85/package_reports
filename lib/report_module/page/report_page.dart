@@ -14,16 +14,18 @@ import 'package:package_reports/report_module/page/report_chart_page.dart';
 import 'package:package_reports/global/widget/widgets.dart';
 
 class ReportPage extends StatefulWidget {
+  
   final String function;
   final bool? voltarComPop;
   final Color? corTitulo;
-  final Map<String, dynamic> body;
-  const ReportPage({
+  final Map<String, dynamic> body = {};
+  
+  ReportPage({
     super.key,
     required this.function,
     this.voltarComPop = false,
     this.corTitulo = Colors.white,
-    required this.body
+    body
   });
 
   @override
@@ -35,7 +37,6 @@ class _ReportPageState extends State<ReportPage> with Rows {
   final LayoutController layout = LayoutController();
   Widgets wp = Widgets();
   double _width = 0.0;
-
   setStatee(Function fn){setState(() {fn();});}
 
   @override
@@ -196,7 +197,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   padding: const EdgeInsets.only(right:5),
                   child: Observer(
                     builder: (_) => Visibility(
-                      visible: (controller.dadosFiltered().isNotEmpty && !controller.loading),
+                      visible: (controller.configPagina['filtros'] != [] && controller.dadosFiltered().isNotEmpty && !controller.loading),
                       child: IconButton.outlined(
                         icon: Icon(
                           Icons.filter_alt_outlined, 
@@ -463,8 +464,18 @@ class _ReportPageState extends State<ReportPage> with Rows {
           return Stack(
             children: [
               InkWell(
-                onDoubleTap: (){
-                  controller.getNovaPage(mapaGetNovaPage:controller.configPagina);
+                onDoubleTap: () {
+                  Navigator.push(
+                    context, 
+                    MaterialPageRoute(
+                      builder: (context) => ReportPage(
+                        voltarComPop: true,
+                        function: 'repositorio/reports/query/compras/assistente_compras_report.php',
+                      ),
+                    )
+                  );
+                  
+                  controller.mapSelectedRow = val;
                 },
                 child: Row(
                   children: controller.row,

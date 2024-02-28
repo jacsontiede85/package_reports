@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/global/core/api_consumer.dart';
+import 'package:package_reports/global/core/settings.dart';
 import 'package:package_reports/report_module/model/filtrar_colunas_model.dart';
 part 'report_from_json_controller.g.dart';
 
@@ -15,21 +16,16 @@ abstract class ReportFromJSONControllerBase with Store {
   late String nomeFunction;
   late double sizeWidth;
   late bool isToGetDadosNaEntrada;
-  Map<String, dynamic> body = {
-    "matricula" : "3312",
-    "indexPage" : 0,
-    "database" : "atacado"
-  };
+  Map<String, dynamic> body = {};
 
   ReportFromJSONControllerBase({
     required this.nomeFunction, 
     required this.sizeWidth,
     required this.isToGetDadosNaEntrada,
-    required body
+    body,
   }) {
     if(isToGetDadosNaEntrada){
-      getConfig();
-      getDados();
+      getConfig().whenComplete(() => getDados());
     }
   }
 
@@ -85,6 +81,8 @@ abstract class ReportFromJSONControllerBase with Store {
   @observable
   bool visibleColElevated = false;
 
+  Map<String, dynamic> mapSelectedRow = {};
+
   setPositionScroll(double position) async {
     visibleColElevated = false;
     if (_position != position) _position = position;
@@ -135,25 +133,41 @@ abstract class ReportFromJSONControllerBase with Store {
 
   //BUSCAR DADOS PARA MONTAGEM DO RELATORIO
 
-  void getConfig() async {
+  Future<void> getConfig() async {
+    loading = true;
     var response = await API().getConfigApi(
       function: nomeFunction
     );
-
     configPagina = response;
+
+    if(false) {
+      body = {
+        "matricula" : "3312",
+        "database" : "atacado",
+      };
+      await getSelectedRowParaNavegarParaNovaPage();
+
+    }else{
+      body = {
+        "matricula" : "3312",
+        "database" : "atacado",
+        "indexPage" : configPagina['indexPage'],
+      };
+    }
+
   }
 
   getDados() async {
     keyFreeze = "";
     if (_listenerStarted) _removeListener();
-    loading = true;
     dados = [];
     listaFiltrarLinhas = [];
     filtrosSelected = [];
     colunasFiltradas = {};
+
     var response = await API().getDataReportApi(
       isContentTypeApplicationJson: true, 
-      urlreports: nomeFunction, 
+      urlreports: nomeFunction,
       body: body,
     );
 
@@ -597,7 +611,13 @@ abstract class ReportFromJSONControllerBase with Store {
       else value["isFiltered"] = false;
   }
 
-  void getNovaPage({required Map<String, dynamic> mapaGetNovaPage}){
-    configPagina = mapaGetNovaPage['page'];
+  Future<void> getSelectedRowParaNavegarParaNovaPage() async {
+    if(configPagina['page'].toString().isNotEmpty){
+      configPagina['selectedRow'] = mapSelectedRow;
+      printO(mapSelectedRow);
+      body.addAll(configPagina['selectedRow']);
+      configPagina = configPagina['page'];
+      body.addAll({'indexPage' : configPagina['indexPage']});
+    }
   }
 }
