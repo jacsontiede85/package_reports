@@ -5,37 +5,34 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/global/core/api_consumer.dart';
-import 'package:package_reports/global/core/settings.dart';
 import 'package:package_reports/report_module/model/filtrar_colunas_model.dart';
 part 'report_from_json_controller.g.dart';
 
 class ReportFromJSONController = ReportFromJSONControllerBase with _$ReportFromJSONController;
 
-abstract class ReportFromJSONControllerBase with Store {
+abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   late String nomeFunction;
   late double sizeWidth;
   late bool isToGetDadosNaEntrada;
-  Map<String, dynamic> body = {};
+
+
 
   ReportFromJSONControllerBase({
     required this.nomeFunction, 
     required this.sizeWidth,
     required this.isToGetDadosNaEntrada,
-    body,
   }) {
     if(isToGetDadosNaEntrada){
       getConfig().whenComplete(() => getDados());
     }
   }
+  Map<String, dynamic> body = {};
 
   @observable
   List dados = [];
 
   TextEditingController searchString = TextEditingController();
-
-  @observable
-  bool isFilterVisible = false;
   
   List<Map<String, dynamic>> filtrosSelected = [];
 
@@ -52,9 +49,6 @@ abstract class ReportFromJSONControllerBase with Store {
 
   @observable
   List<ColunasModel> listaFiltrarLinhas = [];
-
-  @observable
-  bool valorMarcadoNoFiltro = false;
 
   @observable
   bool loading = false;
@@ -81,7 +75,14 @@ abstract class ReportFromJSONControllerBase with Store {
   @observable
   bool visibleColElevated = false;
 
+  bool habilitarNovoRelatorio = false;
+
   Map<String, dynamic> mapSelectedRow = {};
+
+  setMapSelectedRow({required Map<String, dynamic> mapSelectedRow}){
+    this.mapSelectedRow = mapSelectedRow;
+    habilitarNovoRelatorio = true;
+  }
 
   setPositionScroll(double position) async {
     visibleColElevated = false;
@@ -138,9 +139,8 @@ abstract class ReportFromJSONControllerBase with Store {
     var response = await API().getConfigApi(
       function: nomeFunction
     );
-    configPagina = response;
 
-    if(false) {
+    if(habilitarNovoRelatorio && configPagina.isNotEmpty) {
       body = {
         "matricula" : "3312",
         "database" : "atacado",
@@ -148,6 +148,8 @@ abstract class ReportFromJSONControllerBase with Store {
       await getSelectedRowParaNavegarParaNovaPage();
 
     }else{
+      configPagina = response;
+
       body = {
         "matricula" : "3312",
         "database" : "atacado",
@@ -614,7 +616,6 @@ abstract class ReportFromJSONControllerBase with Store {
   Future<void> getSelectedRowParaNavegarParaNovaPage() async {
     if(configPagina['page'].toString().isNotEmpty){
       configPagina['selectedRow'] = mapSelectedRow;
-      printO(mapSelectedRow);
       body.addAll(configPagina['selectedRow']);
       configPagina = configPagina['page'];
       body.addAll({'indexPage' : configPagina['indexPage']});

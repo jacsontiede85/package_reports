@@ -1,4 +1,4 @@
-// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: curly_braces_in_flow_control_structures, must_be_immutable
 
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/gestures.dart';
@@ -13,41 +13,53 @@ import 'package:package_reports/global/core/features.dart';
 import 'package:package_reports/report_module/page/report_chart_page.dart';
 import 'package:package_reports/global/widget/widgets.dart';
 
+
 class ReportPage extends StatefulWidget {
-  
+  Map<String, dynamic> mapSelectedRow = {};
   final String function;
   final bool? voltarComPop;
   final Color? corTitulo;
-  final Map<String, dynamic> body = {};
   
   ReportPage({
     super.key,
     required this.function,
     this.voltarComPop = false,
-    this.corTitulo = Colors.white,
-    body
+    this.corTitulo = Colors.white
   });
+
+  setMapSelectedRow({required Map<String, dynamic>  mapSelectedRow}){
+    this.mapSelectedRow = mapSelectedRow;
+  }
 
   @override
   State<ReportPage> createState() => _ReportPageState();
 }
 
 class _ReportPageState extends State<ReportPage> with Rows {
-  late ReportFromJSONController controller;
+  
+  Map<String, dynamic> mapSelectedRow ={};
+
+  late ReportFromJSONController controller = ReportFromJSONController(
+    nomeFunction: widget.function,
+    sizeWidth: _width,
+    isToGetDadosNaEntrada: true,
+  );
+
   final LayoutController layout = LayoutController();
   Widgets wp = Widgets();
   double _width = 0.0;
+
   setStatee(Function fn){setState(() {fn();});}
 
   @override
   void initState() {
+
+    mapSelectedRow = widget.mapSelectedRow;
+    if(mapSelectedRow.isNotEmpty){
+      controller.setMapSelectedRow(mapSelectedRow: mapSelectedRow);
+    }
+
     super.initState();
-    controller = ReportFromJSONController(
-      nomeFunction: widget.function, 
-      sizeWidth: _width,
-      isToGetDadosNaEntrada: true,
-      body: widget.body,
-    );
   }
 
   @override
@@ -55,6 +67,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     super.dispose();
     controller.verticalScroll.dispose();
     controller.horizontalScroll.dispose();
+    controller;
   }
 
   @override
@@ -294,7 +307,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                             color: Colors.grey[50],
                                             child: Stack(
                                               children: [
-                                                colunas(),
+                                                colunasWidget(),
                                                 Observer(
                                                   builder: (_) => Visibility(
                                                     visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dadosFiltered().length <= 500,
@@ -308,7 +321,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                               ],
                                             ),
                                           ),
-
+    
                                           if(controller.dadosFiltered().isEmpty)
                                             Text(
                                               'Não há dados para os filtros selecionados...',
@@ -322,7 +335,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                           // ROWS [DADOS]
                                           if (controller.dadosFiltered().isNotEmpty)
                                             Flexible(child: rowsBuilder()),
-
+    
                                           if(controller.dadosFiltered().isEmpty)
                                             const Expanded(child: SizedBox()),
                                           
@@ -380,7 +393,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     );
   }
 
-  Widget colunas() {
+  Widget colunasWidget() {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -465,17 +478,16 @@ class _ReportPageState extends State<ReportPage> with Rows {
             children: [
               InkWell(
                 onDoubleTap: () {
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(
-                      builder: (context) => ReportPage(
-                        voltarComPop: true,
-                        function: 'repositorio/reports/query/compras/assistente_compras_report.php',
-                      ),
-                    )
-                  );
-                  
-                  controller.mapSelectedRow = val;
+                  if(controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty)
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ReportPage(
+                          voltarComPop: true,
+                          function: 'repositorio/reports/query/compras/assistente_compras_report.php',
+                        )..setMapSelectedRow(mapSelectedRow: val),
+                      )
+                    );
                 },
                 child: Row(
                   children: controller.row,
@@ -508,43 +520,6 @@ class _ReportPageState extends State<ReportPage> with Rows {
           );
         },
       );
-
-
-  // Widget rows() => controller.dadosFiltered().isEmpty
-  //     ? const SizedBox()
-  //     : Column(
-  //         mainAxisSize: MainAxisSize.max,
-  //         children: [
-  //           ...controller.dadosFiltered().map((val) {
-  //             controller.row = [];
-  //             val.forEach((key, value) {
-  //               Type type = value.runtimeType;
-  //               if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
-  //                 controller.row.add(
-  //                   rowTextFormatted(
-  //                     width: controller.getWidthCol(key: key,),
-  //                     height: 35,
-  //                     controller: controller,
-  //                     key: key,
-  //                     type: type,
-  //                     value: value,
-  //                     cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
-  //                     setStateRows: setStatee
-  //                   ),
-  //                 );
-  //             });
-  //             return InkWell(
-  //               onDoubleTap: (){
-  //                 printW('dsajkflsd');
-  //                 // controller.getNovaPage(mapaGetNovaPage:controller.configPagina);
-  //               },
-  //               child: Row(
-  //                 children: controller.row,
-  //               ),
-  //             );
-  //           }),
-  //         ],
-  //       );
 
   Widget rowsElevated() => controller.dadosFiltered().isEmpty
       ? const SizedBox()

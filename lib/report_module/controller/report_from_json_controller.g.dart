@@ -25,22 +25,6 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
-  late final _$isFilterVisibleAtom = Atom(
-      name: 'ReportFromJSONControllerBase.isFilterVisible', context: context);
-
-  @override
-  bool get isFilterVisible {
-    _$isFilterVisibleAtom.reportRead();
-    return super.isFilterVisible;
-  }
-
-  @override
-  set isFilterVisible(bool value) {
-    _$isFilterVisibleAtom.reportWrite(value, super.isFilterVisible, () {
-      super.isFilterVisible = value;
-    });
-  }
-
   late final _$colunasFiltradasAtom = Atom(
       name: 'ReportFromJSONControllerBase.colunasFiltradas', context: context);
 
@@ -103,24 +87,6 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
   set listaFiltrarLinhas(List<ColunasModel> value) {
     _$listaFiltrarLinhasAtom.reportWrite(value, super.listaFiltrarLinhas, () {
       super.listaFiltrarLinhas = value;
-    });
-  }
-
-  late final _$valorMarcadoNoFiltroAtom = Atom(
-      name: 'ReportFromJSONControllerBase.valorMarcadoNoFiltro',
-      context: context);
-
-  @override
-  bool get valorMarcadoNoFiltro {
-    _$valorMarcadoNoFiltroAtom.reportRead();
-    return super.valorMarcadoNoFiltro;
-  }
-
-  @override
-  set valorMarcadoNoFiltro(bool value) {
-    _$valorMarcadoNoFiltroAtom.reportWrite(value, super.valorMarcadoNoFiltro,
-        () {
-      super.valorMarcadoNoFiltro = value;
     });
   }
 
@@ -260,12 +226,10 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
   String toString() {
     return '''
 dados: ${dados},
-isFilterVisible: ${isFilterVisible},
 colunasFiltradas: ${colunasFiltradas},
 configPagina: ${configPagina},
 colunas: ${colunas},
 listaFiltrarLinhas: ${listaFiltrarLinhas},
-valorMarcadoNoFiltro: ${valorMarcadoNoFiltro},
 loading: ${loading},
 mostrarBarraPesquisar: ${mostrarBarraPesquisar},
 colunaSelecionadaParaExportacao: ${colunaSelecionadaParaExportacao},

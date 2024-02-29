@@ -36,6 +36,7 @@ dependencies:
   syncfusion_flutter_charts: ^24.2.6
   syncfusion_flutter_xlsio: ^24.2.6
   syncfusion_flutter_core: ^24.2.6
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
