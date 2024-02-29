@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   context, 
                   MaterialPageRoute(
                     builder: (context) => ReportPage(
-                      voltarComPop: true,
+                      buscarDadosNaEntrada: false,
                       function: 'repositorio/reports/query/compras/assistente_compras_report.php',
                     ),
                   )

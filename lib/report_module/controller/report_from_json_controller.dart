@@ -16,8 +16,6 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   late double sizeWidth;
   late bool isToGetDadosNaEntrada;
 
-
-
   ReportFromJSONControllerBase({
     required this.nomeFunction, 
     required this.sizeWidth,
@@ -25,9 +23,16 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   }) {
     if(isToGetDadosNaEntrada){
       getConfig().whenComplete(() => getDados());
+    }else{
+      getConfig();
     }
   }
-  Map<String, dynamic> body = {};
+  Map<String, dynamic> body = {
+      "matricula" : "3312",
+      "database" : "atacado",
+      "dtinicio" : '29/02/2024',  
+      "dtfim" : '29/02/2024',
+    };
 
   @observable
   List dados = [];
@@ -139,27 +144,20 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     var response = await API().getConfigApi(
       function: nomeFunction
     );
+    
+    configPagina = response;
 
     if(habilitarNovoRelatorio && configPagina.isNotEmpty) {
-      body = {
-        "matricula" : "3312",
-        "database" : "atacado",
-      };
+
       await getSelectedRowParaNavegarParaNovaPage();
 
     }else{
-      configPagina = response;
-
-      body = {
-        "matricula" : "3312",
-        "database" : "atacado",
-        "indexPage" : configPagina['indexPage'],
-      };
+      body.addAll({"indexPage" : configPagina['indexPage'],});
     }
-
   }
 
   getDados() async {
+    loading = true;
     keyFreeze = "";
     if (_listenerStarted) _removeListener();
     dados = [];
@@ -614,9 +612,9 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   }
 
   Future<void> getSelectedRowParaNavegarParaNovaPage() async {
-    if(configPagina['page'].toString().isNotEmpty){
+    if(configPagina['page'].isNotEmpty && configPagina['page'] != null){
       configPagina['selectedRow'] = mapSelectedRow;
-      body.addAll(configPagina['selectedRow']);
+      body.addAll({'selectedRow' : configPagina['selectedRow']});
       configPagina = configPagina['page'];
       body.addAll({'indexPage' : configPagina['indexPage']});
     }

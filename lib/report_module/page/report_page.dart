@@ -17,13 +17,13 @@ import 'package:package_reports/global/widget/widgets.dart';
 class ReportPage extends StatefulWidget {
   Map<String, dynamic> mapSelectedRow = {};
   final String function;
-  final bool? voltarComPop;
+  bool buscarDadosNaEntrada = false;
   final Color? corTitulo;
   
   ReportPage({
     super.key,
     required this.function,
-    this.voltarComPop = false,
+    required this.buscarDadosNaEntrada,
     this.corTitulo = Colors.white
   });
 
@@ -38,21 +38,38 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> with Rows {
   
   Map<String, dynamic> mapSelectedRow ={};
+  double _width = 0.0;
 
+  LayoutController layout = LayoutController();
+  Widgets wp = Widgets();
+  
   late ReportFromJSONController controller = ReportFromJSONController(
     nomeFunction: widget.function,
     sizeWidth: _width,
-    isToGetDadosNaEntrada: true,
+    isToGetDadosNaEntrada: widget.buscarDadosNaEntrada,
   );
 
-  final LayoutController layout = LayoutController();
-  Widgets wp = Widgets();
-  double _width = 0.0;
 
   setStatee(Function fn){setState(() {fn();});}
 
   @override
   void initState() {
+
+    if(!widget.buscarDadosNaEntrada){
+      controller.getConfig().whenComplete(() {
+        controller.loading = false;
+        wp.navigator(
+          pagina: FiltrosReportPage(
+            context: context,
+            mapaFiltros: controller.configPagina['filtros'],
+            indexPagina: controller.configPagina['indexPage'],
+            reportController: controller,
+          ),
+          context: context, 
+          layout: layout,
+        );        
+      });
+    }
 
     mapSelectedRow = widget.mapSelectedRow;
     if(mapSelectedRow.isNotEmpty){
@@ -89,15 +106,12 @@ class _ReportPageState extends State<ReportPage> with Rows {
               ),
             ),
           ),
-          leading: Visibility(
-            visible: widget.voltarComPop!,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              color: const Color.fromRGBO(255, 255, 255, 1),
-              onPressed: (){
-                Navigator.of(context).pop(true);
-              }
-            ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            color: const Color.fromRGBO(255, 255, 255, 1),
+            onPressed: (){
+              Navigator.of(context).pop(true);
+            }
           ),
           actions: [
             Visibility(
@@ -210,7 +224,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   padding: const EdgeInsets.only(right:5),
                   child: Observer(
                     builder: (_) => Visibility(
-                      visible: (controller.configPagina['filtros'] != [] && controller.dadosFiltered().isNotEmpty && !controller.loading),
+                      visible: (controller.configPagina.isNotEmpty && !controller.loading),
                       child: IconButton.outlined(
                         icon: Icon(
                           Icons.filter_alt_outlined, 
@@ -483,7 +497,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ReportPage(
-                          voltarComPop: true,
+                          buscarDadosNaEntrada: true,
                           function: 'repositorio/reports/query/compras/assistente_compras_report.php',
                         )..setMapSelectedRow(mapSelectedRow: val),
                       )
