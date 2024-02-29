@@ -66,8 +66,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
               return wp.switchQualTipoDeFiltroExibir(
                 context: context,
                 filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
-                dataInicio: controllerFiltro.dtinicio,
-                dataFim: controllerFiltro.dtfim,
+                controller: controllerFiltro,
                 onTap: () async {
                   controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
                     valor:controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,

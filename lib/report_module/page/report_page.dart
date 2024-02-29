@@ -251,14 +251,29 @@ class _ReportPageState extends State<ReportPage> with Rows {
             ),
           ],
         ),
-        body: Container(
-          color: Colors.white,
-          child: Observer(
-            builder: (_) => Stack(
-              children: [
-                !controller.loading || controller.dadosFiltered().isNotEmpty
-                      ? 
-                      ScrollConfiguration(
+        body: Observer(
+          builder: (_) => Visibility(
+            visible: (!controller.loading || controller.dadosFiltered().isEmpty) && !controller.primeiraBusca,
+            replacement: const Center(
+              child: Text(
+                "Por favor selecione algum filtro!", 
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            child: Container(
+              color: Colors.white,
+              child: Observer(
+                builder: (_) => Stack(
+                  children: [
+                    Visibility(
+                      visible: !controller.loading || controller.dadosFiltered().isNotEmpty,
+                      replacement: Center(
+                        child: LoadingAnimationWidget.halfTriangleDot(
+                          color: const Color(0xFFEE4E4E),
+                          size: 40,
+                        ),
+                      ),
+                      child: ScrollConfiguration(
                         behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
                           PointerDeviceKind.touch,
                           PointerDeviceKind.mouse,
@@ -335,9 +350,9 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                               ],
                                             ),
                                           ),
-    
+                                    
                                           if(controller.dadosFiltered().isEmpty)
-                                            Text(
+                                          Text(
                                               'Não há dados para os filtros selecionados...',
                                               style: TextStyle(
                                                 color: Colors.black,
@@ -349,7 +364,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                           // ROWS [DADOS]
                                           if (controller.dadosFiltered().isNotEmpty)
                                             Flexible(child: rowsBuilder()),
-    
+                                    
                                           if(controller.dadosFiltered().isEmpty)
                                             const Expanded(child: SizedBox()),
                                           
@@ -392,14 +407,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
                             ),
                           ),
                         ),
-                      ) :
-                Center(
-                  child: LoadingAnimationWidget.halfTriangleDot(
-                    color: const Color(0xFFEE4E4E),
-                    size: 40,
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -492,7 +504,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             children: [
               InkWell(
                 onDoubleTap: () {
-                  if(controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty)
+                  if(controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty){
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -501,7 +513,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           function: 'repositorio/reports/query/compras/assistente_compras_report.php',
                         )..setMapSelectedRow(mapSelectedRow: val),
                       )
-                    );
+                    );                    
+                  }
                 },
                 child: Row(
                   children: controller.row,

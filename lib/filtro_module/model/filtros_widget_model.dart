@@ -3,7 +3,8 @@ import 'package:package_reports/filtro_module/model/filtros_model.dart';
 class FiltrosWidgetModel {
 
   String tipoFiltro = '';
-  String nome = '';  
+  String titulo = '';  
+  String subtitulo = '';  
   String arquivoQuery = '';  
   String funcaoPrincipal = '';
   String bancoBuscarFiltros = '';
@@ -13,7 +14,8 @@ class FiltrosWidgetModel {
 
   FiltrosWidgetModel({
     this.tipoFiltro = '',
-    this.nome = '',
+    this.titulo = '',
+    this.subtitulo = '',
     this.arquivoQuery = '',
     this.funcaoPrincipal = '',
     this.bancoBuscarFiltros = '',
@@ -22,7 +24,8 @@ class FiltrosWidgetModel {
 
   FiltrosWidgetModel.fromJson(Map<String, dynamic> json, String key){
     tipoFiltro = key;
-    nome = json['nome'];
+    titulo = json['titulo'];
+    subtitulo = json['subtitulo'].toString();
     tipoWidget = json['tipo'];
     funcaoPrincipal = json['funcao'] ?? '';
     bancoBuscarFiltros = json['banco'] ?? '';

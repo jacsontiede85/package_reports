@@ -21,7 +21,7 @@ class ItensFiltro extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black87,
         title: Text(
-          controller.listaFiltrosParaConstruirTela[indexDoFiltro][indexDapagina]!.nome,
+          controller.listaFiltrosParaConstruirTela[indexDoFiltro][indexDapagina]!.titulo,
           style: const TextStyle(
             color: Colors.white
           ),

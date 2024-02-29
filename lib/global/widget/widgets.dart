@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/global/core/settings.dart';
 import 'package:package_reports/global/widget/texto.dart';
@@ -107,14 +109,13 @@ class Widgets {
 
   Widget selecaoDePeriodo ({
     required FiltrosWidgetModel filtrosDados,
+    required FiltroController controller,
     required BuildContext context,
-    required String dataInicio,
-    required String dataFim
   }){
     return card(
       widgetList: [
         Text(
-          filtrosDados.nome.toUpperCase(),
+          filtrosDados.titulo.toUpperCase(),
           style: TextStyle(
             fontSize: 14.0, 
             color: Colors.green[700], 
@@ -138,22 +139,26 @@ class Widgets {
           children: [
             TextButton.icon(
               icon: const Icon(Icons.calendar_today),
-              label: Text(
-                dataInicio,
-                style: const TextStyle(fontSize: 17),
+              label: Observer(
+                builder: (_) => Text(
+                  controller.dtinicio,
+                  style: const TextStyle(fontSize: 17),
+                ),
               ),
               onPressed: () async {
-                dataInicio = await Settings().selectDate(context: context);
+                controller.dtinicio = await Settings().selectDate(context: context);
               },
             ),
             TextButton.icon(
               icon: const Icon(Icons.calendar_today),
-              label: Text(
-                dataFim,
-                style: const TextStyle(fontSize: 17),
+              label: Observer(
+                builder: (_) => Text(
+                  controller.dtfim,
+                  style: const TextStyle(fontSize: 17),
+                ),
               ),
               onPressed: () async {
-                dataFim = await Settings().selectDate(context: context);
+                controller.dtfim = await Settings().selectDate(context: context);
               },
             ),
             PopupMenuButton(
@@ -184,7 +189,7 @@ class Widgets {
       child: card(
         widgetList: [
           Text(
-            filtrosDados.nome.toUpperCase(),
+            filtrosDados.titulo.toUpperCase(),
             style: TextStyle(
               fontSize: 14.0, 
               color: Colors.green[700], 
@@ -192,27 +197,26 @@ class Widgets {
             ),
             textAlign: TextAlign.left,
           ),
-          // subtitulo == null
-          //     ? const SizedBox(height: 0)
-          //     : Container(
-          //         alignment: Alignment.topLeft,
-          //         child: Row(
-          //           children: [
-          //             Expanded(
-          //               flex: 2,
-          //               child: Text(
-          //                 subtitulo,
-          //                 style: const TextStyle(
-          //                   fontSize: 9.0, 
-          //                   color: Colors.black,
-          //                 ),
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          const SizedBox(
-            height: 5,
+          Visibility(
+            visible: filtrosDados.subtitulo.isNotEmpty,
+            child: Container(
+              margin: const EdgeInsets.only(top: 5, bottom: 5),
+              alignment: Alignment.topLeft,
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      filtrosDados.subtitulo,
+                      style: const TextStyle(
+                        fontSize: 11.0, 
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           Stack(
             children: [
@@ -242,8 +246,7 @@ class Widgets {
     required BuildContext context,
     required FiltrosWidgetModel filtrosDados,
     required void Function()? onTap,
-    required String dataInicio,
-    required String dataFim
+    required FiltroController controller,
   }){
     Widget retornoFuncao = const SizedBox();
     switch(filtrosDados.tipoWidget){
@@ -252,7 +255,7 @@ class Widgets {
       break;
 
       case "datapicker" : 
-      retornoFuncao = selecaoDePeriodo(filtrosDados: filtrosDados, context: context, dataFim: dataInicio, dataInicio: dataFim);
+      retornoFuncao = selecaoDePeriodo(filtrosDados: filtrosDados, context: context, controller: controller);
       break;
 
     }

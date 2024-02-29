@@ -27,12 +27,13 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
       getConfig();
     }
   }
+  
   Map<String, dynamic> body = {
-      "matricula" : "3312",
-      "database" : "atacado",
-      "dtinicio" : '29/02/2024',  
-      "dtfim" : '29/02/2024',
-    };
+    "matricula" : "3312",
+    "database" : "atacado",
+    "dtinicio" : '29/02/2024',  
+    "dtfim" : '29/02/2024',
+  };
 
   @observable
   List dados = [];
@@ -82,11 +83,14 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   bool habilitarNovoRelatorio = false;
 
+  bool primeiraBusca = true;
+
   Map<String, dynamic> mapSelectedRow = {};
 
   setMapSelectedRow({required Map<String, dynamic> mapSelectedRow}){
     this.mapSelectedRow = mapSelectedRow;
     habilitarNovoRelatorio = true;
+    primeiraBusca = false;
   }
 
   setPositionScroll(double position) async {
@@ -158,6 +162,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   getDados() async {
     loading = true;
+    primeiraBusca = false;
     keyFreeze = "";
     if (_listenerStarted) _removeListener();
     dados = [];

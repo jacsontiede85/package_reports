@@ -83,8 +83,12 @@ abstract class FiltroControllerBase with Store {
     Map<String, dynamic> novoBody = {};
 
     for(Map<int, FiltrosWidgetModel> valores in listaFiltrosParaConstruirTela){
-      novoBody.addAll(valores[indexPagina]!.toJsonItensSelecionados());
+      novoBody.addAll(valores[indexPagina]!.toJsonItensSelecionados(), );
     }
+
+    controllerReports.body.update('dtinicio', (value) => value = dtinicio,);
+    controllerReports.body.update('dtfim', (value) => value = dtfim);
+
     controllerReports.body.addAll(novoBody);
     await controllerReports.getDados();
   }
