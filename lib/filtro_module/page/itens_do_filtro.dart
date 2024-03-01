@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 
-class ItensFiltro extends StatelessWidget {
+class ItensFiltro extends StatefulWidget {
   final FiltroController controller;
   final int indexDapagina;
   final int indexDoFiltro;
@@ -16,12 +16,24 @@ class ItensFiltro extends StatelessWidget {
   });
 
   @override
+  State<ItensFiltro> createState() => _ItensFiltroState();
+}
+
+class _ItensFiltroState extends State<ItensFiltro> {
+
+  @override
+  void initState() {
+    widget.controller.indexFiltro = widget.indexDoFiltro;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black87,
         title: Text(
-          controller.listaFiltrosParaConstruirTela[indexDoFiltro][indexDapagina]!.titulo,
+          widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro][widget.indexDapagina]!.titulo,
           style: const TextStyle(
             color: Colors.white
           ),
@@ -61,32 +73,39 @@ class ItensFiltro extends StatelessWidget {
           preferredSize: const Size(30,40),
           child: Row(
             children: [
-              SizedBox(
-                width: 200,
-                child: CheckboxListTile(
-                  value: false, 
-                  title: const Text(
-                    "Todos",
-                    style: TextStyle(
-                      color: Colors.white
+              Expanded(
+                // width: 200,
+                child: Observer(
+                  builder: (_) => CheckboxListTile(
+                    value: widget.controller.verificaSeTodosEstaoSelecionados, 
+                    title: const Text(
+                      "Todos",
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
                     ),
+                    onChanged: (_){
+                      if(widget.controller.verificaSeTodosEstaoSelecionados){
+                        widget.controller.limparSelecao();
+                      }else{
+                        widget.controller.selecionarTodos();
+                      }
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
                   ),
-                  onChanged: (value){},
-                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ),
-              SizedBox(
-                width: 210,
-                child: CheckboxListTile(
-                  value: false, 
+              Expanded(
+                child: ListTile(
                   title: const Text(
                     "Inverter seleção",
                     style: TextStyle(
                       color: Colors.white
                     ),
                   ),
-                  onChanged: (value){},
-                  controlAffinity: ListTileControlAffinity.leading,
+                  onTap: (){
+                    widget.controller.inverterSelecao();
+                  },
                 ),
               ),
             ],
@@ -95,7 +114,7 @@ class ItensFiltro extends StatelessWidget {
       ),
       body: Observer(
         builder: (_) => Visibility(
-          visible: !controller.loadingItensFiltors,
+          visible: !widget.controller.loadingItensFiltors,
           replacement: Center(
             child: LoadingAnimationWidget.halfTriangleDot(
               color: const Color(0xFFEE4E4E),
@@ -103,18 +122,18 @@ class ItensFiltro extends StatelessWidget {
             ),
           ),
           child: ListView.builder(
-            itemCount: controller.listaFiltros.length,
+            itemCount: widget.controller.listaFiltros.length,
             itemBuilder: (context, index) {
               return Observer(
                 builder: (_) => CheckboxListTile(
-                  value: controller.listaFiltros[index].selecionado,
+                  value: widget.controller.listaFiltros[index].selecionado,
                   onChanged: (valor){
-                    controller.listaFiltros[index].selecionado = !controller.listaFiltros[index].selecionado;
-                    controller.adicionarItensSelecionado(indexFiltro: indexDoFiltro, itens: controller.listaFiltros[index]);
+                    widget.controller.listaFiltros[index].selecionado = !widget.controller.listaFiltros[index].selecionado;
+                    widget.controller.adicionarItensSelecionado(itens: widget.controller.listaFiltros[index]);
                   },
-                  title: Text(controller.listaFiltros[index].titulo),
+                  title: Text(widget.controller.listaFiltros[index].titulo),
                   subtitle: Text(
-                    controller.listaFiltros[index].subtitulo,
+                    widget.controller.listaFiltros[index].subtitulo,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,

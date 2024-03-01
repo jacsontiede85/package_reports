@@ -67,21 +67,21 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                 context: context,
                 filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
                 controller: controllerFiltro,
+                index: index,
                 onTap: () async {
                   controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
                     valor:controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
-                    indexFiltro: index
                   );
-                    wp.navigator(
-                      context: context,
-                      pagina: ItensFiltro(
-                        controller: controllerFiltro,
-                        indexDapagina: widget.indexPagina,
-                        indexDoFiltro: index,
-                      ),
-                      isToShowFiltroNoMeio: true,
-                      layout: layout
-                    );
+                  wp.navigator(
+                    context: context,
+                    pagina: ItensFiltro(
+                      controller: controllerFiltro,
+                      indexDapagina: widget.indexPagina,
+                      indexDoFiltro: index,
+                    ),
+                    isToShowFiltroNoMeio: true,
+                    layout: layout
+                  );
                 },
               );              
             }

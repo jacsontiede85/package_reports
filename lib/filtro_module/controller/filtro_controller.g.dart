@@ -9,6 +9,15 @@ part of 'filtro_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$FiltroController on FiltroControllerBase, Store {
+  Computed<bool>? _$verificaSeTodosEstaoSelecionadosComputed;
+
+  @override
+  bool get verificaSeTodosEstaoSelecionados =>
+      (_$verificaSeTodosEstaoSelecionadosComputed ??= Computed<bool>(
+              () => super.verificaSeTodosEstaoSelecionados,
+              name: 'FiltroControllerBase.verificaSeTodosEstaoSelecionados'))
+          .value;
+
   late final _$listaFiltrosAtom =
       Atom(name: 'FiltroControllerBase.listaFiltros', context: context);
 
@@ -30,13 +39,15 @@ mixin _$FiltroController on FiltroControllerBase, Store {
       context: context);
 
   @override
-  List<Map<int, FiltrosWidgetModel>> get listaFiltrosParaConstruirTela {
+  List<ObservableMap<int, FiltrosWidgetModel>>
+      get listaFiltrosParaConstruirTela {
     _$listaFiltrosParaConstruirTelaAtom.reportRead();
     return super.listaFiltrosParaConstruirTela;
   }
 
   @override
-  set listaFiltrosParaConstruirTela(List<Map<int, FiltrosWidgetModel>> value) {
+  set listaFiltrosParaConstruirTela(
+      List<ObservableMap<int, FiltrosWidgetModel>> value) {
     _$listaFiltrosParaConstruirTelaAtom
         .reportWrite(value, super.listaFiltrosParaConstruirTela, () {
       super.listaFiltrosParaConstruirTela = value;
@@ -56,6 +67,22 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   set loadingItensFiltors(bool value) {
     _$loadingItensFiltorsAtom.reportWrite(value, super.loadingItensFiltors, () {
       super.loadingItensFiltors = value;
+    });
+  }
+
+  late final _$indexFiltroAtom =
+      Atom(name: 'FiltroControllerBase.indexFiltro', context: context);
+
+  @override
+  int get indexFiltro {
+    _$indexFiltroAtom.reportRead();
+    return super.indexFiltro;
+  }
+
+  @override
+  set indexFiltro(int value) {
+    _$indexFiltroAtom.reportWrite(value, super.indexFiltro, () {
+      super.indexFiltro = value;
     });
   }
 
@@ -91,14 +118,63 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$FiltroControllerBaseActionController =
+      ActionController(name: 'FiltroControllerBase', context: context);
+
+  @override
+  dynamic adicionarItensSelecionado({required FiltrosModel itens}) {
+    final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
+        name: 'FiltroControllerBase.adicionarItensSelecionado');
+    try {
+      return super.adicionarItensSelecionado(itens: itens);
+    } finally {
+      _$FiltroControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic limparSelecao() {
+    final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
+        name: 'FiltroControllerBase.limparSelecao');
+    try {
+      return super.limparSelecao();
+    } finally {
+      _$FiltroControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic selecionarTodos() {
+    final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
+        name: 'FiltroControllerBase.selecionarTodos');
+    try {
+      return super.selecionarTodos();
+    } finally {
+      _$FiltroControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic inverterSelecao() {
+    final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
+        name: 'FiltroControllerBase.inverterSelecao');
+    try {
+      return super.inverterSelecao();
+    } finally {
+      _$FiltroControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''
 listaFiltros: ${listaFiltros},
 listaFiltrosParaConstruirTela: ${listaFiltrosParaConstruirTela},
 loadingItensFiltors: ${loadingItensFiltors},
+indexFiltro: ${indexFiltro},
 dtinicio: ${dtinicio},
-dtfim: ${dtfim}
+dtfim: ${dtfim},
+verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados}
     ''';
   }
 }

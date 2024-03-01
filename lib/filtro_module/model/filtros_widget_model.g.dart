@@ -1,0 +1,34 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'filtros_widget_model.dart';
+
+// **************************************************************************
+// StoreGenerator
+// **************************************************************************
+
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
+
+mixin _$FiltrosWidgetModel on FiltrosWidgetModelBase, Store {
+  late final _$itensSelecionadosAtom =
+      Atom(name: 'FiltrosWidgetModelBase.itensSelecionados', context: context);
+
+  @override
+  Set<FiltrosModel> get itensSelecionados {
+    _$itensSelecionadosAtom.reportRead();
+    return super.itensSelecionados;
+  }
+
+  @override
+  set itensSelecionados(Set<FiltrosModel> value) {
+    _$itensSelecionadosAtom.reportWrite(value, super.itensSelecionados, () {
+      super.itensSelecionados = value;
+    });
+  }
+
+  @override
+  String toString() {
+    return '''
+itensSelecionados: ${itensSelecionados}
+    ''';
+  }
+}

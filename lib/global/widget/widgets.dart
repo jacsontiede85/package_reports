@@ -23,7 +23,7 @@ class Widgets {
     required BuildContext context, 
     Function()? onTap, 
     bool isToShowFiltroNoMeio = false, 
-    required dynamic layout, 
+    required dynamic layout,
   }) async{
     if(1==1){
       await Navigator.push(
@@ -182,7 +182,9 @@ class Widgets {
     // required Function functionGetDadosTotal, 
     // required List<Widget> selecWidgets,
     dynamic theme,
-    bool isToShowFiltroNoMeio = false
+    bool isToShowFiltroNoMeio = false,
+    required FiltroController controller,
+    required int indexFiltro
   }) {
     return InkWell(
       onTap: onTap,
@@ -224,12 +226,46 @@ class Widgets {
                 alignment: Alignment.centerLeft,
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
-                child: const Column(
+                child: Column(
                   children: [
                     Wrap(
                       spacing: 2.0, 
                       direction: Axis.horizontal, 
-                      children: [],
+                      children: controller.listaFiltrosParaConstruirTela[indexFiltro][controller.indexPagina]!.itensSelecionados.map((valores){
+                        return Observer(
+                          name: "Teste",
+                          builder: (_) => Visibility(
+                            visible: valores.selecionado,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: Colors.grey.shade100,
+                              ),
+                              margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
+                              padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.check_box_outlined,
+                                    size: 15,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                  const SizedBox(width: 4,),
+                                  Text(
+                                    valores.codigo,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w400, 
+                                      fontSize: 14, 
+                                      color: Colors.blueGrey,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
@@ -247,11 +283,18 @@ class Widgets {
     required FiltrosWidgetModel filtrosDados,
     required void Function()? onTap,
     required FiltroController controller,
+    required int index,
   }){
     Widget retornoFuncao = const SizedBox();
     switch(filtrosDados.tipoWidget){
       case "checkbox" :
-      retornoFuncao = cardFiltroGeral(context: context, filtrosDados: filtrosDados, onTap: onTap);
+      retornoFuncao = cardFiltroGeral(
+        context: context, 
+        filtrosDados: filtrosDados, 
+        onTap: onTap,
+        controller: controller,
+        indexFiltro: index
+      );
       break;
 
       case "datapicker" : 

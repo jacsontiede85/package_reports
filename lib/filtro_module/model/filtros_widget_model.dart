@@ -1,6 +1,10 @@
+import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
+part 'filtros_widget_model.g.dart';
 
-class FiltrosWidgetModel {
+class FiltrosWidgetModel = FiltrosWidgetModelBase with _$FiltrosWidgetModel;
+
+abstract class FiltrosWidgetModelBase with Store {
 
   String tipoFiltro = '';
   String titulo = '';  
@@ -10,9 +14,10 @@ class FiltrosWidgetModel {
   String bancoBuscarFiltros = '';
   String tipoWidget = '';
 
+  @observable
   Set<FiltrosModel> itensSelecionados = {};
 
-  FiltrosWidgetModel({
+  FiltrosWidgetModelBase({
     this.tipoFiltro = '',
     this.titulo = '',
     this.subtitulo = '',
@@ -22,7 +27,7 @@ class FiltrosWidgetModel {
     this.tipoWidget = '',
   });
 
-  FiltrosWidgetModel.fromJson(Map<String, dynamic> json, String key){
+  FiltrosWidgetModelBase.fromJson(Map<String, dynamic> json, String key){
     tipoFiltro = key;
     titulo = json['titulo'];
     subtitulo = json['subtitulo'].toString();

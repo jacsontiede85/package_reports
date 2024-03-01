@@ -27,21 +27,24 @@ abstract class FiltroControllerBase with Store {
   List<FiltrosModel> listaFiltros = [];
 
   @observable
-  List<Map<int ,FiltrosWidgetModel>> listaFiltrosParaConstruirTela = [];
+  List<ObservableMap<int ,FiltrosWidgetModel>> listaFiltrosParaConstruirTela = [];
 
   @observable
   bool loadingItensFiltors = false;
+
+  @observable
+  int indexFiltro = 0;
 
   @observable
   String dtinicio = Settings.getDataPTBR(), dtfim = Settings.getDataPTBR();
 
   void getDadosCriarFiltros () async {
     mapaFiltrosWidget.forEach((key, value) {
-      listaFiltrosParaConstruirTela.add({ indexPagina : FiltrosWidgetModel.fromJson(value, key)});
+      listaFiltrosParaConstruirTela.add(ObservableMap<int ,FiltrosWidgetModel>.of({ indexPagina : FiltrosWidgetModel.fromJson(value, key)}));
     });
   }
 
-  void funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required int indexFiltro}) async {
+  void funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor}) async {
     try{
       loadingItensFiltors = true;
       
@@ -71,7 +74,8 @@ abstract class FiltroControllerBase with Store {
     }
   }
 
-  adicionarItensSelecionado ({required int indexFiltro, required FiltrosModel itens}){
+  @action
+  adicionarItensSelecionado ({required FiltrosModel itens}){
     if(itens.selecionado){
       listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados.add(itens);
     }else{
@@ -91,6 +95,45 @@ abstract class FiltroControllerBase with Store {
 
     controllerReports.body.addAll(novoBody);
     await controllerReports.getDados();
+  }
+
+
+  // VERIFICAR SE TODOS OS ITENS ESTÃO SELECIONADOS
+  @computed
+  bool get verificaSeTodosEstaoSelecionados {
+    return (listaFiltros.where((element) {
+      return element.selecionado;
+    }).length) == listaFiltros.length;
+  }
+
+  // LIMPAR SELEÇÃO DE TODOS OS ITENS
+  @action
+  limparSelecao() {
+    for( FiltrosModel value in listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados ){
+      if(value.selecionado){
+        value.selecionado = false;
+      }
+    }
+  }
+
+  // SELECIONAR TODOS OS ITENS
+  @action
+  selecionarTodos() {
+    for( FiltrosModel value in listaFiltros){
+      if(!value.selecionado){
+        value.selecionado = true;
+        adicionarItensSelecionado(itens: value);
+      }
+    }
+  }
+
+  // INVERTER SELEÇÃO DOS ITENS
+  @action
+  inverterSelecao() {
+    for( FiltrosModel value in listaFiltros ){
+      value.selecionado = !value.selecionado;
+      adicionarItensSelecionado(itens: value);
+    }
   }
 
 
