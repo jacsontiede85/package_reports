@@ -44,6 +44,59 @@ mixin class Settings{
     }
     return formatarDataPadraoBR("${DateTime.now().toLocal()}");
   }
+  static qtdDiasDoMes(int mes, int ano) {
+    switch (mes) {
+      case 1:
+        return 31;
+      case 2:
+        if (ano == 2000 || ano == 2004 || ano == 2008 || ano == 2012 || ano == 2016 || ano == 2020 || ano == 2024 || ano == 2028 || ano == 2032 || ano == 2036 || ano == 2040 || ano == 2044 || ano == 2048 || ano == 2052 || ano == 2056 || ano == 2060) {
+          return 29;
+        } else {
+          return 28;
+        }
+      case 3:
+        return 31;
+      case 4:
+        return 30;
+      case 5:
+        return 31;
+      case 6:
+        return 30;
+      case 7:
+        return 31;
+      case 8:
+        return 31;
+      case 9:
+        return 30;
+      case 10:
+        return 31;
+      case 11:
+        return 30;
+      case 12:
+        return 31;
+      default:
+        return 30;
+    }
+  }
+
+  static diaDaSemanaConverte(var dia) {
+    switch (dia) {
+      case 'dom.':
+        return 0;
+      case 'seg.':
+        return 1;
+      case 'ter.':
+        return 2;
+      case 'qua.':
+        return 3;
+      case 'qui.':
+        return 4;
+      case 'sex.':
+        return 5;
+      case 'sáb.':
+        return 6;
+    }
+  }
 
 }
 

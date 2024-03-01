@@ -163,7 +163,15 @@ class Widgets {
             ),
             PopupMenuButton(
               itemBuilder: (context) {
-                return [const PopupMenuItem(child: Text("Datas"))];
+                return controller.listaDePeriodos.map((valor) {
+                  return PopupMenuItem(
+                    value: valor.replaceAll(' ', ''),
+                    child: Text(valor),
+                  );
+                },).toList();
+              },
+              onSelected: (value) {
+                controller.selecaoDeDataPorPeriodo(periodo: value);
               },
             )
           ],

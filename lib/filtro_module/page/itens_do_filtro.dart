@@ -74,7 +74,6 @@ class _ItensFiltroState extends State<ItensFiltro> {
           child: Row(
             children: [
               Expanded(
-                // width: 200,
                 child: Observer(
                   builder: (_) => CheckboxListTile(
                     value: widget.controller.verificaSeTodosEstaoSelecionados, 
@@ -84,6 +83,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
                         color: Colors.white
                       ),
                     ),
+                    hoverColor: Colors.grey.shade700,
                     onChanged: (_){
                       if(widget.controller.verificaSeTodosEstaoSelecionados){
                         widget.controller.limparSelecao();
@@ -97,12 +97,18 @@ class _ItensFiltroState extends State<ItensFiltro> {
               ),
               Expanded(
                 child: ListTile(
+                  leading: const Icon(
+                    Icons.change_circle_outlined,
+                    color: Colors.white60,
+                  ),
                   title: const Text(
                     "Inverter seleção",
                     style: TextStyle(
                       color: Colors.white
                     ),
                   ),
+                  dense: true,
+                  hoverColor: Colors.grey.shade700,
                   onTap: (){
                     widget.controller.inverterSelecao();
                   },
@@ -121,7 +127,10 @@ class _ItensFiltroState extends State<ItensFiltro> {
               size: 40,
             ),
           ),
-          child: ListView.builder(
+          child: ListView.separated(
+            separatorBuilder: (context, index) {
+              return const Divider();
+            },
             itemCount: widget.controller.listaFiltros.length,
             itemBuilder: (context, index) {
               return Observer(
