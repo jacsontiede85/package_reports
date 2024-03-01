@@ -24,7 +24,7 @@ mixin class Settings{
     DateTime selectedDate = DateTime.now();
     final DateTime? picked = await showDatePicker(
       context: context,
-      locale: const Locale('pt'),
+      locale: const Locale('pt_BR'),
       initialDate: selectedDate,
       firstDate: DateTime(2000, 1),
       lastDate: DateTime(2101),
@@ -38,12 +38,14 @@ mixin class Settings{
         );
       },
     );
+
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
       return formatarDataPadraoBR("${selectedDate.toLocal()}");
     }
     return formatarDataPadraoBR("${DateTime.now().toLocal()}");
   }
+
   static qtdDiasDoMes(int mes, int ano) {
     switch (mes) {
       case 1:
@@ -110,4 +112,8 @@ void printE(text) {
 
 void printO(text) {
   print('\x1b[32m$text\x1B[0m');
+}
+
+void printT(text) {
+  print('\x1b[35m$text\x1B[0m');
 }

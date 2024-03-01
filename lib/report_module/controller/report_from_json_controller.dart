@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/global/core/api_consumer.dart';
+import 'package:package_reports/global/core/settings.dart';
 import 'package:package_reports/report_module/model/filtrar_colunas_model.dart';
 part 'report_from_json_controller.g.dart';
 
@@ -31,8 +32,8 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   Map<String, dynamic> body = {
     "matricula" : "3312",
     "database" : "atacado",
-    "dtinicio" : '29/02/2024',  
-    "dtfim" : '29/02/2024',
+    "dtinicio" : '${Settings.formatarDataPadraoBR(DateTime.now().toString())}',  
+    "dtfim" : '${Settings.formatarDataPadraoBR(DateTime.now().toString())}',
   };
 
   @observable
@@ -87,7 +88,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   Map<String, dynamic> mapSelectedRow = {};
 
-  setMapSelectedRow({required Map<String, dynamic> mapSelectedRow}){
+  setMapSelectedRow({required Map<String, dynamic> mapSelectedRow,}){
     this.mapSelectedRow = mapSelectedRow;
     habilitarNovoRelatorio = true;
     primeiraBusca = false;

@@ -40,6 +40,9 @@ abstract class FiltroControllerBase with Store {
   @observable
   String dtinicio = Settings.getDataPTBR(), dtfim = Settings.getDataPTBR();
 
+  @observable
+  Map<String, dynamic> filtrosSalvosParaAdicionarNoBody = {};
+
   void getDadosCriarFiltros () async {
     mapaFiltrosWidget.forEach((key, value) {
       listaFiltrosParaConstruirTela.add(ObservableMap<int ,FiltrosWidgetModel>.of({ indexPagina : FiltrosWidgetModel.fromJson(value, key)}));
@@ -87,16 +90,16 @@ abstract class FiltroControllerBase with Store {
   }
 
   criarNovoBody() async {
-    Map<String, dynamic> novoBody = {};
 
     for(Map<int, FiltrosWidgetModel> valores in listaFiltrosParaConstruirTela){
-      novoBody.addAll(valores[indexPagina]!.toJsonItensSelecionados(), );
+      filtrosSalvosParaAdicionarNoBody.addAll(valores[indexPagina]!.toJsonItensSelecionados(),);
     }
 
     controllerReports.body.update('dtinicio', (value) => value = dtinicio,);
     controllerReports.body.update('dtfim', (value) => value = dtfim);
 
-    controllerReports.body.addAll(novoBody);
+    controllerReports.body.addAll(filtrosSalvosParaAdicionarNoBody);
+
     await controllerReports.getDados();
   }
 
@@ -169,8 +172,8 @@ abstract class FiltroControllerBase with Store {
 
     initializeDateFormatting('pt_BR', null);
 
-    var weekday = DateFormat.E('pt_BR').format(DateTime.now().toLocal());
-    
+    String weekday = DateFormat.E('pt_BR').format(DateTime.now().toLocal());
+
     int diaDaSemana = Settings.diaDaSemanaConverte(weekday);
 
     String dtinicioFiltro= '';
@@ -222,18 +225,18 @@ abstract class FiltroControllerBase with Store {
       case 'Anoatual':
         dtinicioFiltro = '01/01/$ano';
         dtfimFiltro = '31/12/$ano';
-        break;
+      break;
 
       case 'Anoanterior':
         dtinicioFiltro = '01/01/${ano-1}';
         dtfimFiltro = '31/12/${ano-1}';
-        break;
+      break;
 
 
       default:
         dtinicioFiltro = '01/01/${periodo.toString().replaceAll('Ano', '')}';
         dtfimFiltro = '31/12/${periodo.toString().replaceAll('Ano', '')}';
-        break;
+      break;
 
     }
 

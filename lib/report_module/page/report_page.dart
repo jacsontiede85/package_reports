@@ -27,7 +27,7 @@ class ReportPage extends StatefulWidget {
     this.corTitulo = Colors.white
   });
 
-  setMapSelectedRow({required Map<String, dynamic>  mapSelectedRow}){
+  setMapSelectedRow({required Map<String, dynamic>  mapSelectedRow,}){
     this.mapSelectedRow = mapSelectedRow;
   }
 
@@ -73,7 +73,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
 
     mapSelectedRow = widget.mapSelectedRow;
     if(mapSelectedRow.isNotEmpty){
-      controller.setMapSelectedRow(mapSelectedRow: mapSelectedRow);
+      controller.setMapSelectedRow(mapSelectedRow: mapSelectedRow,);
     }
 
     super.initState();
@@ -475,80 +475,83 @@ class _ReportPageState extends State<ReportPage> with Rows {
     );
   }
 
-  Widget rowsBuilder() => ListView.builder(
-        itemCount: controller.dadosFiltered().length,
-        physics: const BouncingScrollPhysics(),
-        controller: controller.verticalScroll,
-        itemBuilder: (BuildContext context, int index) {
-          var val = controller.dadosFiltered()[index];
-          controller.row = [];
-          val.forEach((key, value) {
-            Type type = value.runtimeType;
-            if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
-              controller.row.add(
-                rowTextFormatted(
-                  width: controller.getWidthCol(
-                    key: key,
-                  ),
-                  height: 35,
-                  controller: controller,
+  Widget rowsBuilder() {
+    return ListView.builder(
+      itemCount: controller.dadosFiltered().length,
+      physics: const BouncingScrollPhysics(),
+      controller: controller.verticalScroll,
+      itemBuilder: (BuildContext context, int index) {
+        var val = controller.dadosFiltered()[index];
+        controller.row = [];
+        val.forEach((key, value) {
+          Type type = value.runtimeType;
+          if(!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
+            controller.row.add(
+              rowTextFormatted(
+                width: controller.getWidthCol(
                   key: key,
-                  type: type,
-                  value: value,
-                  cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
-                  setStateRows: setStatee
-                )
-              );
-          });
-          return Stack(
-            children: [
-              InkWell(
-                onDoubleTap: () {
-                  if(controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ReportPage(
-                          buscarDadosNaEntrada: true,
-                          function: 'repositorio/reports/query/compras/assistente_compras_report.php',
-                        )..setMapSelectedRow(mapSelectedRow: val),
-                      )
-                    );                    
-                  }
-                },
-                child: Row(
-                  children: controller.row,
                 ),
+                height: 35,
+                controller: controller,
+                key: key,
+                type: type,
+                value: value,
+                cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
+                setStateRows: setStatee
+              )
+            );
+        });
+        return Stack(
+          children: [
+            InkWell(
+              onDoubleTap: () {
+                if(controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReportPage(
+                        buscarDadosNaEntrada: true,
+                        function: 'repositorio/reports/query/compras/assistente_compras_report.php',
+                      )..setMapSelectedRow(mapSelectedRow: val),
+                    )
+                  );                    
+                }
+              },
+              child: Row(
+                children: controller.row,
               ),
-              
-               Observer(
-                builder: (_) => Visibility(
-                  visible: controller.positionScroll > 200 && controller.visibleColElevated,
-                  child: Positioned(
-                    top: 0,
-                    left: controller.positionScroll,
-                    child: rowTextFormatted(
-                      width: controller.getWidthCol(
-                        key: controller.keyFreeze,
-                      ),
-                      height: 35,
-                      controller: controller,
+            ),
+            
+            Observer(
+              builder: (_) => Visibility(
+                visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                child: Positioned(
+                  top: 0,
+                  left: controller.positionScroll,
+                  child: rowTextFormatted(
+                    width: controller.getWidthCol(
                       key: controller.keyFreeze,
-                      type: String,
-                      value: val[controller.keyFreeze],
-                      cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
-                      setStateRows: setStatee
                     ),
+                    height: 35,
+                    controller: controller,
+                    key: controller.keyFreeze,
+                    type: String,
+                    value: val[controller.keyFreeze],
+                    cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
+                    setStateRows: setStatee
                   ),
                 ),
               ),
+            ),
 
-            ],
-          );
-        },
-      );
+          ],
+        );
+      },
+    );
+  }
 
-  Widget rowsElevated() => controller.dadosFiltered().isEmpty
+  Widget rowsElevated() {
+    return controller.dadosFiltered().isEmpty
       ? const SizedBox()
       : Column(
           mainAxisSize: MainAxisSize.max,
@@ -577,6 +580,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               }),
           ],
         );
+  }
 
   Widget rodape() {
     return Container(
