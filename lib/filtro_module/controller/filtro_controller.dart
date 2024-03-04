@@ -94,12 +94,17 @@ abstract class FiltroControllerBase with Store {
     for(Map<int, FiltrosWidgetModel> valores in listaFiltrosParaConstruirTela){
       filtrosSalvosParaAdicionarNoBody.addAll(valores[indexPagina]!.toJsonItensSelecionados(),);
     }
+    if(controllerReports.bodySecundario.isEmpty){
+      controllerReports.bodyPrimario.update('dtinicio', (value) => value = dtinicio,);
+      controllerReports.bodyPrimario.update('dtfim', (value) => value = dtfim);
 
-    controllerReports.body.update('dtinicio', (value) => value = dtinicio,);
-    controllerReports.body.update('dtfim', (value) => value = dtfim);
+      controllerReports.bodyPrimario.addAll(filtrosSalvosParaAdicionarNoBody);
+    }else{
+      controllerReports.bodySecundario.update('dtinicio', (value) => value = dtinicio,);
+      controllerReports.bodySecundario.update('dtfim', (value) => value = dtfim);
 
-    controllerReports.body.addAll(filtrosSalvosParaAdicionarNoBody);
-
+      controllerReports.bodySecundario.addAll(filtrosSalvosParaAdicionarNoBody);
+    }
     await controllerReports.getDados();
   }
 

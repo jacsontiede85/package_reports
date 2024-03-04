@@ -118,6 +118,24 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$filtrosSalvosParaAdicionarNoBodyAtom = Atom(
+      name: 'FiltroControllerBase.filtrosSalvosParaAdicionarNoBody',
+      context: context);
+
+  @override
+  Map<String, dynamic> get filtrosSalvosParaAdicionarNoBody {
+    _$filtrosSalvosParaAdicionarNoBodyAtom.reportRead();
+    return super.filtrosSalvosParaAdicionarNoBody;
+  }
+
+  @override
+  set filtrosSalvosParaAdicionarNoBody(Map<String, dynamic> value) {
+    _$filtrosSalvosParaAdicionarNoBodyAtom
+        .reportWrite(value, super.filtrosSalvosParaAdicionarNoBody, () {
+      super.filtrosSalvosParaAdicionarNoBody = value;
+    });
+  }
+
   late final _$FiltroControllerBaseActionController =
       ActionController(name: 'FiltroControllerBase', context: context);
 
@@ -166,6 +184,28 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   }
 
   @override
+  dynamic conjuntoDePeriodos() {
+    final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
+        name: 'FiltroControllerBase.conjuntoDePeriodos');
+    try {
+      return super.conjuntoDePeriodos();
+    } finally {
+      _$FiltroControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  Map<String, dynamic> selecaoDeDataPorPeriodo({required String periodo}) {
+    final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
+        name: 'FiltroControllerBase.selecaoDeDataPorPeriodo');
+    try {
+      return super.selecaoDeDataPorPeriodo(periodo: periodo);
+    } finally {
+      _$FiltroControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 listaFiltros: ${listaFiltros},
@@ -174,6 +214,7 @@ loadingItensFiltors: ${loadingItensFiltors},
 indexFiltro: ${indexFiltro},
 dtinicio: ${dtinicio},
 dtfim: ${dtfim},
+filtrosSalvosParaAdicionarNoBody: ${filtrosSalvosParaAdicionarNoBody},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados}
     ''';
   }

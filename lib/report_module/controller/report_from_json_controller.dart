@@ -29,7 +29,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     }
   }
 
-  Map<String, dynamic> body = {
+  Map<String, dynamic> bodyPrimario = {
     "matricula" : "3312",
     "database" : "atacado",
     "dtinicio" : '${Settings.formatarDataPadraoBR(DateTime.now().toString())}',  
@@ -92,16 +92,16 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   Map<String, dynamic> mapSelectedRow = {};
   Map<String, dynamic> configPageBuscaRecursiva = {};
-  Map<String, dynamic> bodyAntigoBuscaAnterior = {};
+  Map<String, dynamic> bodySecundario = {};
 
-  setMapSelectedRow({
+  setMapSelectedRowController({
     required Map<String, dynamic> mapSelectedRow, 
     required Map<String, dynamic> configPageBuscaRecursiva,
-    required Map<String, dynamic> bodyAntigoBuscaAnterior
+    required Map<String, dynamic> bodySecundario
   }){
     this.mapSelectedRow = mapSelectedRow;
     this.configPageBuscaRecursiva = configPageBuscaRecursiva;
-    this.bodyAntigoBuscaAnterior = bodyAntigoBuscaAnterior;
+    this.bodySecundario.addAll(bodySecundario);
     habilitarNovoRelatorio = true;
     primeiraBusca = false;
   }
@@ -141,9 +141,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   void _removeListener() {
     try {
-      horizontalScroll.removeListener(() {
-        //printE("Scrolled to: ${horizontalScroll.offset}");
-      });
+      horizontalScroll.removeListener(() {});
     } catch (e) {
       //printE("_startListener");
     }
@@ -157,31 +155,26 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   }
 
   //BUSCAR DADOS PARA MONTAGEM DO RELATORIO
-
   Future<void> getConfig() async {
     loading = true;
     var response = await API().getConfigApi(
       function: nomeFunction
     );
-
     configPagina = configPageBuscaRecursiva;
     if(habilitarNovoRelatorio && configPagina.isNotEmpty) {
-      
-      if(bodyAntigoBuscaAnterior.isNotEmpty){
-        body = bodyAntigoBuscaAnterior;
-      }
-
       getSelectedRowParaNavegarParaNovaPage();
-
     }else{
       configPagina = response;
-      body = body;
-
-      body.addAll({"indexPage" : configPagina['indexPage'],});
+      bodyPrimario.addAll({"indexPage" : configPagina['indexPage'],});
     }
   }
 
   void limparCamposVareaveis() {
+    if(!habilitarNovoRelatorio && !primeiraBusca){
+      configPageBuscaRecursiva = {};
+      getConfig();
+    }
+
     dados = [];
     listaFiltrarLinhas = [];
     filtrosSelected = [];
@@ -194,18 +187,24 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     if (_listenerStarted) _removeListener();
 
     // ! Necessario criar forma de limpar campos que estão indo fazer a busca de relatorios recursivos
+    
   }
 
   getDados() async {
     limparCamposVareaveis();
-
-    var response = await API().getDataReportApi(
-      isContentTypeApplicationJson: true, 
-      urlreports: nomeFunction,
-      body: body,
-    );
-
-    dados = response;
+    if(bodySecundario.isEmpty){
+     dados = await API().getDataReportApi(
+        isContentTypeApplicationJson: true, 
+        urlreports: nomeFunction,
+        body: bodyPrimario,
+      );
+    }else{      
+      dados = await API().getDataReportApi(
+        isContentTypeApplicationJson: true, 
+        urlreports: nomeFunction,
+        body: bodySecundario,
+      );
+    }
 
     List keys = [];
     for(var value in dados){
@@ -646,11 +645,11 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   getSelectedRowParaNavegarParaNovaPage() {
     if(configPagina['page'].isNotEmpty && configPagina['page'] != null){
       configPagina['selectedRow'] = mapSelectedRow;
-      body.addAll({'selectedRow' : configPagina['selectedRow']});
+      bodySecundario.addAll({'selectedRow' : configPagina['selectedRow']});
       configPagina = configPagina['page'];
       // if(body['indexPage'].isNotEmpty && body['indexPage'] != null){
-        body.update('indexPage', (value) => value = configPagina['indexPage']);
-        habilitarNovoRelatorio = false;
+      bodySecundario.update('indexPage', (value) => value = configPagina['indexPage']);
+        // habilitarNovoRelatorio = false;
       // }else{
       //   body.addAll({'indexPage' : configPagina['indexPage']});
       // }

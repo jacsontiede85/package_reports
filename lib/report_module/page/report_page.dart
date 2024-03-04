@@ -18,7 +18,7 @@ class ReportPage extends StatefulWidget {
 
   Map<String, dynamic> mapSelectedRow = {};
   Map<String, dynamic> bodyConfigBuscaRecursiva = {};
-  Map<String, dynamic> bodyAntigoBuscaAnterior = {};
+  Map<String, dynamic> getbodyPrimario = {};
   bool buscarDadosNaEntrada = false;
   
   final String function;
@@ -31,14 +31,14 @@ class ReportPage extends StatefulWidget {
     this.corTitulo = Colors.white
   });
 
-  setMapSelectedRow({
+  setMapSelectedRowPage({
     required Map<String, dynamic> mapSelectedRow, 
     required Map<String, dynamic> bodyConfigBuscaRecursiva,
-    required Map<String, dynamic> bodyAntigoBuscaAnterior,
+    required Map<String, dynamic> getbodyPrimario,
   }){
     this.mapSelectedRow = mapSelectedRow;
     this.bodyConfigBuscaRecursiva = bodyConfigBuscaRecursiva;
-    this.bodyAntigoBuscaAnterior = bodyAntigoBuscaAnterior;
+    this.getbodyPrimario = getbodyPrimario;
   }
 
   @override
@@ -80,10 +80,10 @@ class _ReportPageState extends State<ReportPage> with Rows {
     }
 
     if(widget.mapSelectedRow.isNotEmpty){
-      controller.setMapSelectedRow(
+      controller.setMapSelectedRowController(
         mapSelectedRow: widget.mapSelectedRow,
         configPageBuscaRecursiva: widget.bodyConfigBuscaRecursiva,
-        bodyAntigoBuscaAnterior: widget.bodyAntigoBuscaAnterior,
+        bodySecundario: widget.getbodyPrimario,
       );
     }
 
@@ -520,16 +520,18 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ReportPage(
-                        buscarDadosNaEntrada: true,
-                        function: 'repositorio/reports/query/compras/assistente_compras_report.php',
-                      )..setMapSelectedRow(
-                        mapSelectedRow: val,
-                        bodyConfigBuscaRecursiva: controller.configPagina,
-                        bodyAntigoBuscaAnterior: controller.body,
-                      ),
+                      builder: (context) {
+                        return ReportPage(
+                          buscarDadosNaEntrada: true,
+                          function: 'repositorio/reports/query/compras/assistente_compras_report.php',
+                        )..setMapSelectedRowPage(
+                          mapSelectedRow: val,
+                          bodyConfigBuscaRecursiva: controller.configPagina,
+                          getbodyPrimario: controller.bodyPrimario,
+                        );
+                      },
                     )
-                  );                    
+                  );                
                 }
               },
               child: Row(

@@ -40,7 +40,7 @@ class API with Settings{
   
   Future<List> getDataReportApi({
     required String urlreports, 
-    Map<String, dynamic>? body, 
+    required Map<String, dynamic>? body, 
     bool isContentTypeApplicationJson = false
   }) async {
 
