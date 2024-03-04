@@ -28,7 +28,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
       getConfig();
     }
   }
-  
+
   Map<String, dynamic> body = {
     "matricula" : "3312",
     "database" : "atacado",
@@ -56,6 +56,8 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   @observable
   List<ColunasModel> listaFiltrarLinhas = [];
+
+  List<Widget> row = [];
 
   @observable
   bool loading = false;
@@ -86,13 +88,25 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   bool primeiraBusca = true;
 
-  Map<String, dynamic> mapSelectedRow = {};
+  // ? VAREAVEIS E FUNÇÕES PARA PERMITIR A NAVEGAÇÃO ENTRE VARIOS RELATORIOS
 
-  setMapSelectedRow({required Map<String, dynamic> mapSelectedRow,}){
+  Map<String, dynamic> mapSelectedRow = {};
+  Map<String, dynamic> configPageBuscaRecursiva = {};
+  Map<String, dynamic> bodyAntigoBuscaAnterior = {};
+
+  setMapSelectedRow({
+    required Map<String, dynamic> mapSelectedRow, 
+    required Map<String, dynamic> configPageBuscaRecursiva,
+    required Map<String, dynamic> bodyAntigoBuscaAnterior
+  }){
     this.mapSelectedRow = mapSelectedRow;
+    this.configPageBuscaRecursiva = configPageBuscaRecursiva;
+    this.bodyAntigoBuscaAnterior = bodyAntigoBuscaAnterior;
     habilitarNovoRelatorio = true;
     primeiraBusca = false;
   }
+
+ // ? FIM
 
   setPositionScroll(double position) async {
     visibleColElevated = false;
@@ -149,27 +163,41 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     var response = await API().getConfigApi(
       function: nomeFunction
     );
-    
-    configPagina = response;
 
+    configPagina = configPageBuscaRecursiva;
     if(habilitarNovoRelatorio && configPagina.isNotEmpty) {
+      
+      if(bodyAntigoBuscaAnterior.isNotEmpty){
+        body = bodyAntigoBuscaAnterior;
+      }
 
-      await getSelectedRowParaNavegarParaNovaPage();
+      getSelectedRowParaNavegarParaNovaPage();
 
     }else{
+      configPagina = response;
+      body = body;
+
       body.addAll({"indexPage" : configPagina['indexPage'],});
     }
   }
 
-  getDados() async {
-    loading = true;
-    primeiraBusca = false;
-    keyFreeze = "";
-    if (_listenerStarted) _removeListener();
+  void limparCamposVareaveis() {
     dados = [];
     listaFiltrarLinhas = [];
     filtrosSelected = [];
     colunasFiltradas = {};
+    
+    loading = true;
+    primeiraBusca = false;
+    keyFreeze = "";
+    
+    if (_listenerStarted) _removeListener();
+
+    // ! Necessario criar forma de limpar campos que estão indo fazer a busca de relatorios recursivos
+  }
+
+  getDados() async {
+    limparCamposVareaveis();
 
     var response = await API().getDataReportApi(
       isContentTypeApplicationJson: true, 
@@ -329,8 +357,6 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     notify();
     _startListener();
   }
-
-  List<Widget> row = [];
 
   //retornar o tipo de dados
   getType(value) {
@@ -611,18 +637,23 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     colunasFiltradas = {};
     
     for(var value in listaFiltrarLinhas) value.selecionado = false;
-    for(var value in dados) value["isFiltered"] = false;
-    for(var value in colunas) 
-      if(colunasFiltradas.any((element) => element == value["key"])) value["isFiltered"] = true;
-      else value["isFiltered"] = false;
+      for(var value in dados) value["isFiltered"] = false;
+        for(var value in colunas) 
+          if(colunasFiltradas.any((element) => element == value["key"])) value["isFiltered"] = true;
+          else value["isFiltered"] = false;
   }
 
-  Future<void> getSelectedRowParaNavegarParaNovaPage() async {
+  getSelectedRowParaNavegarParaNovaPage() {
     if(configPagina['page'].isNotEmpty && configPagina['page'] != null){
       configPagina['selectedRow'] = mapSelectedRow;
       body.addAll({'selectedRow' : configPagina['selectedRow']});
       configPagina = configPagina['page'];
-      body.addAll({'indexPage' : configPagina['indexPage']});
+      // if(body['indexPage'].isNotEmpty && body['indexPage'] != null){
+        body.update('indexPage', (value) => value = configPagina['indexPage']);
+        habilitarNovoRelatorio = false;
+      // }else{
+      //   body.addAll({'indexPage' : configPagina['indexPage']});
+      // }
     }
   }
 }

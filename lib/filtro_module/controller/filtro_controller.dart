@@ -161,7 +161,7 @@ abstract class FiltroControllerBase with Store {
     // }
   }
 
-  // função para definir datas para o dropdown de periodos
+  // FUNÇÃO PARA DEFINIR DATAS PARA O DROPDOWN DE PERIODOS
   @action
   Map<String, dynamic> selecaoDeDataPorPeriodo({required String periodo}) {
     var today =  DateTime.now().toLocal();

@@ -15,9 +15,13 @@ import 'package:package_reports/global/widget/widgets.dart';
 
 
 class ReportPage extends StatefulWidget {
+
   Map<String, dynamic> mapSelectedRow = {};
-  final String function;
+  Map<String, dynamic> bodyConfigBuscaRecursiva = {};
+  Map<String, dynamic> bodyAntigoBuscaAnterior = {};
   bool buscarDadosNaEntrada = false;
+  
+  final String function;
   final Color? corTitulo;
   
   ReportPage({
@@ -27,8 +31,14 @@ class ReportPage extends StatefulWidget {
     this.corTitulo = Colors.white
   });
 
-  setMapSelectedRow({required Map<String, dynamic>  mapSelectedRow,}){
+  setMapSelectedRow({
+    required Map<String, dynamic> mapSelectedRow, 
+    required Map<String, dynamic> bodyConfigBuscaRecursiva,
+    required Map<String, dynamic> bodyAntigoBuscaAnterior,
+  }){
     this.mapSelectedRow = mapSelectedRow;
+    this.bodyConfigBuscaRecursiva = bodyConfigBuscaRecursiva;
+    this.bodyAntigoBuscaAnterior = bodyAntigoBuscaAnterior;
   }
 
   @override
@@ -36,8 +46,6 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> with Rows {
-  
-  Map<String, dynamic> mapSelectedRow ={};
   double _width = 0.0;
 
   LayoutController layout = LayoutController();
@@ -71,9 +79,12 @@ class _ReportPageState extends State<ReportPage> with Rows {
       });
     }
 
-    mapSelectedRow = widget.mapSelectedRow;
-    if(mapSelectedRow.isNotEmpty){
-      controller.setMapSelectedRow(mapSelectedRow: mapSelectedRow,);
+    if(widget.mapSelectedRow.isNotEmpty){
+      controller.setMapSelectedRow(
+        mapSelectedRow: widget.mapSelectedRow,
+        configPageBuscaRecursiva: widget.bodyConfigBuscaRecursiva,
+        bodyAntigoBuscaAnterior: widget.bodyAntigoBuscaAnterior,
+      );
     }
 
     super.initState();
@@ -84,7 +95,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     super.dispose();
     controller.verticalScroll.dispose();
     controller.horizontalScroll.dispose();
-    controller;
+    controller.dispose();
   }
 
   @override
@@ -512,7 +523,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       builder: (context) => ReportPage(
                         buscarDadosNaEntrada: true,
                         function: 'repositorio/reports/query/compras/assistente_compras_report.php',
-                      )..setMapSelectedRow(mapSelectedRow: val),
+                      )..setMapSelectedRow(
+                        mapSelectedRow: val,
+                        bodyConfigBuscaRecursiva: controller.configPagina,
+                        bodyAntigoBuscaAnterior: controller.body,
+                      ),
                     )
                   );                    
                 }
