@@ -192,13 +192,14 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   getDados() async {
     limparCamposVareaveis();
+    
     if(bodySecundario.isEmpty){
      dados = await API().getDataReportApi(
         isContentTypeApplicationJson: true, 
         urlreports: nomeFunction,
         body: bodyPrimario,
       );
-    }else{      
+    }else{  
       dados = await API().getDataReportApi(
         isContentTypeApplicationJson: true, 
         urlreports: nomeFunction,
@@ -647,12 +648,11 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
       configPagina['selectedRow'] = mapSelectedRow;
       bodySecundario.addAll({'selectedRow' : configPagina['selectedRow']});
       configPagina = configPagina['page'];
-      // if(body['indexPage'].isNotEmpty && body['indexPage'] != null){
-      bodySecundario.update('indexPage', (value) => value = configPagina['indexPage']);
-        // habilitarNovoRelatorio = false;
-      // }else{
-      //   body.addAll({'indexPage' : configPagina['indexPage']});
-      // }
+      if(bodySecundario['indexPage'].toString().isNotEmpty && bodySecundario['indexPage'] != null){
+        bodySecundario.update('indexPage', (value) => value = configPagina['indexPage']);
+      }else{
+        bodySecundario.addAll({'indexPage' : configPagina['indexPage']});
+      }
     }
   }
 }

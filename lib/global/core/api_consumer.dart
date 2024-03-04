@@ -78,7 +78,6 @@ class API with Settings{
     //payload
     var payload = dados;
     String payload64 = base64Encode(utf8.encode(jsonEncode(payload))); //utf8.encode para caracteres especiais
-
     //assinatura
     String secret = "tisa098*";
     var hmac = Hmac(sha256, secret.codeUnits);
@@ -87,7 +86,7 @@ class API with Settings{
     String token = "$header64.$payload64.$sign";
     
     // printW(dados);
-    // printO(token);
+    // printT(token);
 
     var res = await http.post(
       Uri.parse("${Settings.enderecoRepositorio}$url"),
