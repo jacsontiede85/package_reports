@@ -17,6 +17,14 @@ mixin _$FiltroController on FiltroControllerBase, Store {
               () => super.verificaSeTodosEstaoSelecionados,
               name: 'FiltroControllerBase.verificaSeTodosEstaoSelecionados'))
           .value;
+  Computed<List<FiltrosModel>>? _$getListFiltrosComputedComputed;
+
+  @override
+  List<FiltrosModel> get getListFiltrosComputed =>
+      (_$getListFiltrosComputedComputed ??= Computed<List<FiltrosModel>>(
+              () => super.getListFiltrosComputed,
+              name: 'FiltroControllerBase.getListFiltrosComputed'))
+          .value;
 
   late final _$listaFiltrosAtom =
       Atom(name: 'FiltroControllerBase.listaFiltros', context: context);
@@ -136,6 +144,39 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$exibirBarraPesquisaAtom =
+      Atom(name: 'FiltroControllerBase.exibirBarraPesquisa', context: context);
+
+  @override
+  bool get exibirBarraPesquisa {
+    _$exibirBarraPesquisaAtom.reportRead();
+    return super.exibirBarraPesquisa;
+  }
+
+  @override
+  set exibirBarraPesquisa(bool value) {
+    _$exibirBarraPesquisaAtom.reportWrite(value, super.exibirBarraPesquisa, () {
+      super.exibirBarraPesquisa = value;
+    });
+  }
+
+  late final _$pesquisaItensDoFiltroAtom = Atom(
+      name: 'FiltroControllerBase.pesquisaItensDoFiltro', context: context);
+
+  @override
+  String get pesquisaItensDoFiltro {
+    _$pesquisaItensDoFiltroAtom.reportRead();
+    return super.pesquisaItensDoFiltro;
+  }
+
+  @override
+  set pesquisaItensDoFiltro(String value) {
+    _$pesquisaItensDoFiltroAtom.reportWrite(value, super.pesquisaItensDoFiltro,
+        () {
+      super.pesquisaItensDoFiltro = value;
+    });
+  }
+
   late final _$FiltroControllerBaseActionController =
       ActionController(name: 'FiltroControllerBase', context: context);
 
@@ -215,7 +256,10 @@ indexFiltro: ${indexFiltro},
 dtinicio: ${dtinicio},
 dtfim: ${dtfim},
 filtrosSalvosParaAdicionarNoBody: ${filtrosSalvosParaAdicionarNoBody},
-verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados}
+exibirBarraPesquisa: ${exibirBarraPesquisa},
+pesquisaItensDoFiltro: ${pesquisaItensDoFiltro},
+verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
+getListFiltrosComputed: ${getListFiltrosComputed}
     ''';
   }
 }

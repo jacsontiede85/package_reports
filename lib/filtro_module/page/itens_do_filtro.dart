@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
+import 'package:package_reports/filtro_module/model/filtros_model.dart';
 
 class ItensFiltro extends StatefulWidget {
   final FiltroController controller;
@@ -46,27 +47,54 @@ class _ItensFiltroState extends State<ItensFiltro> {
           }
         ),
         actions: [
-          AnimatedContainer(
-            height: 40,
-            width: 400,
-            duration: const Duration(seconds: 1),
-            child: SearchBar(
-              hintText: 'Pesquisar',
-              elevation: const MaterialStatePropertyAll(0),
-              side: const MaterialStatePropertyAll(BorderSide(color: Colors.white, width: 0.25),),
-              backgroundColor: const MaterialStatePropertyAll(Colors.black12),
-              textStyle: const MaterialStatePropertyAll(
-                TextStyle(
-                  color: Colors.white
-                )
-              ),
-              hintStyle: MaterialStatePropertyAll(
-                TextStyle(
+          Observer(
+            builder: (_) => AnimatedContainer(
+              height: 40,
+              width: widget.controller.exibirBarraPesquisa ? 300 : 60,
+              margin: const EdgeInsets.only(right: 10),
+              duration: const Duration(milliseconds: 300),
+              child: SearchBar(
+                hintText: 'Pesquisar',
+                elevation: const MaterialStatePropertyAll(0),
+                side: const MaterialStatePropertyAll(BorderSide(color: Colors.white, width: 0.25),),
+                backgroundColor: const MaterialStatePropertyAll(Colors.black12),
+                leading: IconButton(
+                  onPressed: (){
+                    widget.controller.exibirBarraPesquisa = !widget.controller.exibirBarraPesquisa;
+                  },
+                  icon: Icon(
+                    widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,
+                  ),
                   color: Colors.white.withOpacity(0.7),
-                  fontWeight: FontWeight.normal
                 ),
-              ),
-            )
+                textStyle: const MaterialStatePropertyAll(
+                  TextStyle(
+                    color: Colors.white
+                  )
+                ),
+                hintStyle: MaterialStatePropertyAll(
+                  TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontWeight: FontWeight.normal
+                  ),
+                ),
+                onChanged: (value) {
+                  widget.controller.pesquisaItensDoFiltro = value;
+                  if(widget.controller.getListFiltrosComputed.isEmpty){
+                    widget.controller.bodyPesquisarFiltros.addAll({"pesquisa" : widget.controller.pesquisaItensDoFiltro});
+                    widget.controller.funcaoBuscarDadosDeCadaFiltro(
+                      valor: widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro][widget.indexDapagina]!,
+                    );
+                  }
+                  else{
+                    widget.controller.bodyPesquisarFiltros.remove('pesquisa');
+                    widget.controller.funcaoBuscarDadosDeCadaFiltro(
+                      valor: widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro][widget.indexDapagina]!,
+                    );
+                  }
+                },
+              )
+            ),
           ),
         ],
         bottom: PreferredSize(
@@ -131,18 +159,19 @@ class _ItensFiltroState extends State<ItensFiltro> {
             separatorBuilder: (context, index) {
               return const Divider();
             },
-            itemCount: widget.controller.listaFiltros.length,
+            itemCount: widget.controller.getListFiltrosComputed.length,
             itemBuilder: (context, index) {
+              FiltrosModel filtro = widget.controller.getListFiltrosComputed[index];
               return Observer(
                 builder: (_) => CheckboxListTile(
-                  value: widget.controller.listaFiltros[index].selecionado,
+                  value: filtro.selecionado,
                   onChanged: (valor){
-                    widget.controller.listaFiltros[index].selecionado = !widget.controller.listaFiltros[index].selecionado;
-                    widget.controller.adicionarItensSelecionado(itens: widget.controller.listaFiltros[index]);
+                    filtro.selecionado = !filtro.selecionado;
+                    widget.controller.adicionarItensSelecionado(itens: filtro);
                   },
-                  title: Text(widget.controller.listaFiltros[index].titulo),
+                  title: Text(filtro.titulo),
                   subtitle: Text(
-                    widget.controller.listaFiltros[index].subtitulo,
+                    filtro.subtitulo,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,

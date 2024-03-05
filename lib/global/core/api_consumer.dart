@@ -23,7 +23,7 @@ class API with Settings{
     var digest = hmac.convert("$header64.$payload64".codeUnits);
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
-    
+
     var res = await http.post(
       Uri.parse("${Settings.enderecoRepositorio}repository/"),
       body: {

@@ -18,7 +18,7 @@ class FiltrosReportPage extends StatefulWidget {
     required this.mapaFiltros,
     required this.indexPagina,
     required this.reportController,
-  });  
+  });
 
   @override
   State<FiltrosReportPage> createState() => _FiltrosReportPageState();

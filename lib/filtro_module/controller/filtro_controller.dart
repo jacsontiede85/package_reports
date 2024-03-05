@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
+import 'package:package_reports/global/core/features.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/global/core/api_consumer.dart';
 import 'package:package_reports/global/core/settings.dart';
@@ -43,6 +44,14 @@ abstract class FiltroControllerBase with Store {
   @observable
   Map<String, dynamic> filtrosSalvosParaAdicionarNoBody = {};
 
+  @observable
+  bool exibirBarraPesquisa  = false;
+
+  @observable
+  String pesquisaItensDoFiltro = '';
+
+  Map<String, dynamic> bodyPesquisarFiltros =  {};
+
   void getDadosCriarFiltros () async {
     mapaFiltrosWidget.forEach((key, value) {
       listaFiltrosParaConstruirTela.add(ObservableMap<int ,FiltrosWidgetModel>.of({ indexPagina : FiltrosWidgetModel.fromJson(value, key)}));
@@ -50,27 +59,29 @@ abstract class FiltroControllerBase with Store {
     conjuntoDePeriodos();
   }
 
-  void funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor}) async {
+  Future<void> funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor,}) async {
     try{
       loadingItensFiltors = true;
-      
+      bodyPesquisarFiltros.addAll({
+        "arquivo" : valor.arquivoQuery,
+        "function" : valor.funcaoPrincipal,
+        "matricula" : "3312",
+      });
+
       var response = await API().jwtSendJson(
         banco: valor.bancoBuscarFiltros,
-        dados: {
-          "arquivo" : valor.arquivoQuery,
-          "function" : valor.funcaoPrincipal,
-          "matricula" : "3312",
-        }
+        dados: bodyPesquisarFiltros
       );
+
       List dados = jsonDecode(response);
       
       listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
 
-      for(FiltrosModel itens in listaFiltros){
+      for(FiltrosModel itens in getListFiltrosComputed){
         for(FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados){
           if(itens.codigo == itensSelecionados.codigo){
             itens = itensSelecionados;
-            listaFiltros[listaFiltros.indexOf(itens)] = itens;
+            getListFiltrosComputed[listaFiltros.indexOf(itens)] = itens;
           }
         }
       }
@@ -254,5 +265,39 @@ abstract class FiltroControllerBase with Store {
     };
   }
 
+
+  @computed
+  List<FiltrosModel> get getListFiltrosComputed {
+    List<FiltrosModel> list = listaFiltros;
+    if(list.isEmpty) {
+      return list;
+    } else {
+      return list.where((element) =>(
+      Features.removerAcentos(
+        string: element.codigo.toString().toLowerCase(),
+      ).contains(
+        Features.removerAcentos(
+          string: pesquisaItensDoFiltro.toLowerCase(),
+        ),
+      ) 
+      ||
+      Features.removerAcentos(
+        string: element.titulo.toString().toLowerCase(),
+      ).contains(
+        Features.removerAcentos(
+          string: pesquisaItensDoFiltro.toLowerCase(),
+        ),
+      ) 
+      ||
+      Features.removerAcentos(
+        string: element.subtitulo.toString().toLowerCase(),
+      ).contains(
+        Features.removerAcentos(
+          string: pesquisaItensDoFiltro.toLowerCase(),
+        ),
+      ) 
+    )).toList();
+    }
+  }
 
 }
