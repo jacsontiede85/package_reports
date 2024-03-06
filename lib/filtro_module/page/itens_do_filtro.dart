@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
-import 'package:package_reports/filtro_module/model/filtros_pagina_atual.dart';
+import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.dart';
 
 class ItensFiltro extends StatefulWidget {
   final FiltroController controller;

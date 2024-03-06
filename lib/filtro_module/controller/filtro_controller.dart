@@ -3,7 +3,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
-import 'package:package_reports/filtro_module/model/filtros_pagina_atual.dart';
+import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/global/core/features.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';

@@ -1,6 +1,6 @@
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
-part 'filtros_pagina_atual.g.dart';
+part 'filtros_pagina_atual_model.g.dart';
 
 class FiltrosPageAtual = FiltrosPageAtualBase with _$FiltrosPageAtual;
 

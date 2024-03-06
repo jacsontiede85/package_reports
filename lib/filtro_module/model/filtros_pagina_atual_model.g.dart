@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'filtros_pagina_atual.dart';
+part of 'filtros_pagina_atual_model.dart';
 
 // **************************************************************************
 // StoreGenerator

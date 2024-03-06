@@ -194,92 +194,79 @@ class Widgets {
     required FiltroController controller,
     required int indexFiltro
   }) {
-    return InkWell(
-      onTap: onTap,
-      child: card(
-        widgetList: [
-          Text(
-            filtrosDados.titulo.toUpperCase(),
-            style: TextStyle(
-              fontSize: 14.0, 
-              color: Colors.green[700], 
-              fontWeight: FontWeight.w800,
-            ),
-            textAlign: TextAlign.left,
+    return Card(
+      child: ListTile(
+        onTap: onTap,
+        trailing: const Icon(Icons.arrow_forward_ios_rounded),
+        title: Text(
+          filtrosDados.titulo.toUpperCase(),
+          style: TextStyle(
+            fontSize: 14.0, 
+            color: Colors.green[700], 
+            fontWeight: FontWeight.w800,
           ),
-          Visibility(
-            visible: filtrosDados.subtitulo.isNotEmpty,
-            child: Container(
-              margin: const EdgeInsets.only(top: 5, bottom: 5),
-              alignment: Alignment.topLeft,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      filtrosDados.subtitulo,
-                      style: const TextStyle(
-                        fontSize: 11.0, 
-                        color: Colors.black,
-                      ),
-                    ),
+          textAlign: TextAlign.left,
+        ),
+        subtitle: Column(
+          children: [
+            Visibility(
+              visible: filtrosDados.subtitulo.isNotEmpty,
+              child: Container(
+                margin: const EdgeInsets.only(top: 5, bottom: 5),
+                alignment: Alignment.topLeft,
+                child: Text(
+                  filtrosDados.subtitulo,
+                  style: const TextStyle(
+                    fontSize: 11.0, 
+                    color: Colors.black,
                   ),
-                ],
-              ),
-            ),
-          ),
-          Stack(
-            children: [
-              Container(
-                alignment: Alignment.centerLeft,
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
-                child: Column(
-                  children: [
-                    Wrap(
-                      spacing: 2.0, 
-                      direction: Axis.horizontal, 
-                      children: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.map((valores){
-                        return Observer(
-                          builder: (_) => Visibility(
-                            visible: valores.selecionado,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: Colors.grey.shade100,
-                              ),
-                              margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
-                              padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.check_box_outlined,
-                                    size: 15,
-                                    color: Colors.grey.shade400,
-                                  ),
-                                  const SizedBox(width: 4,),
-                                  Text(
-                                    valores.codigo,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w400, 
-                                      fontSize: 14, 
-                                      color: Colors.blueGrey,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
                 ),
               ),
-            ],
-          )
-        ],
+            ),
+          
+            Stack(
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  width: MediaQuery.of(context).size.width,
+                  padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
+                  child: Column(
+                    children: [
+                      Wrap(
+                        spacing: 2.0, 
+                        direction: Axis.horizontal,
+                        children: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.map((valores){
+                          return Observer(
+                            builder: (_) => Visibility(
+                              visible: valores.selecionado,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  color: Colors.grey[300],
+                                ),
+                                margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
+                                padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
+                                child: Text(
+                                  "\u{2705} ${valores.codigo}",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500, 
+                                    fontSize: 14, 
+                                    color: Colors.blueGrey,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+
+          ],
+        ),
       ),
     );
   }
