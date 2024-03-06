@@ -7,9 +7,9 @@ class FiltrosWidgetModel = FiltrosWidgetModelBase with _$FiltrosWidgetModel;
 abstract class FiltrosWidgetModelBase with Store {
 
   String tipoFiltro = '';
-  String titulo = '';  
-  String subtitulo = '';  
-  String arquivoQuery = '';  
+  String titulo = '';
+  String subtitulo = '';
+  String arquivoQuery = '';
   String funcaoPrincipal = '';
   String bancoBuscarFiltros = '';
   String tipoWidget = '';
@@ -29,7 +29,7 @@ abstract class FiltrosWidgetModelBase with Store {
 
   FiltrosWidgetModelBase.fromJson(Map<String, dynamic> json, String key){
     tipoFiltro = key;
-    titulo = json['titulo'];
+    titulo = json['titulo'] ?? '';
     subtitulo = json['subtitulo'] ?? '';
     tipoWidget = json['tipo'];
     funcaoPrincipal = json['funcao'] ?? '';

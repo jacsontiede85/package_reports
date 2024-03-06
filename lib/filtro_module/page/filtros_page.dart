@@ -62,15 +62,15 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
         child: ListView.builder(
           itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
           itemBuilder: (context, index) {
-            if(controllerFiltro.listaFiltrosParaConstruirTela[index].keys.first == widget.indexPagina){
+            if(controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == widget.indexPagina){
               return wp.switchQualTipoDeFiltroExibir(
                 context: context,
-                filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
+                filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
                 controller: controllerFiltro,
                 index: index,
                 onTap: () async {
                   controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
-                    valor:controllerFiltro.listaFiltrosParaConstruirTela[index][widget.indexPagina]!,
+                    valor:controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
                   );
                   wp.navigator(
                     context: context,

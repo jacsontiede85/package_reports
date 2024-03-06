@@ -3,6 +3,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
+import 'package:package_reports/filtro_module/model/filtros_pagina_atual.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/global/core/features.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
@@ -30,7 +31,7 @@ abstract class FiltroControllerBase with Store {
   List<FiltrosModel> listaFiltros = [];
 
   @observable
-  List<ObservableMap<int ,FiltrosWidgetModel>> listaFiltrosParaConstruirTela = [];
+  List<FiltrosPageAtual> listaFiltrosParaConstruirTela = [];
 
   @observable
   bool loadingItensFiltors = false;
@@ -54,7 +55,12 @@ abstract class FiltroControllerBase with Store {
 
   void getDadosCriarFiltros () async {
     mapaFiltrosWidget.forEach((key, value) {
-      listaFiltrosParaConstruirTela.add(ObservableMap<int ,FiltrosWidgetModel>.of({ indexPagina : FiltrosWidgetModel.fromJson(value, key)}));
+      listaFiltrosParaConstruirTela.add(
+        FiltrosPageAtual(
+          qualPaginaFiltroPertence: indexPagina,
+          filtrosWidgetModel: FiltrosWidgetModel.fromJson(value, key)
+        )
+      );
     });
     conjuntoDePeriodos();
   }
@@ -78,11 +84,13 @@ abstract class FiltroControllerBase with Store {
       listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
 
       for(FiltrosModel itens in getListFiltrosComputed){
-        for(FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados){
-          if(itens.codigo == itensSelecionados.codigo){
-            itens = itensSelecionados;
-            getListFiltrosComputed[listaFiltros.indexOf(itens)] = itens;
-          }
+        if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
+          for(FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados){
+            if(itens.codigo == itensSelecionados.codigo){
+              itens = itensSelecionados;
+              getListFiltrosComputed[listaFiltros.indexOf(itens)] = itens;
+            }
+          }          
         }
       }
 
@@ -94,16 +102,21 @@ abstract class FiltroControllerBase with Store {
   @action
   adicionarItensSelecionado ({required FiltrosModel itens}){
     if(itens.selecionado){
-      listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados.add(itens);
+      if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.add(itens);
+      }
     }else{
-      listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados.remove(itens);
+      if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.remove(itens);
+      }
     }
   }
 
   criarNovoBody() async {
-
-    for(Map<int, FiltrosWidgetModel> valores in listaFiltrosParaConstruirTela){
-      filtrosSalvosParaAdicionarNoBody.addAll(valores[indexPagina]!.toJsonItensSelecionados(),);
+    for(FiltrosPageAtual valores in listaFiltrosParaConstruirTela){
+      if(valores.qualPaginaFiltroPertence == indexPagina){
+        filtrosSalvosParaAdicionarNoBody.addAll(valores.filtrosWidgetModel.toJsonItensSelecionados(),);        
+      }
     }
     if(controllerReports.bodySecundario.isEmpty){
       controllerReports.bodyPrimario.update('dtinicio', (value) => value = dtinicio,);
@@ -131,11 +144,14 @@ abstract class FiltroControllerBase with Store {
   // LIMPAR SELEÇÃO DE TODOS OS ITENS
   @action
   limparSelecao() {
-    for( FiltrosModel value in listaFiltrosParaConstruirTela[indexFiltro][indexPagina]!.itensSelecionados ){
-      if(value.selecionado){
-        value.selecionado = false;
-      }
+    if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
+      for( FiltrosModel value in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados ){
+        if(value.selecionado){
+          value.selecionado = false;
+        }
+      }      
     }
+
   }
 
   // SELECIONAR TODOS OS ITENS

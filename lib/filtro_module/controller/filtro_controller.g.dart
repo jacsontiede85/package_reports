@@ -47,15 +47,13 @@ mixin _$FiltroController on FiltroControllerBase, Store {
       context: context);
 
   @override
-  List<ObservableMap<int, FiltrosWidgetModel>>
-      get listaFiltrosParaConstruirTela {
+  List<FiltrosPageAtual> get listaFiltrosParaConstruirTela {
     _$listaFiltrosParaConstruirTelaAtom.reportRead();
     return super.listaFiltrosParaConstruirTela;
   }
 
   @override
-  set listaFiltrosParaConstruirTela(
-      List<ObservableMap<int, FiltrosWidgetModel>> value) {
+  set listaFiltrosParaConstruirTela(List<FiltrosPageAtual> value) {
     _$listaFiltrosParaConstruirTelaAtom
         .reportWrite(value, super.listaFiltrosParaConstruirTela, () {
       super.listaFiltrosParaConstruirTela = value;

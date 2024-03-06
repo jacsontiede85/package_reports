@@ -239,9 +239,8 @@ class Widgets {
                     Wrap(
                       spacing: 2.0, 
                       direction: Axis.horizontal, 
-                      children: controller.listaFiltrosParaConstruirTela[indexFiltro][controller.indexPagina]!.itensSelecionados.map((valores){
+                      children: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.map((valores){
                         return Observer(
-                          name: "Teste",
                           builder: (_) => Visibility(
                             visible: valores.selecionado,
                             child: Container(
