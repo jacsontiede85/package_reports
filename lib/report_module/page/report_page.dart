@@ -121,17 +121,18 @@ class _ReportPageState extends State<ReportPage> with Rows {
           actions: [
             Visibility(
               visible: controller.colunasFiltradas.isNotEmpty || controller.searchString.text.isNotEmpty,
-              child: InkWell(
-                onTap: () {
+              child: ElevatedButton.icon(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(
+                    Colors.white.withOpacity(0.3)
+                  )
+                ),
+                onPressed: () {
                   controller.clearFiltros();
                   setState(() {});
                 },
-                child: const Row(
-                  children: [
-                    Icon(Icons.close, color: Colors.red,),
-                    Text("Limpar Filtros", style: TextStyle(color: Colors.white),)
-                  ],
-                ),
+                icon: const Icon(Icons.close, color: Colors.red,),
+                label: const Text("Limpar Filtros", style: TextStyle(color: Colors.white),),
               ),
             ),
             const SizedBox(width: 30,),

@@ -208,6 +208,8 @@ class Widgets {
           textAlign: TextAlign.left,
         ),
         subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start, 
           children: [
             Visibility(
               visible: filtrosDados.subtitulo.isNotEmpty,
@@ -224,45 +226,40 @@ class Widgets {
               ),
             ),
           
-            Stack(
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  width: MediaQuery.of(context).size.width,
-                  padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
-                  child: Column(
-                    children: [
-                      Wrap(
-                        spacing: 2.0, 
-                        direction: Axis.horizontal,
-                        children: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.map((valores){
-                          return Observer(
-                            builder: (_) => Visibility(
-                              visible: valores.selecionado,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: Colors.grey[300],
-                                ),
-                                margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
-                                padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
-                                child: Text(
-                                  "\u{2705} ${valores.codigo}",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500, 
-                                    fontSize: 14, 
-                                    color: Colors.blueGrey,
-                                  ),
-                                ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Stack(
+                alignment: Alignment.centerLeft,
+                children: [
+                  Wrap(
+                    spacing: 2.0, 
+                    direction: Axis.horizontal,
+                    children: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.take(20).map((valores){
+                      return Observer(
+                        builder: (_) => Visibility(
+                          visible: valores.selecionado,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.grey[300],
+                            ),
+                            margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
+                            padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
+                            child: Text(
+                              "\u{2705} ${valores.codigo}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500, 
+                                fontSize: 14, 
+                                color: Colors.blueGrey,
                               ),
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                ),
-              ],
+                ],
+              ),
             )
 
           ],
