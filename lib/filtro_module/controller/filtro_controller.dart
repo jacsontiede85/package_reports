@@ -135,31 +135,38 @@ abstract class FiltroControllerBase with Store {
   // VERIFICAR SE TODOS OS ITENS ESTÃO SELECIONADOS
   @computed
   bool get verificaSeTodosEstaoSelecionados {
-    return (listaFiltros.where((element) {
+    return (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.where((element) {
       return element.selecionado;
-    }).length) == listaFiltros.length;
+    }).length) == getListFiltrosComputed.length;
   }
 
   // LIMPAR SELEÇÃO DE TODOS OS ITENS
   @action
   limparSelecao() {
     if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
-      for( FiltrosModel value in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados ){
-        if(value.selecionado){
-          value.selecionado = false;
-        }
-      }      
+      listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.clear();
+      for( FiltrosModel value in getListFiltrosComputed){
+        value.selecionado = false;
+      }
     }
-
   }
 
   // SELECIONAR TODOS OS ITENS
   @action
   selecionarTodos() {
-    for( FiltrosModel value in listaFiltros){
+    printE('Precisa de correção !!!!');
+    for( FiltrosModel value in getListFiltrosComputed){
       if(!value.selecionado){
         value.selecionado = true;
-        adicionarItensSelecionado(itens: value);
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.addAll({value});
+      }
+    }
+
+    if(listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.isNotEmpty){
+      for( FiltrosModel value in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados){
+        if(!value.selecionado){
+          value.selecionado = true;
+        }
       }
     }
   }
@@ -167,10 +174,18 @@ abstract class FiltroControllerBase with Store {
   // INVERTER SELEÇÃO DOS ITENS
   @action
   inverterSelecao() {
-    for( FiltrosModel value in listaFiltros ){
-      value.selecionado = !value.selecionado;
-      adicionarItensSelecionado(itens: value);
+    if(listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.isEmpty){
+      for( FiltrosModel value in getListFiltrosComputed ){
+        value.selecionado = !value.selecionado;
+        adicionarItensSelecionado(itens: value);
+      }      
+    }else{
+      for( FiltrosModel value in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados){
+        value.selecionado = !value.selecionado;
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.toList().remove(value);
+      }  
     }
+
   }
 
 
