@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
+import 'package:package_reports/filtro_module/model/filtros_pagina_atual.dart';
 
 class ItensFiltro extends StatefulWidget {
   final FiltroController controller;
@@ -22,16 +23,18 @@ class ItensFiltro extends StatefulWidget {
 
 class _ItensFiltroState extends State<ItensFiltro> {
  
+  late FiltrosPageAtual filtroPaginaAtual = widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro];
+
   @override
-  void initState() {
-    widget.controller.indexFiltro = widget.indexDoFiltro;
+  void initState() {    
     super.initState();
+    widget.controller.indexFiltro = widget.indexDoFiltro;
   }
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro].qualPaginaFiltroPertence == widget.indexDapagina,
+      visible: filtroPaginaAtual.qualPaginaFiltroPertence == widget.indexDapagina,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black87,
@@ -39,7 +42,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
             child: Column(
               children: [
                 Text(
-                  widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro].filtrosWidgetModel.titulo,
+                  filtroPaginaAtual.filtrosWidgetModel.titulo,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18
@@ -47,12 +50,14 @@ class _ItensFiltroState extends State<ItensFiltro> {
                 ),
                 Observer(
                   builder: (_) => Visibility(
-                    visible: widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro].filtrosWidgetModel.itensSelecionados.isNotEmpty,
-                    child: Text(
-                      "Qtde. selecionado: ${widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro].filtrosWidgetModel.itensSelecionados.length} de ${widget.controller.listaFiltros.length}",
-                      style: TextStyle(
-                        color: Colors.grey[400],
-                        fontSize: 10
+                    visible: filtroPaginaAtual.filtrosWidgetModel.itensSelecionados.isNotEmpty,
+                    child: Observer(
+                      builder: (_) => Text(
+                        "Qtde. selecionado: ${filtroPaginaAtual.filtrosWidgetModel.itensSelecionados.length} de ${widget.controller.listaFiltros.length}",
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 10
+                        ),
                       ),
                     ),
                   ),
@@ -104,13 +109,13 @@ class _ItensFiltroState extends State<ItensFiltro> {
                     if(widget.controller.getListFiltrosComputed.isEmpty){
                       widget.controller.bodyPesquisarFiltros.addAll({"pesquisa" : widget.controller.pesquisaItensDoFiltro});
                       widget.controller.funcaoBuscarDadosDeCadaFiltro(
-                        valor: widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro].filtrosWidgetModel,
+                        valor: filtroPaginaAtual.filtrosWidgetModel,
                       );
                     }
                     else{
                       widget.controller.bodyPesquisarFiltros.remove('pesquisa');
                       widget.controller.funcaoBuscarDadosDeCadaFiltro(
-                        valor: widget.controller.listaFiltrosParaConstruirTela[widget.indexDoFiltro].filtrosWidgetModel,
+                        valor: filtroPaginaAtual.filtrosWidgetModel,
                       );
                     }
                   },

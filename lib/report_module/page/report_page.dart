@@ -50,34 +50,27 @@ class _ReportPageState extends State<ReportPage> with Rows {
 
   LayoutController layout = LayoutController();
   Widgets wp = Widgets();
+
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   
   late ReportFromJSONController controller = ReportFromJSONController(
-    nomeFunction: widget.function,
-    sizeWidth: _width,
-    isToGetDadosNaEntrada: widget.buscarDadosNaEntrada,
-  );
+      nomeFunction: widget.function,
+      sizeWidth: _width,
+      isToGetDadosNaEntrada: widget.buscarDadosNaEntrada,
+    );
 
 
   setStatee(Function fn){setState(() {fn();});}
 
   @override
   void initState() {
-
-    if(!widget.buscarDadosNaEntrada){
+    if(controller.configPagina.isEmpty)
       controller.getConfig().whenComplete(() {
-        controller.loading = false;
-        wp.navigator(
-          pagina: FiltrosReportPage(
-            context: context,
-            mapaFiltros: controller.configPagina['filtros'],
-            indexPagina: controller.configPagina['indexPage'],
-            reportController: controller,
-          ),
-          context: context, 
-          layout: layout,
-        );        
+        if(!widget.buscarDadosNaEntrada && controller.configPagina.isNotEmpty){
+          controller.loading = false;
+          scaffoldKey.currentState!.openEndDrawer();
+        }
       });
-    }
 
     if(widget.mapSelectedRow.isNotEmpty){
       controller.setMapSelectedRowController(
@@ -106,6 +99,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     return PopScope(
       onPopInvoked: (value) => controller.willPopCallback,
       child: Scaffold(
+        key: scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.black87,
           title: Observer(
@@ -184,7 +178,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               ),
             ),
             Wrap(
-              spacing: 10,
+              spacing: 5,
               children: [
                 Observer(
                   builder: (_) => Visibility(
@@ -243,16 +237,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                         ),
                         color: widget.corTitulo ?? Colors.white,
                         onPressed: () {
-                          wp.navigator(
-                            pagina: FiltrosReportPage(
-                              context: context,
-                              mapaFiltros: controller.configPagina['filtros'],
-                              indexPagina: controller.configPagina['indexPage'],
-                              reportController: controller,
-                            ), 
-                            context: context, 
-                            layout: layout,
-                          );
+                          scaffoldKey.currentState!.openEndDrawer();
                         },
                       ),
                     ),
@@ -261,6 +246,24 @@ class _ReportPageState extends State<ReportPage> with Rows {
               ],
             ),
           ],
+        ),
+        endDrawer: Builder(
+          builder:(context) {
+            if(controller.configPagina.isNotEmpty){
+              return FiltrosReportPage(
+                context: context,
+                mapaFiltros: controller.configPagina['filtros'],
+                indexPagina: controller.configPagina['indexPage'],
+                reportController: controller,
+              );                 
+            }else{
+              return const Drawer(
+                child: Center(
+                  child: Text("Não ha filtros para esse relatorio")
+                ),
+              );
+            }
+          },
         ),
         body: Observer(
           builder: (_) => Visibility(

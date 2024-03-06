@@ -42,24 +42,6 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
-  late final _$listaFiltrosParaConstruirTelaAtom = Atom(
-      name: 'FiltroControllerBase.listaFiltrosParaConstruirTela',
-      context: context);
-
-  @override
-  List<FiltrosPageAtual> get listaFiltrosParaConstruirTela {
-    _$listaFiltrosParaConstruirTelaAtom.reportRead();
-    return super.listaFiltrosParaConstruirTela;
-  }
-
-  @override
-  set listaFiltrosParaConstruirTela(List<FiltrosPageAtual> value) {
-    _$listaFiltrosParaConstruirTelaAtom
-        .reportWrite(value, super.listaFiltrosParaConstruirTela, () {
-      super.listaFiltrosParaConstruirTela = value;
-    });
-  }
-
   late final _$loadingItensFiltorsAtom =
       Atom(name: 'FiltroControllerBase.loadingItensFiltors', context: context);
 
@@ -248,7 +230,6 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   String toString() {
     return '''
 listaFiltros: ${listaFiltros},
-listaFiltrosParaConstruirTela: ${listaFiltrosParaConstruirTela},
 loadingItensFiltors: ${loadingItensFiltors},
 indexFiltro: ${indexFiltro},
 dtinicio: ${dtinicio},

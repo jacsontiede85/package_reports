@@ -38,6 +38,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blueGrey[100],
       appBar: AppBar(
         backgroundColor: Colors.black87,
         title: wp.wpHeader(titulo: 'Filtros'),
@@ -49,12 +50,15 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
           }
         ),
         actions: [
-          ElevatedButton(
-            child: const Text("Aplicar"),
-            onPressed: () async {
-              Navigator.of(context).pop(true);
-              await controllerFiltro.criarNovoBody();
-            },
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ElevatedButton(
+              child: const Text("Aplicar"),
+              onPressed: () async {
+                Navigator.of(context).pop(true);
+                await controllerFiltro.criarNovoBody();
+              },
+            ),
           ),
         ],
       ),

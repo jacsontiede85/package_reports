@@ -30,8 +30,7 @@ abstract class FiltroControllerBase with Store {
   @observable
   List<FiltrosModel> listaFiltros = [];
 
-  @observable
-  List<FiltrosPageAtual> listaFiltrosParaConstruirTela = [];
+  ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela = ObservableList<FiltrosPageAtual>.of([]);
 
   @observable
   bool loadingItensFiltors = false;

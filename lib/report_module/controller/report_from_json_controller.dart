@@ -24,8 +24,6 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   }) {
     if(isToGetDadosNaEntrada){
       getConfig().whenComplete(() => getDados());
-    }else{
-      getConfig();
     }
   }
 
