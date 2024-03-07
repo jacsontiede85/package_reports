@@ -50,13 +50,13 @@ class _ItensFiltroState extends State<ItensFiltro> {
                 ),
                 Observer(
                   builder: (_) => Visibility(
-                    visible: filtroPaginaAtual.filtrosWidgetModel.itensSelecionados.isNotEmpty,
+                    visible: widget.controller.getQtdeItensSelecionados > 0,
                     child: Observer(
                       builder: (_) => Text(
-                        "Qtde. selecionado: ${filtroPaginaAtual.filtrosWidgetModel.itensSelecionados.length} de ${widget.controller.listaFiltros.length}",
+                        "Qtde. selecionado: ${widget.controller.getQtdeItensSelecionados} de ${widget.controller.getListFiltrosComputed.length}",
                         style: TextStyle(
                           color: Colors.grey[400],
-                          fontSize: 10
+                          fontSize: 10,
                         ),
                       ),
                     ),

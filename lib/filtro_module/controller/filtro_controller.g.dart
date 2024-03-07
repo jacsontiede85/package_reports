@@ -9,6 +9,13 @@ part of 'filtro_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$FiltroController on FiltroControllerBase, Store {
+  Computed<int>? _$getQtdeItensSelecionadosComputed;
+
+  @override
+  int get getQtdeItensSelecionados => (_$getQtdeItensSelecionadosComputed ??=
+          Computed<int>(() => super.getQtdeItensSelecionados,
+              name: 'FiltroControllerBase.getQtdeItensSelecionados'))
+      .value;
   Computed<bool>? _$verificaSeTodosEstaoSelecionadosComputed;
 
   @override
@@ -256,6 +263,7 @@ dtfim: ${dtfim},
 filtrosSalvosParaAdicionarNoBody: ${filtrosSalvosParaAdicionarNoBody},
 exibirBarraPesquisa: ${exibirBarraPesquisa},
 pesquisaItensDoFiltro: ${pesquisaItensDoFiltro},
+getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}
     ''';

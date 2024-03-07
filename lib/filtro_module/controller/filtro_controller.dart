@@ -52,6 +52,12 @@ abstract class FiltroControllerBase with Store {
   String pesquisaItensDoFiltro = '';
 
   Map<String, dynamic> bodyPesquisarFiltros =  {};
+  
+  List<String> listaDePeriodos = [];
+
+  // RETORNAR QTDE DE ITENS SELECIONADOS
+  @computed
+  int get getQtdeItensSelecionados => (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.length);
 
   void getDadosCriarFiltros () async {
     mapaFiltrosWidget.forEach((key, value) {
@@ -175,9 +181,6 @@ abstract class FiltroControllerBase with Store {
     }  
   }
 
-
-  List<String> listaDePeriodos = [];
-
   @action
   conjuntoDePeriodos() {
     listaDePeriodos=[];
@@ -281,7 +284,6 @@ abstract class FiltroControllerBase with Store {
       'dtfimFiltro': dtfimFiltro
     };
   }
-
 
   @computed
   List<FiltrosModel> get getListFiltrosComputed {
