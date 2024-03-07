@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
@@ -24,7 +25,7 @@ class FiltrosReportPage extends StatefulWidget {
   State<FiltrosReportPage> createState() => _FiltrosReportPageState();
 }
 
-class _FiltrosReportPageState extends State<FiltrosReportPage> {
+class _FiltrosReportPageState extends State<FiltrosReportPage>{
   
   late FiltroController controllerFiltro = FiltroController(
     mapaFiltrosWidget: widget.mapaFiltros,
@@ -63,36 +64,40 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
         ],
       ),
       body: Center(
-        child: ListView.builder(
-          itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
-          itemBuilder: (context, index) {
-            if(controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == widget.indexPagina){
-              return wp.switchQualTipoDeFiltroExibir(
-                context: context,
-                filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                controller: controllerFiltro,
-                index: index,
-                onTap: () async {
-                  controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
-                    valor:controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                  );
-                  wp.navigator(
+        child: Observer(
+          builder: (context) {
+            return ListView.builder(
+              itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
+              itemBuilder: (context, index) {
+                if(controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == widget.indexPagina){
+                  return wp.switchQualTipoDeFiltroExibir(
                     context: context,
-                    pagina: ItensFiltro(
-                      controller: controllerFiltro,
-                      indexDapagina: widget.indexPagina,
-                      indexDoFiltro: index,
-                    ),
-                    isToShowFiltroNoMeio: true,
-                    layout: layout
-                  );
-                },
-              );              
-            }
-            else{
-              return Container();
-            }
-          },
+                    filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                    controller: controllerFiltro,
+                    index: index,
+                    onTap: () async {
+                      controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
+                        valor:controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                      );
+                      wp.navigator(
+                        context: context,
+                        pagina: ItensFiltro(
+                          controller: controllerFiltro,
+                          indexDapagina: widget.indexPagina,
+                          indexDoFiltro: index,
+                        ),
+                        isToShowFiltroNoMeio: true,
+                        layout: layout
+                      );
+                    },
+                  );              
+                }
+                else{
+                  return Container();
+                }
+              },
+            );
+          }
         ),
       ),
     );

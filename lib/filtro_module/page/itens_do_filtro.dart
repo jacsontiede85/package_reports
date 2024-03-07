@@ -68,7 +68,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             color: const Color.fromRGBO(255, 255, 255, 1),
-            onPressed: (){
+            onPressed: () async {
               Navigator.of(context).pop(true);
             }
           ),

@@ -230,7 +230,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   padding: const EdgeInsets.only(right:5),
                   child: Observer(
                     builder: (_) => Visibility(
-                      visible: (controller.configPagina.isNotEmpty && !controller.loading),
+                      visible: (controller.configPagina.isNotEmpty && !controller.loading && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty),
                       child: IconButton.outlined(
                         icon: Icon(
                           Icons.filter_alt_outlined, 
@@ -330,7 +330,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                               scrollDirection: Axis.horizontal,
                               child: Container(
                                 width: _width > controller.widthTable ? _width : controller.widthTable + 10,
-                                alignment: Alignment.topLeft,
+                                alignment: _width > controller.widthTable ? Alignment.center : Alignment.topLeft,
                                 child: Stack(
                                   children: [
                                     Container(
@@ -519,7 +519,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
         return Stack(
           children: [
             InkWell(
-              onDoubleTap: () {
+              onDoubleTap: controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty ? () {
                 if(controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty){
                   Navigator.push(
                     context,
@@ -537,7 +537,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                     )
                   );                
                 }
-              },
+              } : null,
               child: Row(
                 children: controller.row,
               ),

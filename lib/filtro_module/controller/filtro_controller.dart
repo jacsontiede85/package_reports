@@ -30,6 +30,7 @@ abstract class FiltroControllerBase with Store {
   @observable
   List<FiltrosModel> listaFiltros = [];
 
+  @observable
   ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela = ObservableList<FiltrosPageAtual>.of([]);
 
   @observable
@@ -109,6 +110,8 @@ abstract class FiltroControllerBase with Store {
         listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.remove(itens);
       }
     }
+
+    listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
   }
 
   criarNovoBody() async {
