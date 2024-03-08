@@ -191,13 +191,14 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 Observer(
                   builder: (_) => Visibility(
                     visible: !controller.loading,
-                    child: IconButton.outlined(
+                    child: IconButton(
                       icon: Icon(
                         Icons.bar_chart,
                         size: layout.isDesktop ? 20 : 15,
                       ),
                       color: widget.corTitulo ?? Colors.white,
-                      onPressed: () async => await Navigator.push(
+                      onPressed: () async {
+                        await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ChartsReport(
@@ -205,25 +206,32 @@ class _ReportPageState extends State<ReportPage> with Rows {
                               title: controller.configPagina['name'],
                             ),
                           ),
-                        ),
+                        );
+                      },
                     ),
                   ),
                 ),
                 Observer(
                   builder: (_) => Visibility(
                     visible: (controller.dadosFiltered().isNotEmpty && !controller.loading),
-                    child: IconButton.outlined(
-                      icon: Icon(
-                        Icons.grid_on_outlined, 
-                        size: layout.isDesktop ? 20 : 15,
+                    child: IconButton(
+                      icon: const Text(
+                        "Excel",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700
+                        ),
                       ),
-                      color: widget.corTitulo ?? Colors.white,
                       onPressed: () {
                         showDialog(
                           context: context,
                           builder: (context) => exibirSelecaoDeColunasParaExporta(
-                            onPressed: (){
-                              ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller);
+                            onPressedTudo: (){
+                              ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller, filtraTudo: true);
+                              Navigator.pop(context);
+                            },
+                            onPressedFiltrado: (){
+                              ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller, filtraTudo: false);
                               Navigator.pop(context);
                             },
                             titulo: 'Exportar para Excel'
@@ -238,7 +246,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   child: Observer(
                     builder: (_) => Visibility(
                       visible: (controller.configPagina.isNotEmpty && !controller.loading && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty),
-                      child: IconButton.outlined(
+                      child: IconButton(
                         icon: Icon(
                           Icons.filter_alt_outlined, 
                           size: layout.isDesktop ? 20 : 15,
@@ -679,25 +687,44 @@ class _ReportPageState extends State<ReportPage> with Rows {
     );
   }
 
-  Widget exibirSelecaoDeColunasParaExporta ({required void Function()? onPressed, required String titulo}){
+  Widget exibirSelecaoDeColunasParaExporta ({required void Function()? onPressedFiltrado, required void Function()? onPressedTudo, required String titulo}){
     return AlertDialog(
       elevation: 0,
       title: Text(
         titulo,
         style: const TextStyle(
           fontSize: 18,
-          fontWeight: FontWeight.w500
+          fontWeight: FontWeight.w500 
         ),
       ),
       actions: [
+        Observer(
+          builder:(_) => Visibility(
+            visible: controller.colunasFiltradas.isNotEmpty,
+            child: ElevatedButton.icon(
+              onPressed: onPressedFiltrado,
+              icon:  Icon(
+                Icons.file_download,
+                color: Colors.blue[500],
+              ),
+              label: Text(
+                "Linhas filtradas",
+                style: TextStyle(
+                  fontSize: 19,
+                  color: Colors.blue[500],
+                ),
+              )
+            ),
+          ),
+        ),
         ElevatedButton.icon(
-          onPressed: onPressed,
+          onPressed: onPressedTudo,
           icon:  Icon(
-            Icons.sim_card_download_rounded,
+            Icons.file_download,
             color: Colors.green[500],
           ),
           label: Text(
-            "Exportar",
+            "Exportar tudo",
             style: TextStyle(
               fontSize: 19,
               color: Colors.green[500],

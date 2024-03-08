@@ -11,9 +11,10 @@ import 'package:universal_html/html.dart' show AnchorElement;
 
 class ReportToXLSXController extends WidgetReportXLSX {
   String xlsxFileName = "";
+  bool filtraTudo = true;
 
   //CONSTRUCTOR
-  ReportToXLSXController({required String title, required ReportFromJSONController reportFromJSONController}) {
+  ReportToXLSXController({required String title, required ReportFromJSONController reportFromJSONController, required this.filtraTudo}) {
     createExcel(title: title, reportFromJSONController: reportFromJSONController);
   }
 
@@ -63,31 +64,59 @@ class ReportToXLSXController extends WidgetReportXLSX {
 
     /////////////////////////////////////////////////// LINHAS
     linha = linha + 1;
-        for (Map<String,dynamic> map in reportFromJSONController.dados) {
+    for (Map<String,dynamic> map in reportFromJSONController.dados) {
 
       coluna=1;
-      for (var colunas in reportFromJSONController.colunas){
-        if(colunas['selecionado']){
-          map.forEach((key, value) {
 
-            Style style = linha%2==0 ? celulaCinzaStyle : celulaBrancoStyle;
-          
-            if(!key.toString().contains('__INVISIBLE') && colunas['key'] == key.toString()){
-              celulaText(
-                sheet: sheet, 
-                linha: linha, 
-                coluna: coluna, 
-                style: style, 
-                text: value,
-              );              
-            }
+      if(bool.parse(map['isFiltered'].toString()) == true && !filtraTudo) {
+        for (var colunas in reportFromJSONController.colunas){
+          if(colunas['selecionado']){
+            map.forEach((key, value) {
 
-          });  
-          coluna++;            
+              Style style = linha%2==0 ? celulaCinzaStyle : celulaBrancoStyle;
+            
+              if(!key.toString().contains('__INVISIBLE') && colunas['key'] == key.toString()){
+                celulaText(
+                  sheet: sheet, 
+                  linha: linha, 
+                  coluna: coluna, 
+                  style: style, 
+                  text: value,
+                );              
+              }
+
+            });  
+            coluna++;            
+          }
         }
+        linha++;
       }
 
-      linha++;
+      if(filtraTudo){
+        for (var colunas in reportFromJSONController.colunas){
+          if(colunas['selecionado']){
+            map.forEach((key, value) {
+
+              Style style = linha%2==0 ? celulaCinzaStyle : celulaBrancoStyle;
+            
+              if(!key.toString().contains('__INVISIBLE') && colunas['key'] == key.toString()){
+                celulaText(
+                  sheet: sheet, 
+                  linha: linha, 
+                  coluna: coluna, 
+                  style: style, 
+                  text: value,
+                );              
+              }
+
+            });  
+            coluna++;            
+          }
+        }
+        linha++;
+      }
+
+      
     }
 
     /////////////////////////////////////////////////// OPEN FILE
@@ -108,7 +137,7 @@ class ReportToXLSXController extends WidgetReportXLSX {
     }
 
     reportFromJSONController.loading = false;
-  }
+  }  
 }
 
 class WidgetReportXLSX extends WidgetXLSX {
