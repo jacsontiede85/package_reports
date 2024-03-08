@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/page/filtros_page.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
@@ -54,10 +55,16 @@ class _ReportPageState extends State<ReportPage> with Rows {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   
   late ReportFromJSONController controller = ReportFromJSONController(
-      nomeFunction: widget.function,
-      sizeWidth: _width,
-      isToGetDadosNaEntrada: widget.buscarDadosNaEntrada,
-    );
+    nomeFunction: widget.function,
+    sizeWidth: _width,
+    isToGetDadosNaEntrada: widget.buscarDadosNaEntrada,
+  );
+
+  late FiltroController controllerFiltro = FiltroController(
+    mapaFiltrosWidget: controller.configPagina['filtros'],
+    indexPagina: controller.configPagina['indexPage'],
+    controllerReports: controller,
+  );
 
 
   setStatee(Function fn){setState(() {fn();});}
@@ -252,10 +259,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           builder:(context) {
             if(controller.configPagina.isNotEmpty){
               return FiltrosReportPage(
-                context: context,
-                mapaFiltros: controller.configPagina['filtros'],
-                indexPagina: controller.configPagina['indexPage'],
-                reportController: controller,
+                controllerFiltro: controllerFiltro,
               );                 
             }else{
               return const Drawer(

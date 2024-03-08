@@ -3,22 +3,15 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
-import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/global/widget/widgets.dart';
 
 class FiltrosReportPage extends StatefulWidget {
   
-  final BuildContext context;
-  final Map<String, dynamic> mapaFiltros;
-  final int indexPagina;
-  final ReportFromJSONController reportController;
+  final FiltroController controllerFiltro;
   
   const FiltrosReportPage({
     super.key,
-    required this.context,
-    required this.mapaFiltros,
-    required this.indexPagina,
-    required this.reportController,
+    required this.controllerFiltro,
   });
 
   @override
@@ -27,11 +20,7 @@ class FiltrosReportPage extends StatefulWidget {
 
 class _FiltrosReportPageState extends State<FiltrosReportPage>{
   
-  late FiltroController controllerFiltro = FiltroController(
-    mapaFiltrosWidget: widget.mapaFiltros,
-    indexPagina: widget.indexPagina,
-    controllerReports: widget.reportController
-  );
+  late FiltroController controllerFiltro = widget.controllerFiltro;
   
   Widgets wp = Widgets();
   LayoutController layout = LayoutController();
@@ -69,7 +58,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
             return ListView.builder(
               itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
               itemBuilder: (context, index) {
-                if(controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == widget.indexPagina){
+                if(controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == controllerFiltro.indexPagina){
                   return wp.switchQualTipoDeFiltroExibir(
                     context: context,
                     filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
@@ -83,7 +72,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                         context: context,
                         pagina: ItensFiltro(
                           controller: controllerFiltro,
-                          indexDapagina: widget.indexPagina,
+                          indexDapagina: controllerFiltro.indexPagina,
                           indexDoFiltro: index,
                         ),
                         isToShowFiltroNoMeio: true,
