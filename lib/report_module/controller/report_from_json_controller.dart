@@ -234,6 +234,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
       __FREEZE        => congelar coluna ao deslizar barra de scroll horizontal
       __SIZEW         => passar largura fixa de coluna. Exemplo: __SIZEW300
       __LOCK          => Validar se o usuario tem acesso ao campo
+      __ISRODAPE      => Usar para fazer um rodapé personalizado
 
       IMPORTANTE: coso o tipo de dado não seja informado, o tipo de formatação será identificado a partir dos dados recebidos
     */

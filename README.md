@@ -19,7 +19,147 @@ dependencies:
 flutter pub get
 ```
 
+## Exemplo de 'cabeçalho' que arquivo .PHP que contém a query deve ter
 
+- Para a ultilização dos filtros é necessario criar uma variavel que recebrá um array, esse array deve seguir o padrão imposto no exemplo abaixo, para receber esses
+dados basta, ultilizar um requisição do tipo GET para o arquivo que deseja.
+
+```php
+
+    $menu               = 'Vendas'; // Menu que será exibido no aplicativos
+    $submenu            = '';   //submenu se houver (OPCIONAL)
+    $nomeDoArquivo      = 'query_teste_api.php'; //somente nome do arquivo + extensão
+    $name               = 'Resumo de vendas (Por supervisor)'; // nome de apresentação no aplicativo
+
+    $urlapi = "repositorio/reports/query/compras/";
+    $config = [
+        'menu'=> $menu,
+        'submenu'=> $submenu,
+        'urlapi'=> $urlapi.$nomeDoArquivo,
+        'name'=> $name,
+        'iconFlutterID'=> 'trending_up', // --> https://fonts.google.com/icons?selected=Material+Icons&icon.platform=flutter
+        'graficosDisponiveis' => [
+            'barras' => true,
+            'linhas' => true,
+            'circular' => true,
+        ],
+        'indexPage'=> 0,
+        'selectedRow' => [],
+        'filtros'=> [
+            "cardPeriodo" => [
+                "tipo" => "datapicker",
+                "titulo" => "Selecionar pediodo"
+            ],
+            "cardFilial" => [
+                "banco" => "atacado_analytics",
+                "arquivoquery" =>"query_filtros.php",
+                "funcao" => "getfilial",
+                "tipo" => "checkbox",
+                "titulo" => "Selecionar filial",
+                "subtitulo" => "São exibidos somente filiais com permissão na rotina 131 do Winthor"
+            ],
+            "cardFornecedor" => [
+                "banco" => "atacado_analytics",
+                "arquivoquery" =>"query_filtros.php",
+                "funcao" => "getFornecedor",
+                "tipo" => "checkbox",
+                "titulo" => "Selecionar fornecedor"
+            ],
+            "cardsupervisor" => [
+                "banco" => "atacado_analytics",
+                "arquivoquery" =>"query_filtros.php",
+                "funcao" => "getSupervisor",
+                "tipo" => "checkbox",
+                "titulo" => "Selecionar supervisor",
+                "subtitulo" => "São exibidos somente supervisores com permissão na rotina 131 do Winthor"
+            ],
+        ],
+
+        'page' => [
+            'menu'=> $menu,
+            'submenu'=> $submenu,
+            'urlapi'=> 'repositorio/reports/query/compras/sql1.php',
+            'name'=> 'Resumo de vendas (Por rca)',
+            'iconFlutterID'=> 'trending_up', // --> https://fonts.google.com/icons?selected=Material+Icons&icon.platform=flutter
+            'indexPage'=> 1,
+            'selectedRow' => [],
+            'filtros'=> [
+                "cardPeriodo" => [
+                    "tipo" => "datapicker",
+                    "titulo" => "Selecionar pediodo"
+                ],
+                "cardFilial" => [
+                    "banco" => "atacado_analytics",
+                    "arquivoquery" =>"query_filtros.php",
+                    "funcao" => "getfilial",
+                    "tipo" => "checkbox",
+                    "titulo" => "Selecionar filial",
+                    "subtitulo" => "São exibidos somente filiais com permissão na rotina 131 do Winthor"
+                ],
+            ],
+        ]
+    ];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'GET'){
+        echo json_encode($config);
+        exit;
+    }
+```
+
+- Nessa nova versão do Package Reports é possivel criar relatorios dinamicos, se no 'cabeçalho' do arquivo conter 'page' significa que esse relatorio tem mais uma pagina de navegação, para criar relatorios dinamicos é aconcelhado a criação de uma pasta com todas as querys que esse relatorio terá, ao navegar para a proxima pagina do relatorio, a variavel dentro do array ```$config``` a chave 'selectedRow' será preenchida com um json com todos os valores da linha selecionada, no proximo arquivo apontado dentro de 'page' basta consumir qualquer item desse json para criar um filtro fixo em sua busca.
+
+- Exemplo selectedRow:
+```php
+/* Ao clicar na linha que deseja será adicionado no body da busca o valor de selectedRow como o exemplo abaxio*/
+/* selectedRow : {COD__INT__NO_METRICS: 0, NOME: UF - Vendedor , VLR_VENDA_LIQ: 280356.03, QTDE_CLIENTE_POSITIVADO__INT: 18}*/
+
+$codsupervisor = $obj->selectedRow->COD__INT__NO_METRICS;
+
+$sql = "SELECT CODSUPERVISOR 
+        FROM PCSUPERV 
+        WHERE 1=1 
+        AND PCSUPERV.CODSUPERVISOR IN ($codsupervisor)";
+
+```
+
+- Para obter o retorno do relatorio dinamico, no arquivo principal (mesmo que contém o 'cabeçalho') é necessario uma pequena tratativa para executar as query informadas em cadas arquivo, lembrando que as que nesse tipo de relatorio os arquivos precisarão apenas da tratativa do selectedRow e a varevael que contém a quer:
+
+```php
+
+else{
+        include_once "data_input_and_jwt_validation.php";
+        $obj = get_data_input_and_jwt_validation();
+
+        include_once "bd_instancia.php";
+        
+        switch($obj->indexPage){
+            case 0:
+                include_once "query_teste_api.php";
+                $db     = instancia_DB($obj->database);
+                $result = $db->select($sql);
+                break;
+
+            case 1:
+                include_once "sql1.php";
+                $db     = instancia_DB($obj->database);
+                $result = $db->select($sql);
+                break;
+        }
+
+        http_response_code(200);
+        echo json_encode($result);
+        exit;        
+    }
+```
+
+- Ainda olhando para o arquivo principal o array $config contém uma chave chamada 'filtro' que deve seguir o padrão mostrado acima, é usado para gerar a pagina de filtro
+
+### Pagina de Filtro:
+![Exemplo pagina de filtros](lib/global/src/img/filtro.png)
+
+- Caso o filtro seja do tipo checkbox é necessario informar o banco em que fará a busca, o arquivo e a função para essa busca, sendo assim o botão sera clicavel navegando para um tela a qual poderar selecionar o valores a serem filtrados:
+
+![Selecionar valores para filtrar](lib/global/src/img/selecionar_filtros.png)
 
 ## Exemplo de API para gerar JSON de entrada para o PACKAGE REPORTS
 
@@ -87,34 +227,34 @@ flutter pub get
 ```dart
     /*
       Forma de realizar formatação de dados e alinhamento em tela.
-      Deve-se enviar a seguinte informação no final de cada nome de coluna na query, sendo maíusculo ou minúsculo:
+      Deve-se enviar a seguinte informação no final de cada nome de coluna na query:
 
-      __int_string    => para forçar numero ser tratado e alinhado como string
-      __string        => forçar o uso de String
-      __double        => forçar uso de double
-      __int           => forçar uso de int
-      __no_metrics    => excluir da exibição de metricas dos graficos
-      __nochartarea   => excluir do grafico de area e line
-      __invisible     => não exibir campo no relatório
-      __dontsum       => não somar na barra de totalizador
-      __perc          => colocar % (percentagem) junto ao texto da coluna
-      __freeze        => congelar coluna ao deslizar barra de scroll horizontal
-      __sizew         => passar largura fixa de coluna. Exemplo: __sizew30
+      __INT_STRING    => para forçar numero ser tratado e alinhado como string
+      __STRING        => forçar o uso de String
+      __DOUBLE        => forçar uso de double
+      __INT           => forçar uso de int
+      __NO_METRICS    => excluir da exibição de metricas dos graficos
+      __NOCHARTAREA   => excluir do grafico de area e line
+      __INVISIBLE     => não exibir campo no relatório
+      __DONTSUM       => não somar na barra de totalizador
+      __PERC          => colocar % (percentagem) junto ao texto da coluna
+      __FREEZE        => congelar coluna ao deslizar barra de scroll horizontal
+      __SIZEW         => passar largura fixa de coluna. Exemplo: __SIZEW300
+      __LOCK          => Validar se o usuario tem acesso ao campo
+      __ISRODAPE      => Usar para fazer um rodapé personalizado
 
-      IMPORTANTE:
-      - Caso o tipo de dado não seja informado através de uma tag especificada acima,
-        o tipo de formatação será determinado a partir dos dados recebidos.
+      IMPORTANTE: coso o tipo de dado não seja informado, o tipo de formatação será identificado a partir dos dados recebidos
     */
 ```
 
 ### Relatório de saída:
-![Relatório de exemplo](lib/exemplo/img/exemplo.png)
+![Relatório de exemplo](lib/global/src/img/exemplo.png)
 
 ### Relatório de saída - Gráficos:
-![Relatório de exemplo](lib/exemplo/img/exemplo_grafico.png)
+![Relatório de exemplo](lib/global/src/img/exemplo_grafico.png)
 
 ### Relatório de saída - Exporte para Excel:
-![Relatório de exemplo](lib/exemplo/img/exemplo_xlsx.png)
+![Relatório de exemplo](lib/global/src/img/exemplo_xlsx.png)
 
 
 ## Estrutura do package_reports
