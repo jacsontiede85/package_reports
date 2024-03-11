@@ -22,7 +22,7 @@ flutter pub get
 ## Exemplo de 'cabeçalho' que arquivo .PHP que contém a query deve ter
 
 - Para a ultilização dos filtros é necessario criar uma variavel que recebrá um array, esse array deve seguir o padrão imposto no exemplo abaixo, para receber esses
-dados basta, ultilizar um requisição do tipo GET para o arquivo que deseja.
+dados basta, ultilizar um requisição do tipo ```GET``` para o arquivo que deseja.
 
 ```php
 
@@ -106,7 +106,7 @@ dados basta, ultilizar um requisição do tipo GET para o arquivo que deseja.
     }
 ```
 
-- Nessa nova versão do Package Reports é possivel criar relatorios dinamicos, se no 'cabeçalho' do arquivo conter 'page' significa que esse relatorio tem mais uma pagina de navegação, para criar relatorios dinamicos é aconcelhado a criação de uma pasta com todas as querys que esse relatorio terá, ao navegar para a proxima pagina do relatorio, a variavel dentro do array ```$config``` a chave 'selectedRow' será preenchida com um json com todos os valores da linha selecionada, no proximo arquivo apontado dentro de 'page' basta consumir qualquer item desse json para criar um filtro fixo em sua busca.
+- Nessa nova versão do Package Reports é possivel criar relatorios dinamicos, se no ```cabeçalho``` do arquivo conter ```page``` significa que esse relatorio tem mais uma pagina de navegação, para criar relatorios dinamicos é aconcelhado a criação de uma pasta com todas as querys que esse relatorio terá, ao navegar para a proxima pagina do relatorio, a variavel dentro do array ```$config``` a chave ```selectedRow``` será preenchida com um json com todos os valores da linha selecionada, no proximo arquivo apontado dentro de ```page``` basta consumir qualquer item desse json para criar um filtro fixo em sua busca.
 
 - Exemplo selectedRow:
 ```php
@@ -122,7 +122,7 @@ $sql = "SELECT CODSUPERVISOR
 
 ```
 
-- Para obter o retorno do relatorio dinamico, no arquivo principal (mesmo que contém o 'cabeçalho') é necessario uma pequena tratativa para executar as query informadas em cadas arquivo, lembrando que as que nesse tipo de relatorio os arquivos precisarão apenas da tratativa do selectedRow e a varevael que contém a quer:
+- Para obter o retorno do relatorio dinamico, no arquivo principal (mesmo que contém o ```cabeçalho```) é necessario uma pequena tratativa para executar as query informadas em cadas arquivo, lembrando que as que nesse tipo de relatorio os arquivos precisarão apenas da tratativa do selectedRow e a varevael que contém a quer:
 
 ```php
 
@@ -152,7 +152,7 @@ else{
     }
 ```
 
-- Ainda olhando para o arquivo principal o array $config contém uma chave chamada 'filtro' que deve seguir o padrão mostrado acima, é usado para gerar a pagina de filtro
+- Ainda olhando para o arquivo principal o array ```$config``` contém uma chave chamada ```filtro``` que deve seguir o padrão mostrado acima, é usado para gerar a pagina de filtro
 
 ### Pagina de Filtro:
 ![Exemplo pagina de filtros](lib/global/src/img/filtro.png)
