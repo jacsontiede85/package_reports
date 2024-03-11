@@ -19,7 +19,6 @@ class ReportToXLSXController extends WidgetReportXLSX {
   }
 
   Future<void> createExcel({required String title, required ReportFromJSONController reportFromJSONController}) async {
-    reportFromJSONController.loading = true;
     xlsxFileName = 'Rel-${Features.getDataHoraNomeParaArquivo()}';
 
     // Create a new Excel Document.
@@ -135,8 +134,6 @@ class ReportToXLSXController extends WidgetReportXLSX {
         // printW("Nenhum APP encontrado para abrir este arquivo。${res.message}");
       }
     }
-
-    reportFromJSONController.loading = false;
   }  
 }
 

@@ -1,6 +1,5 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import '../charts/chart_data.dart';
@@ -116,8 +115,6 @@ abstract class ReportChartControllerBase with Store, Charts{
     if (orderby.isNotEmpty) 
       setOrderBy(key: columnOrderBySelected['key'], order: orderby == 'Decrescente' ? 'desc' : 'asc');
 
-    List<Color> cores = _randonColors(length: reportFromJSONController.dados.length);
-
     if (listaDeTotaisDeRodape) {
       List<ChartData> temp = [];
       for (var col in reportFromJSONController.colunas) {
@@ -142,12 +139,22 @@ abstract class ReportChartControllerBase with Store, Charts{
       for (var value in reportFromJSONController.dados) {
         List<ChartData> temp = [];
         String nome = '';
-        for (var key in value.keys) if (value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) nome += '${value[key]}'.length > 20 ? '${'${value[key]}'.substring(0, 20)}... ' : '${value[key]} ';
 
-        var cor = cores.isEmpty ? null : cores[reportFromJSONController.dados.indexOf(value)];
+        for (var key in value.keys) 
+          if (value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) nome += '${value[key]}'.length > 20 ? '${'${value[key]}'.substring(0, 20)}... ' : '${value[key]}';
+
         for (var col in getColumnMetricsChart) {
           if (value['type'] != String && !col['key'].contains('__NOCHARTAREA')) {
-            temp.add(ChartData(title: nome, nome: reportFromJSONController.getNomeColunaFormatado(text: col['key']), valor: value[col['key']].runtimeType == int ? double.parse(value[col['key']].toString()) : value[col['key']], type: value[col['key']].runtimeType, perc: 0, color: cor));
+            temp.add(
+              ChartData(
+                title: nome, 
+                nome: reportFromJSONController.getNomeColunaFormatado(text: col['key']), 
+                valor: value[col['key']].runtimeType == int ? double.parse(value[col['key']].toString()) : value[col['key']], 
+                type: value[col['key']].runtimeType, 
+                perc: 0, 
+                color: gerarCoresPorPosicao(index: reportFromJSONController.dados.indexOf(value)),
+              )
+            );
           }
         }
 
@@ -158,12 +165,23 @@ abstract class ReportChartControllerBase with Store, Charts{
       List<ChartData> temp = [];
       for (var value in reportFromJSONController.dados) {
         String nome = '';
-        for (var key in value.keys) if (value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) nome += '${value[key]}'.length > 12 ? '${'${value[key]}'.substring(0, 12)}... ' : '${value[key]} ';
+        for (var key in value.keys) 
+          if (value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) nome += '${value[key]}'.length > 12 ? '${'${value[key]}'.substring(0, 12)}... ' : '${value[key]} ';
 
         double vlrTotalDaColuna = 0.0;
-        for (var col in reportFromJSONController.colunas) if (col['key'] == keySelected) vlrTotalDaColuna = col['vlrTotalDaColuna'];
+        for (var col in reportFromJSONController.colunas) 
+          if (col['key'] == keySelected) vlrTotalDaColuna = col['vlrTotalDaColuna'];
 
-        temp.add(ChartData(title: nome, nome: nome, valor: value[keySelected].runtimeType == int ? double.parse(value[keySelected].toString()) : value[keySelected], type: value[keySelected].runtimeType, perc: (value[keySelected] / vlrTotalDaColuna) * 100, color: cores.isEmpty ? null : cores[reportFromJSONController.dados.indexOf(value)]));
+        temp.add(
+          ChartData(
+            title: nome, 
+            nome: nome, 
+            valor: value[keySelected].runtimeType == int ? double.parse(value[keySelected].toString()) : value[keySelected],
+            type: value[keySelected].runtimeType, 
+            perc: (value[keySelected] / vlrTotalDaColuna) * 100, 
+            color: gerarCoresPorPosicao(index: reportFromJSONController.dados.indexOf(value)),
+          )
+        );
       }
       return temp;
     }
@@ -171,22 +189,6 @@ abstract class ReportChartControllerBase with Store, Charts{
 
   //ordenar
   setOrderBy({required key, required order}) => reportFromJSONController.setOrderBy(key: key, order: order);
-
-  //gerar lista de cores rândomica
-  //length = total de itens que precisam de cores no grafico
-  List<Color> _randonColors({required int length}) {
-    if (ColorData.cores.length < length) return [];
-    var rng = Random();
-    List<Color> cores = [];
-    List<int> listIndex = [];
-    for (var i = 0; i < length; i++) {
-      int index = rng.nextInt(ColorData.cores.length - 1);
-      if (i < ColorData.cores.length) while (listIndex.where((element) => element == index).toList().isEmpty) index = rng.nextInt(ColorData.cores.length - 1);
-      listIndex.add(index);
-      cores.add(ColorData.cores[index]);
-    }
-    return cores;
-  }
 
   List<Map<String, dynamic>> getTodosOsTiposGraficos (){
     List<Map<String, dynamic>> opcoesDeGraficos = [
@@ -217,6 +219,18 @@ abstract class ReportChartControllerBase with Store, Charts{
       },
     ];
     return opcoesDeGraficos;
+  }
+
+  Color gerarCoresPorPosicao ({required int index}){
+    Color corPrincipal = Colors.grey;
+
+    int red = index * 80;
+    int green = index * 90;
+    int blue = index * 95;
+    
+    corPrincipal =  Color.fromARGB(255, red, green, blue);
+
+    return corPrincipal;
   }
 
 }

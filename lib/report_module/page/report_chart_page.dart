@@ -4,7 +4,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:package_reports/report_module/charts/charts.dart';
-import 'package:package_reports/report_module/controller/layout_controller.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/global/core/features.dart';
 import 'package:package_reports/global/widget/widgets.dart';
@@ -24,7 +23,6 @@ class ChartsReport extends StatefulWidget with Charts {
 }
 
 class _ChartsReportState extends State<ChartsReport> {
-  final LayoutController layout = LayoutController();
 
   ScrollController horizontalScroll = ScrollController();
 
@@ -34,10 +32,6 @@ class _ChartsReportState extends State<ChartsReport> {
 
   @override
   Widget build(BuildContext context) {
-    // Mudou para layout em caso de erro mudar para MediaQuery
-    // double width = MediaQuery.of(context).size.width;
-    // double height = MediaQuery.of(context).size.height;
-    // width = width < 800 ? height : width;
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +49,7 @@ class _ChartsReportState extends State<ChartsReport> {
         ),
         actions: [
           Visibility(
-            visible: layout.isDesktop,
+            visible: true,
             replacement: PopupMenuButton(
               tooltip: 'Graficos',
               itemBuilder: (context) {
@@ -136,25 +130,25 @@ class _ChartsReportState extends State<ChartsReport> {
                     child: Observer(
                       builder: (_) => SizedBox(
                           width: widget.controller.chartNameSelected == 'sfLineCartesianChart'
-                              ? (widget.controller.reportFromJSONController.dados.length * 150) < layout.width
+                              ? (widget.controller.reportFromJSONController.dados.length * 150) < MediaQuery.sizeOf(context).width
                                   ? 500
                                   : widget.controller.reportFromJSONController.dados.length * 150
-                              : layout.width,
+                              : MediaQuery.sizeOf(context).width,
                           height: 4000,
                           child: ListView(
                             controller: verticalScroll,
                             children: [
                               SizedBox(
-                                width: layout.width,
-                                height: layout.height * 0.06,
+                                width: MediaQuery.sizeOf(context).width,
+                                height: MediaQuery.sizeOf(context).height * 0.06,
                               ),
                               if (!widget.controller.loading)
                                 Observer(
                                   builder: (_) => widget.controller.chartNameSelected == 'sfLineCartesianChartArea' || widget.controller.chartNameSelected == 'sfAreaCartesianChart'
                                       ? widget.controller.chartSelected //Graficos de area (lista)
                                       : SizedBox(
-                                      width: layout.width,
-                                      height: (widget.controller.reportFromJSONController.dados.length *30) > (layout.height * 0.83) ? widget.controller.reportFromJSONController.dados.length * 30 : layout.height * 0.83,
+                                      width: MediaQuery.sizeOf(context).width,
+                                      height: (widget.controller.reportFromJSONController.dados.length *30) > (MediaQuery.sizeOf(context).height * 0.83) ? widget.controller.reportFromJSONController.dados.length * 30 : MediaQuery.sizeOf(context).height * 0.83,
                                       child: widget.controller.chartSelected,
                                     ),
                                 ),
@@ -188,16 +182,14 @@ class _ChartsReportState extends State<ChartsReport> {
                               builder: (_) => PopupMenuButton(
                                 child: Text(
                                   'Selecione uma métrica: ${widget.controller.metricaSelecionada}',
-                                  style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
+                                  style: const TextStyle(fontSize: 14),
                                 ),
                                 itemBuilder:(context) => widget.controller.getColumnMetricsChart.map((value) {
                                   return PopupMenuItem(
                                     value: value,
                                     child: Text(
                                       Features.formatarTextoPrimeirasLetrasMaiusculas(value['nomeFormatado']),
-                                      style: TextStyle(
-                                        fontSize: layout.isDesktop ? 14 : 10,
-                                      ),
+                                      style: const TextStyle(fontSize: 14),
                                     ),
                                     onTap: () {
                                       widget.controller.metricaSelecionada = value['nomeFormatado'];
@@ -210,7 +202,7 @@ class _ChartsReportState extends State<ChartsReport> {
                             builder: (_) => PopupMenuButton(
                               child: Text(
                                 'Ordernar por: ${widget.controller.ordenacaoSelecionada}',
-                                style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
+                                style: const TextStyle(fontSize: 14),
                               ),
                               itemBuilder: (context) {
                                 return widget.controller.getColumnOrderByChart.map((value) {
@@ -218,7 +210,7 @@ class _ChartsReportState extends State<ChartsReport> {
                                     value: value,
                                     child: Text(
                                       Features.formatarTextoPrimeirasLetrasMaiusculas(value['nomeFormatado']),
-                                      style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
+                                      style: const TextStyle(fontSize: 14),
                                     ),
                                     onTap: () {
                                       widget.controller.ordenacaoSelecionada = value['nomeFormatado'];
@@ -232,14 +224,14 @@ class _ChartsReportState extends State<ChartsReport> {
                             builder: (_) => PopupMenuButton(
                               child: Text(
                                 'Tipo ordenação: ${widget.controller.tipoOrdenacaoSelecionada}',
-                                style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
+                                style: const TextStyle(fontSize: 14),
                               ),
                               itemBuilder: (context) => ['Crescente', 'Decrescente'].map((value) {
                                 return PopupMenuItem(
                                   value: value,
                                   child: Text(
                                     Features.formatarTextoPrimeirasLetrasMaiusculas(value),
-                                    style: TextStyle(fontSize: layout.isDesktop ? 14 : 10),
+                                    style: const TextStyle(fontSize: 14),
                                   ),
                                   onTap: () {
                                     widget.controller.tipoOrdenacaoSelecionada = value;
