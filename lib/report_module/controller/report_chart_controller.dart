@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-import '../charts/chart_data.dart';
-import '../charts/charts.dart';
+import 'package:package_reports/report_module/charts/chart_data.dart';
+import 'package:package_reports/report_module/charts/charts.dart';
 import 'report_from_json_controller.dart';
 part 'report_chart_controller.g.dart';
 
@@ -119,15 +119,17 @@ abstract class ReportChartControllerBase with Store, Charts{
       List<ChartData> temp = [];
       for (var col in reportFromJSONController.colunas) {
         String nome = '';
-        if (col['type'] == String || col['key'].contains('__NO_METRICS')) 
-          nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}... ' : '${col['key']} ';
+
+        if ((col['type'] == String || col['key'].contains('__NO_METRICS')) && col['key'] != 'isFiltered') 
+          nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}...' : '${col['key']}';
+
         if (col['type'] != String && !col['key'].contains('__NO_METRICS') && !col['key'].contains('__NOCHARTAREA'))
           temp.add(
             ChartData(
               title: nome, 
-              nome: col['nomeFormatado'], 
-              valor: col['vlrTotalDaColuna'], 
-              type: col['type'], 
+              nome: col['nomeFormatado'],
+              valor: col['vlrTotalDaColuna'],
+              type: col['type'],
               perc: 100, 
               color: const Color.fromARGB(255, 29, 27, 27),
             )
@@ -141,7 +143,8 @@ abstract class ReportChartControllerBase with Store, Charts{
         String nome = '';
 
         for (var key in value.keys) 
-          if (value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) nome += '${value[key]}'.length > 20 ? '${'${value[key]}'.substring(0, 20)}... ' : '${value[key]}';
+          if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered')
+            nome += '${value[key]}'.length > 20 ? '${'${value[key]}'.substring(0, 20)}...' : '${value[key]}';
 
         for (var col in getColumnMetricsChart) {
           if (value['type'] != String && !col['key'].contains('__NOCHARTAREA')) {
@@ -165,8 +168,12 @@ abstract class ReportChartControllerBase with Store, Charts{
       List<ChartData> temp = [];
       for (var value in reportFromJSONController.dados) {
         String nome = '';
+        
         for (var key in value.keys) 
-          if (value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) nome += '${value[key]}'.length > 12 ? '${'${value[key]}'.substring(0, 12)}... ' : '${value[key]} ';
+          if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered')
+            nome += '${value[key]}'.length > 20 ? ' - ${value[key].substring(0, 20)}... ' : '${value[key]}';
+          
+            
 
         double vlrTotalDaColuna = 0.0;
         for (var col in reportFromJSONController.colunas) 
