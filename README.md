@@ -33,12 +33,12 @@ flutter pub get
 - Com apenas esses valores em sua variavel já possivel consumir a pagina de relatorios.
 - Dentro desse mesmo mapa existe a chave 'filtros' que é usada para construir a pagina de filtros e seleção de filtros, essa chave recebe como valor um mapa, podendo receber as seguintes chaves, (*) marcado os OBRIGATORIOS:
 
-    * tipo (checkbox, datapicker)
-    * titulo
+    * tipo (checkbox, datapicker) *
+    * titulo *
     - Caso o filtro seja do tipo 'checkbox' as seguintes chaves também serão obrigatorias -
-        * banco
-        * arquivoquery
-        * funcao
+        * banco *
+        * arquivoquery *
+        * funcao *
     - As chaves acima são necessaria para saber qual função será executada para criar as opções de filtros
         - subtitulo
 
@@ -69,8 +69,8 @@ flutter pub get
     * indexPage (valor inteiro que indica qual query será a executada)
     * page (necessario para que a nevegação para proxima pagina do relatorio seja feita) 
 
-- 'page' tambem é do tipo map, e receberá os mesmo valores da variavel inicial ou seja tudo que foi explicado acima pode ser passado 
-dentro de 'page', 'page' é a proxima pagina do relatorio e tambem pode recerber a si mesma
+- ```page``` tambem é do tipo map, e receberá os mesmo valores da variavel inicial ou seja tudo que foi explicado acima pode ser passado 
+dentro de ```page```, ```page``` é a proxima pagina do relatorio e tambem pode recerber a si mesma
 
     
 - Exemplo variavel princial:
@@ -140,7 +140,7 @@ dentro de 'page', 'page' é a proxima pagina do relatorio e tambem pode recerber
     ];
 ```
 
-- O arquivo .PHP tendo a variavel preenchido dessa forma basta fazer uma requisição do tipo GET para obter os valores:
+- O arquivo .PHP tendo a variavel preenchido dessa forma basta fazer uma requisição do tipo ```GET``` para obter os valores:
     ```php
         if ($_SERVER['REQUEST_METHOD'] === 'GET'){
             echo json_encode($config);
@@ -149,7 +149,7 @@ dentro de 'page', 'page' é a proxima pagina do relatorio e tambem pode recerber
     ```
 
         
-- Agora para receber o valor da query basta enviar um body/json em uma requisição do tipo POST, para retornar relatorio simples basta fazer o segiunte retorno:
+- Agora para receber o valor da query basta enviar um body/json em uma requisição do tipo ```POST```, para retornar relatorio simples basta fazer o segiunte retorno:
     ```php
         $sql = "SELECT 1 + 1 SOMA FROM DUAL"
         $result = $classe->select( $sql );
