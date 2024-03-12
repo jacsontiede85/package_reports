@@ -1,5 +1,5 @@
 # Package Reports
--Package de criação de relatórios automaticamente a partir de uma entrada de JSON
+- Package de criação de relatórios automaticamente a partir de uma entrada de JSON
     - Principais funções:
     - Relatório com totalizadores e ordenação
     - Relatórios dinamicoes
