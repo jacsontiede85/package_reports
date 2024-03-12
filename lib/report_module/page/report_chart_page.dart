@@ -38,7 +38,7 @@ class _ChartsReportState extends State<ChartsReport> {
       appBar: AppBar(
         backgroundColor: Colors.black87,
         title: wp.wpHeader(
-          titulo: '${widget.title} Gráficos',
+          titulo: '${widget.title} - Gráficos',
         ),
         actionsIconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
@@ -191,7 +191,10 @@ class _ChartsReportState extends State<ChartsReport> {
                                 builder: (_) => PopupMenuButton(
                                   child: Text(
                                     'Selecione uma métrica: ${widget.controller.metricaSelecionada}',
-                                    style: const TextStyle(fontSize: 14),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                   itemBuilder:(context) => widget.controller.getColumnMetricsChart.map((value) {
                                     return PopupMenuItem(
@@ -213,7 +216,10 @@ class _ChartsReportState extends State<ChartsReport> {
                                 builder: (_) => PopupMenuButton(
                                   child: Text(
                                     'Ordernar por: ${widget.controller.ordenacaoSelecionada}',
-                                    style: const TextStyle(fontSize: 14),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                   itemBuilder: (context) {
                                     return widget.controller.getColumnOrderByChart.map((value) {
@@ -237,7 +243,10 @@ class _ChartsReportState extends State<ChartsReport> {
                                 builder: (_) => PopupMenuButton(
                                   child: Text(
                                     'Tipo ordenação: ${widget.controller.orderby}',
-                                    style: const TextStyle(fontSize: 14),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                   itemBuilder: (context) => ['Crescente', 'Decrescente'].map((value) {
                                     return PopupMenuItem(
