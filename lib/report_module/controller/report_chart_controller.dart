@@ -79,10 +79,6 @@ abstract class ReportChartControllerBase with Store, Charts{
       chartSelected = sfCircularChart(
         dados: _getListChartData(),
       );
-    
-    // ? Analise de dados de colunas (vertical)
-    else if (chartNameSelected == 'pieChart')
-      chartSelected = pieChart(dados: _getListChartData(), centerSpaceRadius: 50, radius: 200);
 
     else if (chartNameSelected == 'sfLineCartesianChartArea') {
       // ? Analise de dados na horizontal (ex.: mes 1, mes2, ... total)
@@ -117,7 +113,8 @@ abstract class ReportChartControllerBase with Store, Charts{
 
     if (listaDeTotaisDeRodape) {
       List<ChartData> temp = [];
-      for (var col in reportFromJSONController.colunas) {
+
+      for (Map<String, dynamic> col in reportFromJSONController.colunas) {
         String nome = '';
 
         if ((col['type'] == String || col['key'].contains('__NO_METRICS')) && col['key'] != 'isFiltered') 
@@ -138,13 +135,14 @@ abstract class ReportChartControllerBase with Store, Charts{
       return temp;
     } else if (chartNameSelected == 'sfLineCartesianChartArea' || chartNameSelected == 'sfAreaCartesianChart') {
       List<List<ChartData>> list = [];
-      for (var value in reportFromJSONController.dados) {
+
+      for (Map<String, dynamic> value in reportFromJSONController.dados) {
         List<ChartData> temp = [];
         String nome = '';
 
-        for (var key in value.keys) 
+        for (String key in value.keys) 
           if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered')
-            nome += '${value[key]}'.length > 20 ? '${'${value[key]}'.substring(0, 20)}...' : '${value[key]}';
+            nome += '${value[key]}';
 
         for (var col in getColumnMetricsChart) {
           if (value['type'] != String && !col['key'].contains('__NOCHARTAREA')) {
@@ -166,18 +164,17 @@ abstract class ReportChartControllerBase with Store, Charts{
       return list;
     } else {
       List<ChartData> temp = [];
-      for (var value in reportFromJSONController.dados) {
+      for (Map<String, dynamic> value in reportFromJSONController.dados) {
         String nome = '';
-        
-        for (var key in value.keys) 
-          if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered')
-            nome += '${value[key]}'.length > 20 ? ' - ${value[key].substring(0, 20)}... ' : '${value[key]}';
-          
-            
-
         double vlrTotalDaColuna = 0.0;
-        for (var col in reportFromJSONController.colunas) 
-          if (col['key'] == keySelected) vlrTotalDaColuna = col['vlrTotalDaColuna'];
+
+        for (String key in value.keys) 
+          if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered')
+            nome += '${value[key]}';
+        
+        for (Map<String, dynamic> col in reportFromJSONController.colunas) 
+          if (col['key'] == keySelected) 
+            vlrTotalDaColuna = col['vlrTotalDaColuna'];
 
         temp.add(
           ChartData(
@@ -187,7 +184,7 @@ abstract class ReportChartControllerBase with Store, Charts{
             type: value[keySelected].runtimeType, 
             perc: (value[keySelected] / vlrTotalDaColuna) * 100, 
             color: gerarCoresPorPosicao(index: reportFromJSONController.dados.indexOf(value)),
-          )
+          ),
         );
       }
       return temp;
