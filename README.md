@@ -1,9 +1,10 @@
 # Package Reports
-Package de criação de relatórios automaticamente a partir de uma entrada de JSON
-- Principais funções:
-  - Relatório com totalizadores e ordenação
-  - Gráficos (Barras, pizza, ...)
-  - Exportação para excel
+-Package de criação de relatórios automaticamente a partir de uma entrada de JSON
+    - Principais funções:
+    - Relatório com totalizadores e ordenação
+    - Relatórios dinamicoes
+    - Gráficos (Barras, pizza, ...)
+    - Exportação para excel
 
 ## Getting Started
 
@@ -20,32 +21,30 @@ flutter pub get
 ```
 
 ## Exemplo de 'cabeçalho' que arquivo .PHP que contém a query deve ter
+- Em um arquivo .PHP Crie uma variavel que receberá um mapa com os dados necessarios para a formação de relatorios.
 
-- Para a ultilização dos filtros é necessario criar uma variavel que recebrá um array, esse array deve seguir o padrão imposto no exemplo abaixo, para receber esses
-dados basta, ultilizar um requisição do tipo ```GET``` para o arquivo que deseja.
+    - Esse mapa tem as seguintes chaves como OBRIGATORIOS:
+        * menu; 
+        * submenu; 
+        * url-api;
+        * iconFlutterID (nome do icone que deseja exibir, não pode passar Icon., apenas o nome do icone);
+        * name;
+        
+- Com apenas esses valores em sua variavel já possivel consumir a pagina de relatorios.
+- Dentro desse mesmo mapa existe a chave 'filtros' que é usada para construir a pagina de filtros e seleção de filtros, essa chave recebe como valor um mapa, podendo receber as seguintes chaves, (*) marcado os OBRIGATORIOS:
 
-```php
+    * tipo (checkbox, datapicker)
+    * titulo
+    - Caso o filtro seja do tipo 'checkbox' as seguintes chaves também serão obrigatorias -
+        * banco
+        * arquivoquery
+        * funcao
+    - As chaves acima são necessaria para saber qual função será executada para criar as opções de filtros
+        - subtitulo
 
-    $menu               = 'Vendas'; // Menu que será exibido no aplicativos
-    $submenu            = '';   //submenu se houver (OPCIONAL)
-    $nomeDoArquivo      = 'query_teste_api.php'; //somente nome do arquivo + extensão
-    $name               = 'Resumo de vendas (Por supervisor)'; // nome de apresentação no aplicativo
-
-    $urlapi = "repositorio/reports/query/compras/";
-    $config = [
-        'menu'=> $menu,
-        'submenu'=> $submenu,
-        'urlapi'=> $urlapi.$nomeDoArquivo,
-        'name'=> $name,
-        'iconFlutterID'=> 'trending_up', // --> https://fonts.google.com/icons?selected=Material+Icons&icon.platform=flutter
-        'graficosDisponiveis' => [
-            'barras' => true,
-            'linhas' => true,
-            'circular' => true,
-        ],
-        'indexPage'=> 0,
-        'selectedRow' => [],
-        'filtros'=> [
+- Exemplo filtros :
+    ```php
+        'filtros' => [
             "cardPeriodo" => [
                 "tipo" => "datapicker",
                 "titulo" => "Selecionar pediodo"
@@ -58,12 +57,42 @@ dados basta, ultilizar um requisição do tipo ```GET``` para o arquivo que dese
                 "titulo" => "Selecionar filial",
                 "subtitulo" => "São exibidos somente filiais com permissão na rotina 131 do Winthor"
             ],
-            "cardFornecedor" => [
-                "banco" => "atacado_analytics",
-                "arquivoquery" =>"query_filtros.php",
-                "funcao" => "getFornecedor",
-                "tipo" => "checkbox",
-                "titulo" => "Selecionar fornecedor"
+        ]
+    ```
+### Pagina de Filtro:
+![Exemplo pagina de filtros](lib/global/src/img/filtro.png)
+
+![Selecionar valores para filtrar](lib/global/src/img/selecionar_filtros.png)
+
+- Para a criação de relatorios dinamicos, no mapa da variavel que foi criada, tornasse necesasrio adiconar as seguintes chaves
+
+    * indexPage (valor inteiro que indica qual query será a executada)
+    * page (necessario para que a nevegação para proxima pagina do relatorio seja feita) 
+
+- 'page' tambem é do tipo map, e receberá os mesmo valores da variavel inicial ou seja tudo que foi explicado acima pode ser passado 
+dentro de 'page', 'page' é a proxima pagina do relatorio e tambem pode recerber a si mesma
+
+    
+- Exemplo variavel princial:
+
+
+```php
+    $config = [
+        'menu'=> $menu,
+        'submenu'=> $submenu,
+        'urlapi'=> $urlapi.$nomeDoArquivo,
+        'name'=> $name,
+        'iconFlutterID'=> 'trending_up', // --> https://fonts.google.com/icons?selected=Material+Icons&icon.platform=flutter
+        'graficosDisponiveis' => [
+            'barras',
+            'linhas',
+            'circular',
+        ],
+        'indexPage'=> 0,
+        'filtros'=> [
+            "cardPeriodo" => [
+                "tipo" => "datapicker",
+                "titulo" => "Selecionar pediodo"
             ],
             "cardsupervisor" => [
                 "banco" => "atacado_analytics",
@@ -80,7 +109,7 @@ dados basta, ultilizar um requisição do tipo ```GET``` para o arquivo que dese
             'submenu'=> $submenu,
             'urlapi'=> 'repositorio/reports/query/compras/sql1.php',
             'name'=> 'Resumo de vendas (Por rca)',
-            'iconFlutterID'=> 'trending_up', // --> https://fonts.google.com/icons?selected=Material+Icons&icon.platform=flutter
+            'iconFlutterID'=> 'trending_up',
             'indexPage'=> 1,
             'selectedRow' => [],
             'filtros'=> [
@@ -97,36 +126,41 @@ dados basta, ultilizar um requisição do tipo ```GET``` para o arquivo que dese
                     "subtitulo" => "São exibidos somente filiais com permissão na rotina 131 do Winthor"
                 ],
             ],
+
+            'page' => [
+                'menu'=> $menu,
+                'submenu'=> $submenu,
+                'urlapi'=> 'repositorio/reports/query/compras/sql1.php',
+                'name'=> 'Teste segunda navegação',
+                'iconFlutterID'=> 'trending_up',
+                'indexPage'=> 2,
+                'selectedRow' => [],
+            ]
         ]
     ];
+```
 
-    if ($_SERVER['REQUEST_METHOD'] === 'GET'){
-        echo json_encode($config);
+- O arquivo .PHP tendo a variavel preenchido dessa forma basta fazer uma requisição do tipo GET para obter os valores:
+    ```php
+        if ($_SERVER['REQUEST_METHOD'] === 'GET'){
+            echo json_encode($config);
+            exit;
+        }
+    ```
+
+        
+- Agora para receber o valor da query basta enviar um body/json em uma requisição do tipo POST, para retornar relatorio simples basta fazer o segiunte retorno:
+    ```php
+        $sql = "SELECT 1 + 1 SOMA FROM DUAL"
+        $result = $classe->select( $sql );
+        echo json_encode($result);
         exit;
-    }
-```
-
-- Nessa nova versão do Package Reports é possivel criar relatorios dinamicos, se no ```cabeçalho``` do arquivo conter ```page``` significa que esse relatorio tem mais uma pagina de navegação, para criar relatorios dinamicos é aconcelhado a criação de uma pasta com todas as querys que esse relatorio terá, ao navegar para a proxima pagina do relatorio, a variavel dentro do array ```$config``` a chave ```selectedRow``` será preenchida com um json com todos os valores da linha selecionada, no proximo arquivo apontado dentro de ```page``` basta consumir qualquer item desse json para criar um filtro fixo em sua busca.
-
-- Exemplo selectedRow:
-```php
-/* Ao clicar na linha que deseja será adicionado no body da busca o valor de selectedRow como o exemplo abaxio*/
-/* selectedRow : {COD__INT__NO_METRICS: 0, NOME: UF - Vendedor , VLR_VENDA_LIQ: 280356.03, QTDE_CLIENTE_POSITIVADO__INT: 18}*/
-
-$codsupervisor = $obj->selectedRow->COD__INT__NO_METRICS;
-
-$sql = "SELECT CODSUPERVISOR 
-        FROM PCSUPERV 
-        WHERE 1=1 
-        AND PCSUPERV.CODSUPERVISOR IN ($codsupervisor)";
-
-```
-
-- Para obter o retorno do relatorio dinamico, no arquivo principal (mesmo que contém o ```cabeçalho```) é necessario uma pequena tratativa para executar as query informadas em cadas arquivo, lembrando que as que nesse tipo de relatorio os arquivos precisarão apenas da tratativa do selectedRow e a varevael que contém a quer:
+    ```
+- Para obter o retorno do relatorio dinamico, no arquivo principal é necessario uma pequena tratativa para executar as query informadas em cadas arquivo, lembrando que as que nesse tipo de relatorio os arquivos precisarão apenas da tratativa do ```selectedRow``` e o ```indexPage```, os arquivos mostrado no exemplo abaixo pode ser usado mais de uma vez, um mesmo arquivo que contem querys diferentes:
 
 ```php
 
-else{
+    else{
         include_once "data_input_and_jwt_validation.php";
         $obj = get_data_input_and_jwt_validation();
 
@@ -151,67 +185,6 @@ else{
         exit;        
     }
 ```
-
-- Ainda olhando para o arquivo principal o array ```$config``` contém uma chave chamada ```filtro``` que deve seguir o padrão mostrado acima, é usado para gerar a pagina de filtro
-
-### Pagina de Filtro:
-![Exemplo pagina de filtros](lib/global/src/img/filtro.png)
-
-- Caso o filtro seja do tipo checkbox é necessario informar o banco em que fará a busca, o arquivo e a função para essa busca, sendo assim o botão sera clicavel navegando para um tela a qual poderar selecionar o valores a serem filtrados:
-
-![Selecionar valores para filtrar](lib/global/src/img/selecionar_filtros.png)
-
-## Exemplo de API para gerar JSON de entrada para o PACKAGE REPORTS
-
-- Exemplo que como escrever uma query na API no back-end:
-```php
-<?php
-    include_once "../header.php";
-        
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $inputJSON = file_get_contents('php://input');
-        $data = json_decode($inputJSON);
-        if ($data === null) {
-            http_response_code(400);
-            echo json_encode(["error" => "Erro ao decodificar o JSON de entrada."]);
-            exit;
-        }
-
-        // FAZER VERIFICAÇÕES DE ENTRADA DE CADA FILTRO
-        if (!isset($data->data_inicio) || !isset($data->data_fim) || !isset($data->banco)) {
-            http_response_code(400);
-            echo json_encode(["error" => "Os campos 'data_inicio' e 'data_fim' são obrigatórios."]);
-            exit;
-        }
-    } else {
-        http_response_code(405);
-        echo json_encode(["error" => "Método não permitido. Use POST para enviar os dados JSON."]);
-        exit;
-    }
-
-    $sql =  "select 
-                  pcpedc.codusur as cod__INT__NO_METRICS
-                , pcusuari.nome
-                , count(*) qtde_pedidos__INT
-                , sum(pcpedc.vlatend) as total
-            from pcpedc, pcusuari
-            where pcpedc.codusur = pcusuari.codusur
-            and data between to_date('$data->data_inicio', 'DD/MM/YYYY') and to_date('$data->data_fim', 'DD/MM/YYYY')
-            group by pcpedc.codusur, pcusuari.nome
-            order by total desc";
-
-    $db = instancia_DB($data->banco);
-    $result = $db->select($sql);
-
-    http_response_code(200);
-    echo json_encode($result);
-    exit;
-```
-
-### exemplo de resquisição da API no Insonia:
-![Relatório de exemplo](lib/exemplo/img/insonia.png)
-
-
 ### Saída JSON da query:
 ```json
     [
