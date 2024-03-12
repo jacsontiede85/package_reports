@@ -146,8 +146,8 @@ mixin Charts{
         );
 
   Widget sfAreaCartesianChart({List<ChartData>? dados, List<List<ChartData>>? dadosList}) {
-    if(dados==null && dadosList==null) {
-      return Column(
+    return (dados==null && dadosList==null) ? const SizedBox() : 
+      Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -238,9 +238,7 @@ mixin Charts{
           const SizedBox(height: 30,),
         ],
       );
-    }else{
-      return const SizedBox();
-    }
+
   }
 
 

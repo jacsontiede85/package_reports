@@ -190,7 +190,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               children: [
                 Observer(
                   builder: (_) => Visibility(
-                    visible: !controller.loading,
+                    visible: !controller.loading && (controller.configPagina['graficosDisponiveis'] != null && controller.configPagina['graficosDisponiveis'].isNotEmpty),
                     child: IconButton(
                       icon: Icon(
                         Icons.bar_chart,

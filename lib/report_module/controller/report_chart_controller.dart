@@ -66,7 +66,7 @@ abstract class ReportChartControllerBase with Store, Charts{
     this.chartNameSelected = chartNameSelected;
     await Future.delayed(const Duration(seconds: 1));
     
-    // ? Analise de dados de colunas (vertical)
+    // ? Analise de dados de linhas (vertical)
     if (chartNameSelected == 'sfLineCartesianChart')
       chartSelected = sfLineCartesianChart(dados: _getListChartData());
     
@@ -74,7 +74,7 @@ abstract class ReportChartControllerBase with Store, Charts{
     else if (chartNameSelected == 'barChartHorizontal') 
       chartSelected = barChartHorizontal(dados: _getListChartData());
 
-    // ? Analise de dados de colunas (vertical)
+    // ? Analise de dados de pizza (vertical)
     else if (chartNameSelected == 'sfCircularChart')
       chartSelected = sfCircularChart(
         dados: _getListChartData(),
@@ -195,33 +195,59 @@ abstract class ReportChartControllerBase with Store, Charts{
   setOrderBy({required key, required order}) => reportFromJSONController.setOrderBy(key: key, order: order);
 
   List<Map<String, dynamic>> getTodosOsTiposGraficos (){
-    List<Map<String, dynamic>> opcoesDeGraficos = [
-      {
-        "nome" : "Barras",
-        "icone" : Icons.bar_chart_sharp,
-        "funcao" : () => getChart(chartNameSelected: 'barChartHorizontal')
-      },
-      {
-        "nome" : "Circular",
-        "icone" : Icons.pie_chart_rounded,
-        "funcao" : () => getChart(chartNameSelected: 'sfCircularChart')
-      },
-      {
-        "nome" : "Linhas",
-        "icone" : Icons.ssid_chart,
-        "funcao" : () => getChart(chartNameSelected: 'sfLineCartesianChart')
-      },
-      {
-        "nome" : "Linhas duplas",
-        "icone" : Icons.stacked_line_chart_outlined,
-        "funcao" : () => getChart(chartNameSelected: 'sfLineCartesianChartArea')
-      },
-      {
-        "nome" : "Area",
-        "icone" : Icons.area_chart,
-        "funcao" : () => getChart(chartNameSelected: 'sfAreaCartesianChart')
-      },
-    ];
+    List<Map<String, dynamic>> opcoesDeGraficos = [];
+
+    for(String grafico in reportFromJSONController.configPagina['graficosDisponiveis']){
+      switch(grafico.toLowerCase()){
+
+        case 'barras' :
+        opcoesDeGraficos.add(      
+          {
+            "nome" : "Barras",
+            "icone" : Icons.bar_chart_sharp,
+            "funcao" : () => getChart(chartNameSelected: 'barChartHorizontal')
+          },
+        );
+
+        case 'circular' :
+        opcoesDeGraficos.add(
+          {
+            "nome" : "Circular",
+            "icone" : Icons.pie_chart_rounded,
+            "funcao" : () => getChart(chartNameSelected: 'sfCircularChart')
+          },
+        );
+
+        case 'linhas' :
+        opcoesDeGraficos.add(      
+          {
+            "nome" : "Linhas",
+            "icone" : Icons.ssid_chart,
+            "funcao" : () => getChart(chartNameSelected: 'sfLineCartesianChart')
+          },
+        );
+
+        case 'linhas duplas' :
+        opcoesDeGraficos.add(      
+          {
+            "nome" : "Linhas duplas",
+            "icone" : Icons.stacked_line_chart_outlined,
+            "funcao" : () => getChart(chartNameSelected: 'sfLineCartesianChartArea')
+          },
+        );
+
+        case 'area' :
+        opcoesDeGraficos.add(      
+          {
+            "nome" : "Area",
+            "icone" : Icons.area_chart,
+            "funcao" : () => getChart(chartNameSelected: 'sfAreaCartesianChart')
+          },
+        );
+
+      }
+    }
+
     return opcoesDeGraficos;
   }
 
