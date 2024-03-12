@@ -141,24 +141,6 @@ mixin _$ReportChartController on ReportChartControllerBase, Store {
     });
   }
 
-  late final _$tipoOrdenacaoSelecionadaAtom = Atom(
-      name: 'ReportChartControllerBase.tipoOrdenacaoSelecionada',
-      context: context);
-
-  @override
-  String get tipoOrdenacaoSelecionada {
-    _$tipoOrdenacaoSelecionadaAtom.reportRead();
-    return super.tipoOrdenacaoSelecionada;
-  }
-
-  @override
-  set tipoOrdenacaoSelecionada(String value) {
-    _$tipoOrdenacaoSelecionadaAtom
-        .reportWrite(value, super.tipoOrdenacaoSelecionada, () {
-      super.tipoOrdenacaoSelecionada = value;
-    });
-  }
-
   late final _$getChartAsyncAction =
       AsyncAction('ReportChartControllerBase.getChart', context: context);
 
@@ -178,8 +160,7 @@ columnMetricSelected: ${columnMetricSelected},
 columnOrderBySelected: ${columnOrderBySelected},
 loading: ${loading},
 metricaSelecionada: ${metricaSelecionada},
-ordenacaoSelecionada: ${ordenacaoSelecionada},
-tipoOrdenacaoSelecionada: ${tipoOrdenacaoSelecionada}
+ordenacaoSelecionada: ${ordenacaoSelecionada}
     ''';
   }
 }

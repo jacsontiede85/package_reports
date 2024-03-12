@@ -201,7 +201,9 @@ class _ChartsReportState extends State<ChartsReport> {
                                         style: const TextStyle(fontSize: 14),
                                       ),
                                       onTap: () {
+                                        widget.controller.columnMetricSelected = value;
                                         widget.controller.metricaSelecionada = value['nomeFormatado'];
+                                        widget.controller.getChart(chartNameSelected: widget.controller.chartNameSelected);
                                       },
                                     );
                                   }).toList(),
@@ -222,7 +224,9 @@ class _ChartsReportState extends State<ChartsReport> {
                                           style: const TextStyle(fontSize: 14),
                                         ),
                                         onTap: () {
+                                          widget.controller.columnOrderBySelected = value;
                                           widget.controller.ordenacaoSelecionada = value['nomeFormatado'];
+                                          widget.controller.getChart(chartNameSelected: widget.controller.chartNameSelected);
                                         },
                                       );
                                     }).toList();
@@ -232,7 +236,7 @@ class _ChartsReportState extends State<ChartsReport> {
                               Observer(
                                 builder: (_) => PopupMenuButton(
                                   child: Text(
-                                    'Tipo ordenação: ${widget.controller.tipoOrdenacaoSelecionada}',
+                                    'Tipo ordenação: ${widget.controller.orderby}',
                                     style: const TextStyle(fontSize: 14),
                                   ),
                                   itemBuilder: (context) => ['Crescente', 'Decrescente'].map((value) {
@@ -243,7 +247,8 @@ class _ChartsReportState extends State<ChartsReport> {
                                         style: const TextStyle(fontSize: 14),
                                       ),
                                       onTap: () {
-                                        widget.controller.tipoOrdenacaoSelecionada = value;
+                                        widget.controller.orderby = value;
+                                        widget.controller.getChart(chartNameSelected: widget.controller.chartNameSelected);
                                       },
                                     );
                                   }).toList(),

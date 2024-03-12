@@ -102,8 +102,6 @@ class API with Settings{
     if (res.statusCode == 200) {
       return res.body.replaceAll("null", '""');
     } else {
-      // printE('Erro de API ${res.statusCode} (jwtSendJson)');
-      // printE("LINK: ${Settings.enderecoRepositorio}");
       return "";
     }
   }

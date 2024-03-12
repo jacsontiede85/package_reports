@@ -39,9 +39,6 @@ abstract class ReportChartControllerBase with Store, Charts{
   @observable
   String ordenacaoSelecionada = '';
 
-  @observable
-  String tipoOrdenacaoSelecionada = '';
-
   //selecionar uma coluna de metrica e exbir o grafico padrao ao carregar tela
   Future<void> load() async {
     loading = true;
@@ -66,15 +63,15 @@ abstract class ReportChartControllerBase with Store, Charts{
     this.chartNameSelected = chartNameSelected;
     await Future.delayed(const Duration(seconds: 1));
     
-    // ? Analise de dados de linhas (vertical)
+    // ? Analise de dados de linhas
     if (chartNameSelected == 'sfLineCartesianChart')
       chartSelected = sfLineCartesianChart(dados: _getListChartData());
     
-    // ? Analise de dados de colunas (vertical)
+    // ? Analise de dados de colunas (horizontal)
     else if (chartNameSelected == 'barChartHorizontal') 
       chartSelected = barChartHorizontal(dados: _getListChartData());
 
-    // ? Analise de dados de pizza (vertical)
+    // ? Analise de dados de pizza
     else if (chartNameSelected == 'sfCircularChart')
       chartSelected = sfCircularChart(
         dados: _getListChartData(),
@@ -88,7 +85,7 @@ abstract class ReportChartControllerBase with Store, Charts{
         children: charts,
       );
     } else if (chartNameSelected == 'sfAreaCartesianChart') {
-      //Analise de dados na horizontal (ex.: mes 1, mes2, ... total)
+      // ? Analise de dados na horizontal (ex.: mes 1, mes2, ... total)
       List<Widget> charts = [];
       List<ChartData> listTotal = [];
       listTotal = _getListChartData(listaDeTotaisDeRodape: true);
