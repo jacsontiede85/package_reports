@@ -106,7 +106,7 @@ abstract class FiltroControllerBase with Store {
   }
 
   @action
-  adicionarItensSelecionado ({required FiltrosModel itens}){
+  void adicionarItensSelecionado ({required FiltrosModel itens}){
     if(itens.selecionado){
       if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
         listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.add(itens);
@@ -120,7 +120,7 @@ abstract class FiltroControllerBase with Store {
     listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
   }
 
-  criarNovoBody() async {
+  Future<void> criarNovoBody() async {
     for(FiltrosPageAtual valores in listaFiltrosParaConstruirTela){
       if(valores.qualPaginaFiltroPertence == indexPagina){
         filtrosSalvosParaAdicionarNoBody.addAll(valores.filtrosWidgetModel.toJsonItensSelecionados(),);        
@@ -151,7 +151,7 @@ abstract class FiltroControllerBase with Store {
 
   // LIMPAR SELEÇÃO DE TODOS OS ITENS
   @action
-  limparSelecao() {
+  void limparSelecao() {
     if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
       listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.clear();
       for( FiltrosModel value in getListFiltrosComputed){
@@ -162,7 +162,7 @@ abstract class FiltroControllerBase with Store {
 
   // SELECIONAR TODOS OS ITENS
   @action
-  selecionarTodos() {
+  void selecionarTodos() {
     for( FiltrosModel value in getListFiltrosComputed){
       if(!value.selecionado){
         value.selecionado = true;
@@ -174,7 +174,7 @@ abstract class FiltroControllerBase with Store {
 
   // INVERTER SELEÇÃO DOS ITENS
   @action
-  inverterSelecao() {
+  void inverterSelecao() {
     for( FiltrosModel value in getListFiltrosComputed ){
       value.selecionado = !value.selecionado;
       adicionarItensSelecionado(itens: value);
@@ -182,7 +182,7 @@ abstract class FiltroControllerBase with Store {
   }
 
   @action
-  conjuntoDePeriodos() {
+  void conjuntoDePeriodos() {
     listaDePeriodos=[];
     // List<AnosModel> anosmodel = await TotalizadorDados().getAnosDeVenda(order: 'desc');
     listaDePeriodos.add('Hoje');
