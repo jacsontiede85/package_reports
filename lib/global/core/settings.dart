@@ -101,19 +101,3 @@ mixin class Settings{
   }
 
 }
-
-void printW(text) {
-  print('\x1B[33m$text\x1B[0m');
-}
-
-void printE(text) {
-  print('\x1B[31m$text\x1B[0m');
-}
-
-void printO(text) {
-  print('\x1b[32m$text\x1B[0m');
-}
-
-void printT(text) {
-  print('\x1b[35m$text\x1B[0m');
-}
