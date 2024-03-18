@@ -539,7 +539,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       builder: (context) {
                         return ReportPage(
                           buscarDadosNaEntrada: true,
-                          function: 'repositorio/reports/query/compras/assistente_compras_report.php',
+                          function: controller.configPagina['urlapi'],
                         )..setMapSelectedRowPage(
                           mapSelectedRow: val,
                           bodyConfigBuscaRecursiva: controller.configPagina,
