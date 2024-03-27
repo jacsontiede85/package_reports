@@ -21,6 +21,8 @@ class ReportPage extends StatefulWidget {
   Map<String, dynamic> bodyConfigBuscaRecursiva = {};
   Map<String, dynamic> getbodyPrimario = {};
   bool buscarDadosNaEntrada = false;
+  late int matricula;
+  late String database;
   
   final String function;
   final Color? corTitulo;
@@ -29,7 +31,9 @@ class ReportPage extends StatefulWidget {
     super.key,
     required this.function,
     required this.buscarDadosNaEntrada,
-    this.corTitulo = Colors.white
+    this.corTitulo = Colors.white,
+    required this.matricula,
+    required this.database
   });
 
   setMapSelectedRowPage({
@@ -58,6 +62,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
     nomeFunction: widget.function,
     sizeWidth: _width,
     isToGetDadosNaEntrada: widget.buscarDadosNaEntrada,
+    matricula: widget.matricula,
+    database: widget.database
   );
 
   late FiltroController controllerFiltro = FiltroController(
@@ -538,6 +544,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
                     MaterialPageRoute(
                       builder: (context) {
                         return ReportPage(
+                          matricula: widget.matricula,
+                          database: widget.database,
                           buscarDadosNaEntrada: true,
                           function: controller.configPagina['urlapi'],
                         )..setMapSelectedRowPage(

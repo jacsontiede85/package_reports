@@ -52,6 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   context, 
                   MaterialPageRoute(
                     builder: (context) => ReportPage(
+                      matricula: 3312,
+                      database: "atacado",
                       buscarDadosNaEntrada: false,
                       function: 'repositorio/reports/query/exemplo_relatorio_dinamico/arquivo_principal.php',
                     ),
