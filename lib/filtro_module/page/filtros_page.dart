@@ -55,7 +55,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                 if(widget.onAplicar == null) {
                   await controllerFiltro.criarNovoBody();
                 } else {
-                  widget.onAplicar;
+                  widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela);
                 }
               },
             ),
