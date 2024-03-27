@@ -18,11 +18,13 @@ abstract class FiltroControllerBase with Store {
   Map<String, dynamic> mapaFiltrosWidget = {};
   int indexPagina = 0;
   late ReportFromJSONController controllerReports;
+  
 
   FiltroControllerBase({
     required this.mapaFiltrosWidget,
     required this.indexPagina,
     required this.controllerReports,
+    //this.onAplicar,
   }){
     getDadosCriarFiltros();
   }

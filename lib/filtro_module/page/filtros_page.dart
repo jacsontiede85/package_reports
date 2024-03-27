@@ -1,6 +1,10 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
+import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/report_module/controller/layout_controller.dart';
 import 'package:package_reports/global/widget/widgets.dart';
@@ -8,10 +12,12 @@ import 'package:package_reports/global/widget/widgets.dart';
 class FiltrosReportPage extends StatefulWidget {
   
   final FiltroController controllerFiltro;
+  Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela)? onAplicar;
   
-  const FiltrosReportPage({
+  FiltrosReportPage({
     super.key,
     required this.controllerFiltro,
+    this.onAplicar
   });
 
   @override
@@ -46,7 +52,11 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
               child: const Text("Aplicar"),
               onPressed: () async {
                 Navigator.of(context).pop(true);
-                await controllerFiltro.criarNovoBody();
+                if(widget.onAplicar == null) {
+                  await controllerFiltro.criarNovoBody();
+                } else {
+                  widget.onAplicar;
+                }
               },
             ),
           ),
