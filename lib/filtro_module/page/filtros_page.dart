@@ -12,7 +12,7 @@ import 'package:package_reports/global/widget/widgets.dart';
 class FiltrosReportPage extends StatefulWidget {
   
   final FiltroController controllerFiltro;
-  Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela)? onAplicar;
+  Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela, String dtinicio, String dtfim)? onAplicar;
   
   FiltrosReportPage({
     super.key,
@@ -55,7 +55,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                 if(widget.onAplicar == null) {
                   await controllerFiltro.criarNovoBody();
                 } else {
-                  widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela);
+                  widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim);
                 }
               },
             ),
