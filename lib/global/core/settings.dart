@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 mixin class Settings{
-  static String enderecoRepositorio = 'https://api.agnconsultoria.com.br/';
+  static String enderecoRepositorio = 'https://analytics.agnconsultoria.com.br/api/';
 
   static getDataPTBR() {
     final DateTime now = DateTime.now();
