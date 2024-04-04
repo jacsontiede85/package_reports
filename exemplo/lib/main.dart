@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       matricula: 3312,
                       database: "atacado",
                       buscarDadosNaEntrada: false,
-                      function: 'repositorio/reports/query/exemplo_relatorio_dinamico/arquivo_principal.php',
+                      function: 'comercial/analise-faturamento-por-cliente-12-meses/',
                     ),
                   )
                 );
