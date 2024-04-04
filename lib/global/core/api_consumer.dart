@@ -45,8 +45,17 @@ class API with Settings{
   }) async {
 
     if(isContentTypeApplicationJson){
-      var response = await getDataReportApiJWT(dados: body, url: urlreports);
-      return jsonDecode(response);
+      try{
+        var response = await getDataReportApiJWT(dados: body, url: urlreports);
+        return jsonDecode(response);        
+      }catch(e){
+        return [
+          {
+            'mensagem': 'Dados não encontrado! Verifique os filtros selecionados e tente novamente.\nCatch message nerd: $e',
+          }
+        ];
+      }
+
     } else {
       http.Response response = await http.post(
         Uri.parse('${Settings.enderecoRepositorio}$urlreports'),

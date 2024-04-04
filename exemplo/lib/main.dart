@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       matricula: 3312,
                       database: "atacado",
                       buscarDadosNaEntrada: false,
-                      function: 'comercial/analise-faturamento-por-cliente-12-meses/',
+                      function: 'repositorio/reports/query/compras/simular_varios_precos.php',
                     ),
                   )
                 );
