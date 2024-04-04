@@ -23,7 +23,7 @@ class ReportPage extends StatefulWidget {
   bool buscarDadosNaEntrada = false;
   late int matricula;
   late String database;
-  
+  Map<String,dynamic>? conteudoParaModificarBodyInicial;
   final String function;
   final Color? corTitulo;
   
@@ -33,7 +33,8 @@ class ReportPage extends StatefulWidget {
     required this.buscarDadosNaEntrada,
     this.corTitulo = Colors.white,
     required this.matricula,
-    required this.database
+    required this.database,
+    this.conteudoParaModificarBodyInicial
   });
 
   setMapSelectedRowPage({
@@ -63,7 +64,8 @@ class _ReportPageState extends State<ReportPage> with Rows {
     sizeWidth: _width,
     isToGetDadosNaEntrada: widget.buscarDadosNaEntrada,
     matricula: widget.matricula,
-    database: widget.database
+    database: widget.database,
+    modificarbodyPrimario: widget.conteudoParaModificarBodyInicial!
   );
 
   late FiltroController controllerFiltro = FiltroController(
