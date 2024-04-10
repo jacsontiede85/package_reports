@@ -65,7 +65,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     isToGetDadosNaEntrada: widget.buscarDadosNaEntrada,
     matricula: widget.matricula,
     database: widget.database,
-    modificarbodyPrimario: widget.conteudoParaModificarBodyInicial!
+    modificarbodyPrimario: widget.conteudoParaModificarBodyInicial
   );
 
   late FiltroController controllerFiltro = FiltroController(

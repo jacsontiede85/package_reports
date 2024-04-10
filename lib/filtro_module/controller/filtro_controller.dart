@@ -42,7 +42,7 @@ abstract class FiltroControllerBase with Store {
   int indexFiltro = 0;
 
   @observable
-  String dtinicio = Settings.getDataPTBR(), dtfim = Settings.getDataPTBR();
+  String dtinicio = SettingsReports.getDataPTBR(), dtfim = SettingsReports.getDataPTBR();
 
   @observable
   Map<String, dynamic> filtrosSalvosParaAdicionarNoBody = {};
@@ -212,40 +212,40 @@ abstract class FiltroControllerBase with Store {
 
     String weekday = DateFormat.E('pt_BR').format(DateTime.now().toLocal());
 
-    int diaDaSemana = Settings.diaDaSemanaConverte(weekday);
+    int diaDaSemana = SettingsReports.diaDaSemanaConverte(weekday);
 
     String dtinicioFiltro= '';
     String dtfimFiltro= '';
 
     switch(periodo){
       case 'Hoje':
-        dtinicioFiltro = Settings.formatarDataPadraoBR("${DateTime.now().toLocal()}");
-        dtfimFiltro = Settings.formatarDataPadraoBR("${DateTime.now().toLocal()}");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${DateTime.now().toLocal()}");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${DateTime.now().toLocal()}");
       break;
 
       case 'Ontem':
-        dtinicioFiltro = Settings.formatarDataPadraoBR("${today.add(const Duration( days: -1 ))}");
-        dtfimFiltro = Settings.formatarDataPadraoBR("${today.add(const Duration( days: -1 ))}");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${today.add(const Duration( days: -1 ))}");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${today.add(const Duration( days: -1 ))}");
       break;
 
       case 'Semanaatual':
-        dtinicioFiltro = Settings.formatarDataPadraoBR("${ today.add( Duration(   days: -1 *  diaDaSemana    )) }");
-        dtfimFiltro = Settings.formatarDataPadraoBR("${ today.add( Duration(   days: (  6 - diaDaSemana )    )) }");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${ today.add( Duration(   days: -1 *  diaDaSemana    )) }");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${ today.add( Duration(   days: (  6 - diaDaSemana )    )) }");
       break;
 
       case 'Semanaanterior':
-        dtinicioFiltro = Settings.formatarDataPadraoBR("${ today.add( Duration(   days: (  6 - diaDaSemana )-7-6    )) }");
-        dtfimFiltro = Settings.formatarDataPadraoBR("${ today.add( Duration(   days: -1 * (  diaDaSemana+1 )    )) }");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${ today.add( Duration(   days: (  6 - diaDaSemana )-7-6    )) }");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${ today.add( Duration(   days: -1 * (  diaDaSemana+1 )    )) }");
       break;
 
       case 'Últimos15dias':
-        dtinicioFiltro = Settings.formatarDataPadraoBR("${ today.add(const Duration(   days: -15    )) }");
-        dtfimFiltro = Settings.formatarDataPadraoBR("${ today.add(const Duration(   days: 0    )) }");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${ today.add(const Duration(   days: -15    )) }");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${ today.add(const Duration(   days: 0    )) }");
       break;
 
       case 'Mêsatual':
         dtinicioFiltro = '01/${today.toString().substring(5,7)}/${today.toString().substring(0,4)}';
-        dtfimFiltro = '${Settings.qtdDiasDoMes(mes, ano)}/${today.toString().substring(5,7)}/${today.toString().substring(0,4)}';
+        dtfimFiltro = '${SettingsReports.qtdDiasDoMes(mes, ano)}/${today.toString().substring(5,7)}/${today.toString().substring(0,4)}';
       break;
 
       case 'Mêsanterior':
@@ -253,10 +253,10 @@ abstract class FiltroControllerBase with Store {
         mes = ( mes-1 ==0? mes =12 : mes-1 );
         if(mes < 10){
           dtinicioFiltro = '01/0$mes/$ano';
-          dtfimFiltro = '${Settings.qtdDiasDoMes(mes, ano)}/${'0$mes'}/$ano';
+          dtfimFiltro = '${SettingsReports.qtdDiasDoMes(mes, ano)}/${'0$mes'}/$ano';
         }else{
           dtinicioFiltro = '01/$mes/$ano';
-          dtfimFiltro = '${Settings.qtdDiasDoMes(mes, ano)}/$mes/$ano';
+          dtfimFiltro = '${SettingsReports.qtdDiasDoMes(mes, ano)}/$mes/$ano';
         }
       break;
 

@@ -3,7 +3,7 @@ import 'package:crypto/crypto.dart';
 import 'package:package_reports/global/core/settings.dart';
 import 'dart:convert';
 
-class API with Settings{
+class API with SettingsReports{
 
 
   Future<String> jwtSendJson({required String banco, required Map dados,}) async {
@@ -25,7 +25,7 @@ class API with Settings{
     String token = "$header64.$payload64.$sign";
 
     var res = await http.post(
-      Uri.parse("${Settings.enderecoRepositorio}repository/"),
+      Uri.parse("${SettingsReports.enderecoRepositorio}repository/"),
       body: {
         'connection': banco,
         'token': token,
@@ -58,7 +58,7 @@ class API with Settings{
 
     } else {
       http.Response response = await http.post(
-        Uri.parse('${Settings.enderecoRepositorio}$urlreports'),
+        Uri.parse('${SettingsReports.enderecoRepositorio}$urlreports'),
         body: body,
       );
 
@@ -98,7 +98,7 @@ class API with Settings{
     // printT(token);
 
     var res = await http.post(
-      Uri.parse("${Settings.enderecoRepositorio}$url"),
+      Uri.parse("${SettingsReports.enderecoRepositorio}$url"),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -118,7 +118,7 @@ class API with Settings{
   Future<Map<String, dynamic>> getConfigApi({required String function,}) async {
 
     http.Response response = await http.get(
-      Uri.parse('${Settings.enderecoRepositorio}$function'),
+      Uri.parse('${SettingsReports.enderecoRepositorio}$function'),
     );
     try {
       return jsonDecode(response.body);

@@ -147,7 +147,7 @@ class Widgets {
                 ),
               ),
               onPressed: () async {
-                controller.dtinicio = await Settings().selectDate(context: context);
+                controller.dtinicio = await SettingsReports().selectDate(context: context);
               },
             ),
             TextButton.icon(
@@ -159,7 +159,7 @@ class Widgets {
                 ),
               ),
               onPressed: () async {
-                controller.dtfim = await Settings().selectDate(context: context);
+                controller.dtfim = await SettingsReports().selectDate(context: context);
               },
             ),
             PopupMenuButton(

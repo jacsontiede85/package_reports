@@ -4,9 +4,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-mixin class Settings{
-  static String enderecoRepositorio = 'https://api.agnconsultoria.com.br/';
+mixin class SettingsReports{
+  static String enderecoRepositorio = '';
   // static String enderecoRepositorio = 'https://analytics.agnconsultoria.com.br/api/';
+
+  setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
 
   static getDataPTBR() {
     final DateTime now = DateTime.now();
