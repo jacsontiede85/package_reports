@@ -1,6 +1,4 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
-
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Features{
@@ -50,29 +48,6 @@ class Features{
     date = date[0].toString().split('-');
     dat = '${date[2]}/${date[1]}/${date[0]}';
     return dat;
-  }
-
-  static Future<String> selectDate(BuildContext context) async {
-    DateTime selectedDate = DateTime.now();
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      locale: const Locale('pt'),
-      initialDate: selectedDate,
-      firstDate: DateTime(2000, 1),
-      lastDate: DateTime(2101),
-      // builder: (BuildContext context, Widget child) {
-      //   return Theme(
-      //     data: ThemeData(primarySwatch: myColor),
-      //     child: child,
-      //   );
-      // },
-    );
-    if (picked != null && picked != selectedDate) {
-      selectedDate = picked;
-      //print(selectedDate);
-      return formatarData("${selectedDate.toLocal()}");
-    }
-    return formatarData("${DateTime.now().toLocal()}");
   }
 
   static String formatarTextoPrimeirasLetrasMaiusculas(String txt) {

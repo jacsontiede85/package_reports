@@ -16,7 +16,6 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   late String nomeFunction;
   late double sizeWidth;
   late bool isToGetDadosNaEntrada;
-  late int matricula;
   late String database;
   Map<String,dynamic>? modificarbodyPrimario;
 
@@ -24,11 +23,9 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     required this.nomeFunction, 
     required this.sizeWidth,
     required this.isToGetDadosNaEntrada,
-    required this.matricula,
     required this.database,
     this.modificarbodyPrimario,
-  }) {    
-    bodyPrimario.update("matricula", (value) => matricula);
+  }) {
     bodyPrimario.update("database", (value) => database);
     
     if(isToGetDadosNaEntrada){
@@ -41,7 +38,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   }
 
   Map<String, dynamic> bodyPrimario = {
-    "matricula" : 0,
+    "matricula" : SettingsReports.matricula,
     "database" : "",
     "dtinicio" : '${SettingsReports.formatarDataPadraoBR(DateTime.now().toString())}',  
     "dtfim" : '${SettingsReports.formatarDataPadraoBR(DateTime.now().toString())}',

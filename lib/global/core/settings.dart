@@ -6,10 +6,10 @@ import 'package:intl/intl.dart';
 
 mixin class SettingsReports{
   static String enderecoRepositorio = '';
-  static String matricula = '';
+  static int matricula = 0;
 
   setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
-  setMatricula({required String matriculaUsu}) => matricula = matriculaUsu;
+  setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;
 
   static getDataPTBR() {
     final DateTime now = DateTime.now();

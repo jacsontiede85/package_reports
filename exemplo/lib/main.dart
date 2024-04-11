@@ -4,6 +4,8 @@ import 'package:package_reports/global/core/settings.dart';
 import 'package:package_reports/report_module/page/report_page.dart';
 
 void main() {
+  SettingsReports().setEnderecoApi(enderecoUrl: 'https://analytics.agnconsultoria.com.br/api/');
+  SettingsReports().setMatricula(matriculaUsu: 3312);
   runApp(const MyApp());
 }
 
@@ -37,7 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) { 
-    SettingsReports().setEnderecoApi(enderecoUrl: 'https://analytics.agnconsultoria.com.br/api/');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -54,7 +55,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   context, 
                   MaterialPageRoute(
                     builder: (context) => ReportPage(
-                      matricula: 3312,
                       database: "atacado",
                       buscarDadosNaEntrada: false,
                       function: 'vendas/venda-por-supervisor/index.php',
