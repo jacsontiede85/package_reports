@@ -195,15 +195,21 @@ class _ItensFiltroState extends State<ItensFiltro> {
                       filtro.selecionado = !filtro.selecionado;
                       widget.controller.adicionarItensSelecionado(itens: filtro);
                     },
-                    title: Text(filtro.titulo),
-                    subtitle: Text(
-                      filtro.subtitulo,
+                    title: Text(
+                      "${filtro.codigo} - ${filtro.titulo}",
                       style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
-                        color: Color.fromARGB(197, 209, 158, 5),
                       ),
                     ),
+                    subtitle: filtro.subtitulo.isNotEmpty ? Text(
+                      filtro.subtitulo,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        color: Color.fromARGB(197, 209, 158, 5),
+                      ),
+                    ) : null,
                     controlAffinity: ListTileControlAffinity.leading,
                   ),
                 );

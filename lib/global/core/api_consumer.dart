@@ -16,11 +16,7 @@ class API with SettingsReports{
         var response = await getDataReportApiJWT(dados: body, url: urlreports);
         return jsonDecode(response);        
       }catch(e){
-        return [
-          {
-            'mensagem': 'Dados não encontrado! Verifique os filtros selecionados e tente novamente.\nCatch message nerd: $e',
-          }
-        ];
+        return [];
       }
 
     } else {
@@ -62,7 +58,7 @@ class API with SettingsReports{
     String token = "$header64.$payload64.$sign";
     
     // printW(dados);
-    // printT(token);
+    // print(token);
 
     var res = await http.post(
       Uri.parse("${SettingsReports.enderecoRepositorio}$url"),

@@ -57,6 +57,9 @@ abstract class FiltroControllerBase with Store {
   
   List<String> listaDePeriodos = [];
 
+  @observable
+  bool habilitarDataFaturamento = false;
+
   // RETORNAR QTDE DE ITENS SELECIONADOS
   @computed
   int get getQtdeItensSelecionados => (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.length);

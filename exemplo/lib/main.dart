@@ -5,6 +5,7 @@ import 'package:package_reports/report_module/page/report_page.dart';
 
 void main() {
   SettingsReports().setEnderecoApi(enderecoUrl: 'https://analytics.agnconsultoria.com.br/api/');
+  // SettingsReports().setEnderecoApi(enderecoUrl: 'https://api.agnconsultoria.com.br/');
   SettingsReports().setMatricula(matriculaUsu: 3312);
   runApp(const MyApp());
 }
@@ -58,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       database: "atacado",
                       buscarDadosNaEntrada: false,
                       function: 'vendas/venda-por-supervisor/index.php',
+                      // function: 'repositorio/reports/query/compras/simular_varios_precos.php',
                     ),
                   )
                 );

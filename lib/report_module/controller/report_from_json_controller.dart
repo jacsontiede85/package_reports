@@ -359,12 +359,10 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
       getWidthTable();
       setOrderBy(key: colunas[0]['key'], order: 'asc');
       getColunaElevada();
-    } catch (e) {
-      // printE("Erro getDados");
+    } finally{
+      notify();
+      _startListener();      
     }
-
-    notify();
-    _startListener();
   }
 
   //retornar o tipo de dados

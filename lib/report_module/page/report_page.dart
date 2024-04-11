@@ -78,7 +78,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
   void initState() {
     if(controller.configPagina.isEmpty)
       controller.getConfig().whenComplete(() {
-        if(!widget.buscarDadosNaEntrada && controller.configPagina.isNotEmpty){
+        if(!widget.buscarDadosNaEntrada && controller.configPagina.isNotEmpty && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty){
           controller.loading = false;
           scaffoldKey.currentState!.openEndDrawer();
         }
@@ -149,43 +149,46 @@ class _ReportPageState extends State<ReportPage> with Rows {
             ),
             const SizedBox(width: 30,),
             Observer(
-              builder: (_) => Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: AnimatedContainer(
-                  height: 40,
-                  width: controller.mostrarBarraPesquisar ? 250 : 60,
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.all(5),
-                  child: SearchBar(
-                    controller: controller.searchString,
-                    hintText: 'Pesquisar',
-                    elevation: const MaterialStatePropertyAll(0),
-                    side: const MaterialStatePropertyAll(BorderSide(color: Colors.white, width: 0.25),),
-                    backgroundColor: const MaterialStatePropertyAll(Colors.black12),
-                    textStyle: MaterialStatePropertyAll(
-                      TextStyle(
-                        color: widget.corTitulo
-                      )
-                    ),
-                    hintStyle: MaterialStatePropertyAll(
-                      TextStyle(
-                        color: widget.corTitulo?.withOpacity(0.7),
-                        fontWeight: FontWeight.normal
+              builder: (_) => Visibility(
+                visible: controller.configPagina.isNotEmpty && !controller.loading && controller.dados.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: AnimatedContainer(
+                    height: 40,
+                    width: controller.mostrarBarraPesquisar ? 250 : 60,
+                    duration: const Duration(milliseconds: 300),
+                    margin: const EdgeInsets.all(5),
+                    child: SearchBar(
+                      controller: controller.searchString,
+                      hintText: 'Pesquisar',
+                      elevation: const MaterialStatePropertyAll(0),
+                      side: const MaterialStatePropertyAll(BorderSide(color: Colors.white, width: 0.25),),
+                      backgroundColor: const MaterialStatePropertyAll(Colors.black12),
+                      textStyle: MaterialStatePropertyAll(
+                        TextStyle(
+                          color: widget.corTitulo
+                        )
                       ),
-                    ),
-                    leading: IconButton(
-                      onPressed: (){
-                        controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
+                      hintStyle: MaterialStatePropertyAll(
+                        TextStyle(
+                          color: widget.corTitulo?.withOpacity(0.7),
+                          fontWeight: FontWeight.normal
+                        ),
+                      ),
+                      leading: IconButton(
+                        onPressed: (){
+                          controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
+                        },
+                        icon: Icon(
+                          controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
+                          color: controller.mostrarBarraPesquisar ? widget.corTitulo?.withOpacity(0.7) : widget.corTitulo,
+                        )
+                      ),
+                      onChanged: (value) {
+                        controller.filterListFromSearch();
+                        setState(() {});
                       },
-                      icon: Icon(
-                        controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
-                        color: controller.mostrarBarraPesquisar ? widget.corTitulo?.withOpacity(0.7) : widget.corTitulo,
-                      )
                     ),
-                    onChanged: (value) {
-                      controller.filterListFromSearch();
-                      setState(() {});
-                    },
                   ),
                 ),
               ),
@@ -195,7 +198,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               children: [
                 Observer(
                   builder: (_) => Visibility(
-                    visible: !controller.loading && (controller.configPagina['graficosDisponiveis'] != null && controller.configPagina['graficosDisponiveis'].isNotEmpty),
+                    visible: !controller.loading && controller.dados.isNotEmpty && (controller.configPagina['graficosDisponiveis'] != null && controller.configPagina['graficosDisponiveis'].isNotEmpty),
                     child: IconButton(
                       icon: Icon(
                         Icons.bar_chart,

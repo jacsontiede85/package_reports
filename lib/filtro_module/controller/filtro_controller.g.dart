@@ -182,11 +182,28 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$habilitarDataFaturamentoAtom = Atom(
+      name: 'FiltroControllerBase.habilitarDataFaturamento', context: context);
+
+  @override
+  bool get habilitarDataFaturamento {
+    _$habilitarDataFaturamentoAtom.reportRead();
+    return super.habilitarDataFaturamento;
+  }
+
+  @override
+  set habilitarDataFaturamento(bool value) {
+    _$habilitarDataFaturamentoAtom
+        .reportWrite(value, super.habilitarDataFaturamento, () {
+      super.habilitarDataFaturamento = value;
+    });
+  }
+
   late final _$FiltroControllerBaseActionController =
       ActionController(name: 'FiltroControllerBase', context: context);
 
   @override
-  dynamic adicionarItensSelecionado({required FiltrosModel itens}) {
+  void adicionarItensSelecionado({required FiltrosModel itens}) {
     final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
         name: 'FiltroControllerBase.adicionarItensSelecionado');
     try {
@@ -197,7 +214,7 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   }
 
   @override
-  dynamic limparSelecao() {
+  void limparSelecao() {
     final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
         name: 'FiltroControllerBase.limparSelecao');
     try {
@@ -208,7 +225,7 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   }
 
   @override
-  dynamic selecionarTodos() {
+  void selecionarTodos() {
     final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
         name: 'FiltroControllerBase.selecionarTodos');
     try {
@@ -219,7 +236,7 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   }
 
   @override
-  dynamic inverterSelecao() {
+  void inverterSelecao() {
     final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
         name: 'FiltroControllerBase.inverterSelecao');
     try {
@@ -230,7 +247,7 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   }
 
   @override
-  dynamic conjuntoDePeriodos() {
+  void conjuntoDePeriodos() {
     final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
         name: 'FiltroControllerBase.conjuntoDePeriodos');
     try {
@@ -263,6 +280,7 @@ dtfim: ${dtfim},
 filtrosSalvosParaAdicionarNoBody: ${filtrosSalvosParaAdicionarNoBody},
 exibirBarraPesquisa: ${exibirBarraPesquisa},
 pesquisaItensDoFiltro: ${pesquisaItensDoFiltro},
+habilitarDataFaturamento: ${habilitarDataFaturamento},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}
