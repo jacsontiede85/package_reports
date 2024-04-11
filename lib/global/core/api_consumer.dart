@@ -5,39 +5,6 @@ import 'dart:convert';
 
 class API with SettingsReports{
 
-
-  Future<String> jwtSendJson({required String banco, required Map dados,}) async {
-    //header
-    var header = {
-      "alg": "HS256",
-      "typ": "JWT",
-    };
-    String header64 = base64Encode(jsonEncode(header).codeUnits);
-
-    //payload
-    var payload = dados;
-    String payload64 = base64Encode(utf8.encode(jsonEncode(payload)));
-
-    //assinatura
-    var hmac = Hmac(sha256, 'tisa098*'.codeUnits);
-    var digest = hmac.convert("$header64.$payload64".codeUnits);
-    String sign = base64Encode(digest.bytes);
-    String token = "$header64.$payload64.$sign";
-
-    var res = await http.post(
-      Uri.parse("${SettingsReports.enderecoRepositorio}repository/"),
-      body: {
-        'connection': banco,
-        'token': token,
-      },
-    );
-    if (res.statusCode == 200) {
-      return res.body;
-    } else {
-      return "";
-    }
-  }
-  
   Future<List> getDataReportApi({
     required String urlreports, 
     required Map<String, dynamic>? body, 

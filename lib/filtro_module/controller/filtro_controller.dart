@@ -77,14 +77,14 @@ abstract class FiltroControllerBase with Store {
     try{
       loadingItensFiltors = true;
       bodyPesquisarFiltros.addAll({
-        "arquivo" : valor.arquivoQuery,
         "function" : valor.funcaoPrincipal,
+        "database" : valor.bancoBuscarFiltros,
         "matricula" : "3312",
       });
 
-      var response = await API().jwtSendJson(
-        banco: valor.bancoBuscarFiltros,
-        dados: bodyPesquisarFiltros
+      var response = await API().getDataReportApiJWT(
+        dados: bodyPesquisarFiltros,
+        url: "filtros/${valor.arquivoQuery}"
       );
 
       List dados = jsonDecode(response);

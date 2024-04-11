@@ -13,16 +13,16 @@ abstract class FiltrosModelBase with Store {
   bool selecionado = false;
 
   FiltrosModelBase.fromJson(Map<String, dynamic> json){
-    codigo = json['codigo'];
-    titulo = json['titulo'];
-    subtitulo = json['subtitulo'];
+    codigo = json['CODIGO'];
+    titulo = json['TITULO'];
+    subtitulo = json['SUBTITULO'];
   }
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> data = <String, dynamic>{};
-    data['codigo'] = codigo;
-    data['titulo'] = titulo;
-    data['subtitulo'] = subtitulo;
+    data['CODIGO'] = codigo;
+    data['TITULO'] = titulo;
+    data['SUBTITULO'] = subtitulo;
     return data;
   }
 
