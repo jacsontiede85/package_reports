@@ -128,7 +128,7 @@ abstract class FiltroControllerBase with Store {
   Future<void> criarNovoBody() async {
     for(FiltrosPageAtual valores in listaFiltrosParaConstruirTela){
       if(valores.qualPaginaFiltroPertence == indexPagina){
-        filtrosSalvosParaAdicionarNoBody.addAll(valores.filtrosWidgetModel.toJsonItensSelecionados(),);        
+        filtrosSalvosParaAdicionarNoBody.addAll(valores.filtrosWidgetModel.toJsonItensSelecionados(),);
       }
     }
     if(controllerReports.bodySecundario.isEmpty){

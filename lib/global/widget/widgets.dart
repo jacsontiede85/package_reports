@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
+import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/core/settings.dart';
 import 'package:package_reports/global/widget/texto.dart';
 
@@ -24,7 +25,7 @@ class Widgets {
     required BuildContext context, 
     Function()? onTap, 
     bool isToShowFiltroNoMeio = false, 
-    required dynamic layout,
+    required LayoutControllerPackage layout,
   }) async{
     if(1==1){
       await Navigator.push(
@@ -125,8 +126,8 @@ class Widgets {
               filtrosDados.titulo.toUpperCase(),
               style: TextStyle(
                 fontSize: 14.0, 
-                color: Colors.green[700], 
-                fontWeight: FontWeight.w800,
+                color: Theme.of(context).brightness == Brightness.light ? Colors.green[700] : Colors.greenAccent[200], 
+                fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.left,
             ),
@@ -213,7 +214,7 @@ class Widgets {
           style: TextStyle(
             fontSize: 14.0, 
             color: Theme.of(context).brightness == Brightness.light ? Colors.green[700] : Colors.greenAccent[200],
-            fontWeight: FontWeight.w800,
+            fontWeight: FontWeight.w700,
           ),
           textAlign: TextAlign.left,
         ),

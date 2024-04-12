@@ -49,24 +49,29 @@ abstract class LayoutControllerPackageBase with Store {
 
   @computed
   double get larguraEndDrawerFiltros{
-    if(desktop && width <1100)
+    if(desktop && width <1100) {
       return 400;
-    else if(desktop && width >1500)
-      return 500;
-    else if( mobile || tablet )
-      return width;
-    else
-      return width*0.35;
+    } else if(desktop && width >1500){
+      return 500;      
+    }
+    else if( mobile || tablet ){
+      return width;      
+    }
+    else{
+      return width*0.35;      
+    }
   }
 
   @computed
   double get larguraJanelaFiltrosPesquisa{
-    if( mobile || tablet )
+    if( mobile || tablet ) {
       return width;
-    else if(desktop && width <1100)
-      return width*0.50;
-    else
-      return width*0.40;
+    } else if(desktop && width <1100){
+      return width*0.50;      
+    }
+    else{
+      return width*0.40;      
+    }
   }
 
 
@@ -95,18 +100,20 @@ abstract class LayoutControllerPackageBase with Store {
 
     widthMenuDesktop = (width * 0.25) > 400 ? 400 : (width * 0.25); //25% da largura da tela, se maior que 400, será considerado 400 como largura máxima
 
-    if (mobile || tablet)
+    if (mobile || tablet) {
       widthAreaDeCardDesktop = width;
-    else
+    } else {
       widthAreaDeCardDesktop = width;
+    }
 
-    if (mobile || tablet)
+    if (mobile || tablet) {
       widthCard = width - 10;
-    else {
-      if (widthAreaDeCardDesktop < 900)
+    } else {
+      if (widthAreaDeCardDesktop < 900) {
         widthCard = widthAreaDeCardDesktop * 0.999; //95%
-      else
+      } else {
         widthCard = widthAreaDeCardDesktop * 0.48; //47%
+      }
     }
 
   }

@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
+import 'package:http/http.dart';
 import 'package:package_reports/global/core/settings.dart';
 import 'dart:convert';
 
@@ -52,15 +53,15 @@ class API with SettingsReports{
     String payload64 = base64Encode(utf8.encode(jsonEncode(payload))); //utf8.encode para caracteres especiais
     //assinatura
     String secret = "tisa098*";
-    var hmac = Hmac(sha256, secret.codeUnits);
-    var digest = hmac.convert("$header64.$payload64".codeUnits);
+    Hmac hmac = Hmac(sha256, secret.codeUnits);
+    Digest  digest = hmac.convert("$header64.$payload64".codeUnits);
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
     
     // print(dados);
-    print(token);
+    // print(token);
 
-    var res = await http.post(
+    Response res = await http.post(
       Uri.parse("${SettingsReports.enderecoRepositorio}$url"),
       headers: {
         'Content-Type': 'application/json',

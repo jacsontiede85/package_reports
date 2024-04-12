@@ -274,9 +274,18 @@ class _ReportPageState extends State<ReportPage> with Rows {
         endDrawer: Builder(
           builder:(context) {
             if(controller.configPagina.isNotEmpty){
-              return FiltrosReportPage(
-                controllerFiltro: controllerFiltro,
-              );                 
+              if(controller.bodySecundario.isNotEmpty){
+                return FiltrosReportPage(
+                  controllerFiltro: controllerFiltro,
+                  bodypesquisaAtual: controller.bodySecundario,
+                );                                 
+              }else{
+                return FiltrosReportPage(
+                  controllerFiltro: controllerFiltro,
+                  bodypesquisaAtual: controller.bodyPrimario,
+                );       
+              }
+
             }else{
               return const Drawer(
                 child: Center(

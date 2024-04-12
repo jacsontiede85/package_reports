@@ -13,10 +13,12 @@ class FiltrosReportPage extends StatefulWidget {
   
   final FiltroController controllerFiltro;
   Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela, String dtinicio, String dtfim)? onAplicar;
+  Map<String, dynamic> bodypesquisaAtual;
   
   FiltrosReportPage({
     super.key,
     required this.controllerFiltro,
+    required this.bodypesquisaAtual,
     this.onAplicar
   });
 
@@ -45,9 +47,42 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
           }
         ),
         actions: [
+          Observer(
+            builder: (_) => Visibility(
+              visible: controllerFiltro.filtrosSalvosParaAdicionarNoBody.isNotEmpty || controllerFiltro.listaFiltrosParaConstruirTela.any((element) => element.filtrosWidgetModel.itensSelecionados.isNotEmpty),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: TextButton.icon(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(Colors.redAccent.shade400)
+                  ),
+                  onPressed: () {
+                    for(String chaves in controllerFiltro.filtrosSalvosParaAdicionarNoBody.keys){
+                      widget.bodypesquisaAtual.remove(chaves);
+                    }
+                    for(FiltrosPageAtual filtros in controllerFiltro.listaFiltrosParaConstruirTela){
+                      filtros.filtrosWidgetModel.itensSelecionados.clear();
+                    }
+                    controllerFiltro.filtrosSalvosParaAdicionarNoBody.clear();
+                    controllerFiltro.listaFiltrosParaConstruirTela = ObservableList.of([...controllerFiltro.listaFiltrosParaConstruirTela]);
+                  },
+                  icon: const Icon(
+                    Icons.clear_rounded,
+                    color: Colors.white,
+                  ),
+                  label: const Text(
+                    "Limpar Filtros",
+                    style: TextStyle(
+                      color: Colors.white
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child: ElevatedButton(
+            child: TextButton(
               style: const ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(Colors.blue)
               ),
@@ -62,7 +97,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
               child: const Text(
                 "Aplicar",
                 style: TextStyle(
-                  color: Colors.white
+                  color: Colors.white,
                 ),
               ),
             ),

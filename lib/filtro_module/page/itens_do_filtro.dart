@@ -204,10 +204,10 @@ class _ItensFiltroState extends State<ItensFiltro> {
                     ),
                     subtitle: filtro.subtitulo.isNotEmpty ? Text(
                       filtro.subtitulo,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
-                        color: Color.fromARGB(197, 209, 158, 5),
+                        color: Theme.of(context).brightness == Brightness.light ? Colors.orange[700] : Colors.orangeAccent[100], 
                       ),
                     ) : null,
                     controlAffinity: ListTileControlAffinity.leading,
