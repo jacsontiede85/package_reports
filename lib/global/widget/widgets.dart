@@ -232,7 +232,7 @@ class Widgets {
                   filtrosDados.subtitulo,
                   style: const TextStyle(
                     fontSize: 11.0, 
-                    color: Colors.black,
+                    // color: Colors.black,
                   ),
                 ),
               ),

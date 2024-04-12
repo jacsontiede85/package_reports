@@ -7,7 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/page/filtros_page.dart';
-import 'package:package_reports/report_module/controller/layout_controller.dart';
+import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
 import 'package:package_reports/report_module/controller/report_to_xlsx_controller.dart';
 import 'package:package_reports/global/core/features.dart';
@@ -52,7 +52,7 @@ class ReportPage extends StatefulWidget {
 class _ReportPageState extends State<ReportPage> with Rows {
   double _width = 0.0;
 
-  LayoutController layout = LayoutController();
+  LayoutControllerPackage layout = LayoutControllerPackage();
   Widgets wp = Widgets();
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -202,7 +202,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                     child: IconButton(
                       icon: Icon(
                         Icons.bar_chart,
-                        size: layout.isDesktop ? 20 : 15,
+                        size: layout.desktop ? 20 : 15,
                       ),
                       color: widget.corTitulo ?? Colors.white,
                       onPressed: () async {
@@ -257,7 +257,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       child: IconButton(
                         icon: Icon(
                           Icons.filter_alt_outlined, 
-                          size: layout.isDesktop ? 20 : 15,
+                          size: layout.desktop ? 20 : 15,
                         ),
                         color: widget.corTitulo ?? Colors.white,
                         onPressed: () {
@@ -391,7 +391,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                               'Não há dados para os filtros selecionados...',
                                               style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: layout.isDesktop ? 16 : 12,
+                                                fontSize: layout.desktop ? 16 : 12,
                                                 fontWeight: FontWeight.w600
                                               ),
                                           ),

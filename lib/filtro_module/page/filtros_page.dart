@@ -6,7 +6,7 @@ import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
-import 'package:package_reports/report_module/controller/layout_controller.dart';
+import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/widget/widgets.dart';
 
 class FiltrosReportPage extends StatefulWidget {
@@ -29,12 +29,11 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
   late FiltroController controllerFiltro = widget.controllerFiltro;
   
   Widgets wp = Widgets();
-  LayoutController layout = LayoutController();
+  LayoutControllerPackage layout = LayoutControllerPackage();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[100],
       appBar: AppBar(
         backgroundColor: Colors.black87,
         title: wp.wpHeader(titulo: 'Filtros'),
@@ -49,7 +48,9 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: ElevatedButton(
-              child: const Text("Aplicar"),
+              style: const ButtonStyle(
+                backgroundColor: MaterialStatePropertyAll(Colors.blue)
+              ),
               onPressed: () async {
                 Navigator.of(context).pop(true);
                 if(widget.onAplicar == null) {
@@ -58,6 +59,12 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                   widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim);
                 }
               },
+              child: const Text(
+                "Aplicar",
+                style: TextStyle(
+                  color: Colors.white
+                ),
+              ),
             ),
           ),
         ],
