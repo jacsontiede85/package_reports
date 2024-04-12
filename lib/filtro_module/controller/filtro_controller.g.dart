@@ -182,20 +182,19 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
-  late final _$habilitarDataFaturamentoAtom = Atom(
-      name: 'FiltroControllerBase.habilitarDataFaturamento', context: context);
+  late final _$isDataFaturamentoAtom =
+      Atom(name: 'FiltroControllerBase.isDataFaturamento', context: context);
 
   @override
-  bool get habilitarDataFaturamento {
-    _$habilitarDataFaturamentoAtom.reportRead();
-    return super.habilitarDataFaturamento;
+  bool get isDataFaturamento {
+    _$isDataFaturamentoAtom.reportRead();
+    return super.isDataFaturamento;
   }
 
   @override
-  set habilitarDataFaturamento(bool value) {
-    _$habilitarDataFaturamentoAtom
-        .reportWrite(value, super.habilitarDataFaturamento, () {
-      super.habilitarDataFaturamento = value;
+  set isDataFaturamento(bool value) {
+    _$isDataFaturamentoAtom.reportWrite(value, super.isDataFaturamento, () {
+      super.isDataFaturamento = value;
     });
   }
 
@@ -280,7 +279,7 @@ dtfim: ${dtfim},
 filtrosSalvosParaAdicionarNoBody: ${filtrosSalvosParaAdicionarNoBody},
 exibirBarraPesquisa: ${exibirBarraPesquisa},
 pesquisaItensDoFiltro: ${pesquisaItensDoFiltro},
-habilitarDataFaturamento: ${habilitarDataFaturamento},
+isDataFaturamento: ${isDataFaturamento},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}

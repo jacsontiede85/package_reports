@@ -112,85 +112,88 @@ class Widgets {
     required FiltrosWidgetModel filtrosDados,
     required FiltroController controller,
     required BuildContext context,
+    required String tipo,
   }){
-    return card(
-      widgetList: [
-        Text(
-          filtrosDados.titulo.toUpperCase(),
-          style: TextStyle(
-            fontSize: 14.0, 
-            color: Colors.green[700], 
-            fontWeight: FontWeight.w800,
-          ),
-          textAlign: TextAlign.left,
-        ),
-        SizedBox(
-          width: 250,
-          child: Observer(
-            builder: (_) => CheckboxListTile(
-              value: controller.habilitarDataFaturamento, 
-              title: const Text('Data faturamento'),
-              controlAffinity: ListTileControlAffinity.leading,
-              onChanged: (c){
-                controller.habilitarDataFaturamento = !controller.habilitarDataFaturamento;
-                if(c == true){
-                  controller.controllerReports.bodyPrimario.addAll({
-                    "coluna_data" : "pcpedc.dtfat"
-                  });                
-                }else{
-                  controller.controllerReports.bodyPrimario.addAll({
-                    "coluna_data" : "pcpedc.data"
-                  });      
-                }
-              },
+    return Builder(
+      builder: (context) {
+        if(tipo == 'datapickerFaturamento'){
+          controller.validarSeDataSeraDeFaturamento();          
+        }
+        return card(
+          widgetList: [
+            Text(
+              filtrosDados.titulo.toUpperCase(),
+              style: TextStyle(
+                fontSize: 14.0, 
+                color: Colors.green[700], 
+                fontWeight: FontWeight.w800,
+              ),
+              textAlign: TextAlign.left,
             ),
-          ),
-        ),
-        ButtonBar(
-          alignment: MainAxisAlignment.start, 
-          mainAxisSize: MainAxisSize.max,
-          buttonPadding: const EdgeInsets.all(10),
-          children: [
-            TextButton.icon(
-              icon: const Icon(Icons.calendar_today),
-              label: Observer(
-                builder: (_) => Text(
-                  controller.dtinicio,
-                  style: const TextStyle(fontSize: 17),
+            SizedBox(
+              width: 250,
+              child: Observer(
+                builder: (_) => Visibility(
+                  visible: tipo == 'datapickerFaturamento',
+                  child: CheckboxListTile(
+                    value: controller.isDataFaturamento, 
+                    title: const Text('Data faturamento'),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (c){
+                      controller.isDataFaturamento = !controller.isDataFaturamento;
+                      controller.validarSeDataSeraDeFaturamento();
+                    },
+                  ),
                 ),
               ),
-              onPressed: () async {
-                controller.dtinicio = await SettingsReports().selectDate(context: context);
-              },
             ),
-            TextButton.icon(
-              icon: const Icon(Icons.calendar_today),
-              label: Observer(
-                builder: (_) => Text(
-                  controller.dtfim,
-                  style: const TextStyle(fontSize: 17),
+            ButtonBar(
+              alignment: MainAxisAlignment.start, 
+              mainAxisSize: MainAxisSize.max,
+              buttonPadding: const EdgeInsets.all(10),
+              children: [
+                TextButton.icon(
+                  icon: const Icon(Icons.calendar_today),
+                  label: Observer(
+                    builder: (_) => Text(
+                      controller.dtinicio,
+                      style: const TextStyle(fontSize: 17),
+                    ),
+                  ),
+                  onPressed: () async {
+                    controller.dtinicio = await SettingsReports().selectDate(context: context);
+                  },
                 ),
-              ),
-              onPressed: () async {
-                controller.dtfim = await SettingsReports().selectDate(context: context);
-              },
+                TextButton.icon(
+                  icon: const Icon(Icons.calendar_today),
+                  label: Observer(
+                    builder: (_) => Text(
+                      controller.dtfim,
+                      style: const TextStyle(fontSize: 17),
+                    ),
+                  ),
+                  onPressed: () async {
+                    controller.dtfim = await SettingsReports().selectDate(context: context);
+                  },
+                ),
+                PopupMenuButton(
+                  itemBuilder: (context) {
+                    return controller.listaDePeriodos.map((valor) {
+                      return PopupMenuItem(
+                        value: valor.replaceAll(' ', ''),
+                        child: Text(valor),
+                      );
+                    },).toList();
+                  },
+                  onSelected: (value) {
+                    controller.selecaoDeDataPorPeriodo(periodo: value);
+                  },
+                )
+              ],
             ),
-            PopupMenuButton(
-              itemBuilder: (context) {
-                return controller.listaDePeriodos.map((valor) {
-                  return PopupMenuItem(
-                    value: valor.replaceAll(' ', ''),
-                    child: Text(valor),
-                  );
-                },).toList();
-              },
-              onSelected: (value) {
-                controller.selecaoDeDataPorPeriodo(periodo: value);
-              },
-            )
-          ],
-        ),
-      ]
+          ]
+        );
+      }
     );
   }
 
@@ -310,18 +313,24 @@ class Widgets {
   }){
     Widget retornoFuncao = const SizedBox();
     switch(filtrosDados.tipoWidget){
+
       case "checkbox" :
-      retornoFuncao = cardFiltroGeral(
-        context: context, 
-        filtrosDados: filtrosDados, 
-        onTap: onTap,
-        controller: controller,
-        indexFiltro: index
-      );
+        retornoFuncao = cardFiltroGeral(
+          context: context, 
+          filtrosDados: filtrosDados, 
+          onTap: onTap,
+          controller: controller,
+          indexFiltro: index
+        );
       break;
 
       case "datapicker" : 
-        retornoFuncao = selecaoDePeriodo(filtrosDados: filtrosDados, context: context, controller: controller);
+        retornoFuncao = selecaoDePeriodo(
+          filtrosDados: filtrosDados, 
+          context: context, 
+          controller: controller,
+          tipo: filtrosDados.tipoWidget,
+        );
       break;
 
     }

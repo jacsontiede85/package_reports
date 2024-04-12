@@ -58,7 +58,7 @@ abstract class FiltroControllerBase with Store {
   List<String> listaDePeriodos = [];
 
   @observable
-  bool habilitarDataFaturamento = false;
+  bool isDataFaturamento = false;
 
   // RETORNAR QTDE DE ITENS SELECIONADOS
   @computed
@@ -321,6 +321,18 @@ abstract class FiltroControllerBase with Store {
         ),
       ) 
     )).toList();
+    }
+  }
+
+  validarSeDataSeraDeFaturamento (){
+    if(isDataFaturamento){
+      controllerReports.bodyPrimario.addAll({
+        "coluna_data" : "pcpedc.dtfat"
+      });                
+    }else{
+      controllerReports.bodyPrimario.addAll({
+        "coluna_data" : "pcpedc.data"
+      });      
     }
   }
 

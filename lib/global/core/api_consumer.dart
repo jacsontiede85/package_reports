@@ -57,7 +57,7 @@ class API with SettingsReports{
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
     
-    // printW(dados);
+    // print(dados);
     // print(token);
 
     var res = await http.post(
