@@ -201,8 +201,6 @@ class Widgets {
     required BuildContext context, 
     required FiltrosWidgetModel filtrosDados,
     required void Function()? onTap,
-    dynamic theme,
-    bool isToShowFiltroNoMeio = false,
     required FiltroController controller,
     required int indexFiltro
   }) {
@@ -214,7 +212,7 @@ class Widgets {
           filtrosDados.titulo.toUpperCase(),
           style: TextStyle(
             fontSize: 14.0, 
-            color: Colors.green[700], 
+            color: Theme.of(context).brightness == Brightness.light ? Colors.green[700] : Colors.greenAccent[200],
             fontWeight: FontWeight.w800,
           ),
           textAlign: TextAlign.left,
@@ -231,8 +229,7 @@ class Widgets {
                 child: Text(
                   filtrosDados.subtitulo,
                   style: const TextStyle(
-                    fontSize: 11.0, 
-                    // color: Colors.black,
+                    fontSize: 11.0,
                   ),
                 ),
               ),
