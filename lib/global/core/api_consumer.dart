@@ -58,7 +58,7 @@ class API with SettingsReports{
     String token = "$header64.$payload64.$sign";
     
     // print(dados);
-    // print(token);
+    print(token);
 
     var res = await http.post(
       Uri.parse("${SettingsReports.enderecoRepositorio}$url"),

@@ -116,7 +116,7 @@ class Widgets {
   }){
     return Builder(
       builder: (context) {
-        if(tipo == 'datapickerFaturamento'){
+        if(tipo == 'datapickerfaturamento'){
           controller.validarSeDataSeraDeFaturamento();          
         }
         return card(
@@ -134,7 +134,7 @@ class Widgets {
               width: 250,
               child: Observer(
                 builder: (_) => Visibility(
-                  visible: tipo == 'datapickerFaturamento',
+                  visible: tipo == 'datapickerfaturamento',
                   child: CheckboxListTile(
                     value: controller.isDataFaturamento, 
                     title: const Text('Data faturamento'),
@@ -324,7 +324,7 @@ class Widgets {
         );
       break;
 
-      case "datapicker" : 
+      case "datapicker" || "datapickerfaturamento" : 
         retornoFuncao = selecaoDePeriodo(
           filtrosDados: filtrosDados, 
           context: context, 
