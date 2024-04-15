@@ -174,7 +174,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
         ),
         body: Observer(
           builder: (_) => Visibility(
-            visible: !widget.controller.loadingItensFiltors,
+            visible: !widget.controller.loadingItensFiltros,
             replacement: Center(
               child: LoadingAnimationWidget.halfTriangleDot(
                 color: const Color(0xFFEE4E4E),

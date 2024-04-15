@@ -36,7 +36,7 @@ abstract class FiltroControllerBase with Store {
   ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela = ObservableList<FiltrosPageAtual>.of([]);
 
   @observable
-  bool loadingItensFiltors = false;
+  bool loadingItensFiltros = false;
 
   @observable
   int indexFiltro = 0;
@@ -60,6 +60,9 @@ abstract class FiltroControllerBase with Store {
   @observable
   bool isDataFaturamento = false;
 
+  @observable
+  String valorSelecionadoDropDown = 'NENHUM';
+
   // RETORNAR QTDE DE ITENS SELECIONADOS
   @computed
   int get getQtdeItensSelecionados => (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.length);
@@ -78,11 +81,11 @@ abstract class FiltroControllerBase with Store {
 
   Future<void> funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor,}) async {
     try{
-      loadingItensFiltors = true;
+      loadingItensFiltros = true;
       bodyPesquisarFiltros.addAll({
         "function" : valor.funcaoPrincipal,
         "database" : valor.bancoBuscarFiltros,
-        "matricula" : "3312",
+        "matricula" : SettingsReports.matricula,
       });
 
       var response = await API().getDataReportApiJWT(
@@ -106,14 +109,14 @@ abstract class FiltroControllerBase with Store {
       }
 
     }finally{
-      loadingItensFiltors = false;
+      loadingItensFiltros = false;
     }
   }
 
   @action
   void adicionarItensSelecionado ({required FiltrosModel itens}){
     if(itens.selecionado){
-      if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
+      if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){    
         listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.add(itens);
       }
     }else{

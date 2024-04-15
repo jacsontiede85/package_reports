@@ -118,7 +118,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                     index: index,
                     onTap: () async {
                       controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
-                        valor:controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                        valor: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
                       );
                       wp.navigator(
                         context: context,
@@ -131,7 +131,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                         layout: layout
                       );
                     },
-                  );              
+                  ); 
                 }
                 else{
                   return Container();

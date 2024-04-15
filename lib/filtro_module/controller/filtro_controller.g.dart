@@ -67,19 +67,19 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
-  late final _$loadingItensFiltorsAtom =
-      Atom(name: 'FiltroControllerBase.loadingItensFiltors', context: context);
+  late final _$loadingItensFiltrosAtom =
+      Atom(name: 'FiltroControllerBase.loadingItensFiltros', context: context);
 
   @override
-  bool get loadingItensFiltors {
-    _$loadingItensFiltorsAtom.reportRead();
-    return super.loadingItensFiltors;
+  bool get loadingItensFiltros {
+    _$loadingItensFiltrosAtom.reportRead();
+    return super.loadingItensFiltros;
   }
 
   @override
-  set loadingItensFiltors(bool value) {
-    _$loadingItensFiltorsAtom.reportWrite(value, super.loadingItensFiltors, () {
-      super.loadingItensFiltors = value;
+  set loadingItensFiltros(bool value) {
+    _$loadingItensFiltrosAtom.reportWrite(value, super.loadingItensFiltros, () {
+      super.loadingItensFiltros = value;
     });
   }
 
@@ -198,6 +198,23 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$valorSelecionadoDropDownAtom = Atom(
+      name: 'FiltroControllerBase.valorSelecionadoDropDown', context: context);
+
+  @override
+  String get valorSelecionadoDropDown {
+    _$valorSelecionadoDropDownAtom.reportRead();
+    return super.valorSelecionadoDropDown;
+  }
+
+  @override
+  set valorSelecionadoDropDown(String value) {
+    _$valorSelecionadoDropDownAtom
+        .reportWrite(value, super.valorSelecionadoDropDown, () {
+      super.valorSelecionadoDropDown = value;
+    });
+  }
+
   late final _$FiltroControllerBaseActionController =
       ActionController(name: 'FiltroControllerBase', context: context);
 
@@ -272,7 +289,7 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     return '''
 listaFiltros: ${listaFiltros},
 listaFiltrosParaConstruirTela: ${listaFiltrosParaConstruirTela},
-loadingItensFiltors: ${loadingItensFiltors},
+loadingItensFiltros: ${loadingItensFiltros},
 indexFiltro: ${indexFiltro},
 dtinicio: ${dtinicio},
 dtfim: ${dtfim},
@@ -280,6 +297,7 @@ filtrosSalvosParaAdicionarNoBody: ${filtrosSalvosParaAdicionarNoBody},
 exibirBarraPesquisa: ${exibirBarraPesquisa},
 pesquisaItensDoFiltro: ${pesquisaItensDoFiltro},
 isDataFaturamento: ${isDataFaturamento},
+valorSelecionadoDropDown: ${valorSelecionadoDropDown},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}

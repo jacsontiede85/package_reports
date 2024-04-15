@@ -301,6 +301,69 @@ class Widgets {
     );
   }
 
+  Widget cardFiltroDropDown ({
+    required BuildContext context, 
+    required FiltrosWidgetModel filtrosDados,
+    required FiltroController controller,
+    required int index,
+  })  {
+    controller.indexFiltro = index;
+    return Card(
+      child: ListTile(
+        title: Text(
+          filtrosDados.titulo.toUpperCase(),
+          style: TextStyle(
+            fontSize: 14.0, 
+            color: Theme.of(context).brightness == Brightness.light ? Colors.green[700] : Colors.greenAccent[200],
+            fontWeight: FontWeight.w700,
+          ),
+          textAlign: TextAlign.left,
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          child: Builder(
+            builder: (context) {
+              if(controller.listaFiltros.isNotEmpty){
+                return Observer(
+                  builder: (_) => DropdownButton<String>(
+                    value: controller.valorSelecionadoDropDown,
+                    isExpanded: true,
+                    isDense: true,
+                    onChanged: (value) {
+                      controller.valorSelecionadoDropDown = value!;
+                      controller.listaFiltros[0].selecionado = true;
+                      controller.adicionarItensSelecionado(itens: controller.listaFiltros[0]);
+                    },
+                    items: controller.listaFiltros.map((value) {
+                      return DropdownMenuItem<String>(
+                        value: value.codigo,
+                        child: Text(
+                          value.titulo,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );                
+              }else{
+                return InkWell(
+                  child: SizedBox(
+                    height: 25,
+                    width: MediaQuery.sizeOf(context).width,
+                  ),
+                  onTap: () async {
+                    await controller.funcaoBuscarDadosDeCadaFiltro(
+                      valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                    );
+                    controller.valorSelecionadoDropDown = controller.listaFiltros[0].codigo;
+                  },
+                );
+              }
+            }
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget switchQualTipoDeFiltroExibir ({
     required BuildContext context,
@@ -308,8 +371,9 @@ class Widgets {
     required void Function()? onTap,
     required FiltroController controller,
     required int index,
-  }){
+  }) {
     Widget retornoFuncao = const SizedBox();
+    
     switch(filtrosDados.tipoWidget){
 
       case "checkbox" :
@@ -331,6 +395,14 @@ class Widgets {
         );
       break;
 
+      case "dropdown" :
+        retornoFuncao = cardFiltroDropDown(
+          context: context,
+          filtrosDados: filtrosDados,
+          controller: controller,
+          index: index,
+        );
+      break;
     }
     return retornoFuncao;
   }
