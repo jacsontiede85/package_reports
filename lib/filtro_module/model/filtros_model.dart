@@ -13,10 +13,10 @@ abstract class FiltrosModelBase with Store {
   bool selecionado = false;
 
   FiltrosModelBase({
-    codigo = '',
-    titulo = '',
-    subtitulo = '',
-    selecionado = false
+    this.codigo = '',
+    this.titulo = '',
+    this.subtitulo = '',
+    this.selecionado = false
   });
 
   FiltrosModelBase.fromJson(Map<String, dynamic> json){

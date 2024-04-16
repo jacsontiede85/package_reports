@@ -307,7 +307,7 @@ class Widgets {
     required FiltroController controller,
     required int index,
   })  {
-    controller.indexFiltro = index;
+
     return Card(
       child: ListTile(
         title: Text(
@@ -331,8 +331,9 @@ class Widgets {
                     isDense: true,
                     onChanged: (value) {
                       controller.valorSelecionadoDropDown = value!;
-                      // controller.listaFiltros[0].selecionado = true;
-                      // controller.adicionarItensSelecionado(itens: controller.listaFiltros[0]);
+                      int indexFiltrosSelecionado = controller.listaFiltros.indexWhere((element) => element == value);
+                      controller.listaFiltros[indexFiltrosSelecionado].selecionado = true;
+                      controller.adicionarItensSelecionado(itens: controller.listaFiltros[indexFiltrosSelecionado]);
                     },
                     hint: Text(controller.valorSelecionadoDropDown.titulo),
                     items: !controller.validarListaParaDropDown ? null : controller.listaFiltros.map((value) {
@@ -367,6 +368,7 @@ class Widgets {
                     ),
                   ),
                   onTap: () async {
+                    controller.indexFiltro = index;
                     await controller.funcaoBuscarDadosDeCadaFiltro(
                       valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
                       isBuscarDropDown: true
