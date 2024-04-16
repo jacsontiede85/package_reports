@@ -38,7 +38,13 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black87,
-        title: wp.wpHeader(titulo: 'Filtros'),
+        title: const Text(
+          "Filtros", 
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.white
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios),
           color: const Color.fromRGBO(255, 255, 255, 1),

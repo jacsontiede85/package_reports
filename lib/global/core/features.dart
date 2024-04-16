@@ -3,9 +3,6 @@ import 'package:intl/intl.dart';
 
 class Features{
 
-  /// FORMATAÇÃO DE NUMEROS
-  static var numberFormat = NumberFormat("#,##0.00", "pt_BR");
-
   static toFormatNumber(String valor, {int? qtCasasDecimais}) {
     if (valor == 'NaN') return '0,00';
     if (valor == 'null') return '0,00';
@@ -35,19 +32,10 @@ class Features{
     return valor;
   }
 
-  /// DATAS
-
   static getDataHoraNomeParaArquivo() {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('dd-MM-yyyy-HH-mm-ss');
     return formatter.format(now);
-  }
-
-  static formatarData(String dat) {
-    List date = dat.split(' ');
-    date = date[0].toString().split('-');
-    dat = '${date[2]}/${date[1]}/${date[0]}';
-    return dat;
   }
 
   static String formatarTextoPrimeirasLetrasMaiusculas(String txt) {

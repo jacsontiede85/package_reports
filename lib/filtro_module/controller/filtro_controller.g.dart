@@ -198,6 +198,38 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$isRCAsemVendaAtom =
+      Atom(name: 'FiltroControllerBase.isRCAsemVenda', context: context);
+
+  @override
+  bool get isRCAsemVenda {
+    _$isRCAsemVendaAtom.reportRead();
+    return super.isRCAsemVenda;
+  }
+
+  @override
+  set isRCAsemVenda(bool value) {
+    _$isRCAsemVendaAtom.reportWrite(value, super.isRCAsemVenda, () {
+      super.isRCAsemVenda = value;
+    });
+  }
+
+  late final _$isRCAativoAtom =
+      Atom(name: 'FiltroControllerBase.isRCAativo', context: context);
+
+  @override
+  bool get isRCAativo {
+    _$isRCAativoAtom.reportRead();
+    return super.isRCAativo;
+  }
+
+  @override
+  set isRCAativo(bool value) {
+    _$isRCAativoAtom.reportWrite(value, super.isRCAativo, () {
+      super.isRCAativo = value;
+    });
+  }
+
   late final _$valorSelecionadoDropDownAtom = Atom(
       name: 'FiltroControllerBase.valorSelecionadoDropDown', context: context);
 
@@ -314,6 +346,8 @@ filtrosSalvosParaAdicionarNoBody: ${filtrosSalvosParaAdicionarNoBody},
 exibirBarraPesquisa: ${exibirBarraPesquisa},
 pesquisaItensDoFiltro: ${pesquisaItensDoFiltro},
 isDataFaturamento: ${isDataFaturamento},
+isRCAsemVenda: ${isRCAsemVenda},
+isRCAativo: ${isRCAativo},
 valorSelecionadoDropDown: ${valorSelecionadoDropDown},
 validarListaParaDropDown: ${validarListaParaDropDown},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},

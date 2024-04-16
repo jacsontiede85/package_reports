@@ -179,7 +179,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
             visible: !widget.controller.loadingItensFiltros,
             replacement: Center(
               child: LoadingAnimationWidget.halfTriangleDot(
-                color: const Color(0xFFEE4E4E),
+                color: const Color.fromARGB(255, 102, 78, 238),
                 size: 40,
               ),
             ),

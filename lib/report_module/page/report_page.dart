@@ -117,9 +117,12 @@ class _ReportPageState extends State<ReportPage> with Rows {
           title: Observer(
             builder: (_) => Visibility(
               visible: controller.configPagina.isNotEmpty,
-              child: wp.wpHeader(
-                titulo: controller.configPagina['name'].toString(),
-                cor: widget.corTitulo ?? Colors.white,
+              child: Text(
+                controller.configPagina['name'].toString(), 
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white
+                ),
               ),
             ),
           ),
@@ -331,7 +334,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       visible: !controller.loading || controller.dadosFiltered().isNotEmpty,
                       replacement: Center(
                         child: LoadingAnimationWidget.halfTriangleDot(
-                          color: const Color(0xFFEE4E4E),
+                          color: const Color.fromARGB(255, 102, 78, 238),
                           size: 40,
                         ),
                       ),

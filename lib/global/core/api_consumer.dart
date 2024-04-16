@@ -13,6 +13,8 @@ class API with SettingsReports{
     };
     String header64 = base64Encode(jsonEncode(header).codeUnits);
 
+    // print(dados);
+
     //payload
     var payload = dados;
     String payload64 = base64Encode(utf8.encode(jsonEncode(payload))); //utf8.encode para caracteres especiais
@@ -23,9 +25,6 @@ class API with SettingsReports{
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
     
-    // print(dados);
-    // print(token);
-
     Response res = await http.post(
       Uri.parse("${SettingsReports.enderecoRepositorio}$url"),
       headers: {

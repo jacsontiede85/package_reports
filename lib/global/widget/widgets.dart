@@ -5,18 +5,18 @@ import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/core/settings.dart';
-import 'package:package_reports/global/widget/texto.dart';
 
 class Widgets {
 
-  Widget wpHeader({
-    required String titulo,
-    Color cor = Colors.white,
-  }) {
-    return Texto(
-      texto: titulo,
-      tipo: TipoTexto.titulo,
-      cor: cor,
+  Widget tituloCards ({required String titulo, required BuildContext context}){
+    return Text(
+      titulo.toUpperCase(),
+      style: TextStyle(
+        fontSize: 14.0, 
+        color: Theme.of(context).brightness == Brightness.light ? Colors.green[700] : Colors.greenAccent[200], 
+        fontWeight: FontWeight.w700,
+      ),
+      textAlign: TextAlign.left,
     );
   }
 
@@ -92,23 +92,6 @@ class Widgets {
     }
   }
 
-
-  Widget card({required List<Widget> widgetList}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start, 
-            children: widgetList,
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget selecaoDePeriodo ({
     required FiltrosWidgetModel filtrosDados,
     required FiltroController controller,
@@ -120,79 +103,81 @@ class Widgets {
         if(tipo == 'datapickerfaturamento'){
           controller.validarSeDataSeraDeFaturamento();          
         }
-        return card(
-          widgetList: [
-            Text(
-              filtrosDados.titulo.toUpperCase(),
-              style: TextStyle(
-                fontSize: 14.0, 
-                color: Theme.of(context).brightness == Brightness.light ? Colors.green[700] : Colors.greenAccent[200], 
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.left,
-            ),
-            SizedBox(
-              width: 250,
-              child: Observer(
-                builder: (_) => Visibility(
-                  visible: tipo == 'datapickerfaturamento',
-                  child: CheckboxListTile(
-                    value: controller.isDataFaturamento, 
-                    title: const Text('Data faturamento'),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    onChanged: (c){
-                      controller.isDataFaturamento = !controller.isDataFaturamento;
-                      controller.validarSeDataSeraDeFaturamento();
-                    },
-                  ),
-                ),
-              ),
-            ),
-            ButtonBar(
-              alignment: MainAxisAlignment.start, 
-              mainAxisSize: MainAxisSize.max,
-              buttonPadding: const EdgeInsets.all(10),
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start, 
               children: [
-                TextButton.icon(
-                  icon: const Icon(Icons.calendar_today),
-                  label: Observer(
-                    builder: (_) => Text(
-                      controller.dtinicio,
-                      style: const TextStyle(fontSize: 17),
+                tituloCards(
+                  titulo: filtrosDados.titulo.toUpperCase(),
+                  context: context
+                ),
+                SizedBox(
+                  width: 250,
+                  child: Observer(
+                    builder: (_) => Visibility(
+                      visible: tipo == 'datapickerfaturamento',
+                      child: CheckboxListTile(
+                        value: controller.isDataFaturamento, 
+                        title: const Text('Data faturamento'),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        onChanged: (c){
+                          controller.isDataFaturamento = !controller.isDataFaturamento;
+                          controller.validarSeDataSeraDeFaturamento();
+                        },
+                      ),
                     ),
                   ),
-                  onPressed: () async {
-                    controller.dtinicio = await SettingsReports().selectDate(context: context);
-                  },
                 ),
-                TextButton.icon(
-                  icon: const Icon(Icons.calendar_today),
-                  label: Observer(
-                    builder: (_) => Text(
-                      controller.dtfim,
-                      style: const TextStyle(fontSize: 17),
+                ButtonBar(
+                  alignment: MainAxisAlignment.start, 
+                  mainAxisSize: MainAxisSize.max,
+                  buttonPadding: const EdgeInsets.all(10),
+                  children: [
+                    TextButton.icon(
+                      icon: const Icon(Icons.calendar_today),
+                      label: Observer(
+                        builder: (_) => Text(
+                          controller.dtinicio,
+                          style: const TextStyle(fontSize: 17),
+                        ),
+                      ),
+                      onPressed: () async {
+                        controller.dtinicio = await SettingsReports().selectDate(context: context);
+                      },
                     ),
-                  ),
-                  onPressed: () async {
-                    controller.dtfim = await SettingsReports().selectDate(context: context);
-                  },
+                    TextButton.icon(
+                      icon: const Icon(Icons.calendar_today),
+                      label: Observer(
+                        builder: (_) => Text(
+                          controller.dtfim,
+                          style: const TextStyle(fontSize: 17),
+                        ),
+                      ),
+                      onPressed: () async {
+                        controller.dtfim = await SettingsReports().selectDate(context: context);
+                      },
+                    ),
+                    PopupMenuButton(
+                      itemBuilder: (context) {
+                        return controller.listaDePeriodos.map((valor) {
+                          return PopupMenuItem(
+                            value: valor.replaceAll(' ', ''),
+                            child: Text(valor),
+                          );
+                        },).toList();
+                      },
+                      onSelected: (value) {
+                        controller.selecaoDeDataPorPeriodo(periodo: value);
+                      },
+                    )
+                  ],
                 ),
-                PopupMenuButton(
-                  itemBuilder: (context) {
-                    return controller.listaDePeriodos.map((valor) {
-                      return PopupMenuItem(
-                        value: valor.replaceAll(' ', ''),
-                        child: Text(valor),
-                      );
-                    },).toList();
-                  },
-                  onSelected: (value) {
-                    controller.selecaoDeDataPorPeriodo(periodo: value);
-                  },
-                )
-              ],
+              ]
             ),
-          ]
+          ),
         );
       }
     );
@@ -209,19 +194,69 @@ class Widgets {
       child: ListTile(
         onTap: onTap,
         trailing: const Icon(Icons.arrow_forward_ios_rounded),
-        title: Text(
-          filtrosDados.titulo.toUpperCase(),
-          style: TextStyle(
-            fontSize: 14.0, 
-            color: Theme.of(context).brightness == Brightness.light ? Colors.green[700] : Colors.greenAccent[200],
-            fontWeight: FontWeight.w700,
-          ),
-          textAlign: TextAlign.left,
+        title: tituloCards(
+          titulo: filtrosDados.titulo.toUpperCase(),
+          context: context
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start, 
           children: [
+
+            Row(
+              children: [
+                Observer(
+                  builder: (_) => Visibility(
+                    visible: filtrosDados.tipoWidget == "checkboxRCA",
+                    child: Expanded(
+                      child: CheckboxListTile(
+                        splashRadius: 15,
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text(
+                          "EXIBIR RCA SEM VENDAS",
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        value: controller.isRCAsemVenda, 
+                        onChanged: (s){
+                          controller.isRCAsemVenda = !controller.isRCAsemVenda;
+                          controller.validarCondicaoDebuscaRCA();
+                        }
+                      ),
+                    ),
+                  ),
+                ),
+
+                Observer(
+                  builder: (_) => Visibility(
+                    visible: filtrosDados.tipoWidget == "checkboxRCA",
+                    child: Expanded(
+                      child: CheckboxListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text(
+                          "SOMENTE ATIVOS",
+                          style: TextStyle(
+                            fontSize: 11, 
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        value: controller.isRCAativo, 
+                        onChanged: (s){
+                          controller.isRCAativo = !controller.isRCAativo;
+                          controller.validarCondicaoDebuscaRCA();
+                        }
+                      ),
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+
             Visibility(
               visible: filtrosDados.subtitulo.isNotEmpty,
               child: Container(
@@ -310,14 +345,9 @@ class Widgets {
 
     return Card(
       child: ListTile(
-        title: Text(
-          filtrosDados.titulo.toUpperCase(),
-          style: TextStyle(
-            fontSize: 14.0, 
-            color: Theme.of(context).brightness == Brightness.light ? Colors.green[700] : Colors.greenAccent[200],
-            fontWeight: FontWeight.w700,
-          ),
-          textAlign: TextAlign.left,
+        title: tituloCards(
+          titulo: filtrosDados.titulo.toUpperCase(),
+          context: context
         ),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -395,7 +425,7 @@ class Widgets {
     
     switch(filtrosDados.tipoWidget){
 
-      case "checkbox" :
+      case "checkbox" || "checkboxRCA":
         retornoFuncao = cardFiltroGeral(
           context: context, 
           filtrosDados: filtrosDados, 
@@ -425,4 +455,5 @@ class Widgets {
     }
     return retornoFuncao;
   }
+
 }

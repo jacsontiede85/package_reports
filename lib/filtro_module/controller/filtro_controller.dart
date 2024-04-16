@@ -61,6 +61,12 @@ abstract class FiltroControllerBase with Store {
   bool isDataFaturamento = false;
 
   @observable
+  bool isRCAsemVenda = false;
+
+  @observable
+  bool isRCAativo = false;
+
+  @observable
   FiltrosModel valorSelecionadoDropDown = FiltrosModel(codigo: '', selecionado: false, subtitulo: '', titulo: 'NENHUM');
 
   @observable
@@ -332,7 +338,7 @@ abstract class FiltroControllerBase with Store {
     }
   }
 
-  validarSeDataSeraDeFaturamento (){
+  void validarSeDataSeraDeFaturamento (){
     if(isDataFaturamento){
       controllerReports.bodyPrimario.addAll({
         "coluna_data" : "pcpedc.dtfat"
@@ -343,5 +349,20 @@ abstract class FiltroControllerBase with Store {
       });      
     }
   }
+
+  void validarCondicaoDebuscaRCA (){
+    if(isRCAativo){
+      controllerReports.bodyPrimario.addAll({'rcaativos' : true});
+      bodyPesquisarFiltros.addAll({'rcaativos' : true});
+    }else{
+      controllerReports.bodyPrimario.remove('rcaativos');
+      bodyPesquisarFiltros.remove('rcaativos');
+    }
+    if(isRCAsemVenda){
+      controllerReports.bodyPrimario.addAll({'rcasemvenda' : true});
+    }else{
+      controllerReports.bodyPrimario.remove('rcasemvenda');
+    }
+  } 
 
 }

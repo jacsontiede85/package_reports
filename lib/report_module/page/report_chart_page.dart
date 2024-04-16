@@ -37,8 +37,12 @@ class _ChartsReportState extends State<ChartsReport> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black87,
-        title: wp.wpHeader(
-          titulo: '${widget.title} - Gráficos',
+        title: Text(
+          "${widget.title} - Graficos", 
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.white
+          ),
         ),
         actionsIconTheme: const IconThemeData(color: Colors.white),
         leading: IconButton(
@@ -136,7 +140,7 @@ class _ChartsReportState extends State<ChartsReport> {
                           visible: !widget.controller.loading,
                           replacement: Center(
                             child: LoadingAnimationWidget.halfTriangleDot(
-                              color: const Color(0xFFEE4E4E),
+                              color: const Color.fromARGB(255, 102, 78, 238),
                               size: 40,
                             ),
                           ),
