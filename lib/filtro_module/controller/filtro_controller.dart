@@ -61,7 +61,10 @@ abstract class FiltroControllerBase with Store {
   bool isDataFaturamento = false;
 
   @observable
-  String valorSelecionadoDropDown = 'NENHUM';
+  FiltrosModel valorSelecionadoDropDown = FiltrosModel(codigo: '', selecionado: false, subtitulo: '', titulo: 'NENHUM');
+
+  @observable
+  bool validarListaParaDropDown = false;
 
   // RETORNAR QTDE DE ITENS SELECIONADOS
   @computed
@@ -79,8 +82,10 @@ abstract class FiltroControllerBase with Store {
     conjuntoDePeriodos();
   }
 
-  Future<void> funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor,}) async {
+  Future<void> funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required bool isBuscarDropDown}) async {
     try{
+      validarListaParaDropDown = isBuscarDropDown;
+
       loadingItensFiltros = true;
       bodyPesquisarFiltros.addAll({
         "function" : valor.funcaoPrincipal,
@@ -116,7 +121,7 @@ abstract class FiltroControllerBase with Store {
   @action
   void adicionarItensSelecionado ({required FiltrosModel itens}){
     if(itens.selecionado){
-      if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){    
+      if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
         listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.add(itens);
       }
     }else{

@@ -323,20 +323,21 @@ class Widgets {
           padding: const EdgeInsets.only(top: 10, bottom: 10),
           child: Builder(
             builder: (context) {
-              if(controller.listaFiltros.isNotEmpty){
+              if(controller.validarListaParaDropDown){
                 return Observer(
-                  builder: (_) => DropdownButton<String>(
+                  builder: (_) => DropdownButton<FiltrosModel>(
                     value: controller.valorSelecionadoDropDown,
                     isExpanded: true,
                     isDense: true,
                     onChanged: (value) {
                       controller.valorSelecionadoDropDown = value!;
-                      controller.listaFiltros[0].selecionado = true;
-                      controller.adicionarItensSelecionado(itens: controller.listaFiltros[0]);
+                      // controller.listaFiltros[0].selecionado = true;
+                      // controller.adicionarItensSelecionado(itens: controller.listaFiltros[0]);
                     },
-                    items: controller.listaFiltros.map((value) {
-                      return DropdownMenuItem<String>(
-                        value: value.codigo,
+                    hint: Text(controller.valorSelecionadoDropDown.titulo),
+                    items: !controller.validarListaParaDropDown ? null : controller.listaFiltros.map((value) {
+                      return DropdownMenuItem<FiltrosModel>(
+                        value: value,
                         child: Text(
                           value.titulo,
                         ),
@@ -346,15 +347,31 @@ class Widgets {
                 );                
               }else{
                 return InkWell(
-                  child: SizedBox(
+                  child: Container(
                     height: 25,
                     width: MediaQuery.sizeOf(context).width,
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          width: 0.25 
+                        )
+                      )
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(controller.valorSelecionadoDropDown.titulo),
+                        ),
+                        const Icon(Icons.arrow_drop_down_sharp),
+                      ],
+                    ),
                   ),
                   onTap: () async {
                     await controller.funcaoBuscarDadosDeCadaFiltro(
                       valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                      isBuscarDropDown: true
                     );
-                    controller.valorSelecionadoDropDown = controller.listaFiltros[0].codigo;
+                    controller.valorSelecionadoDropDown = controller.listaFiltros[0];
                   },
                 );
               }

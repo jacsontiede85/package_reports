@@ -1,5 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -202,17 +204,15 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     limparCamposVareaveis();
     
     if(bodySecundario.isEmpty){
-     dados = await API().getDataReportApi(
-        isContentTypeApplicationJson: true, 
-        urlreports: nomeFunction,
-        body: bodyPrimario,
-      );
+     dados = jsonDecode( await API().getDataReportApiJWT(
+        url: nomeFunction,
+        dados: bodyPrimario,
+      ));
     }else{  
-      dados = await API().getDataReportApi(
-        isContentTypeApplicationJson: true, 
-        urlreports: nomeFunction,
-        body: bodySecundario,
-      );
+      dados = jsonDecode(await API().getDataReportApiJWT(
+        url: nomeFunction,
+        dados: bodySecundario,
+      ));
     }
 
     List keys = [];

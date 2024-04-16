@@ -202,16 +202,33 @@ mixin _$FiltroController on FiltroControllerBase, Store {
       name: 'FiltroControllerBase.valorSelecionadoDropDown', context: context);
 
   @override
-  String get valorSelecionadoDropDown {
+  FiltrosModel get valorSelecionadoDropDown {
     _$valorSelecionadoDropDownAtom.reportRead();
     return super.valorSelecionadoDropDown;
   }
 
   @override
-  set valorSelecionadoDropDown(String value) {
+  set valorSelecionadoDropDown(FiltrosModel value) {
     _$valorSelecionadoDropDownAtom
         .reportWrite(value, super.valorSelecionadoDropDown, () {
       super.valorSelecionadoDropDown = value;
+    });
+  }
+
+  late final _$validarListaParaDropDownAtom = Atom(
+      name: 'FiltroControllerBase.validarListaParaDropDown', context: context);
+
+  @override
+  bool get validarListaParaDropDown {
+    _$validarListaParaDropDownAtom.reportRead();
+    return super.validarListaParaDropDown;
+  }
+
+  @override
+  set validarListaParaDropDown(bool value) {
+    _$validarListaParaDropDownAtom
+        .reportWrite(value, super.validarListaParaDropDown, () {
+      super.validarListaParaDropDown = value;
     });
   }
 
@@ -298,6 +315,7 @@ exibirBarraPesquisa: ${exibirBarraPesquisa},
 pesquisaItensDoFiltro: ${pesquisaItensDoFiltro},
 isDataFaturamento: ${isDataFaturamento},
 valorSelecionadoDropDown: ${valorSelecionadoDropDown},
+validarListaParaDropDown: ${validarListaParaDropDown},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}

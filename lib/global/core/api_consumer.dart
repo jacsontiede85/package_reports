@@ -5,41 +5,6 @@ import 'package:package_reports/global/core/settings.dart';
 import 'dart:convert';
 
 class API with SettingsReports{
-
-  Future<List> getDataReportApi({
-    required String urlreports, 
-    required Map<String, dynamic>? body, 
-    bool isContentTypeApplicationJson = false
-  }) async {
-
-    if(isContentTypeApplicationJson){
-      try{
-        var response = await getDataReportApiJWT(dados: body, url: urlreports);
-        return jsonDecode(response);        
-      }catch(e){
-        return [];
-      }
-
-    } else {
-      http.Response response = await http.post(
-        Uri.parse('${SettingsReports.enderecoRepositorio}$urlreports'),
-        body: body,
-      );
-
-      try {
-        return jsonDecode(response.body);
-      } catch (e) {
-        return [
-          {
-            'status_code': response.statusCode,
-            'mensagem': 'Dados não encontrado! Verifique os filtros selecionados e tente novamente.\nCatch message nerd: $e',
-          }
-        ];
-      }
-    }
-  }
-
-  
   Future<String> getDataReportApiJWT({String? banco, Map? dados, String? url}) async {
     //header
     var header = {

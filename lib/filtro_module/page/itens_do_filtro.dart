@@ -110,12 +110,14 @@ class _ItensFiltroState extends State<ItensFiltro> {
                       widget.controller.bodyPesquisarFiltros.addAll({"pesquisa" : widget.controller.pesquisaItensDoFiltro});
                       widget.controller.funcaoBuscarDadosDeCadaFiltro(
                         valor: filtroPaginaAtual.filtrosWidgetModel,
+                        isBuscarDropDown: false
                       );
                     }
                     else{
                       widget.controller.bodyPesquisarFiltros.remove('pesquisa');
                       widget.controller.funcaoBuscarDadosDeCadaFiltro(
                         valor: filtroPaginaAtual.filtrosWidgetModel,
+                        isBuscarDropDown: false
                       );
                     }
                   },

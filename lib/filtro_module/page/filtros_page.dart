@@ -117,8 +117,10 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                     controller: controllerFiltro,
                     index: index,
                     onTap: () async {
+                      controllerFiltro.listaFiltros.clear();
                       controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
                         valor: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                        isBuscarDropDown: false,
                       );
                       wp.navigator(
                         context: context,
