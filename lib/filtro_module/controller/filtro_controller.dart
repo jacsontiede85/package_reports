@@ -354,15 +354,33 @@ abstract class FiltroControllerBase with Store {
     if(isRCAativo){
       controllerReports.bodyPrimario.addAll({'rcaativos' : true});
       bodyPesquisarFiltros.addAll({'rcaativos' : true});
+      filtrosSalvosParaAdicionarNoBody.addAll({'rcaativos' : true});
     }else{
       controllerReports.bodyPrimario.remove('rcaativos');
       bodyPesquisarFiltros.remove('rcaativos');
+      filtrosSalvosParaAdicionarNoBody.remove('rcaativos');
     }
+
     if(isRCAsemVenda){
       controllerReports.bodyPrimario.addAll({'rcasemvenda' : true});
+      filtrosSalvosParaAdicionarNoBody.addAll({'rcasemvenda' : true});
     }else{
       controllerReports.bodyPrimario.remove('rcasemvenda');
+      filtrosSalvosParaAdicionarNoBody.remove('rcasemvenda');
     }
-  } 
+  }
+
+  void limparFiltros ({required Map<String, dynamic> bodyParaSerLimpo}){
+    for(String chaves in filtrosSalvosParaAdicionarNoBody.keys){
+      bodyParaSerLimpo.remove(chaves);
+    }
+    for(FiltrosPageAtual filtros in listaFiltrosParaConstruirTela){
+      filtros.filtrosWidgetModel.itensSelecionados.clear();
+    }
+    filtrosSalvosParaAdicionarNoBody.clear();
+    isRCAativo = false;
+    isRCAsemVenda = false;
+    listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
+  }
 
 }

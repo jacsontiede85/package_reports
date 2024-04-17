@@ -55,7 +55,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
         actions: [
           Observer(
             builder: (_) => Visibility(
-              visible: controllerFiltro.filtrosSalvosParaAdicionarNoBody.isNotEmpty || controllerFiltro.listaFiltrosParaConstruirTela.any((element) => element.filtrosWidgetModel.itensSelecionados.isNotEmpty),
+              visible: (controllerFiltro.isRCAativo || controllerFiltro.isRCAsemVenda) || controllerFiltro.filtrosSalvosParaAdicionarNoBody.isNotEmpty || controllerFiltro.listaFiltrosParaConstruirTela.any((element) => element.filtrosWidgetModel.itensSelecionados.isNotEmpty),
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextButton.icon(
@@ -63,14 +63,9 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                     backgroundColor: MaterialStatePropertyAll(Colors.redAccent.shade400)
                   ),
                   onPressed: () {
-                    for(String chaves in controllerFiltro.filtrosSalvosParaAdicionarNoBody.keys){
-                      widget.bodypesquisaAtual.remove(chaves);
-                    }
-                    for(FiltrosPageAtual filtros in controllerFiltro.listaFiltrosParaConstruirTela){
-                      filtros.filtrosWidgetModel.itensSelecionados.clear();
-                    }
-                    controllerFiltro.filtrosSalvosParaAdicionarNoBody.clear();
-                    controllerFiltro.listaFiltrosParaConstruirTela = ObservableList.of([...controllerFiltro.listaFiltrosParaConstruirTela]);
+                    controllerFiltro.limparFiltros(
+                      bodyParaSerLimpo: widget.bodypesquisaAtual
+                    );
                   },
                   icon: const Icon(
                     Icons.clear_rounded,

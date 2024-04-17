@@ -353,60 +353,65 @@ class Widgets {
           padding: const EdgeInsets.only(top: 10, bottom: 10),
           child: Builder(
             builder: (context) {
-              if(controller.validarListaParaDropDown){
-                return Observer(
-                  builder: (_) => DropdownButton<FiltrosModel>(
-                    value: controller.valorSelecionadoDropDown,
-                    isExpanded: true,
-                    isDense: true,
-                    onChanged: (value) {
-                      controller.valorSelecionadoDropDown = value!;
-                      int indexFiltrosSelecionado = controller.listaFiltros.indexWhere((element) => element == value);
-                      controller.listaFiltros[indexFiltrosSelecionado].selecionado = true;
-                      controller.adicionarItensSelecionado(itens: controller.listaFiltros[indexFiltrosSelecionado]);
-                    },
-                    hint: Text(controller.valorSelecionadoDropDown.titulo),
-                    items: !controller.validarListaParaDropDown ? null : controller.listaFiltros.map((value) {
-                      return DropdownMenuItem<FiltrosModel>(
-                        value: value,
-                        child: Text(
-                          value.titulo,
+              return Observer(
+                builder: (_){
+                  if(controller.validarListaParaDropDown){
+                    return Observer(
+                      builder: (_) => DropdownButton<FiltrosModel>(
+                        value: controller.valorSelecionadoDropDown,
+                        isExpanded: true,
+                        isDense: true,
+                        onChanged: (value) {
+                          controller.valorSelecionadoDropDown = value!;
+                          int indexFiltrosSelecionado = controller.listaFiltros.indexWhere((element) => element == value);
+                          controller.listaFiltros[indexFiltrosSelecionado].selecionado = true;
+                          controller.adicionarItensSelecionado(itens: controller.listaFiltros[indexFiltrosSelecionado]);
+                        },
+                        hint: Text(controller.valorSelecionadoDropDown.titulo),
+                        items: !controller.validarListaParaDropDown ? null : controller.listaFiltros.map((value) {
+                          return DropdownMenuItem<FiltrosModel>(
+                            value: value,
+                            child: Text(
+                              value.titulo,
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    );                
+                  }else{
+                    return InkWell(
+                      child: Container(
+                        height: 25,
+                        width: MediaQuery.sizeOf(context).width,
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              width: 0.25 
+                            )
+                          )
                         ),
-                      );
-                    }).toList(),
-                  ),
-                );                
-              }else{
-                return InkWell(
-                  child: Container(
-                    height: 25,
-                    width: MediaQuery.sizeOf(context).width,
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          width: 0.25 
-                        )
-                      )
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(controller.valorSelecionadoDropDown.titulo),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(controller.valorSelecionadoDropDown.titulo),
+                            ),
+                            const Icon(Icons.arrow_drop_down_sharp),
+                          ],
                         ),
-                        const Icon(Icons.arrow_drop_down_sharp),
-                      ],
-                    ),
-                  ),
-                  onTap: () async {
-                    controller.indexFiltro = index;
-                    await controller.funcaoBuscarDadosDeCadaFiltro(
-                      valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                      isBuscarDropDown: true
+                      ),
+                      onTap: () async {
+                        controller.indexFiltro = index;
+                        await controller.funcaoBuscarDadosDeCadaFiltro(
+                          valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                          isBuscarDropDown: true
+                        );
+                        controller.valorSelecionadoDropDown = controller.listaFiltros[0];
+                      },
                     );
-                    controller.valorSelecionadoDropDown = controller.listaFiltros[0];
-                  },
-                );
-              }
+                  }
+                }
+              );
+
             }
           ),
         ),
