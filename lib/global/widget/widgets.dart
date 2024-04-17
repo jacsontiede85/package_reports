@@ -207,7 +207,7 @@ class Widgets {
               children: [
                 Observer(
                   builder: (_) => Visibility(
-                    visible: filtrosDados.tipoWidget == "checkboxRCA",
+                    visible: filtrosDados.tipoWidget == "checkboxrca",
                     child: Expanded(
                       child: CheckboxListTile(
                         splashRadius: 15,
@@ -232,7 +232,7 @@ class Widgets {
 
                 Observer(
                   builder: (_) => Visibility(
-                    visible: filtrosDados.tipoWidget == "checkboxRCA",
+                    visible: filtrosDados.tipoWidget == "checkboxrca",
                     child: Expanded(
                       child: CheckboxListTile(
                         contentPadding: EdgeInsets.zero,
@@ -425,7 +425,7 @@ class Widgets {
     
     switch(filtrosDados.tipoWidget){
 
-      case "checkbox" || "checkboxRCA":
+      case "checkbox" || "checkboxrca":
         retornoFuncao = cardFiltroGeral(
           context: context, 
           filtrosDados: filtrosDados, 
