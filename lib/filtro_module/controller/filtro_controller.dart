@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
+import 'package:package_reports/filtro_module/model/filtros_carregados_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
@@ -30,7 +31,7 @@ abstract class FiltroControllerBase with Store {
   }
 
   @observable
-  List<FiltrosModel> listaFiltros = [];
+  List<FiltrosCarrregados> listaFiltrosCarregados = [];
 
   @observable
   ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela = ObservableList<FiltrosPageAtual>.of([]);
@@ -71,6 +72,9 @@ abstract class FiltroControllerBase with Store {
 
   @observable
   bool validarListaParaDropDown = false;
+  
+  @observable
+  int novoIndexFiltro = -1;
 
   // RETORNAR QTDE DE ITENS SELECIONADOS
   @computed
@@ -88,32 +92,45 @@ abstract class FiltroControllerBase with Store {
     conjuntoDePeriodos();
   }
 
-  Future<void> funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required bool isBuscarDropDown}) async {
+  Future<void> funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required bool isBuscarDropDown, required int index}) async {
+    indexFiltro = index;
     try{
       validarListaParaDropDown = isBuscarDropDown;
 
       loadingItensFiltros = true;
-      bodyPesquisarFiltros.addAll({
-        "function" : valor.funcaoPrincipal,
-        "database" : valor.bancoBuscarFiltros,
-        "matricula" : SettingsReports.matricula,
-      });
 
-      var response = await API().getDataReportApiJWT(
-        dados: bodyPesquisarFiltros,
-        url: "filtros/${valor.arquivoQuery}"
-      );
+      novoIndexFiltro = retornarIndexListaFiltrosCarregados(); 
 
-      List dados = jsonDecode(response);
+      if(novoIndexFiltro == -1){
+        bodyPesquisarFiltros.addAll({
+          "function" : valor.funcaoPrincipal,
+          "database" : valor.bancoBuscarFiltros,
+          "matricula" : SettingsReports.matricula,
+        });
+
+        var response = await API().getDataReportApiJWT(
+          dados: bodyPesquisarFiltros,
+          url: "filtros/${valor.arquivoQuery}"
+        );
+
+        List dados = jsonDecode(response);
       
-      listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
+        listaFiltrosCarregados.add(
+          FiltrosCarrregados(
+            indexFiltros: indexFiltro,
+            indexPagina: indexPagina,
+            listaFiltros: dados.map((e) => FiltrosModel.fromJson(e)).toList(),
+          ),
+        );
+        novoIndexFiltro = retornarIndexListaFiltrosCarregados();
+      }
 
       for(FiltrosModel itens in getListFiltrosComputed){
         if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
           for(FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados){
             if(itens.codigo == itensSelecionados.codigo){
               itens = itensSelecionados;
-              getListFiltrosComputed[listaFiltros.indexOf(itens)] = itens;
+              getListFiltrosComputed[listaFiltrosCarregados[novoIndexFiltro].listaFiltros.indexOf(itens)] = itens;
             }
           }          
         }
@@ -304,12 +321,20 @@ abstract class FiltroControllerBase with Store {
     };
   }
 
+
   @computed
-  List<FiltrosModel> get getListFiltrosComputed {
-    List<FiltrosModel> list = listaFiltros;
+  List<FiltrosModel> get getListFiltrosComputed  {
+    novoIndexFiltro = retornarIndexListaFiltrosCarregados();
+
+    List<FiltrosModel> list = [];
+    // print('object');
+    // if(novoIndexFiltro > 0) 
+    list = listaFiltrosCarregados[novoIndexFiltro].listaFiltros;
+
     if(list.isEmpty) {
       return list;
-    } else {
+    }
+    else {
       return list.where((element) =>(
       Features.removerAcentos(
         string: element.codigo.toString().toLowerCase(),
@@ -336,6 +361,7 @@ abstract class FiltroControllerBase with Store {
       ) 
     )).toList();
     }
+    
   }
 
   void validarSeDataSeraDeFaturamento (){
@@ -381,6 +407,11 @@ abstract class FiltroControllerBase with Store {
     isRCAativo = false;
     isRCAsemVenda = false;
     listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
+  }
+
+  int retornarIndexListaFiltrosCarregados () {
+    int novoIndexFiltro = listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == indexFiltro && element.indexPagina == indexPagina);
+    return novoIndexFiltro;
   }
 
 }

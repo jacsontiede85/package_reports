@@ -33,19 +33,20 @@ mixin _$FiltroController on FiltroControllerBase, Store {
               name: 'FiltroControllerBase.getListFiltrosComputed'))
           .value;
 
-  late final _$listaFiltrosAtom =
-      Atom(name: 'FiltroControllerBase.listaFiltros', context: context);
+  late final _$listaFiltrosCarregadosAtom = Atom(
+      name: 'FiltroControllerBase.listaFiltrosCarregados', context: context);
 
   @override
-  List<FiltrosModel> get listaFiltros {
-    _$listaFiltrosAtom.reportRead();
-    return super.listaFiltros;
+  List<FiltrosCarrregados> get listaFiltrosCarregados {
+    _$listaFiltrosCarregadosAtom.reportRead();
+    return super.listaFiltrosCarregados;
   }
 
   @override
-  set listaFiltros(List<FiltrosModel> value) {
-    _$listaFiltrosAtom.reportWrite(value, super.listaFiltros, () {
-      super.listaFiltros = value;
+  set listaFiltrosCarregados(List<FiltrosCarrregados> value) {
+    _$listaFiltrosCarregadosAtom
+        .reportWrite(value, super.listaFiltrosCarregados, () {
+      super.listaFiltrosCarregados = value;
     });
   }
 
@@ -264,6 +265,22 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$novoIndexFiltroAtom =
+      Atom(name: 'FiltroControllerBase.novoIndexFiltro', context: context);
+
+  @override
+  int get novoIndexFiltro {
+    _$novoIndexFiltroAtom.reportRead();
+    return super.novoIndexFiltro;
+  }
+
+  @override
+  set novoIndexFiltro(int value) {
+    _$novoIndexFiltroAtom.reportWrite(value, super.novoIndexFiltro, () {
+      super.novoIndexFiltro = value;
+    });
+  }
+
   late final _$FiltroControllerBaseActionController =
       ActionController(name: 'FiltroControllerBase', context: context);
 
@@ -336,7 +353,7 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   @override
   String toString() {
     return '''
-listaFiltros: ${listaFiltros},
+listaFiltrosCarregados: ${listaFiltrosCarregados},
 listaFiltrosParaConstruirTela: ${listaFiltrosParaConstruirTela},
 loadingItensFiltros: ${loadingItensFiltros},
 indexFiltro: ${indexFiltro},
@@ -350,6 +367,7 @@ isRCAsemVenda: ${isRCAsemVenda},
 isRCAativo: ${isRCAativo},
 valorSelecionadoDropDown: ${valorSelecionadoDropDown},
 validarListaParaDropDown: ${validarListaParaDropDown},
+novoIndexFiltro: ${novoIndexFiltro},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}
