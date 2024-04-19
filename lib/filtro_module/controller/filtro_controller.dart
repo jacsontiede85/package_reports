@@ -406,6 +406,11 @@ abstract class FiltroControllerBase with Store {
     for(FiltrosPageAtual filtros in listaFiltrosParaConstruirTela){
       filtros.filtrosWidgetModel.itensSelecionados.clear();
     }
+    for(FiltrosCarrregados filtros in listaFiltrosCarregados){
+      for(FiltrosModel itens in filtros.listaFiltros){
+        itens.selecionado = false;
+      }
+    }
     filtrosSalvosParaAdicionarNoBody.clear();
     isRCAativo = false;
     isRCAsemVenda = false;
