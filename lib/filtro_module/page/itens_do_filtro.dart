@@ -8,11 +8,13 @@ import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.d
 class ItensFiltro extends StatefulWidget {
   final FiltroController controller;
   final int indexDapagina;
+  final FiltrosPageAtual filtroPaginaAtual;
 
   const ItensFiltro({
     super.key,
     required this.controller,
     required this.indexDapagina,
+    required this.filtroPaginaAtual
   });
 
   @override
@@ -20,18 +22,11 @@ class ItensFiltro extends StatefulWidget {
 }
 
 class _ItensFiltroState extends State<ItensFiltro> {
- 
-  late FiltrosPageAtual filtroPaginaAtual = widget.controller.listaFiltrosParaConstruirTela[widget.controller.indexFiltro];
-
-  @override
-  void initState() {    
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: filtroPaginaAtual.qualPaginaFiltroPertence == widget.indexDapagina,
+      visible: widget.filtroPaginaAtual.qualPaginaFiltroPertence == widget.indexDapagina,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black87,
@@ -39,7 +34,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
             child: Column(
               children: [
                 Text(
-                  filtroPaginaAtual.filtrosWidgetModel.titulo,
+                  widget.filtroPaginaAtual.filtrosWidgetModel.titulo,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18
@@ -106,7 +101,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
                     if(widget.controller.getListFiltrosComputed.isEmpty){
                       widget.controller.bodyPesquisarFiltros.addAll({"pesquisa" : widget.controller.pesquisaItensDoFiltro});
                       widget.controller.funcaoBuscarDadosDeCadaFiltro(
-                        valor: filtroPaginaAtual.filtrosWidgetModel,
+                        valor: widget.filtroPaginaAtual.filtrosWidgetModel,
                         isBuscarDropDown: false,
                         index: widget.controller.indexFiltro
                       );
@@ -114,7 +109,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
                     else{
                       widget.controller.bodyPesquisarFiltros.remove('pesquisa');
                       widget.controller.funcaoBuscarDadosDeCadaFiltro(
-                        valor: filtroPaginaAtual.filtrosWidgetModel,
+                        valor: widget.filtroPaginaAtual.filtrosWidgetModel,
                         isBuscarDropDown: false,
                         index: widget.controller.indexFiltro
                       );
@@ -124,54 +119,59 @@ class _ItensFiltroState extends State<ItensFiltro> {
               ),
             ),
           ],
-          // bottom: PreferredSize(
-          //   preferredSize: const Size(30,40),
-          //   child: Row(
-          //     children: [
-          //       Expanded(
-          //         child: Observer(
-          //           builder: (_) => CheckboxListTile(
-          //             value: widget.controller.verificaSeTodosEstaoSelecionados, 
-          //             title: const Text(
-          //               "Todos",
-          //               style: TextStyle(
-          //                 color: Colors.white
-          //               ),
-          //             ),
-          //             hoverColor: Colors.grey.shade700,
-          //             onChanged: (_){
-          //               if(widget.controller.verificaSeTodosEstaoSelecionados){
-          //                 widget.controller.limparSelecao();
-          //               }else{
-          //                 widget.controller.selecionarTodos();
-          //               }
-          //             },
-          //             controlAffinity: ListTileControlAffinity.leading,
-          //           ),
-          //         ),
-          //       ),
-          //       Expanded(
-          //         child: ListTile(
-          //           leading: const Icon(
-          //             Icons.change_circle_outlined,
-          //             color: Colors.white60,
-          //           ),
-          //           title: const Text(
-          //             "Inverter seleção",
-          //             style: TextStyle(
-          //               color: Colors.white
-          //             ),
-          //           ),
-          //           dense: true,
-          //           hoverColor: Colors.grey.shade700,
-          //           onTap: (){
-          //             widget.controller.inverterSelecao();
-          //           },
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
+          bottom: PreferredSize(
+            preferredSize: const Size(30,40),
+            child: Observer(
+              builder: (_) => Visibility(
+                visible: !widget.controller.loadingItensFiltros && widget.controller.getListFiltrosComputed.isNotEmpty,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Observer(
+                        builder: (_) => CheckboxListTile(
+                          value: widget.controller.verificaSeTodosEstaoSelecionados, 
+                          title: const Text(
+                            "Todos",
+                            style: TextStyle(
+                              color: Colors.white
+                            ),
+                          ),
+                          hoverColor: Colors.grey.shade700,
+                          onChanged: (_){
+                            if(widget.controller.verificaSeTodosEstaoSelecionados){
+                              widget.controller.limparSelecao();
+                            }else{
+                              widget.controller.selecionarTodos();
+                            }
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        leading: const Icon(
+                          Icons.change_circle_outlined,
+                          color: Colors.white60,
+                        ),
+                        title: const Text(
+                          "Inverter seleção",
+                          style: TextStyle(
+                            color: Colors.white
+                          ),
+                        ),
+                        dense: true,
+                        hoverColor: Colors.grey.shade700,
+                        onTap: (){
+                          widget.controller.inverterSelecao();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
         body: Observer(
           builder: (_) => Visibility(

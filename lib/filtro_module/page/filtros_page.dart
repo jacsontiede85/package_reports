@@ -1,5 +1,4 @@
 // ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -129,6 +128,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                         pagina: ItensFiltro(
                           controller: controllerFiltro,
                           indexDapagina: controllerFiltro.indexPagina,
+                          filtroPaginaAtual: controllerFiltro.listaFiltrosParaConstruirTela[index],
                         ),
                         isToShowFiltroNoMeio: true,
                         layout: layout

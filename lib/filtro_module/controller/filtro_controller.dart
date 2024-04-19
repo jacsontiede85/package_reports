@@ -127,6 +127,7 @@ abstract class FiltroControllerBase with Store {
         indexFiltro = index;
         novoIndexFiltro = retornarIndexListaFiltrosCarregados();
       }
+      
       indexFiltro = index;
       for(FiltrosModel itens in getListFiltrosComputed){
         if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
@@ -331,8 +332,6 @@ abstract class FiltroControllerBase with Store {
     novoIndexFiltro = retornarIndexListaFiltrosCarregados();
 
     List<FiltrosModel> list = [];
-    // print('object');
-    // if(novoIndexFiltro > 0) 
     list = listaFiltrosCarregados[novoIndexFiltro].listaFiltros;
 
     if(list.isEmpty) {
@@ -415,11 +414,6 @@ abstract class FiltroControllerBase with Store {
 
   int retornarIndexListaFiltrosCarregados ({int? index}) {
     int novoIndexFiltro = listaFiltrosCarregados.indexWhere((element) => element.indexFiltros ==(index ?? indexFiltro) && element.indexPagina == indexPagina);
-    return novoIndexFiltro;
-  }
-
-  int teste ({int ? index}) {
-    int novoIndexFiltro = listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == indexFiltro && element.indexPagina == indexPagina && indexFiltro == index);
     return novoIndexFiltro;
   }
 
