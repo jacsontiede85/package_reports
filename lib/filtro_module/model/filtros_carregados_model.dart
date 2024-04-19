@@ -14,10 +14,13 @@ abstract class FiltrosCarrregadosBase with Store {
   @observable
   List<FiltrosModel> listaFiltros = [];
 
+  FiltrosModel? valorSelecionadoParaDropDown;
+
   FiltrosCarrregadosBase({
     this.indexFiltros = 0, 
     this.indexPagina = 0,
     required this.listaFiltros,
+    this.valorSelecionadoParaDropDown,
   });
 
 

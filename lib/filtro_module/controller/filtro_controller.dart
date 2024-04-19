@@ -68,13 +68,13 @@ abstract class FiltroControllerBase with Store {
   bool isRCAativo = false;
 
   @observable
-  FiltrosModel valorSelecionadoDropDown = FiltrosModel(codigo: '', selecionado: false, subtitulo: '', titulo: 'NENHUM');
-
-  @observable
   bool validarListaParaDropDown = false;
   
   @observable
   int novoIndexFiltro = -1;
+
+  @observable
+  ObservableMap<int, FiltrosModel> valoresSelecionadorDropDown = ObservableMap<int, FiltrosModel>.of({});
 
   // RETORNAR QTDE DE ITENS SELECIONADOS
   @computed
@@ -93,13 +93,15 @@ abstract class FiltroControllerBase with Store {
   }
 
   Future<void> funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required bool isBuscarDropDown, required int index}) async {
-    indexFiltro = index;
+
+    if(isBuscarDropDown == false) validarListaParaDropDown = isBuscarDropDown;
+
     try{
       validarListaParaDropDown = isBuscarDropDown;
 
       loadingItensFiltros = true;
 
-      novoIndexFiltro = retornarIndexListaFiltrosCarregados(); 
+      novoIndexFiltro = retornarIndexListaFiltrosCarregados(index: index); 
 
       if(novoIndexFiltro == -1){
         bodyPesquisarFiltros.addAll({
@@ -114,17 +116,18 @@ abstract class FiltroControllerBase with Store {
         );
 
         List dados = jsonDecode(response);
-      
+
         listaFiltrosCarregados.add(
           FiltrosCarrregados(
-            indexFiltros: indexFiltro,
+            indexFiltros: index,
             indexPagina: indexPagina,
             listaFiltros: dados.map((e) => FiltrosModel.fromJson(e)).toList(),
           ),
         );
+        indexFiltro = index;
         novoIndexFiltro = retornarIndexListaFiltrosCarregados();
       }
-
+      indexFiltro = index;
       for(FiltrosModel itens in getListFiltrosComputed){
         if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
           for(FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados){
@@ -138,6 +141,7 @@ abstract class FiltroControllerBase with Store {
 
     }finally{
       loadingItensFiltros = false;
+      if(isBuscarDropDown) validarListaParaDropDown = isBuscarDropDown;
     }
   }
 
@@ -409,8 +413,13 @@ abstract class FiltroControllerBase with Store {
     listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
   }
 
-  int retornarIndexListaFiltrosCarregados () {
-    int novoIndexFiltro = listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == indexFiltro && element.indexPagina == indexPagina);
+  int retornarIndexListaFiltrosCarregados ({int? index}) {
+    int novoIndexFiltro = listaFiltrosCarregados.indexWhere((element) => element.indexFiltros ==(index ?? indexFiltro) && element.indexPagina == indexPagina);
+    return novoIndexFiltro;
+  }
+
+  int teste ({int ? index}) {
+    int novoIndexFiltro = listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == indexFiltro && element.indexPagina == indexPagina && indexFiltro == index);
     return novoIndexFiltro;
   }
 

@@ -355,20 +355,22 @@ class Widgets {
             builder: (context) {
               return Observer(
                 builder: (_){
-                  if(controller.validarListaParaDropDown){
+                  if(controller.listaFiltrosCarregados.any((element) {
+                    return element.indexFiltros == index;
+                  })){
                     return Observer(
                       builder: (_) => DropdownButton<FiltrosModel>(
-                        value: controller.valorSelecionadoDropDown,
+                        value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
                         isExpanded: true,
                         isDense: true,
                         onChanged: (value) {
-                          // controller.valorSelecionadoDropDown = value!;
-                          // int indexFiltrosSelecionado = controller.listaFiltros.indexWhere((element) => element == value);
-                          // controller.listaFiltros[indexFiltrosSelecionado].selecionado = true;
-                          // controller.adicionarItensSelecionado(itens: controller.listaFiltros[indexFiltrosSelecionado]);
+                          controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value!;
+                          int indexFiltrosSelecionado = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.indexWhere((element) => element == value);
+                          controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[indexFiltrosSelecionado].selecionado = true;
+                          controller.adicionarItensSelecionado(itens: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[indexFiltrosSelecionado]);
                         },
-                        hint: Text(controller.valorSelecionadoDropDown.titulo),
-                        items: !controller.validarListaParaDropDown ? null : controller.listaFiltrosCarregados[index].listaFiltros.map((value) {
+                        hint: Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
+                        items: !controller.validarListaParaDropDown ? null : controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((value) {
                           return DropdownMenuItem<FiltrosModel>(
                             value: value,
                             child: Text(
@@ -390,23 +392,22 @@ class Widgets {
                             )
                           )
                         ),
-                        child: Row(
+                        child: const Row(
                           children: [
                             Expanded(
-                              child: Text(controller.valorSelecionadoDropDown.titulo),
+                              child: Text("NENHUM"),
                             ),
-                            const Icon(Icons.arrow_drop_down_sharp),
+                            Icon(Icons.arrow_drop_down_sharp),
                           ],
                         ),
                       ),
                       onTap: () async {
-                        controller.indexFiltro = index;
                         await controller.funcaoBuscarDadosDeCadaFiltro(
                           valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
                           isBuscarDropDown: true,
                           index: index
                         );
-                        controller.valorSelecionadoDropDown = controller.listaFiltrosCarregados[index].listaFiltros[0];
+                        controller.listaFiltrosCarregados[controller.teste(index: index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.teste(index: index)].listaFiltros[0];
                       },
                     );
                   }

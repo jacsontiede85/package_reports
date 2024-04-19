@@ -231,23 +231,6 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
-  late final _$valorSelecionadoDropDownAtom = Atom(
-      name: 'FiltroControllerBase.valorSelecionadoDropDown', context: context);
-
-  @override
-  FiltrosModel get valorSelecionadoDropDown {
-    _$valorSelecionadoDropDownAtom.reportRead();
-    return super.valorSelecionadoDropDown;
-  }
-
-  @override
-  set valorSelecionadoDropDown(FiltrosModel value) {
-    _$valorSelecionadoDropDownAtom
-        .reportWrite(value, super.valorSelecionadoDropDown, () {
-      super.valorSelecionadoDropDown = value;
-    });
-  }
-
   late final _$validarListaParaDropDownAtom = Atom(
       name: 'FiltroControllerBase.validarListaParaDropDown', context: context);
 
@@ -278,6 +261,24 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   set novoIndexFiltro(int value) {
     _$novoIndexFiltroAtom.reportWrite(value, super.novoIndexFiltro, () {
       super.novoIndexFiltro = value;
+    });
+  }
+
+  late final _$valoresSelecionadorDropDownAtom = Atom(
+      name: 'FiltroControllerBase.valoresSelecionadorDropDown',
+      context: context);
+
+  @override
+  ObservableMap<int, FiltrosModel> get valoresSelecionadorDropDown {
+    _$valoresSelecionadorDropDownAtom.reportRead();
+    return super.valoresSelecionadorDropDown;
+  }
+
+  @override
+  set valoresSelecionadorDropDown(ObservableMap<int, FiltrosModel> value) {
+    _$valoresSelecionadorDropDownAtom
+        .reportWrite(value, super.valoresSelecionadorDropDown, () {
+      super.valoresSelecionadorDropDown = value;
     });
   }
 
@@ -365,9 +366,9 @@ pesquisaItensDoFiltro: ${pesquisaItensDoFiltro},
 isDataFaturamento: ${isDataFaturamento},
 isRCAsemVenda: ${isRCAsemVenda},
 isRCAativo: ${isRCAativo},
-valorSelecionadoDropDown: ${valorSelecionadoDropDown},
 validarListaParaDropDown: ${validarListaParaDropDown},
 novoIndexFiltro: ${novoIndexFiltro},
+valoresSelecionadorDropDown: ${valoresSelecionadorDropDown},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}
