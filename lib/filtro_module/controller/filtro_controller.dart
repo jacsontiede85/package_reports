@@ -31,7 +31,7 @@ abstract class FiltroControllerBase with Store {
   }
 
   @observable
-  List<FiltrosCarrregados> listaFiltrosCarregados = [];
+  ObservableList<FiltrosCarrregados> listaFiltrosCarregados = ObservableList<FiltrosCarrregados>.of([]);
 
   @observable
   ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela = ObservableList<FiltrosPageAtual>.of([]);

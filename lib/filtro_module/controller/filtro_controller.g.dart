@@ -37,13 +37,13 @@ mixin _$FiltroController on FiltroControllerBase, Store {
       name: 'FiltroControllerBase.listaFiltrosCarregados', context: context);
 
   @override
-  List<FiltrosCarrregados> get listaFiltrosCarregados {
+  ObservableList<FiltrosCarrregados> get listaFiltrosCarregados {
     _$listaFiltrosCarregadosAtom.reportRead();
     return super.listaFiltrosCarregados;
   }
 
   @override
-  set listaFiltrosCarregados(List<FiltrosCarrregados> value) {
+  set listaFiltrosCarregados(ObservableList<FiltrosCarrregados> value) {
     _$listaFiltrosCarregadosAtom
         .reportWrite(value, super.listaFiltrosCarregados, () {
       super.listaFiltrosCarregados = value;
