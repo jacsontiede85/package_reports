@@ -381,10 +381,10 @@ class Widgets {
                             isExpanded: true,
                             isDense: true,
                             onChanged: (value) {
-                              controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value!;
-                              int indexFiltrosSelecionado = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.indexWhere((element) => element == value);
-                              controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[indexFiltrosSelecionado].selecionado = true;
-                              controller.adicionarItensSelecionado(itens: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[indexFiltrosSelecionado]);
+                              controller.adicionarItensDropDown(
+                                index: index,
+                                valorSelecionado: value!
+                              );
                             },
                             hint: Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
                             items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((value) {

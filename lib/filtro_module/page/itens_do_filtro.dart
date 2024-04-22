@@ -8,14 +8,18 @@ import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.d
 class ItensFiltro extends StatefulWidget {
   final FiltroController controller;
   final int indexDapagina;
+  final int indexDofiltro;
   final FiltrosPageAtual filtroPaginaAtual;
 
-  const ItensFiltro({
+  ItensFiltro({
     super.key,
     required this.controller,
     required this.indexDapagina,
+    required this.indexDofiltro,
     required this.filtroPaginaAtual
-  });
+  }){
+    controller.indexFiltro = indexDofiltro;
+  }
 
   @override
   State<ItensFiltro> createState() => _ItensFiltroState();

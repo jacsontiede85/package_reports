@@ -422,4 +422,20 @@ abstract class FiltroControllerBase with Store {
     return novoIndexFiltro;
   }
 
+  void adicionarItensDropDown ({required int index, required FiltrosModel valorSelecionado}){
+    int indexFiltrosCarregados = listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index);
+    listaFiltrosCarregados[indexFiltrosCarregados].valorSelecionadoParaDropDown = valorSelecionado;
+    int indexFiltrosSelecionado = listaFiltrosCarregados[indexFiltrosCarregados].listaFiltros.indexWhere((element) => element == valorSelecionado);
+
+    for(FiltrosModel itens in listaFiltrosCarregados[indexFiltrosCarregados].listaFiltros){
+      itens.selecionado = false;
+      listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.remove(itens);
+    }
+
+    listaFiltrosCarregados[indexFiltrosCarregados].listaFiltros[indexFiltrosSelecionado].selecionado = true;
+    indexFiltro  = index;
+    adicionarItensSelecionado(itens: listaFiltrosCarregados[indexFiltrosCarregados].listaFiltros[indexFiltrosSelecionado]);
+
+  }
+
 }

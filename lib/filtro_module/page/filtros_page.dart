@@ -129,6 +129,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                           controller: controllerFiltro,
                           indexDapagina: controllerFiltro.indexPagina,
                           filtroPaginaAtual: controllerFiltro.listaFiltrosParaConstruirTela[index],
+                          indexDofiltro: index,
                         ),
                         isToShowFiltroNoMeio: true,
                         layout: layout
