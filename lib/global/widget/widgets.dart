@@ -349,71 +349,145 @@ class Widgets {
           titulo: filtrosDados.titulo.toUpperCase(),
           context: context
         ),
-        subtitle: Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
-          child: Builder(
-            builder: (context) {
-              return Observer(
-                builder: (_){
-                  if(controller.listaFiltrosCarregados.where((element) => element.indexFiltros == index).toList().isNotEmpty){
-                    return Observer(
-                      builder: (_) => DropdownButton<FiltrosModel>(
-                        value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
-                        isExpanded: true,
-                        isDense: true,
-                        onChanged: (value) {
-                          controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value!;
-                          int indexFiltrosSelecionado = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.indexWhere((element) => element == value);
-                          controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[indexFiltrosSelecionado].selecionado = true;
-                          controller.adicionarItensSelecionado(itens: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[indexFiltrosSelecionado]);
-                        },
-                        hint: Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
-                        items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((value) {
-                          return DropdownMenuItem<FiltrosModel>(
-                            value: value,
-                            child: Text(
-                              value.titulo,
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    );                
-                  }else{
-                    return InkWell(
-                      child: Container(
-                        height: 25,
-                        width: MediaQuery.sizeOf(context).width,
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              width: 0.25 
-                            )
-                          )
-                        ),
-                        child: const Row(
-                          children: [
-                            Expanded(
-                              child: Text("NENHUM"),
-                            ),
-                            Icon(Icons.arrow_drop_down_sharp),
-                          ],
-                        ),
-                      ),
-                      onTap: () async {
-                        await controller.funcaoBuscarDadosDeCadaFiltro(
-                          valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                          isBuscarDropDown: true,
-                          index: index
-                        );
-                        controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[0];
-                      },
-                    );
-                  }
-                }
-              );
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start, 
+          children: [
 
-            }
-          ),
+            Visibility(
+              visible: filtrosDados.subtitulo.isNotEmpty,
+              child: Container(
+                margin: const EdgeInsets.only(top: 5, bottom: 5),
+                alignment: Alignment.topLeft,
+                child: Text(
+                  filtrosDados.subtitulo,
+                  style: const TextStyle(
+                    fontSize: 11.0,
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: Builder(
+                builder: (context) {
+                  return Observer(
+                    builder: (_){
+                      if(controller.listaFiltrosCarregados.where((element) => element.indexFiltros == index).toList().isNotEmpty){
+                        return Observer(
+                          builder: (_) => DropdownButton<FiltrosModel>(
+                            value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
+                            isExpanded: true,
+                            isDense: true,
+                            onChanged: (value) {
+                              controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value!;
+                              int indexFiltrosSelecionado = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.indexWhere((element) => element == value);
+                              controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[indexFiltrosSelecionado].selecionado = true;
+                              controller.adicionarItensSelecionado(itens: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[indexFiltrosSelecionado]);
+                            },
+                            hint: Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
+                            items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((value) {
+                              return DropdownMenuItem<FiltrosModel>(
+                                value: value,
+                                child: Text(
+                                  value.titulo,
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        );                
+                      }else{
+                        return InkWell(
+                          child: Container(
+                            height: 25,
+                            width: MediaQuery.sizeOf(context).width,
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  width: 0.25 
+                                )
+                              )
+                            ),
+                            child: const Row(
+                              children: [
+                                Expanded(
+                                  child: Text("NENHUM"),
+                                ),
+                                Icon(Icons.arrow_drop_down_sharp),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            await controller.funcaoBuscarDadosDeCadaFiltro(
+                              valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                              isBuscarDropDown: true,
+                              index: index
+                            );
+                            controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[0];
+                          },
+                        );
+                      }
+                    }
+                  );
+            
+                }
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget cardCampoDigitavel ({
+    required BuildContext context, 
+    required FiltrosWidgetModel filtrosDados,
+    required FiltroController controller,
+    required int index,
+  }){
+    return Card (
+      child: ListTile(
+        title: tituloCards(
+          titulo: filtrosDados.titulo, 
+          context: context
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start, 
+          children: [
+
+            Visibility(
+              visible: filtrosDados.subtitulo.isNotEmpty,
+              child: Container(
+                margin: const EdgeInsets.only(top: 5, bottom: 5),
+                alignment: Alignment.topLeft,
+                child: Text(
+                  filtrosDados.subtitulo,
+                  style: const TextStyle(
+                    fontSize: 11.0,
+                  ),
+                ),
+              ),
+            ),
+
+            TextField(
+              decoration: const InputDecoration(
+                filled: true,
+                isDense: true,
+                contentPadding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+              ),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600
+              ),
+              onSubmitted: (value) {},
+            ),
+            
+          ],
         ),
       ),
     );
@@ -451,6 +525,15 @@ class Widgets {
 
       case "dropdown" :
         retornoFuncao = cardFiltroDropDown(
+          context: context,
+          filtrosDados: filtrosDados,
+          controller: controller,
+          index: index,
+        );
+      break;
+
+      case "textolivre" :
+        retornoFuncao = cardCampoDigitavel(
           context: context,
           filtrosDados: filtrosDados,
           controller: controller,

@@ -39,7 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {  
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -58,8 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) => ReportPage(
                       database: "atacado",
                       buscarDadosNaEntrada: false,
-                      function: 'vendas/venda-por-supervisor/index.php',
-                      // function: 'repositorio/reports/query/compras/simular_varios_precos.php',
+                      function: 'comercial/clientes-sem-vendas/index.php',
                     ),
                   )
                 );
