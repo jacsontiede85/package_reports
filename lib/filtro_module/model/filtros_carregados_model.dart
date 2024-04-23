@@ -10,6 +10,8 @@ abstract class FiltrosCarrregadosBase with Store {
   int indexFiltros = 0;
   @observable
   int indexPagina = 0;
+  @observable
+  bool pesquisaFeita = false;
 
   @observable
   List<FiltrosModel> listaFiltros = [];

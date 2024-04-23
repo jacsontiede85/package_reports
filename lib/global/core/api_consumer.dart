@@ -24,7 +24,7 @@ class API with SettingsReports{
     Digest  digest = hmac.convert("$header64.$payload64".codeUnits);
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
-    
+    // log(token);
     Response res = await http.post(
       Uri.parse("${SettingsReports.enderecoRepositorio}$url"),
       headers: {

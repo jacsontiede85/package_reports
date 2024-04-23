@@ -41,6 +41,22 @@ mixin _$FiltrosCarrregados on FiltrosCarrregadosBase, Store {
     });
   }
 
+  late final _$pesquisaFeitaAtom =
+      Atom(name: 'FiltrosCarrregadosBase.pesquisaFeita', context: context);
+
+  @override
+  bool get pesquisaFeita {
+    _$pesquisaFeitaAtom.reportRead();
+    return super.pesquisaFeita;
+  }
+
+  @override
+  set pesquisaFeita(bool value) {
+    _$pesquisaFeitaAtom.reportWrite(value, super.pesquisaFeita, () {
+      super.pesquisaFeita = value;
+    });
+  }
+
   late final _$listaFiltrosAtom =
       Atom(name: 'FiltrosCarrregadosBase.listaFiltros', context: context);
 
@@ -62,6 +78,7 @@ mixin _$FiltrosCarrregados on FiltrosCarrregadosBase, Store {
     return '''
 indexFiltros: ${indexFiltros},
 indexPagina: ${indexPagina},
+pesquisaFeita: ${pesquisaFeita},
 listaFiltros: ${listaFiltros}
     ''';
   }

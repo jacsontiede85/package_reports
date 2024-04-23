@@ -101,14 +101,15 @@ class _ItensFiltroState extends State<ItensFiltro> {
                         fontWeight: FontWeight.normal
                       ),
                     ),
-                    onChanged: (value) {
+                    onSubmitted: (value) {
                       widget.controller.pesquisaItensDoFiltro = value;
                       if(widget.controller.getListFiltrosComputed.isEmpty){
                         widget.controller.bodyPesquisarFiltros.addAll({"pesquisa" : widget.controller.pesquisaItensDoFiltro});
                         widget.controller.funcaoBuscarDadosDeCadaFiltro(
                           valor: widget.filtroPaginaAtual.filtrosWidgetModel,
                           isBuscarDropDown: false,
-                          index: widget.controller.indexFiltro
+                          index: widget.controller.indexFiltro,
+                          pesquisa: true
                         );
                       }
                       else{
@@ -116,7 +117,8 @@ class _ItensFiltroState extends State<ItensFiltro> {
                         widget.controller.funcaoBuscarDadosDeCadaFiltro(
                           valor: widget.filtroPaginaAtual.filtrosWidgetModel,
                           isBuscarDropDown: false,
-                          index: widget.controller.indexFiltro
+                          index: widget.controller.indexFiltro,
+                          pesquisa: true
                         );
                       }
                     },
