@@ -7,13 +7,13 @@ import 'dart:convert';
 class API with SettingsReports{
   Future<String> getDataReportApiJWT({String? banco, Map? dados, String? url}) async {
     //header
-    var header = {
+    Map<String, String> header = {
       "alg": "HS256",
       "typ": "JWT",
     };
     String header64 = base64Encode(jsonEncode(header).codeUnits);
 
-    print(dados);
+    // print(dados);
 
     //payload
     var payload = dados;
