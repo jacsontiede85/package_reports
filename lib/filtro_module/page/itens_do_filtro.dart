@@ -35,32 +35,30 @@ class _ItensFiltroState extends State<ItensFiltro> {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black87,
-            title: SelectionArea(
-              child: Column(
-                children: [
-                  Text(
-                    widget.filtroPaginaAtual.filtrosWidgetModel.titulo,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18
-                    ),
+            title: Column(
+              children: [
+                Text(
+                  widget.filtroPaginaAtual.filtrosWidgetModel.titulo,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18
                   ),
-                  Observer(
-                    builder: (_) => Visibility(
-                      visible: widget.controller.getQtdeItensSelecionados > 0,
-                      child: Observer(
-                        builder: (_) => Text(
-                          "Qtde. selecionado: ${widget.controller.getQtdeItensSelecionados} de ${widget.controller.getListFiltrosComputed.length}",
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 10,
-                          ),
+                ),
+                Observer(
+                  builder: (_) => Visibility(
+                    visible: widget.controller.getQtdeItensSelecionados > 0,
+                    child: Observer(
+                      builder: (_) => Text(
+                        "Qtde. selecionado: ${widget.controller.getQtdeItensSelecionados} de ${widget.controller.getListFiltrosComputed.length}",
+                        style: TextStyle(
+                          color: Colors.grey[400],
+                          fontSize: 10,
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),
@@ -103,8 +101,8 @@ class _ItensFiltroState extends State<ItensFiltro> {
                     ),
                     onSubmitted: (value) {
                       widget.controller.pesquisaItensDoFiltro = value;
+                      widget.controller.bodyPesquisarFiltros.addAll({"pesquisa" : widget.controller.pesquisaItensDoFiltro});
                       if(widget.controller.getListFiltrosComputed.isEmpty){
-                        widget.controller.bodyPesquisarFiltros.addAll({"pesquisa" : widget.controller.pesquisaItensDoFiltro});
                         widget.controller.funcaoBuscarDadosDeCadaFiltro(
                           valor: widget.filtroPaginaAtual.filtrosWidgetModel,
                           isBuscarDropDown: false,
@@ -113,13 +111,14 @@ class _ItensFiltroState extends State<ItensFiltro> {
                         );
                       }
                       else{
-                        widget.controller.bodyPesquisarFiltros.remove('pesquisa');
-                        widget.controller.funcaoBuscarDadosDeCadaFiltro(
-                          valor: widget.filtroPaginaAtual.filtrosWidgetModel,
-                          isBuscarDropDown: false,
-                          index: widget.controller.indexFiltro,
-                          pesquisa: true
-                        );
+                        if(widget.controller.pesquisaItensDoFiltro.isEmpty){
+                          widget.controller.funcaoBuscarDadosDeCadaFiltro(
+                            valor: widget.filtroPaginaAtual.filtrosWidgetModel,
+                            isBuscarDropDown: false,
+                            index: widget.controller.indexFiltro,
+                            pesquisa: true
+                          );                          
+                        }
                       }
                     },
                   )
@@ -183,10 +182,16 @@ class _ItensFiltroState extends State<ItensFiltro> {
           body: Observer(
             builder: (_) => Visibility(
               visible: !widget.controller.loadingItensFiltros && widget.controller.getListFiltrosComputed.isNotEmpty,
-              replacement: Center(
-                child: LoadingAnimationWidget.halfTriangleDot(
-                  color: const Color.fromARGB(255, 102, 78, 238),
-                  size: 40,
+              replacement: Visibility(
+                visible: !widget.controller.erroBuscarItensFiltro,
+                replacement: const Center(
+                  child: Text("Não foi possivel encontrar o item pesquisado !")
+                ),
+                child: Center(
+                  child: LoadingAnimationWidget.halfTriangleDot(
+                    color: const Color.fromARGB(255, 102, 78, 238),
+                    size: 40,
+                  ),
                 ),
               ),
               child: widget.controller.novoIndexFiltro == -1 ? const Text("TESTE") : ListView.separated(

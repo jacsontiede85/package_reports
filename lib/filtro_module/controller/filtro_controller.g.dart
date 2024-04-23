@@ -282,6 +282,23 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$erroBuscarItensFiltroAtom = Atom(
+      name: 'FiltroControllerBase.erroBuscarItensFiltro', context: context);
+
+  @override
+  bool get erroBuscarItensFiltro {
+    _$erroBuscarItensFiltroAtom.reportRead();
+    return super.erroBuscarItensFiltro;
+  }
+
+  @override
+  set erroBuscarItensFiltro(bool value) {
+    _$erroBuscarItensFiltroAtom.reportWrite(value, super.erroBuscarItensFiltro,
+        () {
+      super.erroBuscarItensFiltro = value;
+    });
+  }
+
   late final _$FiltroControllerBaseActionController =
       ActionController(name: 'FiltroControllerBase', context: context);
 
@@ -369,6 +386,7 @@ isRCAativo: ${isRCAativo},
 validarListaParaDropDown: ${validarListaParaDropDown},
 novoIndexFiltro: ${novoIndexFiltro},
 valoresSelecionadorDropDown: ${valoresSelecionadorDropDown},
+erroBuscarItensFiltro: ${erroBuscarItensFiltro},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}

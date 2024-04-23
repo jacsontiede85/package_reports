@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
@@ -76,6 +77,9 @@ abstract class FiltroControllerBase with Store {
   @observable
   ObservableMap<int, FiltrosModel> valoresSelecionadorDropDown = ObservableMap<int, FiltrosModel>.of({});
 
+  @observable
+  bool erroBuscarItensFiltro = false;
+
   // RETORNAR QTDE DE ITENS SELECIONADOS
   @computed
   int get getQtdeItensSelecionados => (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.length);
@@ -94,6 +98,7 @@ abstract class FiltroControllerBase with Store {
 
   Future<void> funcaoBuscarDadosDeCadaFiltro ({required FiltrosWidgetModel valor, required bool isBuscarDropDown, required int index, bool pesquisa = false}) async {
 
+    erroBuscarItensFiltro = false;
     if(isBuscarDropDown == false) validarListaParaDropDown = isBuscarDropDown;
 
     try{        
@@ -104,52 +109,65 @@ abstract class FiltroControllerBase with Store {
       novoIndexFiltro = retornarIndexListaFiltrosCarregados(index: index); 
 
       if(novoIndexFiltro == -1 || (!listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita && !pesquisa)){
-        bodyPesquisarFiltros.addAll({
-          "function" : valor.funcaoPrincipal,
-          "database" : valor.bancoBuscarFiltros,
-          "matricula" : SettingsReports.matricula,
-        });
 
-        var response = await API().getDataReportApiJWT(
-          dados: bodyPesquisarFiltros,
-          url: "filtros/${valor.arquivoQuery}"
-        );
+        try{
+          bodyPesquisarFiltros.addAll({
+            "function" : valor.funcaoPrincipal,
+            "database" : valor.bancoBuscarFiltros,
+            "matricula" : SettingsReports.matricula,
+          });
 
-        List dados = jsonDecode(response);
-        
-        if(novoIndexFiltro == -1 || listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita){
-          listaFiltrosCarregados.add(
-            FiltrosCarrregados(
-              indexFiltros: index,
-              indexPagina: indexPagina,
-              listaFiltros: dados.map((e) => FiltrosModel.fromJson(e)).toList(),
-            ),
-          );          
-        }else{
-          listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
+          var response = await API().getDataReportApiJWT(
+            dados: bodyPesquisarFiltros,
+            url: "filtros/${valor.arquivoQuery}"
+          );
+
+          List dados = jsonDecode(response);
+          
+          if(novoIndexFiltro == -1 || listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita){
+            listaFiltrosCarregados.add(
+              FiltrosCarrregados(
+                indexFiltros: index,
+                indexPagina: indexPagina,
+                listaFiltros: dados.map((e) => FiltrosModel.fromJson(e)).toList(),
+              ),
+            );          
+          }else{
+            listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
+          }
+
+          indexFiltro = index;
+          novoIndexFiltro = retornarIndexListaFiltrosCarregados();          
+        }catch(e){
+          log('message');
+          erroBuscarItensFiltro = true;
+        }finally{
+          listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = true;          
         }
-
-        indexFiltro = index;
-        novoIndexFiltro = retornarIndexListaFiltrosCarregados();
-        listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = true;
       }
       else if(pesquisa){
+        try{
+          bodyPesquisarFiltros.addAll({
+            "function" : valor.funcaoPrincipal,
+            "database" : valor.bancoBuscarFiltros,
+            "matricula" : SettingsReports.matricula,
+          });
+          // print(bodyPesquisarFiltros);
+          var response = await API().getDataReportApiJWT(
+            dados: bodyPesquisarFiltros,
+            url: "filtros/${valor.arquivoQuery}"
+          );
+          
+          bodyPesquisarFiltros.remove('pesquisa');
+          List dados = jsonDecode(response);
 
-        bodyPesquisarFiltros.addAll({
-          "function" : valor.funcaoPrincipal,
-          "database" : valor.bancoBuscarFiltros,
-          "matricula" : SettingsReports.matricula,
-        });
-
-        var response = await API().getDataReportApiJWT(
-          dados: bodyPesquisarFiltros,
-          url: "filtros/${valor.arquivoQuery}"
-        );
-        bodyPesquisarFiltros.remove('pesquisa');
-        List dados = jsonDecode(response);
-
-        listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = false;
-        listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
+          listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();          
+        }catch(e){
+          log('Erro pesquisa: $e',);
+          erroBuscarItensFiltro = true;
+        }finally{
+          listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = false;          
+        }
         
       }
       
