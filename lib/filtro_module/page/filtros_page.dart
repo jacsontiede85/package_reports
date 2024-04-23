@@ -37,6 +37,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black87,
+        surfaceTintColor: Colors.transparent,
         title: const Text(
           "Filtros", 
           style: TextStyle(

@@ -114,6 +114,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
         key: scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.black87,
+          surfaceTintColor: Colors.transparent,
           title: Observer(
             builder: (_) => Visibility(
               visible: controller.configPagina.isNotEmpty,

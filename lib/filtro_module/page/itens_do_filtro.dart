@@ -35,6 +35,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black87,
+            surfaceTintColor: Colors.transparent,
             title: Column(
               children: [
                 Text(

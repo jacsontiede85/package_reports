@@ -13,7 +13,7 @@ class API with SettingsReports{
     };
     String header64 = base64Encode(jsonEncode(header).codeUnits);
 
-    // print(dados);
+    print(dados);
 
     //payload
     var payload = dados;

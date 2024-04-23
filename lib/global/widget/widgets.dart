@@ -484,7 +484,12 @@ class Widgets {
                 fontSize: 14,
                 fontWeight: FontWeight.w600
               ),
-              onSubmitted: (value) {},
+              onChanged: (value) {
+                controller.filtrosSalvosParaAdicionarNoBody.addAll({filtrosDados.tipoFiltro : value});
+                if(value.isEmpty){
+                  controller.filtrosSalvosParaAdicionarNoBody.remove(filtrosDados.tipoFiltro);
+                }
+              },
             ),
             
           ],

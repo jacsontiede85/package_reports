@@ -37,6 +37,7 @@ class _ChartsReportState extends State<ChartsReport> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black87,
+        surfaceTintColor: Colors.transparent,
         title: Text(
           "${widget.title} - Graficos", 
           style: const TextStyle(

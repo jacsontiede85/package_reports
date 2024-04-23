@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
@@ -26,7 +25,6 @@ abstract class FiltroControllerBase with Store {
     required this.mapaFiltrosWidget,
     required this.indexPagina,
     required this.controllerReports,
-    //this.onAplicar,
   }){
     getDadosCriarFiltros();
   }
@@ -139,7 +137,6 @@ abstract class FiltroControllerBase with Store {
           indexFiltro = index;
           novoIndexFiltro = retornarIndexListaFiltrosCarregados();          
         }catch(e){
-          log('message');
           erroBuscarItensFiltro = true;
         }finally{
           listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = true;          
@@ -152,7 +149,7 @@ abstract class FiltroControllerBase with Store {
             "database" : valor.bancoBuscarFiltros,
             "matricula" : SettingsReports.matricula,
           });
-          // print(bodyPesquisarFiltros);
+
           var response = await API().getDataReportApiJWT(
             dados: bodyPesquisarFiltros,
             url: "filtros/${valor.arquivoQuery}"
@@ -163,7 +160,6 @@ abstract class FiltroControllerBase with Store {
 
           listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();          
         }catch(e){
-          log('Erro pesquisa: $e',);
           erroBuscarItensFiltro = true;
         }finally{
           listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = false;          
