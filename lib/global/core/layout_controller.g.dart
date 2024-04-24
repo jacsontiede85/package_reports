@@ -260,7 +260,7 @@ mixin _$LayoutControllerPackage on LayoutControllerPackageBase, Store {
   dynamic setSizeScreen(
       {required dynamic altura,
       required dynamic largura,
-      required dynamic sizingInformation,
+      required SizingInformation sizingInformation,
       required BuildContext context}) {
     final _$actionInfo = _$LayoutControllerPackageBaseActionController
         .startAction(name: 'LayoutControllerPackageBase.setSizeScreen');

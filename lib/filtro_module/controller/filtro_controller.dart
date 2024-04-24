@@ -291,35 +291,35 @@ abstract class FiltroControllerBase with Store {
 
     String weekday = DateFormat.E('pt_BR').format(DateTime.now().toLocal());
 
-    int diaDaSemana = SettingsReports.diaDaSemanaConverte(weekday);
+    int diaDaSemana = SettingsReports.diaDaSemanaConverte(dia: weekday);
 
     String dtinicioFiltro= '';
     String dtfimFiltro= '';
 
     switch(periodo){
       case 'Hoje':
-        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${DateTime.now().toLocal()}");
-        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${DateTime.now().toLocal()}");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${DateTime.now().toLocal()}");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${DateTime.now().toLocal()}");
       break;
 
       case 'Ontem':
-        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${today.add(const Duration( days: -1 ))}");
-        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${today.add(const Duration( days: -1 ))}");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(const Duration( days: -1 ))}");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(const Duration( days: -1 ))}");
       break;
 
       case 'Semanaatual':
-        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${ today.add( Duration(   days: -1 *  diaDaSemana    )) }");
-        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${ today.add( Duration(   days: (  6 - diaDaSemana )    )) }");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${ today.add( Duration(   days: -1 *  diaDaSemana    )) }");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${ today.add( Duration(   days: (  6 - diaDaSemana )    )) }");
       break;
 
       case 'Semanaanterior':
-        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${ today.add( Duration(   days: (  6 - diaDaSemana )-7-6    )) }");
-        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${ today.add( Duration(   days: -1 * (  diaDaSemana+1 )    )) }");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${ today.add( Duration(   days: (  6 - diaDaSemana )-7-6    )) }");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${ today.add( Duration(   days: -1 * (  diaDaSemana+1 )    )) }");
       break;
 
       case 'Últimos15dias':
-        dtinicioFiltro = SettingsReports.formatarDataPadraoBR("${ today.add(const Duration(   days: -15    )) }");
-        dtfimFiltro = SettingsReports.formatarDataPadraoBR("${ today.add(const Duration(   days: 0    )) }");
+        dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${ today.add(const Duration(   days: -15    )) }");
+        dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${ today.add(const Duration(   days: 0    )) }");
       break;
 
       case 'Mêsatual':

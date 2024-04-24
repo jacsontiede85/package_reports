@@ -3,6 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
+import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/core/settings.dart';
 
@@ -23,11 +24,10 @@ class Widgets {
   navigator({
     required dynamic pagina, 
     required BuildContext context, 
-    Function()? onTap, 
     bool isToShowFiltroNoMeio = false, 
     required LayoutControllerPackage layout,
   }) async{
-    if(1==1){
+    if(layout.mobile || layout.tablet){
       await Navigator.push(
         context, 
         MaterialPageRoute(
@@ -37,42 +37,51 @@ class Widgets {
     }
     else{
       switch (pagina.runtimeType) {
-        case const (FiltrosWidgetModel):
-          Widget widgetContrucao = Container(
-            color: Colors.transparent,
-            child: Row(
-              children: isToShowFiltroNoMeio ? 
-              [
-                GestureDetector(
-                  onTap: onTap ?? () {
+        case const (ItensFiltro) :
+          Widget widgetContrucao = Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: 
+            // isToShowFiltroNoMeio ? 
+            // [
+            //   GestureDetector(
+            //     onTap: onTap ?? () {
+            //       Navigator.of(context).pop();
+            //     },
+            //     child: Container(color: Colors.transparent, width: (layout.width - layout.larguraJanelaFiltrosPesquisa)/2,),
+            //   ),
+            //   Expanded(
+            //     child: Padding(
+            //       padding: const EdgeInsets.only(top: 30, bottom: 30),
+            //       child: pagina,
+            //     )
+            //   ),
+            //   GestureDetector(
+            //     onTap: onTap ?? () {
+            //       Navigator.of(context).pop();
+            //     },
+            //     child: Container(color: Colors.transparent, width: (layout.width - layout.larguraJanelaFiltrosPesquisa)/2,),
+            //   ),
+            // ] 
+            // : 
+            [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
                     Navigator.of(context).pop();
                   },
-                  child: Container(color: Colors.transparent, width: (layout.width - layout.larguraJanelaFiltrosPesquisa)/2,),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 30, bottom: 30),
-                    child: pagina,
-                  )
+              ),
+              Drawer(
+                width: 500,
+                shape: const RoundedRectangleBorder(
+                  borderRadius:BorderRadius.only(
+                    bottomLeft:  Radius.circular(15),
+                    topLeft:  Radius.circular(15),
+                  ),
                 ),
-                GestureDetector(
-                  onTap: onTap ?? () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(color: Colors.transparent, width: (layout.width - layout.larguraJanelaFiltrosPesquisa)/2,),
-                ),
-              ] 
-              : 
-              [
-                GestureDetector(
-                  onTap: onTap ?? () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(color: Colors.transparent, width: layout.width - layout.larguraJanelaFiltrosPesquisa,),
-                ),
-                Expanded(child: pagina),
-              ],
-            ),
+                child: pagina,
+              )
+            ],
           );
           await showDialog<void>(
             barrierColor: Colors.black54.withOpacity(0.4),

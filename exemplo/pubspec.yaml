@@ -14,6 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   package_reports:
     path: ../
+  responsive_builder: ^0.7.0
 
 dev_dependencies:
   flutter_test:

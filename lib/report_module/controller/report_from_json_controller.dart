@@ -42,8 +42,8 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   Map<String, dynamic> bodyPrimario = {
     "matricula" : SettingsReports.matricula,
     "database" : "",
-    "dtinicio" : '${SettingsReports.formatarDataPadraoBR(DateTime.now().toString())}',  
-    "dtfim" : '${SettingsReports.formatarDataPadraoBR(DateTime.now().toString())}',
+    "dtinicio" : SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),  
+    "dtfim" : SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),
   };
 
   @observable

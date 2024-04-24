@@ -195,7 +195,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
                   ),
                 ),
               ),
-              child: widget.controller.novoIndexFiltro == -1 ? const Text("TESTE") : ListView.separated(
+              child: widget.controller.novoIndexFiltro == -1 ? const SizedBox() : ListView.separated(
                 separatorBuilder: (context, index) {
                   return const Divider();
                 },

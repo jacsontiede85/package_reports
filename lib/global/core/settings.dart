@@ -1,6 +1,3 @@
-
-// ignore_for_file: avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -17,11 +14,11 @@ mixin class SettingsReports{
     return formatter.format(now);
   }
   
-  static formatarDataPadraoBR(String dat) {
-    List date = dat.split(' ');
+  static String formatarDataPadraoBR({required String data}) {
+    List date = data.split(' ');
     date = date[0].toString().split('-');
-    dat = '${date[2]}/${date[1]}/${date[0]}';
-    return dat;
+    data = '${date[2]}/${date[1]}/${date[0]}';
+    return data;
   }
 
   Future<String> selectDate({required BuildContext context}) async {
@@ -45,12 +42,12 @@ mixin class SettingsReports{
 
     if (picked != null && picked != selectedDate) {
       selectedDate = picked;
-      return formatarDataPadraoBR("${selectedDate.toLocal()}");
+      return formatarDataPadraoBR(data: "${selectedDate.toLocal()}");
     }
-    return formatarDataPadraoBR("${DateTime.now().toLocal()}");
+    return formatarDataPadraoBR(data: "${DateTime.now().toLocal()}");
   }
 
-  static qtdDiasDoMes(int mes, int ano) {
+  static int qtdDiasDoMes(int mes, int ano) {
     switch (mes) {
       case 1:
         return 31;
@@ -85,7 +82,7 @@ mixin class SettingsReports{
     }
   }
 
-  static diaDaSemanaConverte(var dia) {
+  static int diaDaSemanaConverte({required String dia}) {
     switch (dia) {
       case 'dom.':
         return 0;
@@ -101,6 +98,8 @@ mixin class SettingsReports{
         return 5;
       case 'sáb.':
         return 6;
+      default:
+        return 1;
     }
   }
 

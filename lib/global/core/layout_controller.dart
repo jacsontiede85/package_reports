@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 part 'layout_controller.g.dart';
 
 class LayoutControllerPackage = LayoutControllerPackageBase with _$LayoutControllerPackage;
@@ -76,17 +77,17 @@ abstract class LayoutControllerPackageBase with Store {
 
 
   @action
-  setSizeScreen({required altura, required largura, required var sizingInformation, required BuildContext context}) {
+  setSizeScreen({required altura, required largura, required SizingInformation sizingInformation, required BuildContext context}) {
     setDeviceScreenType(sizingInformation: sizingInformation, context: context);
     height = altura;
     width = largura;
 
-    // Orientation orientation = MediaQuery.of(context).orientation;
-    // if (orientation == Orientation.portrait) {
-    //   tablet = sizingInformation.deviceScreenType == DeviceScreenType.tablet;
-    // }else {
-    //   desktop = sizingInformation.deviceScreenType == DeviceScreenType.tablet;
-    // }
+    Orientation orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.portrait) {
+      tablet = sizingInformation.deviceScreenType == DeviceScreenType.tablet;
+    }else {
+      desktop = sizingInformation.deviceScreenType == DeviceScreenType.tablet;
+    }
 
     if ( width >= 900 ) {
       desktop = true;
@@ -120,10 +121,10 @@ abstract class LayoutControllerPackageBase with Store {
 
 
 
-  setDeviceScreenType({required var sizingInformation, required BuildContext context}) {
-    // mobile = sizingInformation.deviceScreenType == DeviceScreenType.mobile;
-    // tablet = sizingInformation.deviceScreenType == DeviceScreenType.tablet;
-    // desktop = sizingInformation.deviceScreenType == DeviceScreenType.desktop;
+  setDeviceScreenType({required SizingInformation sizingInformation, required BuildContext context}) {
+    mobile = sizingInformation.deviceScreenType == DeviceScreenType.mobile;
+    tablet = sizingInformation.deviceScreenType == DeviceScreenType.tablet;
+    desktop = sizingInformation.deviceScreenType == DeviceScreenType.desktop;
     web = kIsWeb ? true : false;
     platformIOSAndroid = (Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.android);
 

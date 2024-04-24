@@ -58,7 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) => ReportPage(
                       database: "atacado",
                       buscarDadosNaEntrada: false,
-                      function: 'comercial/clientes-sem-vendas/index.php',
+                      function: 'vendas/venda-por-rca/index.php',
+                      // function: 'comercial/clientes-sem-vendas/index.php',
                     ),
                   )
                 );

@@ -7,6 +7,7 @@ import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.d
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/widget/widgets.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 
 class FiltrosReportPage extends StatefulWidget {
   
@@ -34,118 +35,139 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black87,
-        surfaceTintColor: Colors.transparent,
-        title: const Text(
-          "Filtros", 
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.white
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          color: const Color.fromRGBO(255, 255, 255, 1),
-          onPressed: (){
-            Navigator.of(context).pop(true);
-          }
-        ),
-        actions: [
-          Observer(
-            builder: (_) => Visibility(
-              visible: (controllerFiltro.isRCAativo || controllerFiltro.isRCAsemVenda) || controllerFiltro.filtrosSalvosParaAdicionarNoBody.isNotEmpty || controllerFiltro.listaFiltrosParaConstruirTela.any((element) => element.filtrosWidgetModel.itensSelecionados.isNotEmpty),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextButton.icon(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.redAccent.shade400)
-                  ),
-                  onPressed: () {
-                    controllerFiltro.limparFiltros(
-                      bodyParaSerLimpo: widget.bodypesquisaAtual
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.clear_rounded,
-                    color: Colors.white,
-                  ),
-                  label: const Text(
-                    "Limpar Filtros",
-                    style: TextStyle(
-                      color: Colors.white
+    return ResponsiveBuilder(
+      builder: (context, sizingInformation) {
+        
+        // CONFIGURAÇÃO DE LAYOUT (CONTROLLER)
+        layout.setSizeScreen(
+          altura: MediaQuery.of(context).size.height,
+          largura: MediaQuery.of(context).size.width,
+          sizingInformation: sizingInformation,
+          context: context,
+        );
+
+        // ------------------------------ FORÇAR MUDANÇA DE LAYOUT
+        layout.menuDrawerDesktopVisible = false;
+        if (layout.width < 800) {
+          layout.desktop = false;
+          layout.tablet = false;
+          layout.mobile = true;
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.black87,
+            surfaceTintColor: Colors.transparent,
+            title: const Text(
+              "Filtros", 
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white
+              ),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              color: const Color.fromRGBO(255, 255, 255, 1),
+              onPressed: (){
+                Navigator.of(context).pop(true);
+              }
+            ),
+            actions: [
+              Observer(
+                builder: (_) => Visibility(
+                  visible: (controllerFiltro.isRCAativo || controllerFiltro.isRCAsemVenda) || controllerFiltro.filtrosSalvosParaAdicionarNoBody.isNotEmpty || controllerFiltro.listaFiltrosParaConstruirTela.any((element) => element.filtrosWidgetModel.itensSelecionados.isNotEmpty),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: TextButton.icon(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(Colors.redAccent.shade400)
+                      ),
+                      onPressed: () {
+                        controllerFiltro.limparFiltros(
+                          bodyParaSerLimpo: widget.bodypesquisaAtual
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.clear_rounded,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        "Limpar Filtros",
+                        style: TextStyle(
+                          color: Colors.white
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: TextButton(
-              style: const ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(Colors.blue)
-              ),
-              onPressed: () async {
-                Navigator.of(context).pop(true);
-                if(widget.onAplicar == null) {
-                  await controllerFiltro.criarNovoBody();
-                } else {
-                  widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim);
-                }
-              },
-              child: const Text(
-                "Aplicar",
-                style: TextStyle(
-                  color: Colors.white,
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: TextButton(
+                  style: const ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(Colors.blue)
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).pop(true);
+                    if(widget.onAplicar == null) {
+                      await controllerFiltro.criarNovoBody();
+                    } else {
+                      widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim);
+                    }
+                  },
+                  child: const Text(
+                    "Aplicar",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
+            ],
+          ),
+          body: Center(
+            child: Observer(
+              builder: (context) {
+                return ListView.builder(
+                  itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
+                  itemBuilder: (context, index) {
+                    if(controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == controllerFiltro.indexPagina){
+                      return wp.switchQualTipoDeFiltroExibir(
+                        context: context,
+                        filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                        controller: controllerFiltro,
+                        index: index,
+                        onTap: () async {
+                          controllerFiltro.pesquisaItensDoFiltro = "";
+                          controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
+                            valor: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                            isBuscarDropDown: false,
+                            index: index,
+                          );
+                          wp.navigator(
+                            context: context,
+                            pagina: ItensFiltro(
+                              controller: controllerFiltro,
+                              indexDapagina: controllerFiltro.indexPagina,
+                              filtroPaginaAtual: controllerFiltro.listaFiltrosParaConstruirTela[index],
+                              indexDofiltro: index,
+                            ),
+                            isToShowFiltroNoMeio: true,
+                            layout: layout
+                          );
+                        },
+                      ); 
+                    }
+                    else{
+                      return Container();
+                    }
+                  },
+                );
+              }
             ),
           ),
-        ],
-      ),
-      body: Center(
-        child: Observer(
-          builder: (context) {
-            return ListView.builder(
-              itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
-              itemBuilder: (context, index) {
-                if(controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == controllerFiltro.indexPagina){
-                  return wp.switchQualTipoDeFiltroExibir(
-                    context: context,
-                    filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                    controller: controllerFiltro,
-                    index: index,
-                    onTap: () async {
-                      controllerFiltro.pesquisaItensDoFiltro = "";
-                      controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
-                        valor: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                        isBuscarDropDown: false,
-                        index: index,
-                      );
-                      wp.navigator(
-                        context: context,
-                        pagina: ItensFiltro(
-                          controller: controllerFiltro,
-                          indexDapagina: controllerFiltro.indexPagina,
-                          filtroPaginaAtual: controllerFiltro.listaFiltrosParaConstruirTela[index],
-                          indexDofiltro: index,
-                        ),
-                        isToShowFiltroNoMeio: true,
-                        layout: layout
-                      );
-                    },
-                  ); 
-                }
-                else{
-                  return Container();
-                }
-              },
-            );
-          }
-        ),
-      ),
+        );
+      },
     );
   }
 }
