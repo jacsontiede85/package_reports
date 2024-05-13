@@ -36,6 +36,8 @@ class API with SettingsReports{
       })
     );
 
+    //print(res.body);
+
     if (res.statusCode == 200) {
       return res.body.replaceAll("null", '""');
     } else {

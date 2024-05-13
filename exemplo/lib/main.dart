@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       database: "atacado",
                       buscarDadosNaEntrada: false,
                       function: 'vendas/venda-por-rca/index.php',
-                      // function: 'comercial/clientes-sem-vendas/index.php',
+                      //sfunction: 'dashboard/query_vendas/leadtime_analitico/index.php',
                     ),
                   )
                 );
