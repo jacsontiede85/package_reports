@@ -18,11 +18,17 @@ abstract class FiltrosCarrregadosBase with Store {
 
   FiltrosModel? valorSelecionadoParaDropDown;
 
+
+  //Variavel adicionada para uso do dashboard
+  @observable
+  String tipoFiltro = "";
+
   FiltrosCarrregadosBase({
     this.indexFiltros = 0, 
     this.indexPagina = 0,
     required this.listaFiltros,
     this.valorSelecionadoParaDropDown,
+    this.tipoFiltro = ""
   });
 
 

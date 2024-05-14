@@ -125,6 +125,7 @@ abstract class FiltroControllerBase with Store {
           if(novoIndexFiltro == -1 || listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita){
             listaFiltrosCarregados.add(
               FiltrosCarrregados(
+                tipoFiltro: listaFiltrosParaConstruirTela[index].filtrosWidgetModel.tipoFiltro,
                 indexFiltros: index,
                 indexPagina: indexPagina,
                 listaFiltros: dados.map((e) => FiltrosModel.fromJson(e)).toList(),
