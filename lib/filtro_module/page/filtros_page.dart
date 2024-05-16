@@ -10,26 +10,19 @@ import 'package:package_reports/global/widget/widgets.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class FiltrosReportPage extends StatefulWidget {
-  
   final FiltroController controllerFiltro;
   Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela, String dtinicio, String dtfim)? onAplicar;
   Map<String, dynamic> bodypesquisaAtual;
-  
-  FiltrosReportPage({
-    super.key,
-    required this.controllerFiltro,
-    required this.bodypesquisaAtual,
-    this.onAplicar
-  });
+
+  FiltrosReportPage({super.key, required this.controllerFiltro, required this.bodypesquisaAtual, this.onAplicar});
 
   @override
   State<FiltrosReportPage> createState() => _FiltrosReportPageState();
 }
 
-class _FiltrosReportPageState extends State<FiltrosReportPage>{
-  
+class _FiltrosReportPageState extends State<FiltrosReportPage> {
   late FiltroController controllerFiltro = widget.controllerFiltro;
-  
+
   Widgets wp = Widgets();
   LayoutControllerPackage layout = LayoutControllerPackage();
 
@@ -37,7 +30,6 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
   Widget build(BuildContext context) {
     return ResponsiveBuilder(
       builder: (context, sizingInformation) {
-        
         // CONFIGURAÇÃO DE LAYOUT (CONTROLLER)
         layout.setSizeScreen(
           altura: MediaQuery.of(context).size.height,
@@ -59,19 +51,15 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
             backgroundColor: Colors.black87,
             surfaceTintColor: Colors.transparent,
             title: const Text(
-              "Filtros", 
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white
-              ),
+              "Filtros",
+              style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              color: const Color.fromRGBO(255, 255, 255, 1),
-              onPressed: (){
-                Navigator.of(context).pop(true);
-              }
-            ),
+                icon: const Icon(Icons.arrow_back_ios),
+                color: const Color.fromRGBO(255, 255, 255, 1),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                }),
             actions: [
               Observer(
                 builder: (_) => Visibility(
@@ -79,13 +67,9 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: TextButton.icon(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.redAccent.shade400)
-                      ),
+                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade400)),
                       onPressed: () {
-                        controllerFiltro.limparFiltros(
-                          bodyParaSerLimpo: widget.bodypesquisaAtual
-                        );
+                        controllerFiltro.limparFiltros(bodyParaSerLimpo: widget.bodypesquisaAtual);
                       },
                       icon: const Icon(
                         Icons.clear_rounded,
@@ -93,9 +77,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                       ),
                       label: const Text(
                         "Limpar Filtros",
-                        style: TextStyle(
-                          color: Colors.white
-                        ),
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
@@ -104,12 +86,10 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextButton(
-                  style: const ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll(Colors.blue)
-                  ),
+                  style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.blue)),
                   onPressed: () async {
                     Navigator.of(context).pop(true);
-                    if(widget.onAplicar == null) {
+                    if (widget.onAplicar == null) {
                       await controllerFiltro.criarNovoBody();
                     } else {
                       widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim);
@@ -126,25 +106,24 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
             ],
           ),
           body: Center(
-            child: Observer(
-              builder: (context) {
-                return ListView.builder(
-                  itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
-                  itemBuilder: (context, index) {
-                    if(controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == controllerFiltro.indexPagina){
-                      return wp.switchQualTipoDeFiltroExibir(
-                        context: context,
-                        filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                        controller: controllerFiltro,
-                        index: index,
-                        onTap: () async {
-                          controllerFiltro.pesquisaItensDoFiltro = "";
-                          controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
-                            valor: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                            isBuscarDropDown: false,
-                            index: index,
-                          );
-                          wp.navigator(
+            child: Observer(builder: (context) {
+              return ListView.builder(
+                itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
+                itemBuilder: (context, index) {
+                  if (controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == controllerFiltro.indexPagina) {
+                    return wp.switchQualTipoDeFiltroExibir(
+                      context: context,
+                      filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                      controller: controllerFiltro,
+                      index: index,
+                      onTap: () async {
+                        controllerFiltro.pesquisaItensDoFiltro = "";
+                        controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
+                          valor: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                          isBuscarDropDown: false,
+                          index: index,
+                        );
+                        wp.navigator(
                             context: context,
                             pagina: ItensFiltro(
                               controller: controllerFiltro,
@@ -153,18 +132,15 @@ class _FiltrosReportPageState extends State<FiltrosReportPage>{
                               indexDofiltro: index,
                             ),
                             isToShowFiltroNoMeio: true,
-                            layout: layout
-                          );
-                        },
-                      ); 
-                    }
-                    else{
-                      return Container();
-                    }
-                  },
-                );
-              }
-            ),
+                            layout: layout);
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              );
+            }),
           ),
         );
       },

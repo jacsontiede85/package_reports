@@ -73,13 +73,30 @@ mixin _$FiltrosCarrregados on FiltrosCarrregadosBase, Store {
     });
   }
 
+  late final _$tipoFiltroAtom =
+      Atom(name: 'FiltrosCarrregadosBase.tipoFiltro', context: context);
+
+  @override
+  String get tipoFiltro {
+    _$tipoFiltroAtom.reportRead();
+    return super.tipoFiltro;
+  }
+
+  @override
+  set tipoFiltro(String value) {
+    _$tipoFiltroAtom.reportWrite(value, super.tipoFiltro, () {
+      super.tipoFiltro = value;
+    });
+  }
+
   @override
   String toString() {
     return '''
 indexFiltros: ${indexFiltros},
 indexPagina: ${indexPagina},
 pesquisaFeita: ${pesquisaFeita},
-listaFiltros: ${listaFiltros}
+listaFiltros: ${listaFiltros},
+tipoFiltro: ${tipoFiltro}
     ''';
   }
 }
