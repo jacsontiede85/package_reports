@@ -266,6 +266,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
         //formatação padrão
         try {
+          //print("$value | $key: ${value[key]}");
           value[key] = double.parse(value[key]);
         } catch (e) {
           try {
