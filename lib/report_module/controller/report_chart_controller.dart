@@ -1,5 +1,4 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
-
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/report_module/charts/chart_data.dart';
@@ -9,11 +8,11 @@ part 'report_chart_controller.g.dart';
 
 class ReportChartController = ReportChartControllerBase with _$ReportChartController;
 
-abstract class ReportChartControllerBase with Store, Charts{
+abstract class ReportChartControllerBase with Store, Charts {
   late ReportFromJSONController reportFromJSONController;
   ReportChartControllerBase({required this.reportFromJSONController}) {
     load();
-  }  
+  }
 
   @observable
   String chartNameSelected = 'barChartHorizontal';
@@ -62,13 +61,13 @@ abstract class ReportChartControllerBase with Store, Charts{
     loading = true;
     this.chartNameSelected = chartNameSelected;
     await Future.delayed(const Duration(seconds: 1));
-    
+
     // ? Analise de dados de linhas
     if (chartNameSelected == 'sfLineCartesianChart')
       chartSelected = sfLineCartesianChart(dados: _getListChartData());
-    
+
     // ? Analise de dados de colunas (horizontal)
-    else if (chartNameSelected == 'barChartHorizontal') 
+    else if (chartNameSelected == 'barChartHorizontal')
       chartSelected = barChartHorizontal(dados: _getListChartData());
 
     // ? Analise de dados de pizza
@@ -76,7 +75,6 @@ abstract class ReportChartControllerBase with Store, Charts{
       chartSelected = sfCircularChart(
         dados: _getListChartData(),
       );
-
     else if (chartNameSelected == 'sfLineCartesianChartArea') {
       // ? Analise de dados na horizontal (ex.: mes 1, mes2, ... total)
       List<Widget> charts = [];
@@ -105,8 +103,7 @@ abstract class ReportChartControllerBase with Store, Charts{
   _getListChartData({bool listaDeTotaisDeRodape = false}) {
     var keySelected = columnMetricSelected['key'];
 
-    if (orderby.isNotEmpty) 
-      setOrderBy(key: columnOrderBySelected['key'], order: orderby == 'Decrescente' ? 'desc' : 'asc');
+    if (orderby.isNotEmpty) setOrderBy(key: columnOrderBySelected['key'], order: orderby == 'Decrescente' ? 'desc' : 'asc');
 
     if (listaDeTotaisDeRodape) {
       List<ChartData> temp = [];
@@ -114,19 +111,18 @@ abstract class ReportChartControllerBase with Store, Charts{
       for (Map<String, dynamic> col in reportFromJSONController.colunas) {
         String nome = '';
 
-        if ((col['type'] == String || col['key'].contains('__NO_METRICS')) && col['key'] != 'isFiltered') 
-          nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}...' : '${col['key']}';
+        if ((col['type'] == String || col['key'].contains('__NO_METRICS')) && col['key'] != 'isFiltered') nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}...' : '${col['key']}';
 
         if (col['type'] != String && !col['key'].contains('__NO_METRICS') && !col['key'].contains('__NOCHARTAREA'))
           temp.add(
             ChartData(
-              title: nome, 
+              title: nome,
               nome: col['nomeFormatado'],
               valor: col['vlrTotalDaColuna'],
               type: col['type'],
-              perc: 100, 
+              perc: 100,
               color: const Color.fromARGB(255, 29, 27, 27),
-            )
+            ),
           );
       }
       return temp;
@@ -137,22 +133,18 @@ abstract class ReportChartControllerBase with Store, Charts{
         List<ChartData> temp = [];
         String nome = '';
 
-        for (String key in value.keys) 
-          if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered')
-            nome += '${value[key]}';
+        for (String key in value.keys) if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered') nome += '${value[key]}';
 
         for (var col in getColumnMetricsChart) {
           if (value['type'] != String && !col['key'].contains('__NOCHARTAREA')) {
-            temp.add(
-              ChartData(
-                title: nome, 
-                nome: reportFromJSONController.getNomeColunaFormatado(text: col['key']), 
-                valor: value[col['key']].runtimeType == int ? double.parse(value[col['key']].toString()) : value[col['key']], 
-                type: value[col['key']].runtimeType, 
-                perc: 0, 
-                color: gerarCoresPorPosicao(index: reportFromJSONController.dados.indexOf(value)),
-              )
-            );
+            temp.add(ChartData(
+              title: nome,
+              nome: reportFromJSONController.getNomeColunaFormatado(text: col['key']),
+              valor: value[col['key']].runtimeType == int ? double.parse(value[col['key']].toString()) : value[col['key']],
+              type: value[col['key']].runtimeType,
+              perc: 0,
+              color: gerarCoresPorPosicao(index: reportFromJSONController.dados.indexOf(value)),
+            ));
           }
         }
 
@@ -165,21 +157,17 @@ abstract class ReportChartControllerBase with Store, Charts{
         String nome = '';
         double vlrTotalDaColuna = 0.0;
 
-        for (String key in value.keys) 
-          if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered')
-            nome += '${value[key]}';
-        
-        for (Map<String, dynamic> col in reportFromJSONController.colunas) 
-          if (col['key'] == keySelected) 
-            vlrTotalDaColuna = col['vlrTotalDaColuna'];
+        for (String key in value.keys) if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered') nome += '${value[key]}';
+
+        for (Map<String, dynamic> col in reportFromJSONController.colunas) if (col['key'] == keySelected) vlrTotalDaColuna = col['vlrTotalDaColuna'];
 
         temp.add(
           ChartData(
-            title: nome, 
-            nome: nome, 
+            title: nome,
+            nome: nome,
             valor: value[keySelected].runtimeType == int ? double.parse(value[keySelected].toString()) : value[keySelected],
-            type: value[keySelected].runtimeType, 
-            perc: (value[keySelected] / vlrTotalDaColuna) * 100, 
+            type: value[keySelected].runtimeType,
+            perc: (value[keySelected] / vlrTotalDaColuna) * 100,
             color: gerarCoresPorPosicao(index: reportFromJSONController.dados.indexOf(value)),
           ),
         );
@@ -191,73 +179,70 @@ abstract class ReportChartControllerBase with Store, Charts{
   //ordenar
   setOrderBy({required key, required order}) => reportFromJSONController.setOrderBy(key: key, order: order);
 
-  List<Map<String, dynamic>> getTodosOsTiposGraficos (){
+  List<Map<String, dynamic>> getTodosOsTiposGraficos() {
     List<Map<String, dynamic>> opcoesDeGraficos = [];
 
-    for(String grafico in reportFromJSONController.configPagina['graficosDisponiveis']){
-      switch(grafico.toLowerCase()){
+    for (String grafico in reportFromJSONController.configPagina['graficosDisponiveis']) {
+      switch (grafico.toLowerCase()) {
+        case 'barras':
+          opcoesDeGraficos.add(
+            {
+              "nome": "Barras",
+              "icone": Icons.bar_chart_sharp,
+              "funcao": () => getChart(chartNameSelected: 'barChartHorizontal'),
+            },
+          );
 
-        case 'barras' :
-        opcoesDeGraficos.add(      
-          {
-            "nome" : "Barras",
-            "icone" : Icons.bar_chart_sharp,
-            "funcao" : () => getChart(chartNameSelected: 'barChartHorizontal')
-          },
-        );
+        case 'circular':
+          opcoesDeGraficos.add(
+            {
+              "nome": "Circular",
+              "icone": Icons.pie_chart_rounded,
+              "funcao": () => getChart(chartNameSelected: 'sfCircularChart'),
+            },
+          );
 
-        case 'circular' :
-        opcoesDeGraficos.add(
-          {
-            "nome" : "Circular",
-            "icone" : Icons.pie_chart_rounded,
-            "funcao" : () => getChart(chartNameSelected: 'sfCircularChart')
-          },
-        );
+        case 'linhas':
+          opcoesDeGraficos.add(
+            {
+              "nome": "Linhas",
+              "icone": Icons.ssid_chart,
+              "funcao": () => getChart(chartNameSelected: 'sfLineCartesianChart'),
+            },
+          );
 
-        case 'linhas' :
-        opcoesDeGraficos.add(      
-          {
-            "nome" : "Linhas",
-            "icone" : Icons.ssid_chart,
-            "funcao" : () => getChart(chartNameSelected: 'sfLineCartesianChart')
-          },
-        );
+        case 'linhas duplas':
+          opcoesDeGraficos.add(
+            {
+              "nome": "Linhas duplas",
+              "icone": Icons.stacked_line_chart_outlined,
+              "funcao": () => getChart(chartNameSelected: 'sfLineCartesianChartArea'),
+            },
+          );
 
-        case 'linhas duplas' :
-        opcoesDeGraficos.add(      
-          {
-            "nome" : "Linhas duplas",
-            "icone" : Icons.stacked_line_chart_outlined,
-            "funcao" : () => getChart(chartNameSelected: 'sfLineCartesianChartArea')
-          },
-        );
-
-        case 'area' :
-        opcoesDeGraficos.add(      
-          {
-            "nome" : "Area",
-            "icone" : Icons.area_chart,
-            "funcao" : () => getChart(chartNameSelected: 'sfAreaCartesianChart')
-          },
-        );
-
+        case 'area':
+          opcoesDeGraficos.add(
+            {
+              "nome": "Area",
+              "icone": Icons.area_chart,
+              "funcao": () => getChart(chartNameSelected: 'sfAreaCartesianChart'),
+            },
+          );
       }
     }
 
     return opcoesDeGraficos;
   }
 
-  Color gerarCoresPorPosicao ({required int index}){
+  Color gerarCoresPorPosicao({required int index}) {
     Color corPrincipal = Colors.grey;
 
     int red = index * 80;
     int green = index * 90;
     int blue = index * 95;
-    
-    corPrincipal =  Color.fromARGB(255, red, green, blue);
+
+    corPrincipal = Color.fromARGB(255, red, green, blue);
 
     return corPrincipal;
   }
-
 }

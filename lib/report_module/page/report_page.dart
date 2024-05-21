@@ -955,7 +955,10 @@ mixin Rows {
           height: height,
           decoration: BoxDecoration(
             color: Colors.grey,
-            border: Border.all(color: Colors.purple.withOpacity(0.5), width: 0.25),
+            border: Border.all(
+              color: Colors.purple.withOpacity(0.5),
+              width: 0.25,
+            ),
           ),
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
           alignment: Alignment.center,

@@ -1,5 +1,6 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -266,7 +267,6 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
         //formatação padrão
         try {
-          //print("$value | $key: ${value[key]}");
           value[key] = double.parse(value[key]);
         } catch (e) {
           try {
@@ -298,7 +298,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
               },
             ),
           );
-        } else if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('isFiltered')) {
+        } else if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().contains('isFiltered')) {
           colunas.add(
             ObservableMap.of(
               {
@@ -317,14 +317,18 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         }
       }
 
+      limparPrint();
+      print("A");
       //calcular totalizadores de rodape
       for (var col in colunas)
         for (var row in dados)
           for (var key in row.keys)
             if (key == col['key']) {
+              print("| ${key}");
               if (col['type'] != String) col['vlrTotalDaColuna'] += row[key];
             }
 
+      printW("Aqui....");
       //calcular max caractares para definir largura de colunas
       for (var col in colunas)
         for (var row in dados)
@@ -354,6 +358,8 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       getWidthTable();
       setOrderBy(key: colunas[0]['key'], order: 'asc');
       getColunaElevada();
+    } catch (e) {
+      print("C1 $e");
     } finally {
       notify();
       _startListener();
@@ -441,7 +447,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       }
       if (keyFreeze.isEmpty)
         for (var key in val.keys) {
-          if ((val[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && '${val[key]}'.length > 5 && !key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('isFiltered')) {
+          if ((val[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && '${val[key]}'.length > 5 && !key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().contains('isFiltered')) {
             keyFreeze = key;
             break;
           }
@@ -670,5 +676,29 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         );
       }
     }
+  }
+}
+
+void printW(text) {
+  if (kDebugMode) {
+    print('\x1B[33m$text\x1B[0m');
+  }
+}
+
+void printE(text) {
+  if (kDebugMode) {
+    print('\x1B[31m$text\x1B[0m');
+  }
+}
+
+void printO(text) {
+  if (kDebugMode) {
+    print('\x1b[32m$text\x1B[0m');
+  }
+}
+
+void limparPrint() {
+  if (kDebugMode) {
+    print("\x1B[2J\x1B[0;0H");
   }
 }
