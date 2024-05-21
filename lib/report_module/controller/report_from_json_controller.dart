@@ -97,7 +97,6 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   bool primeiraBusca = true;
 
   // ? VAREAVEIS E FUNÇÕES PARA PERMITIR A NAVEGAÇÃO ENTRE VARIOS RELATORIOS
-
   Map<String, dynamic> mapSelectedRow = {};
   Map<String, dynamic> configPageBuscaRecursiva = {};
   Map<String, dynamic> bodySecundario = {};
@@ -109,7 +108,6 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     habilitarNovoRelatorio = true;
     primeiraBusca = false;
   }
-
   // ? FIM
 
   setPositionScroll(double position) async {
@@ -217,7 +215,11 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     List keys = [];
     for (var value in dados) {
       value['isFiltered'] = false;
-      for (var key in value.keys) if (key.toString().toUpperCase().contains('__LOCK')) keys.add(key);
+      for (var key in value.keys) {
+        if (key.toString().toUpperCase().contains('__LOCK')) {
+          keys.add(key);
+        }
+      }
     }
 
     for (var value in keys) for (int i = 0; i < dados.length; i++) dados[i].remove(value);
@@ -317,18 +319,14 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         }
       }
 
-      limparPrint();
-      print("A");
       //calcular totalizadores de rodape
       for (var col in colunas)
         for (var row in dados)
           for (var key in row.keys)
-            if (key == col['key']) {
-              print("| ${key}");
+            if (key == col['key'] && row[key].toString().isNotEmpty) {
               if (col['type'] != String) col['vlrTotalDaColuna'] += row[key];
             }
 
-      printW("Aqui....");
       //calcular max caractares para definir largura de colunas
       for (var col in colunas)
         for (var row in dados)
@@ -359,7 +357,9 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       setOrderBy(key: colunas[0]['key'], order: 'asc');
       getColunaElevada();
     } catch (e) {
-      print("C1 $e");
+      if (kDebugMode) {
+        print("Erro $e");
+      }
     } finally {
       notify();
       _startListener();
@@ -603,7 +603,9 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   getTheSelectedFilteredRows() {
     Set temp = {};
     for (var element in filtrosSelected) {
-      temp.add(element["coluna"]);
+      temp.add(
+        element["coluna"],
+      );
     }
 
     for (var key in dados) {
