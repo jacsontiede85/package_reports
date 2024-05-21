@@ -604,16 +604,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                     }
                   : null,
               child: Row(
-                //children: controller.row,
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 500,
-                      height: 500,
-                      child: Text("?"),
-                    ),
-                  ),
-                ],
+                children: controller.row,
               ),
             ),
             Observer(
