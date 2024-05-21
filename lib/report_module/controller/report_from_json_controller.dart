@@ -553,7 +553,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
           if (key['isFiltered']) {
             int count = 0;
             for (var value in key.values) {
-              if (value.toString().toLowerCase().toUpperCase().contains(searchString.text.toLowerCase())) {
+              if (value.toString().toLowerCase().contains(searchString.text.toLowerCase())) {
                 count++;
                 break;
               }
@@ -570,7 +570,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       for (var key in dados) {
         int count = 0;
         for (var value in key.values) {
-          if (value.toString().toLowerCase().toUpperCase().contains(searchString.text.toLowerCase())) {
+          if (value.toString().toLowerCase().contains(searchString.text.toLowerCase())) {
             count++;
             break;
           }
@@ -654,6 +654,15 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         value["isFiltered"] = true;
       else
         value["isFiltered"] = false;
+
+    for (var col in colunas) {
+      col['vlrTotalDaColuna'] = 0;
+      for (var row in dados)
+        for (var key in row.keys)
+          if (key == col['key']) {
+            if (col['type'] != String) col['vlrTotalDaColuna'] +=  row[key];
+          }
+    }
   }
 
   getSelectedRowParaNavegarParaNovaPage() {

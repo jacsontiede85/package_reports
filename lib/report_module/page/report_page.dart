@@ -679,12 +679,12 @@ class _ReportPageState extends State<ReportPage> with Rows {
               height: 40,
               controller: controller,
               key: element['key'],
-              type: element['key'].toString().contains('__DONTSUM') ? String : element['type'],
+              type: element['key'].toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
               value: controller.colunas.indexOf(element) == 0
                   ? '${controller.dadosFiltered().length}'
                   : element['type'] == String
                       ? ''
-                      : element['key'].toString().contains('__DONTSUM')
+                      : element['key'].toString().toUpperCase().contains('__DONTSUM')
                           ? ''
                           : element['vlrTotalDaColuna'],
               isSelected: element['isSelected'],
@@ -726,7 +726,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           cor: const Color.fromARGB(255, 65, 63, 63),
           controller: controller,
           key: controller.keyFreeze,
-          type: controller.keyFreeze.toString().contains('__DONTSUM') ? String : element['type'],
+          type: controller.keyFreeze.toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
           value: '${controller.dadosFiltered().length}',
           isSelected: element['isSelected'],
           isRodape: true,
