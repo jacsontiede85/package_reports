@@ -4,7 +4,7 @@ import 'package:http/http.dart';
 import 'package:package_reports/global/core/settings.dart';
 import 'dart:convert';
 
-class API with SettingsReports{
+class API with SettingsReports {
   Future<String> getDataReportApiJWT({String? banco, Map? dados, String? url}) async {
     //header
     Map<String, String> header = {
@@ -21,7 +21,7 @@ class API with SettingsReports{
     //assinatura
     String secret = "tisa098*";
     Hmac hmac = Hmac(sha256, secret.codeUnits);
-    Digest  digest = hmac.convert("$header64.$payload64".codeUnits);
+    Digest digest = hmac.convert("$header64.$payload64".codeUnits);
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
     // log(token);
@@ -30,13 +30,13 @@ class API with SettingsReports{
       headers: {
         'Content-Type': 'application/json',
       },
-      body: jsonEncode({
-        'connection': banco,
-        'token': token
-      })
+      body: jsonEncode(
+        {
+          'connection': banco,
+          'token': token,
+        },
+      ),
     );
-
-    //print(res.body);
 
     if (res.statusCode == 200) {
       return res.body.replaceAll("null", '""');
@@ -45,20 +45,22 @@ class API with SettingsReports{
     }
   }
 
-  Future<Map<String, dynamic>> getConfigApi({required String function,}) async {
+  Future<Map<String, dynamic>> getConfigApi({
+    required String function,
+  }) async {
     String matricula = base64Encode(utf8.encode('matricula=${SettingsReports.matricula}'));
     http.Response response = await http.get(
       Uri.parse('${SettingsReports.enderecoRepositorio}$function?hash=$matricula'),
     );
     try {
-      return jsonDecode(response.body);
+      return jsonDecode(
+        response.body,
+      );
     } catch (e) {
-      return 
-      {
+      return {
         'status_code': response.statusCode,
         'mensagem': 'Dados não encontrado! Verifique os filtros selecionados e tente novamente.\nCatch message nerd: $e',
       };
     }
   }
-
 }

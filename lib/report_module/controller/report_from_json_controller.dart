@@ -1,7 +1,5 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -13,44 +11,43 @@ part 'report_from_json_controller.g.dart';
 
 class ReportFromJSONController = ReportFromJSONControllerBase with _$ReportFromJSONController;
 
-abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
-
+abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   late String nomeFunction;
   late double sizeWidth;
   late bool isToGetDadosNaEntrada;
   late String database;
-  Map<String,dynamic>? modificarbodyPrimario;
+  Map<String, dynamic>? modificarbodyPrimario;
 
   ReportFromJSONControllerBase({
-    required this.nomeFunction, 
+    required this.nomeFunction,
     required this.sizeWidth,
     required this.isToGetDadosNaEntrada,
     required this.database,
     this.modificarbodyPrimario,
   }) {
     bodyPrimario.update("database", (value) => database);
-    
-    if(isToGetDadosNaEntrada){
+
+    if (isToGetDadosNaEntrada) {
       getConfig().whenComplete(() => getDados());
     }
 
-    if(modificarbodyPrimario != null){
-      bodyPrimario.addAll(modificarbodyPrimario??{});
+    if (modificarbodyPrimario != null) {
+      bodyPrimario.addAll(modificarbodyPrimario ?? {});
     }
   }
 
   Map<String, dynamic> bodyPrimario = {
-    "matricula" : SettingsReports.matricula,
-    "database" : "",
-    "dtinicio" : SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),  
-    "dtfim" : SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),
+    "matricula": SettingsReports.matricula,
+    "database": "",
+    "dtinicio": SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),
+    "dtfim": SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),
   };
 
   @observable
   List dados = [];
 
   TextEditingController searchString = TextEditingController();
-  
+
   List<Map<String, dynamic>> filtrosSelected = [];
 
   @observable
@@ -104,11 +101,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   Map<String, dynamic> configPageBuscaRecursiva = {};
   Map<String, dynamic> bodySecundario = {};
 
-  setMapSelectedRowController({
-    required Map<String, dynamic> mapSelectedRow, 
-    required Map<String, dynamic> configPageBuscaRecursiva,
-    required Map<String, dynamic> bodySecundario
-  }){
+  setMapSelectedRowController({required Map<String, dynamic> mapSelectedRow, required Map<String, dynamic> configPageBuscaRecursiva, required Map<String, dynamic> bodySecundario}) {
     this.mapSelectedRow = mapSelectedRow;
     this.configPageBuscaRecursiva = configPageBuscaRecursiva;
     this.bodySecundario.addAll(bodySecundario);
@@ -116,7 +109,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     primeiraBusca = false;
   }
 
- // ? FIM
+  // ? FIM
 
   setPositionScroll(double position) async {
     visibleColElevated = false;
@@ -167,20 +160,22 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   //BUSCAR DADOS PARA MONTAGEM DO RELATORIO
   Future<void> getConfig() async {
     loading = true;
-    var response = await API().getConfigApi(
-      function: nomeFunction
-    );
+    var response = await API().getConfigApi(function: nomeFunction);
     configPagina = configPageBuscaRecursiva;
-    if(habilitarNovoRelatorio && configPagina.isNotEmpty) {
+    if (habilitarNovoRelatorio && configPagina.isNotEmpty) {
       getSelectedRowParaNavegarParaNovaPage();
-    }else{
+    } else {
       configPagina = response;
-      bodyPrimario.addAll({"indexPage" : configPagina['indexPage'],});
+      bodyPrimario.addAll(
+        {
+          "indexPage": configPagina['indexPage'],
+        },
+      );
     }
   }
 
   void limparCamposVareaveis() {
-    if(!habilitarNovoRelatorio && !primeiraBusca){
+    if (!habilitarNovoRelatorio && !primeiraBusca) {
       configPageBuscaRecursiva = {};
       getConfig();
     }
@@ -189,43 +184,42 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     listaFiltrarLinhas = [];
     filtrosSelected = [];
     colunasFiltradas = {};
-    
+
     loading = true;
     primeiraBusca = false;
     keyFreeze = "";
-    
+
     if (_listenerStarted) _removeListener();
 
     // ! Necessario criar forma de limpar campos que estão indo fazer a busca de relatorios recursivos
-    
   }
 
   getDados() async {
     limparCamposVareaveis();
-    
-    if(bodySecundario.isEmpty){
-     dados = jsonDecode( await API().getDataReportApiJWT(
-        url: nomeFunction,
-        dados: bodyPrimario,
-      ));
-    }else{  
-      dados = jsonDecode(await API().getDataReportApiJWT(
-        url: nomeFunction,
-        dados: bodySecundario,
-      ));
+
+    if (bodySecundario.isEmpty) {
+      dados = jsonDecode(
+        await API().getDataReportApiJWT(
+          url: nomeFunction,
+          dados: bodyPrimario,
+        ),
+      );
+    } else {
+      dados = jsonDecode(
+        await API().getDataReportApiJWT(
+          url: nomeFunction,
+          dados: bodySecundario,
+        ),
+      );
     }
 
     List keys = [];
-    for(var value in dados){
+    for (var value in dados) {
       value['isFiltered'] = false;
-      for(var key in value.keys)
-        if(key.toString().contains('__LOCK'))
-          keys.add(key);
+      for (var key in value.keys) if (key.toString().toUpperCase().contains('__LOCK')) keys.add(key);
     }
 
-    for(var value in keys)
-      for(int i = 0; i<dados.length; i++)
-        dados[i].remove(value);
+    for (var value in keys) for (int i = 0; i < dados.length; i++) dados[i].remove(value);
 
     /////////////////////////////// TRATAR TIPOS DE DADOS [ ROWS ]
     /*
@@ -251,8 +245,8 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
     for (var value in dados) {
       for (var key in value.keys) {
-        if (key.toString().contains('__STRING') || key.toString().contains('__INT_STRING')) continue;
-        if (key.toString().contains('__INT')) {
+        if (key.toString().toUpperCase().contains('__STRING') || key.toString().toUpperCase().contains('__INT_STRING')) continue;
+        if (key.toString().toUpperCase().contains('__INT')) {
           try {
             var val = double.parse(value[key]).floor();
             value[key] = val;
@@ -261,7 +255,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
           }
           continue;
         }
-        if (key.toString().contains('__DOUBLE')) {
+        if (key.toString().toUpperCase().contains('__DOUBLE')) {
           try {
             value[key] = double.parse(value[key]);
           } catch (e) {
@@ -287,39 +281,39 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     colunas.clear();
     colunasRodapePerson.clear();
     try {
-        
       for (var key in dados[0].keys) {
-        if (key.toString().contains('__ISRODAPE')){
+        if (key.toString().toUpperCase().contains('__ISRODAPE')) {
           colunasRodapePerson.add(
-            ObservableMap.of({
-              'key': key,
-              'nomeFormatado': getNomeColunaFormatado(text: key),
-              'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
-              'order': 'asc',
-              'isSelected': false,
-              'vlrTotalDaColuna': 0.0,
-              'widthCol': 0.0,
-              'selecionado' : colunaSelecionadaParaExportacao,
-            })
-          );
-          
-        }
-        else if (!key.toString().contains('__INVISIBLE') && !key.toString().contains('isFiltered')){
-            colunas.add(
-              ObservableMap.of({
+            ObservableMap.of(
+              {
                 'key': key,
                 'nomeFormatado': getNomeColunaFormatado(text: key),
-                'type': key.toString().contains('__INT_STRING') ? String : getType(dados[0][key]),
+                'type': key.toString().toUpperCase().toUpperCase().contains('__INT_STRING') ? String : getType(dados[0][key]),
                 'order': 'asc',
                 'isSelected': false,
                 'vlrTotalDaColuna': 0.0,
                 'widthCol': 0.0,
-                'selecionado' : colunaSelecionadaParaExportacao,
-                'isFiltered': false
-              })
-            );
+                'selecionado': colunaSelecionadaParaExportacao,
+              },
+            ),
+          );
+        } else if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('isFiltered')) {
+          colunas.add(
+            ObservableMap.of(
+              {
+                'key': key,
+                'nomeFormatado': getNomeColunaFormatado(text: key),
+                'type': key.toString().toUpperCase().contains('__INT_STRING') ? String : getType(dados[0][key]),
+                'order': 'asc',
+                'isSelected': false,
+                'vlrTotalDaColuna': 0.0,
+                'widthCol': 0.0,
+                'selecionado': colunaSelecionadaParaExportacao,
+                'isFiltered': false,
+              },
+            ),
+          );
         }
-
       }
 
       //calcular totalizadores de rodape
@@ -335,8 +329,8 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
         for (var row in dados)
           for (var key in row.keys) {
             if (key == col['key']) {
-              try{
-                if(key.toString().contains('__SIZEW')){
+              try {
+                if (key.toString().toUpperCase().contains('__SIZEW')) {
                   var temp = key.toString().split('__SIZEW');
                   col['widthCol'] = double.parse(temp[1]);
                 } else {
@@ -346,7 +340,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
                     col['widthCol'] = double.parse('${'${col['vlrTotalDaColuna'].toStringAsFixed(2)}'.length}');
                   }
                 }
-              } catch (e){
+              } catch (e) {
                 if (col['type'] == String) {
                   if (col['widthCol'].floor() < row[key].toString().length) col['widthCol'] = double.parse('${row[key].toString().length}');
                 } else {
@@ -359,9 +353,9 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
       getWidthTable();
       setOrderBy(key: colunas[0]['key'], order: 'asc');
       getColunaElevada();
-    } finally{
+    } finally {
       notify();
-      _startListener();      
+      _startListener();
     }
   }
 
@@ -381,16 +375,16 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
 
   //retornar nome de coluna formatado
   getNomeColunaFormatado({required String text}) {
-    text = text.toString().replaceAll('__PERC', '_%');
-    text = text.toString().replaceAll('__INT_STRING', '');
-    text = text.toString().replaceAll('__STRING', '');
-    text = text.toString().replaceAll('__DOUBLE', '');
-    text = text.toString().replaceAll('__INT', '');
-    text = text.toString().replaceAll('__NO_METRICS', '');
-    text = text.toString().replaceAll('__NOCHARTAREA', '');
-    text = text.toString().replaceAll('__INVISIBLE', '');
-    text = text.toString().replaceAll('__DONTSUM', '');
-    text = text.toString().replaceAll('__FREEZE', '');
+    text = text.toString().toUpperCase().replaceAll('__PERC', '_%');
+    text = text.toString().toUpperCase().replaceAll('__INT_STRING', '');
+    text = text.toString().toUpperCase().replaceAll('__STRING', '');
+    text = text.toString().toUpperCase().replaceAll('__DOUBLE', '');
+    text = text.toString().toUpperCase().replaceAll('__INT', '');
+    text = text.toString().toUpperCase().replaceAll('__NO_METRICS', '');
+    text = text.toString().toUpperCase().replaceAll('__NOCHARTAREA', '');
+    text = text.toString().toUpperCase().replaceAll('__INVISIBLE', '');
+    text = text.toString().toUpperCase().replaceAll('__DONTSUM', '');
+    text = text.toString().toUpperCase().replaceAll('__FREEZE', '');
     var temp = text.split('__');
     text = temp[0];
     text = text.toString().replaceAll('_', ' ');
@@ -409,7 +403,7 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
         } else
           value['isSelected'] = false;
 
-      if (a[key].toString().length == 10 && a[key].toString().contains('/')) {
+      if (a[key].toString().length == 10 && a[key].toString().toUpperCase().contains('/')) {
         try {
           DateTime datea = DateFormat('dd/MM/yyyy').parse(a[key]);
           DateTime dateb = DateFormat('dd/MM/yyyy').parse(b[key]);
@@ -423,11 +417,11 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
           return a[key].compareTo(b[key]);
         }
       } else {
-        if (order == 'asc') if (key.toString().contains('__INT_STRING'))
+        if (order == 'asc') if (key.toString().toUpperCase().contains('__INT_STRING'))
           return int.parse(a[key]).compareTo(int.parse(b[key]));
         else
           return a[key].compareTo(b[key]);
-        else if (key.toString().contains('__INT_STRING'))
+        else if (key.toString().toUpperCase().contains('__INT_STRING'))
           return int.parse(b[key]).compareTo(int.parse(a[key]));
         else
           return b[key].compareTo(a[key]);
@@ -439,14 +433,14 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
   getColunaElevada() {
     for (var val in dados) {
       for (var key in val.keys) {
-        if (key.toString().contains('__FREEZE')) {
+        if (key.toString().toUpperCase().contains('__FREEZE')) {
           keyFreeze = key;
           break;
         }
       }
       if (keyFreeze.isEmpty)
         for (var key in val.keys) {
-          if ((val[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && '${val[key]}'.length > 5 && !key.toString().contains('__INVISIBLE') && !key.toString().contains('isFiltered')) {
+          if ((val[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && '${val[key]}'.length > 5 && !key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('isFiltered')) {
             keyFreeze = key;
             break;
           }
@@ -512,28 +506,20 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     dados = dados;
   }
 
-  List<ColunasModel> createlistaFiltrarLinhas({required String chave}){
-            
-    for(Map<String, dynamic> valores in dados){
+  List<ColunasModel> createlistaFiltrarLinhas({required String chave}) {
+    for (Map<String, dynamic> valores in dados) {
       bool existe = listaFiltrarLinhas.any((mapa) => mapa.valor == valores[chave].toString() && mapa.coluna == chave);
       if (!existe) {
-        listaFiltrarLinhas.add(
-          ColunasModel(
-            coluna: chave,
-            valor: valores[chave].toString(), 
-            selecionado: false
-          )
-        );
+        listaFiltrarLinhas.add(ColunasModel(coluna: chave, valor: valores[chave].toString(), selecionado: false));
       }
-
     }
 
     List<ColunasModel> temp = listaFiltrarLinhas.where((mapa) => mapa.coluna == chave).toList();
 
     temp.sort((a, b) {
-      try{
+      try {
         return double.parse(a.valor).compareTo(double.parse(b.valor));
-      }catch(e){
+      } catch (e) {
         return a.valor.compareTo(b.valor);
       }
     });
@@ -541,124 +527,146 @@ abstract class ReportFromJSONControllerBase with Store,ChangeNotifier {
     return temp.toList();
   }
 
-  
-
   //inicio filtro de das colunas e da barra de pesquisa
-  List dadosFiltered (){
-    try{
-      if(filtrosSelected.isNotEmpty || searchString.text.isNotEmpty)
+  List dadosFiltered() {
+    try {
+      if (filtrosSelected.isNotEmpty || searchString.text.isNotEmpty)
         return dados.where((element) => element['isFiltered']).toList();
       else
         return dados;
-    }catch(e){
+    } catch (e) {
       return dados;
     }
   }
 
-  filterListFromSearch(){
-    if(searchString.text.isNotEmpty)
-      if(filtrosSelected.isNotEmpty){
-        if(dados.any((element) => element['isFiltered']))
-          for(var key in dados){
-            if(key['isFiltered']){
-              int count = 0;
-              for(var value in key.values){
-                if(value.toString().toLowerCase().contains(searchString.text.toLowerCase())){
-                  count++;
-                  break;
-                }
+  filterListFromSearch() {
+    if (searchString.text.isNotEmpty) if (filtrosSelected.isNotEmpty) {
+      if (dados.any((element) => element['isFiltered']))
+        for (var key in dados) {
+          if (key['isFiltered']) {
+            int count = 0;
+            for (var value in key.values) {
+              if (value.toString().toLowerCase().toUpperCase().contains(searchString.text.toLowerCase())) {
+                count++;
+                break;
               }
-              if(count > 0) key["isFiltered"] = true;
-              else key["isFiltered"] = false; 
             }
+            if (count > 0)
+              key["isFiltered"] = true;
+            else
+              key["isFiltered"] = false;
           }
-        else getTheSelectedFilteredRows();
-      }else{
-        for(var key in dados){
-          int count = 0;
-          for(var value in key.values){
-            if(value.toString().toLowerCase().contains(searchString.text.toLowerCase())){
-              count++;
-              break;
-            }
-          }
-          if(count > 0) key["isFiltered"] = true;
-          else key["isFiltered"] = false; 
         }
+      else
+        getTheSelectedFilteredRows();
+    } else {
+      for (var key in dados) {
+        int count = 0;
+        for (var value in key.values) {
+          if (value.toString().toLowerCase().toUpperCase().contains(searchString.text.toLowerCase())) {
+            count++;
+            break;
+          }
+        }
+        if (count > 0)
+          key["isFiltered"] = true;
+        else
+          key["isFiltered"] = false;
       }
-    else getTheSelectedFilteredRows();
+    }
+    else
+      getTheSelectedFilteredRows();
 
+    for (var col in colunas) {
+      col['vlrTotalDaColuna'] = 0;
+      for (var row in dados)
+        for (var key in row.keys)
+          if (key == col['key']) {
+            if (col['type'] != String) col['vlrTotalDaColuna'] += row['isFiltered'] ? row[key] : 0;
+          }
 
-      for (var col in colunas){
-        col['vlrTotalDaColuna'] = 0; 
-        for (var row in dados)
-          for (var key in row.keys)
-            if (key == col['key']) {
-              if (col['type'] != String) col['vlrTotalDaColuna'] += row['isFiltered'] ? row[key] : 0;
-            }
-
-        for(var value in colunasFiltradas)
-          if(col["key"] == value) col["isFiltered"] = true;
-          else col["isFiltered"] = false;
-      }
+      for (var value in colunasFiltradas)
+        if (col["key"] == value)
+          col["isFiltered"] = true;
+        else
+          col["isFiltered"] = false;
+    }
   }
 
-  getTheSelectedFilteredRows(){
+  getTheSelectedFilteredRows() {
     Set temp = {};
-    for (var element in filtrosSelected) {temp.add(element["coluna"]);}
-
-    for(var key in dados){
-      int count = 0;
-      for(var value in temp){
-        if(filtrosSelected.any((element) {
-          if(element["coluna"] == value) 
-          return element["valor"].toString() == key[value].toString();
-          else return false;
-        }))
-          count++;
-      }
-
-      if(count == temp.length) key["isFiltered"] = true;
-      else key["isFiltered"] = false;  
-      
-      if(searchString.text.isNotEmpty) filterListFromSearch();
+    for (var element in filtrosSelected) {
+      temp.add(element["coluna"]);
     }
 
-      for (var col in colunas){
-        col['vlrTotalDaColuna'] = 0; 
-        for (var row in dados)
-          for (var key in row.keys)
-            if (key == col['key']) {
-              if (col['type'] != String) col['vlrTotalDaColuna'] += row['isFiltered'] ? row[key] : 0;
-            }
-
-        if(colunasFiltradas.any((element) => element == col["key"]))
-          col["isFiltered"] = true;
-        else col["isFiltered"] = false;
+    for (var key in dados) {
+      int count = 0;
+      for (var value in temp) {
+        if (filtrosSelected.any((element) {
+          if (element["coluna"] == value)
+            return element["valor"].toString() == key[value].toString();
+          else
+            return false;
+        })) count++;
       }
+
+      if (count == temp.length)
+        key["isFiltered"] = true;
+      else
+        key["isFiltered"] = false;
+
+      if (searchString.text.isNotEmpty) filterListFromSearch();
+    }
+
+    for (var col in colunas) {
+      col['vlrTotalDaColuna'] = 0;
+      for (var row in dados)
+        for (var key in row.keys)
+          if (key == col['key']) {
+            if (col['type'] != String) col['vlrTotalDaColuna'] += row['isFiltered'] ? row[key] : 0;
+          }
+
+      if (colunasFiltradas.any((element) => element == col["key"]))
+        col["isFiltered"] = true;
+      else
+        col["isFiltered"] = false;
+    }
   }
 
-  clearFiltros(){
+  clearFiltros() {
     searchString.clear();
     filtrosSelected = [];
     colunasFiltradas = {};
-    
-    for(var value in listaFiltrarLinhas) value.selecionado = false;
-      for(var value in dados) value["isFiltered"] = false;
-        for(var value in colunas) 
-          if(colunasFiltradas.any((element) => element == value["key"])) value["isFiltered"] = true;
-          else value["isFiltered"] = false;
+
+    for (var value in listaFiltrarLinhas) value.selecionado = false;
+    for (var value in dados) value["isFiltered"] = false;
+    for (var value in colunas)
+      if (colunasFiltradas.any((element) => element == value["key"]))
+        value["isFiltered"] = true;
+      else
+        value["isFiltered"] = false;
   }
 
   getSelectedRowParaNavegarParaNovaPage() {
-    if(configPagina['page'].isNotEmpty && configPagina['page'] != null){
+    if (configPagina['page'].isNotEmpty && configPagina['page'] != null) {
       configPagina['selectedRow'] = mapSelectedRow;
-      bodySecundario.addAll({'selectedRow' : configPagina['selectedRow']});
+      bodySecundario.addAll(
+        {
+          'selectedRow': configPagina['selectedRow'],
+        },
+      );
       configPagina = configPagina['page'];
-      if(bodySecundario['indexPage'].toString().isNotEmpty && bodySecundario['indexPage'] != null){
-        bodySecundario.update('indexPage', (value) => value = configPagina['indexPage']);
-      }else{
-        bodySecundario.addAll({'indexPage' : configPagina['indexPage']});
+      if (bodySecundario['indexPage'].toString().isNotEmpty && bodySecundario['indexPage'] != null) {
+        bodySecundario.update(
+          'indexPage',
+          (value) => value = configPagina['indexPage'],
+        );
+      } else {
+        bodySecundario.addAll(
+          {
+            'indexPage': configPagina['indexPage'],
+          },
+        );
       }
     }
   }

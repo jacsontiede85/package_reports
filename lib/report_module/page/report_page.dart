@@ -1,5 +1,4 @@
 // ignore_for_file: curly_braces_in_flow_control_structures, must_be_immutable
-
 import 'package:adaptive_scrollbar/adaptive_scrollbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -122,16 +121,20 @@ class _ReportPageState extends State<ReportPage> with Rows {
               visible: controller.configPagina.isNotEmpty,
               child: Text(
                 controller.configPagina['name'].toString(),
-                style: const TextStyle(fontSize: 16, color: Colors.white),
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
           leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              color: const Color.fromRGBO(255, 255, 255, 1),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              }),
+            icon: const Icon(Icons.arrow_back_ios),
+            color: const Color.fromRGBO(255, 255, 255, 1),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+          ),
           actions: [
             Visibility(
               visible: controller.colunasFiltradas.isNotEmpty || controller.searchString.text.isNotEmpty,
@@ -186,16 +189,20 @@ class _ReportPageState extends State<ReportPage> with Rows {
                         ),
                       ),
                       hintStyle: WidgetStatePropertyAll(
-                        TextStyle(color: widget.corTitulo?.withOpacity(0.7), fontWeight: FontWeight.normal),
+                        TextStyle(
+                          color: widget.corTitulo?.withOpacity(0.7),
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
                       leading: IconButton(
-                          onPressed: () {
-                            controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
-                          },
-                          icon: Icon(
-                            controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
-                            color: controller.mostrarBarraPesquisar ? widget.corTitulo?.withOpacity(0.7) : widget.corTitulo,
-                          )),
+                        onPressed: () {
+                          controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
+                        },
+                        icon: Icon(
+                          controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
+                          color: controller.mostrarBarraPesquisar ? widget.corTitulo?.withOpacity(0.7) : widget.corTitulo,
+                        ),
+                      ),
                       onChanged: (value) {
                         controller.filterListFromSearch();
                         setState(() {});
@@ -342,10 +349,12 @@ class _ReportPageState extends State<ReportPage> with Rows {
                         ),
                       ),
                       child: ScrollConfiguration(
-                        behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
-                          PointerDeviceKind.touch,
-                          PointerDeviceKind.mouse,
-                        }),
+                        behavior: ScrollConfiguration.of(context).copyWith(
+                          dragDevices: {
+                            PointerDeviceKind.touch,
+                            PointerDeviceKind.mouse,
+                          },
+                        ),
                         child: AdaptiveScrollbar(
                           controller: controller.verticalScroll,
                           width: 8,
@@ -519,21 +528,22 @@ class _ReportPageState extends State<ReportPage> with Rows {
         InkWell(
           onTap: () => controller.setOrderBy(key: controller.keyFreeze, order: element['order']),
           child: rowTextFormatted(
-              width: controller.getWidthCol(
-                key: controller.keyFreeze,
-              ),
-              cor: Colors.white,
-              height: controller.getHeightColunasCabecalho,
-              controller: controller,
+            width: controller.getWidthCol(
               key: controller.keyFreeze,
-              type: element['type'],
-              value: Features.formatarTextoPrimeirasLetrasMaiusculas(
-                element['nomeFormatado'].trim(),
-              ),
-              isTitle: true,
-              isSelected: element['isSelected'],
-              order: element['order'],
-              setStateRows: setStatee),
+            ),
+            cor: Colors.white,
+            height: controller.getHeightColunasCabecalho,
+            controller: controller,
+            key: controller.keyFreeze,
+            type: element['type'],
+            value: Features.formatarTextoPrimeirasLetrasMaiusculas(
+              element['nomeFormatado'].trim(),
+            ),
+            isTitle: true,
+            isSelected: element['isSelected'],
+            order: element['order'],
+            setStateRows: setStatee,
+          ),
         ),
       ],
     );
@@ -903,7 +913,9 @@ mixin Rows {
                             controller.colunasFiltradas.removeWhere((element) => element == e.coluna);
                           setStateRows(() {
                             if (e.selecionado)
-                              controller.filtrosSelected.add({"coluna": e.coluna, "valor": e.valor});
+                              controller.filtrosSelected.add(
+                                {"coluna": e.coluna, "valor": e.valor},
+                              );
                             else
                               controller.filtrosSelected.removeWhere((element) => element['coluna'] == e.coluna && element['valor'] == e.valor);
                             controller.getTheSelectedFilteredRows();

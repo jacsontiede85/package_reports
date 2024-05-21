@@ -154,7 +154,11 @@ class _ItensFiltroState extends State<ItensFiltro> {
               visible: !widget.controller.loadingItensFiltros && widget.controller.getListFiltrosComputed.isNotEmpty,
               replacement: Visibility(
                 visible: !widget.controller.erroBuscarItensFiltro,
-                replacement: const Center(child: Text("Não foi possivel encontrar o item pesquisado !")),
+                replacement: const Center(
+                  child: Text(
+                    "Não foi possivel encontrar o item pesquisado !",
+                  ),
+                ),
                 child: Center(
                   child: LoadingAnimationWidget.halfTriangleDot(
                     color: const Color.fromARGB(255, 102, 78, 238),
