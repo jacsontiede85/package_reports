@@ -117,14 +117,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
           backgroundColor: Colors.black87,
           surfaceTintColor: Colors.transparent,
           title: Observer(
-            builder: (_) => Visibility(
-              visible: controller.configPagina.isNotEmpty,
-              child: Text(
-                controller.configPagina['name'].toString(),
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
+            builder: (_) => Text(
+              controller.configPagina['name'] ?? "Indisponível",
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.white,
               ),
             ),
           ),
@@ -329,10 +326,12 @@ class _ReportPageState extends State<ReportPage> with Rows {
         body: Observer(
           builder: (_) => Visibility(
             visible: (!controller.loading || controller.dadosFiltered().isEmpty) && !controller.primeiraBusca,
-            replacement: const Center(
+            replacement: Center(
               child: Text(
-                "Por favor selecione algum filtro!",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                controller.configPagina['name'] != null ? "Por favor selecione algum filtro!" : "Relatório indisponível no momento",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             child: Container(
@@ -430,11 +429,15 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                           if (controller.dadosFiltered().isEmpty)
                                             Text(
                                               'Não há dados para os filtros selecionados...',
-                                              style: TextStyle(color: Colors.black, fontSize: layout.desktop ? 16 : 12, fontWeight: FontWeight.w600),
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: layout.desktop ? 16 : 12,
+                                                fontWeight: FontWeight.w600,
+                                              ),
                                             ),
 
                                           // ROWS [DADOS]
-                                          if (controller.dadosFiltered().isNotEmpty) Flexible(child: rowsBuilder()),
+                                          if (controller.dadosFiltered().isNotEmpty) Flexible(flex: 2, child: rowsBuilder()),
 
                                           if (controller.dadosFiltered().isEmpty) const Expanded(child: SizedBox()),
 
@@ -601,7 +604,16 @@ class _ReportPageState extends State<ReportPage> with Rows {
                     }
                   : null,
               child: Row(
-                children: controller.row,
+                //children: controller.row,
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: 500,
+                      height: 500,
+                      child: Text("?"),
+                    ),
+                  ),
+                ],
               ),
             ),
             Observer(
@@ -840,7 +852,10 @@ mixin Rows {
                     : isRodape
                         ? Colors.black54
                         : Colors.grey[300]),
-            border: Border.all(color: Colors.purple.withOpacity(0.3), width: 0.25),
+            border: Border.all(
+              color: Colors.purple.withOpacity(0.3),
+              width: 0.25,
+            ),
           ),
           padding: EdgeInsets.only(left: 5, right: 5, bottom: isRodape ? 5 : 0),
           alignment: (isTitle)
