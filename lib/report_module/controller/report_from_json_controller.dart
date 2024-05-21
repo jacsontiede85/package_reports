@@ -681,6 +681,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
 }
 
+/*
 void printW(text) {
   if (kDebugMode) {
     print('\x1B[33m$text\x1B[0m');
@@ -704,3 +705,4 @@ void limparPrint() {
     print("\x1B[2J\x1B[0;0H");
   }
 }
+*/
