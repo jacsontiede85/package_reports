@@ -60,42 +60,43 @@ class _ItensFiltroState extends State<ItensFiltro> {
             actions: [
               Observer(
                 builder: (_) => AnimatedContainer(
-                    height: 40,
-                    width: widget.controller.exibirBarraPesquisa ? 300 : 60,
-                    margin: const EdgeInsets.only(right: 10),
-                    duration: const Duration(milliseconds: 300),
-                    child: SearchBar(
-                      hintText: 'Pesquisar',
-                      elevation: const WidgetStatePropertyAll(0),
-                      side: const WidgetStatePropertyAll(
-                        BorderSide(color: Colors.white, width: 0.25),
-                      ),
-                      backgroundColor: const WidgetStatePropertyAll(Colors.black12),
-                      leading: IconButton(
-                        onPressed: () {
-                          widget.controller.exibirBarraPesquisa = !widget.controller.exibirBarraPesquisa;
-                        },
-                        icon: Icon(
-                          widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,
-                        ),
-                        color: Colors.white.withOpacity(0.7),
-                      ),
-                      textStyle: const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
-                      hintStyle: WidgetStatePropertyAll(
-                        TextStyle(color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.normal),
-                      ),
-                      onSubmitted: (value) {
-                        widget.controller.pesquisaItensDoFiltro = value;
-                        widget.controller.bodyPesquisarFiltros.addAll({"pesquisa": widget.controller.pesquisaItensDoFiltro});
-                        if (widget.controller.getListFiltrosComputed.isEmpty) {
-                          widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
-                        } else {
-                          if (widget.controller.pesquisaItensDoFiltro.isEmpty) {
-                            widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
-                          }
-                        }
+                  height: 40,
+                  width: widget.controller.exibirBarraPesquisa ? 300 : 60,
+                  margin: const EdgeInsets.only(right: 10),
+                  duration: const Duration(milliseconds: 300),
+                  child: SearchBar(
+                    hintText: 'Pesquisar',
+                    elevation: const WidgetStatePropertyAll(0),
+                    side: const WidgetStatePropertyAll(
+                      BorderSide(color: Colors.white, width: 0.25),
+                    ),
+                    backgroundColor: const WidgetStatePropertyAll(Colors.black12),
+                    leading: IconButton(
+                      onPressed: () {
+                        widget.controller.exibirBarraPesquisa = !widget.controller.exibirBarraPesquisa;
                       },
-                    )),
+                      icon: Icon(
+                        widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,
+                      ),
+                      color: Colors.white.withOpacity(0.7),
+                    ),
+                    textStyle: const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
+                    hintStyle: WidgetStatePropertyAll(
+                      TextStyle(color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.normal),
+                    ),
+                    onSubmitted: (value) {
+                      widget.controller.pesquisaItensDoFiltro = value;
+                      widget.controller.bodyPesquisarFiltros.addAll({"pesquisa": widget.controller.pesquisaItensDoFiltro});
+                      if (widget.controller.getListFiltrosComputed.isEmpty) {
+                        widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
+                      } else {
+                        if (widget.controller.pesquisaItensDoFiltro.isEmpty) {
+                          widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
+                        }
+                      }
+                    },
+                  ),
+                ),
               ),
             ],
             bottom: PreferredSize(

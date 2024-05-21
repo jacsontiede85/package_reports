@@ -86,7 +86,9 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextButton(
-                  style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.blue)),
+                  style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.blue),
+                  ),
                   onPressed: () async {
                     Navigator.of(context).pop(true);
                     if (widget.onAplicar == null) {
@@ -124,15 +126,16 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                           index: index,
                         );
                         wp.navigator(
-                            context: context,
-                            pagina: ItensFiltro(
-                              controller: controllerFiltro,
-                              indexDapagina: controllerFiltro.indexPagina,
-                              filtroPaginaAtual: controllerFiltro.listaFiltrosParaConstruirTela[index],
-                              indexDofiltro: index,
-                            ),
-                            isToShowFiltroNoMeio: true,
-                            layout: layout);
+                          context: context,
+                          pagina: ItensFiltro(
+                            controller: controllerFiltro,
+                            indexDapagina: controllerFiltro.indexPagina,
+                            filtroPaginaAtual: controllerFiltro.listaFiltrosParaConstruirTela[index],
+                            indexDofiltro: index,
+                          ),
+                          isToShowFiltroNoMeio: true,
+                          layout: layout,
+                        );
                       },
                     );
                   } else {
