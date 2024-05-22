@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       buscarDadosNaEntrada: false,
                       function: 'vendas/venda-por-rca/index.php',
                       //function: 'vendas/pedidos-faltas-cortes/index.php',
-                      //sfunction: 'dashboard/query_vendas/leadtime_analitico/index.php',
+                      //function: 'dashboard/query_vendas/leadtime_analitico/index.php',
                     ),
                   ),
                 );

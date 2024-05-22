@@ -106,8 +106,9 @@ class _ReportPageState extends State<ReportPage> with Rows {
 
   @override
   Widget build(BuildContext context) {
-    _width = layout.width;
+    _width = MediaQuery.of(context).size.width;
     controller.sizeWidth = _width;
+
 
     return PopScope(
       onPopInvoked: (value) => controller.willPopCallback,
