@@ -660,7 +660,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       for (var row in dados)
         for (var key in row.keys)
           if (key == col['key']) {
-            if (col['type'] != String) col['vlrTotalDaColuna'] +=  row[key];
+            if (col['type'] != String) col['vlrTotalDaColuna'] += row[key];
           }
     }
   }

@@ -118,7 +118,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           surfaceTintColor: Colors.transparent,
           title: Observer(
             builder: (_) => Text(
-              controller.configPagina['name'] ?? "Indisponível",
+              controller.configPagina['name'] ?? "",
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.white,
