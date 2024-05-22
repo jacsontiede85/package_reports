@@ -74,7 +74,7 @@ class ReportToXLSXController extends WidgetReportXLSX {
 
               Style style = linha%2==0 ? celulaCinzaStyle : celulaBrancoStyle;
             
-              if(!key.toString().contains('__INVISIBLE') && colunas['key'] == key.toString()){
+              if(!key.toString().toUpperCase().contains('__INVISIBLE') && colunas['key'] == key.toString()){
                 celulaText(
                   sheet: sheet, 
                   linha: linha, 
@@ -98,7 +98,7 @@ class ReportToXLSXController extends WidgetReportXLSX {
 
               Style style = linha%2==0 ? celulaCinzaStyle : celulaBrancoStyle;
             
-              if(!key.toString().contains('__INVISIBLE') && colunas['key'] == key.toString()){
+              if(!key.toString().toUpperCase().contains('__INVISIBLE') && colunas['key'] == key.toString()){
                 celulaText(
                   sheet: sheet, 
                   linha: linha, 

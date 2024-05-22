@@ -334,7 +334,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
             if (key == col['key']) {
               try {
                 if (key.toString().toUpperCase().contains('__SIZEW')) {
-                  var temp = key.toString().split('__SIZEW');
+                  var temp = key.toString().toUpperCase().split('__SIZEW');
                   col['widthCol'] = double.parse(temp[1]);
                 } else {
                   if (col['type'] == String) {

@@ -562,7 +562,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
         controller.row = [];
         val.forEach((key, value) {
           Type type = value.runtimeType;
-          if (!key.toString().contains('__INVISIBLE') && !key.toString().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
+          if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
             controller.row.add(
               rowTextFormatted(
                 width: controller.getWidthCol(
@@ -696,9 +696,9 @@ class _ReportPageState extends State<ReportPage> with Rows {
         else
           ...controller.colunasRodapePerson.map((element) {
             for (var value in controller.dadosFiltered()) {
-              if (element['key'].toString().contains('__ISRODAPE')) {
+              if (element['key'].toString().toUpperCase().contains('__ISRODAPE')) {
                 return rowTextComLable(
-                  width: controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().contains('__ISRODAPE')).length,
+                  width: controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().toUpperCase().contains('__ISRODAPE')).length,
                   height: 40,
                   controller: controller,
                   key: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado']),

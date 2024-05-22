@@ -48,13 +48,13 @@ abstract class ReportChartControllerBase with Store, Charts {
   }
 
   //retornar colunas de metricas para dropdown
-  List<Map> get getColumnMetricsChart => reportFromJSONController.colunas.where((element) => element['type'] != String && !element['key'].toString().contains('__NO_METRICS')).toList();
+  List<Map> get getColumnMetricsChart => reportFromJSONController.colunas.where((element) => element['type'] != String && !element['key'].toString().toUpperCase().contains('__NO_METRICS')).toList();
 
   //retornar colunas de metricas para dropdown de ordenação
   List<Map> get getColumnOrderByChart => [...reportFromJSONController.colunas].toList();
 
   //ativar ou desativar graficos de ared
-  bool get isVisibleChartsArea => getColumnMetricsChart.where((value) => value['type'] != String && !value['key'].contains('__NOCHARTAREA')).toList().length > 1;
+  bool get isVisibleChartsArea => getColumnMetricsChart.where((value) => value['type'] != String && !value['key'].toString().toUpperCase().contains('__NOCHARTAREA')).toList().length > 1;
 
   @action
   getChart({required String chartNameSelected}) async {
@@ -111,9 +111,9 @@ abstract class ReportChartControllerBase with Store, Charts {
       for (Map<String, dynamic> col in reportFromJSONController.colunas) {
         String nome = '';
 
-        if ((col['type'] == String || col['key'].contains('__NO_METRICS')) && col['key'] != 'isFiltered') nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}...' : '${col['key']}';
+        if ((col['type'] == String || col['key'].toString().toUpperCase().contains('__NO_METRICS')) && col['key'] != 'isFiltered') nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}...' : '${col['key']}';
 
-        if (col['type'] != String && !col['key'].contains('__NO_METRICS') && !col['key'].contains('__NOCHARTAREA'))
+        if (col['type'] != String && !col['key'].toString().toUpperCase().contains('__NO_METRICS') && !col['key'].toString().toUpperCase().contains('__NOCHARTAREA'))
           temp.add(
             ChartData(
               title: nome,
@@ -133,10 +133,10 @@ abstract class ReportChartControllerBase with Store, Charts {
         List<ChartData> temp = [];
         String nome = '';
 
-        for (String key in value.keys) if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered') nome += '${value[key]}';
+        for (String key in value.keys) if ((value[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && key != 'isFiltered') nome += '${value[key]}';
 
         for (var col in getColumnMetricsChart) {
-          if (value['type'] != String && !col['key'].contains('__NOCHARTAREA')) {
+          if (value['type'] != String && !col['key'].toString().toUpperCase().contains('__NOCHARTAREA')) {
             temp.add(ChartData(
               title: nome,
               nome: reportFromJSONController.getNomeColunaFormatado(text: col['key']),
@@ -157,7 +157,7 @@ abstract class ReportChartControllerBase with Store, Charts {
         String nome = '';
         double vlrTotalDaColuna = 0.0;
 
-        for (String key in value.keys) if ((value[key].runtimeType == String || key.toString().contains('__NO_METRICS')) && key != 'isFiltered') nome += '${value[key]}';
+        for (String key in value.keys) if ((value[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && key != 'isFiltered') nome += '${value[key]}';
 
         for (Map<String, dynamic> col in reportFromJSONController.colunas) if (col['key'] == keySelected) vlrTotalDaColuna = col['vlrTotalDaColuna'];
 
