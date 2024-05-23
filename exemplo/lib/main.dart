@@ -7,9 +7,7 @@ void main() {
   SettingsReports().setEnderecoApi(enderecoUrl: 'https://analytics.agnconsultoria.com.br/api/');
   // SettingsReports().setEnderecoApi(enderecoUrl: 'https://api.agnconsultoria.com.br/');
   SettingsReports().setMatricula(matriculaUsu: 3312);
-  runApp(
-    const MyApp(),
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -63,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) => ReportPage(
                       database: "atacado",
                       buscarDadosNaEntrada: false,
-                      function: 'vendas/venda-por-rca/index.php',
-                      //function: 'vendas/pedidos-faltas-cortes/index.php',
+                      //function: 'vendas/venda-por-rca/index.php',
+                      function: 'campanha_lola/campanha-lola-clientes-nunca-compraram-lola/index.php',
                       //function: 'dashboard/query_vendas/leadtime_analitico/index.php',
                     ),
                   ),

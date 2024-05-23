@@ -1,11 +1,10 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
-
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 
-class WidgetXLSX{
+class WidgetXLSX {
   String? titulo;
 
-  Style styleCabecalho({required workbook}){
+  Style styleCabecalho({required workbook}) {
     //------------- FORMATAÇÃO CABEÇALHO
     //Defining a global style with all properties.
     Style style = workbook.styles.add('cabecalho');
@@ -21,8 +20,7 @@ class WidgetXLSX{
     return style;
   }
 
-
-  Style styleColunas({required workbook}){
+  Style styleColunas({required workbook}) {
     //------------- FORMATAÇÃO COLUNAS
     //Defining a global style with all properties.
     Style style = workbook.styles.add('colunas');
@@ -38,8 +36,7 @@ class WidgetXLSX{
     return style;
   }
 
-
-  Style styleCelulaCinza({required workbook}){
+  Style styleCelulaCinza({required workbook}) {
     //-------------FORMATAÇÃO LINHA CINZA
     //Defining a global style with all properties.
     Style style = workbook.styles.add('linha');
@@ -54,8 +51,7 @@ class WidgetXLSX{
     return style;
   }
 
-
-  Style styleCelulaBranco({required workbook}){
+  Style styleCelulaBranco({required workbook}) {
     //-------------FORMATAÇÃO LINHA BRANCO
     //Defining a global style with all properties.
     Style style = workbook.styles.add('linha1');
@@ -70,7 +66,7 @@ class WidgetXLSX{
     return style;
   }
 
-  Worksheet tilulo({required Worksheet sheet, required int linha, required int coluna, required Style cabecalhoStyle, required String titulo}){
+  Worksheet tilulo({required Worksheet sheet, required int linha, required int coluna, required Style cabecalhoStyle, required String titulo}) {
     this.titulo = titulo;
     sheet.getRangeByName('A$linha:E$linha').merge();
     sheet.getRangeByIndex(linha, coluna).cellStyle = cabecalhoStyle;
@@ -80,8 +76,8 @@ class WidgetXLSX{
     return sheet;
   }
 
-  colunas({required Worksheet sheet, required int linha, required int coluna, required Style colunasStyle, required colunasList}){
-    for(int index=0; index < colunasList.length; index++){
+  colunas({required Worksheet sheet, required int linha, required int coluna, required Style colunasStyle, required colunasList}) {
+    for (int index = 0; index < colunasList.length; index++) {
       sheet.getRangeByIndex(linha, coluna).cellStyle = colunasStyle;
       sheet.getRangeByIndex(linha, coluna).setText(colunasList[index]);
       Range range = sheet.getRangeByIndex(linha, coluna);
@@ -90,16 +86,16 @@ class WidgetXLSX{
     }
   }
 
-  celulaText({required Worksheet sheet, required int linha, required int coluna, required Style style, required text, bool? autoFitColumns, bool? laguraFixa, bool? larguraTitulo}){
+  celulaText({required Worksheet sheet, required int linha, required int coluna, required Style style, required text, bool? autoFitColumns, bool? laguraFixa, bool? larguraTitulo}) {
     sheet.getRangeByIndex(linha, coluna).cellStyle = style;
     Range range = sheet.getRangeByIndex(linha, coluna);
-    if(larguraTitulo??false) {
+    if (larguraTitulo ?? false) {
       range.setText('$titulo$titulo------------'); //forçar primeira celula ficar com a largura do titulo
       range.autoFitColumns();
       range.setText(text);
     }
 
-    if(laguraFixa??false) {
+    if (laguraFixa ?? false) {
       range.setText('-------------'); //forçar uma largura fixa
       range.autoFitColumns();
       range.setText(text);
@@ -107,32 +103,28 @@ class WidgetXLSX{
       range.setText(text);
     }
 
-    if(!(larguraTitulo??false))
-      if(!(laguraFixa??false))
-        if(autoFitColumns??true)
-          range.autoFitColumns();
+    if (!(larguraTitulo ?? false)) if (!(laguraFixa ?? false)) if (autoFitColumns ?? true) range.autoFitColumns();
   }
 
-  celulaNumber({required sheet, required linha, required coluna, required style, required number, bool? laguraFixa}){
+  celulaNumber({required sheet, required linha, required coluna, required style, required number, bool? laguraFixa}) {
     sheet.getRangeByIndex(linha, coluna).cellStyle = style;
     Range range = sheet.getRangeByIndex(linha, coluna);
     double num;
 
-    if (number == 'NaN'){
+    if (number == 'NaN') {
       number = 0.0;
     }
 
-    if(number.runtimeType.toString() == 'double')
+    if (number.runtimeType.toString() == 'double')
       num = number;
     else
-      num = double.parse( number??'0.0' );
-    if(laguraFixa!=null)
-      range.setNumber(99999999999.999);//forçar uma largura fixa
+      num = double.parse(number ?? '0.0');
+    if (laguraFixa != null)
+      range.setNumber(99999999999.999); //forçar uma largura fixa
     else
       range.setNumber(num);
     range.autoFitColumns();
     range.setNumber(num);
     range.numberFormat = '#,##0.00'; // valor formatado
   }
-
 }

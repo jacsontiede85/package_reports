@@ -109,7 +109,6 @@ class _ReportPageState extends State<ReportPage> with Rows {
     _width = MediaQuery.of(context).size.width;
     controller.sizeWidth = _width;
 
-
     return PopScope(
       onPopInvoked: (value) => controller.willPopCallback,
       child: Scaffold(
@@ -319,7 +318,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
               }
             } else {
               return const Drawer(
-                child: Center(child: Text("Não ha filtros para esse relatorio")),
+                child: Center(
+                  child: Text(
+                    "Não ha filtros para esse relatorio",
+                  ),
+                ),
               );
             }
           },
