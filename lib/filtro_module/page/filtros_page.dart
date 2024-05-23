@@ -119,6 +119,10 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                       controller: controllerFiltro,
                       index: index,
                       onTap: () async {
+                        if(controllerFiltro.bodyPesquisarFiltros.containsKey("pesquisa")){
+                          controllerFiltro.bodyPesquisarFiltros.update("pesquisa", (value) => "",);
+                        }
+                        
                         controllerFiltro.pesquisaItensDoFiltro = "";
                         controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
                           valor: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,

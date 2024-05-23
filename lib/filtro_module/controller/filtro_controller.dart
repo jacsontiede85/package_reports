@@ -124,7 +124,6 @@ abstract class FiltroControllerBase with Store {
           } else {
             listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
           }
-
           indexFiltro = index;
           novoIndexFiltro = retornarIndexListaFiltrosCarregados();
         } catch (e) {
