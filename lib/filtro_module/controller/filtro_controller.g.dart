@@ -137,13 +137,13 @@ mixin _$FiltroController on FiltroControllerBase, Store {
       context: context);
 
   @override
-  Map<String, dynamic> get filtrosSalvosParaAdicionarNoBody {
+  ObservableMap<String, dynamic> get filtrosSalvosParaAdicionarNoBody {
     _$filtrosSalvosParaAdicionarNoBodyAtom.reportRead();
     return super.filtrosSalvosParaAdicionarNoBody;
   }
 
   @override
-  set filtrosSalvosParaAdicionarNoBody(Map<String, dynamic> value) {
+  set filtrosSalvosParaAdicionarNoBody(ObservableMap<String, dynamic> value) {
     _$filtrosSalvosParaAdicionarNoBodyAtom
         .reportWrite(value, super.filtrosSalvosParaAdicionarNoBody, () {
       super.filtrosSalvosParaAdicionarNoBody = value;

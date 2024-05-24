@@ -43,7 +43,7 @@ abstract class FiltroControllerBase with Store {
   String dtinicio = SettingsReports.getDataPTBR(), dtfim = SettingsReports.getDataPTBR();
 
   @observable
-  Map<String, dynamic> filtrosSalvosParaAdicionarNoBody = {};
+  ObservableMap<String, dynamic> filtrosSalvosParaAdicionarNoBody = ObservableMap.of({});
 
   @observable
   bool exibirBarraPesquisa = false;

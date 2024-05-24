@@ -69,7 +69,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                     child: TextButton.icon(
                       style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade400)),
                       onPressed: () {
-                        controllerFiltro.limparFiltros(bodyParaSerLimpo: widget.bodypesquisaAtual);
+                        controllerFiltro.limparFiltros(bodyParaSerLimpo: widget.bodypesquisaAtual);                     
                       },
                       icon: const Icon(
                         Icons.clear_rounded,
