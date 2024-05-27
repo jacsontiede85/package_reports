@@ -61,7 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) => ReportPage(
                       database: "atacado",
                       buscarDadosNaEntrada: false,
-                      function: 'vendas/venda-por-rca/index.php',
+                      //function: 'vendas/venda-por-rca/index.php',
+                      function: 'compras/pedido-de-compra-saldo/index.php',
                       //function: 'campanha_lola/campanha-lola-clientes-nunca-compraram-lola/index.php',
                       //function: 'dashboard/query_vendas/leadtime_analitico/index.php',
                     ),

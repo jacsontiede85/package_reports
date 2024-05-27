@@ -422,6 +422,13 @@ abstract class FiltroControllerBase with Store {
     }
     for (FiltrosPageAtual filtros in listaFiltrosParaConstruirTela) {
       filtros.filtrosWidgetModel.itensSelecionados.clear();
+
+      // Voltar o valor do dropdown para o primeiro index
+      if(filtros.filtrosWidgetModel.tipoWidget.contains("dropdown")){
+        for(var value in listaFiltrosCarregados){
+          value.valorSelecionadoParaDropDown = value.listaFiltros.first;
+        }
+      }
     }
     for (FiltrosCarrregados filtros in listaFiltrosCarregados) {
       for (FiltrosModel itens in filtros.listaFiltros) {
