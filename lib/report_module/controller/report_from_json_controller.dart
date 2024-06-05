@@ -251,7 +251,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         if (key.toString().toUpperCase().contains('__STRING') || key.toString().toUpperCase().contains('__INT_STRING')) continue;
         if (key.toString().toUpperCase().contains('__INT')) {
           try {
-            var val = double.parse(value[key]).floor();
+            var val = double.parse(value[key].toString()).floor();
             value[key] = val;
           } catch (e) {
             value[key] = 0;
@@ -260,7 +260,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         }
         if (key.toString().toUpperCase().contains('__DOUBLE')) {
           try {
-            value[key] = double.parse(value[key]);
+            value[key] = double.parse(value[key].toString());
           } catch (e) {
             value[key] = 0.0;
           }
