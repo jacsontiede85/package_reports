@@ -80,9 +80,14 @@ class _ReportPageState extends State<ReportPage> with Rows {
     if (controller.configPagina.isEmpty)
       controller.getConfig().whenComplete(
         () {
-          if (!widget.buscarDadosNaEntrada && controller.configPagina.isNotEmpty && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty) {
-            controller.loading = false;
-            scaffoldKey.currentState!.openEndDrawer();
+          bool buscarDados = controller.configPagina['buscarDadosEntrada'] ?? false;
+          if(buscarDados){
+            controller.getDados();
+          }else{
+            if (!widget.buscarDadosNaEntrada && controller.configPagina.isNotEmpty && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty) {
+              controller.loading = false;
+              scaffoldKey.currentState!.openEndDrawer();
+            }            
           }
         },
       );
