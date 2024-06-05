@@ -299,6 +299,22 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$dataCampanhaInicialAtom =
+      Atom(name: 'FiltroControllerBase.dataCampanhaInicial', context: context);
+
+  @override
+  String get dataCampanhaInicial {
+    _$dataCampanhaInicialAtom.reportRead();
+    return super.dataCampanhaInicial;
+  }
+
+  @override
+  set dataCampanhaInicial(String value) {
+    _$dataCampanhaInicialAtom.reportWrite(value, super.dataCampanhaInicial, () {
+      super.dataCampanhaInicial = value;
+    });
+  }
+
   late final _$FiltroControllerBaseActionController =
       ActionController(name: 'FiltroControllerBase', context: context);
 
@@ -387,6 +403,7 @@ validarListaParaDropDown: ${validarListaParaDropDown},
 novoIndexFiltro: ${novoIndexFiltro},
 valoresSelecionadorDropDown: ${valoresSelecionadorDropDown},
 erroBuscarItensFiltro: ${erroBuscarItensFiltro},
+dataCampanhaInicial: ${dataCampanhaInicial},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}

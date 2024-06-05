@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:intl/intl.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/core/settings.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:universal_html/js_util.dart';
 
 class Widgets {
   Widget tituloCards({required String titulo, required BuildContext context}) {
@@ -231,24 +234,22 @@ class Widgets {
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Observer(builder: (_) {
-                return Observer(
-                  builder: (_) => DropdownButton<FiltrosModel>(
-                    value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
-                    isExpanded: true,
-                    isDense: true,
-                    onChanged: (value) {
-                      //controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
-                    },
-                    hint: Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
-                    items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((value) {
-                      return DropdownMenuItem<FiltrosModel>(
-                        value: value,
-                        child: Text(
-                          value.titulo,
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                return DropdownButton(
+                  isExpanded: true,
+                  isDense: true,
+                  onChanged: (value) {
+                    controller.dataCampanhaInicial = value!;
+                    if(controller.dataCampanhaInicial.length != 7) controller.dataCampanhaInicial = "0${controller.dataCampanhaInicial}";
+                  },
+                  hint: Text("${controller.monthNames[int.parse(controller.dataCampanhaInicial.split("/").first)-1]}/${controller.dataCampanhaInicial.split("/").last}", style: const TextStyle(fontWeight: FontWeight.bold),),
+                  items: controller.datasMeses.map((value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(
+                        "${controller.monthNames[int.parse(value.split("/").first)-1]}/${value.split("/").last}",
+                      ),
+                    );
+                  }).toList(),
                 );
               }),
             ),

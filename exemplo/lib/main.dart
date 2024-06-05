@@ -6,7 +6,7 @@ import 'package:package_reports/report_module/page/report_page.dart';
 void main() {
   SettingsReports().setEnderecoApi(enderecoUrl: 'https://analytics.agnconsultoria.com.br/api/');
   // SettingsReports().setEnderecoApi(enderecoUrl: 'https://api.agnconsultoria.com.br/');
-  SettingsReports().setMatricula(matriculaUsu: 3312);
+  SettingsReports().setMatricula(matriculaUsu: 3374);
   runApp(const MyApp());
 }
 
@@ -62,8 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       database: "atacado",
                       buscarDadosNaEntrada: false,
                       //function: 'vendas/venda-por-rca/index.php',
-                      function: 'compras/pedido-de-compra-saldo/index.php',
-                      //function: 'campanha_lola/campanha-lola-clientes-nunca-compraram-lola/index.php',
+                      //function: 'compras/pedido-de-compra-saldo/index.php',
+                      function: 'campanha_milionaria/campanha-milionaria-dca-sintetico-por-supervisor/index.php',
                       //function: 'dashboard/query_vendas/leadtime_analitico/index.php',
                     ),
                   ),

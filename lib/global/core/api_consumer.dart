@@ -13,7 +13,7 @@ class API with SettingsReports {
     };
     String header64 = base64Encode(jsonEncode(header).codeUnits);
 
-    // print(dados);
+     //print(dados);
 
     //payload
     var payload = dados;
@@ -37,6 +37,10 @@ class API with SettingsReports {
         },
       ),
     );
+
+     print("${SettingsReports.enderecoRepositorio}$url");
+     print(banco);
+     print(token); 
 
     if (res.statusCode == 200) {
       return res.body.replaceAll("null", '""');

@@ -76,12 +76,50 @@ abstract class FiltroControllerBase with Store {
   @observable
   bool erroBuscarItensFiltro = false;
 
+  @observable
+  String dataCampanhaInicial = "";
+
+  List<String> datasMeses = [];
+
+  List<String> monthNames = [
+    "janeiro", "fevereiro", "março", "abril", "maio", "junho", 
+    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+  ];
+
+  void getDataMensal({required String mesInicial}) async{
+    dataCampanhaInicial = "${DateTime.now().month}/${DateFormat.y().format(DateTime.now())}";
+    if(dataCampanhaInicial.length != 7) dataCampanhaInicial = "0$dataCampanhaInicial";
+    var data1 = DateTime(int.parse(mesInicial.split("/").last), int.parse(mesInicial.split("/").first), 01);
+    var data2 = DateTime.now();
+    int year = data2.year;
+    int month = data2.month;
+    int temp = ((data2.year - data1.year) * 12 + data2.month - data1.month) + 1;
+
+    for(var i = 0; i<temp; i++){
+      if(data2.month - i > 0){
+        datasMeses.add("${(month - i)}/$year");
+      }
+      else{
+        if(month - i + ((data2.year - year) * 12) <= 0){
+          year--;
+          datasMeses.add("${(month - i + ((data2.year - year) * 12))}/$year");
+        }else {
+          datasMeses.add("${(month - i + ((data2.year - year) * 12))}/$year");
+        }
+      }
+    }
+  }
+
   // RETORNAR QTDE DE ITENS SELECIONADOS
   @computed
   int get getQtdeItensSelecionados => (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.length);
 
   void getDadosCriarFiltros() async {
     mapaFiltrosWidget.forEach((key, value) {
+      if(value["tipo"] == "datapickermensal"){
+        getDataMensal(mesInicial: value["mesInicial"]);
+      }
+
       listaFiltrosParaConstruirTela.add(FiltrosPageAtual(qualPaginaFiltroPertence: indexPagina, filtrosWidgetModel: FiltrosWidgetModel.fromJson(value, key)));
     });
     conjuntoDePeriodos();
@@ -200,6 +238,15 @@ abstract class FiltroControllerBase with Store {
       controllerReports.bodyPrimario.update('dtfim', (value) => value = dtfim);
 
       controllerReports.bodyPrimario.addAll(filtrosSalvosParaAdicionarNoBody);
+
+      //Data mensal das campanhas
+      if(controllerReports.bodyPrimario.containsKey("dataMensal")) {
+        controllerReports.bodyPrimario.update("dataMensal", (value) => value = dataCampanhaInicial,);
+      } else {
+        controllerReports.bodyPrimario.addAll(
+          {"dataMensal": dataCampanhaInicial}
+        );
+      }
     } else {
       controllerReports.bodySecundario.update(
         'dtinicio',
@@ -209,6 +256,15 @@ abstract class FiltroControllerBase with Store {
 
       controllerReports.bodySecundario.addAll(filtrosSalvosParaAdicionarNoBody);
     }
+
+      //Data mensal das campanhas
+      if(controllerReports.bodyPrimario.containsKey("dataMensal")) {
+        controllerReports.bodyPrimario.update("dataMensal", (value) => value = dataCampanhaInicial,);
+      } else {
+        controllerReports.bodyPrimario.addAll(
+          {"dataMensal": dataCampanhaInicial}
+        );
+      }
     await controllerReports.getDados();
   }
 

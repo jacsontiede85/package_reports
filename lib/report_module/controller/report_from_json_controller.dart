@@ -321,11 +321,15 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
       //calcular totalizadores de rodape
       for (var col in colunas)
-        for (var row in dados)
-          for (var key in row.keys)
+        for (var row in dados){
+          for (var key in row.keys){
             if (key == col['key'] && row[key].toString().isNotEmpty) {
-              if (col['type'] != String) col['vlrTotalDaColuna'] += row[key];
+              if (col['type'] != String) {
+                col['vlrTotalDaColuna'] += double.parse(row[key].toString());
+              }
             }
+          }
+        }
 
       //calcular max caractares para definir largura de colunas
       for (var col in colunas)
