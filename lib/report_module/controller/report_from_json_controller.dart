@@ -325,7 +325,8 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
           for (var key in row.keys){
             if (key == col['key'] && row[key].toString().isNotEmpty) {
               if (col['type'] != String) {
-                col['vlrTotalDaColuna'] += double.parse(row[key].toString());
+                if(row[key].runtimeType == String) row[key] = double.parse(row[key]);
+                col['vlrTotalDaColuna'] += row[key];
               }
             }
           }
