@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:intl/intl.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/core/settings.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:universal_html/js_util.dart';
 
 class Widgets {
   Widget tituloCards({required String titulo, required BuildContext context}) {

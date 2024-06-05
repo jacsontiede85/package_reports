@@ -215,11 +215,40 @@ abstract class FiltroControllerBase with Store {
       }
     } else {
       if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
+        removerItensSelecionadosBody(itens: itens);
         listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.remove(itens);
       }
     }
 
     listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
+  }
+
+  void removerItensSelecionadosBody ({required FiltrosModel itens}){
+    Map<String, dynamic> bodyAtual = {};
+
+    if(controllerReports.bodySecundario.isEmpty){
+      bodyAtual = controllerReports.bodyPrimario;
+    }else{
+      bodyAtual = controllerReports.bodySecundario;
+    }
+
+    String tipoFiltro = listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.tipoFiltro;
+    int indexItenMarcado = listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.toList().indexWhere((element) => element == itens);
+
+    if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
+      bodyAtual[tipoFiltro].removeAt(indexItenMarcado);
+    }
+    if(bodyAtual[tipoFiltro].length == 0){
+      bodyAtual.removeWhere((key, value) => key == tipoFiltro);
+      filtrosSalvosParaAdicionarNoBody.remove(tipoFiltro);
+    }
+
+    if(controllerReports.bodySecundario.isEmpty){
+      controllerReports.bodyPrimario = bodyAtual;
+    }else{
+      controllerReports.bodySecundario = bodyAtual;
+    }
+    // print(controllerReports.bodyPrimario);
   }
 
   Future<void> criarNovoBody() async {

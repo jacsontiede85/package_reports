@@ -38,9 +38,9 @@ class API with SettingsReports {
       ),
     );
 
-     print("${SettingsReports.enderecoRepositorio}$url");
-     print(banco);
-     print(token); 
+    //  print("${SettingsReports.enderecoRepositorio}$url");
+    //  print(banco);
+    //  print(token); 
 
     if (res.statusCode == 200) {
       return res.body.replaceAll("null", '""');
