@@ -215,15 +215,18 @@ abstract class FiltroControllerBase with Store {
       }
     } else {
       if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
-        removerItensSelecionadosBody(itens: itens);
-        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.remove(itens);
+        removerItensSelecionadosBody(
+          itens: itens,
+          index: listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.toList().indexWhere((element) => element == itens)
+        );
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.remove(itens); 
       }
     }
 
     listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
   }
 
-  void removerItensSelecionadosBody ({required FiltrosModel itens}){
+  void removerItensSelecionadosBody ({required FiltrosModel itens, required int index}){
     Map<String, dynamic> bodyAtual = {};
 
     if(controllerReports.bodySecundario.isEmpty){
@@ -233,22 +236,26 @@ abstract class FiltroControllerBase with Store {
     }
 
     String tipoFiltro = listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.tipoFiltro;
-    int indexItenMarcado = listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.toList().indexWhere((element) => element == itens);
+    int indexItenMarcado = index;
+    try{
+      if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
+        if(bodyAtual.containsKey(tipoFiltro)){
+          bodyAtual[tipoFiltro].removeAt(indexItenMarcado);      
+          if(bodyAtual[tipoFiltro].length == 0){
+            bodyAtual.removeWhere((key, value) => key == tipoFiltro);
+            filtrosSalvosParaAdicionarNoBody.remove(tipoFiltro);
+          }               
+        }
 
-    if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
-      bodyAtual[tipoFiltro].removeAt(indexItenMarcado);
+      }
+  
+    }finally{
+      if(controllerReports.bodySecundario.isEmpty){
+        controllerReports.bodyPrimario = bodyAtual;
+      }else{
+        controllerReports.bodySecundario = bodyAtual;
+      }      
     }
-    if(bodyAtual[tipoFiltro].length == 0){
-      bodyAtual.removeWhere((key, value) => key == tipoFiltro);
-      filtrosSalvosParaAdicionarNoBody.remove(tipoFiltro);
-    }
-
-    if(controllerReports.bodySecundario.isEmpty){
-      controllerReports.bodyPrimario = bodyAtual;
-    }else{
-      controllerReports.bodySecundario = bodyAtual;
-    }
-    // print(controllerReports.bodyPrimario);
   }
 
   Future<void> criarNovoBody() async {
@@ -300,20 +307,24 @@ abstract class FiltroControllerBase with Store {
   // VERIFICAR SE TODOS OS ITENS ESTÃO SELECIONADOS
   @computed
   bool get verificaSeTodosEstaoSelecionados {
-    return (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.where((element) {
-          return element.selecionado;
-        }).length) ==
-        getListFiltrosComputed.length;
+    return (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.where(
+      (element) => element.selecionado == true,
+    ).length) == getListFiltrosComputed.length;
   }
 
   // LIMPAR SELEÇÃO DE TODOS OS ITENS
   @action
   void limparSelecao() {
+    String tipoFiltro = listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.tipoFiltro;
     if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
       listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.clear();
       for (FiltrosModel value in getListFiltrosComputed) {
         value.selecionado = false;
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.removeAll({value});
+        listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
       }
+      controllerReports.bodyPrimario.removeWhere((key, value) => key == tipoFiltro);
+      filtrosSalvosParaAdicionarNoBody.remove(tipoFiltro);
     }
   }
 
