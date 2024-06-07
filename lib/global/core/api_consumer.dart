@@ -43,7 +43,9 @@ class API with SettingsReports {
     //  print(token); 
 
     if (res.statusCode == 200) {
-      return res.body.replaceAll("null", '""');
+      return res.body.replaceAllMapped(
+        RegExp(r'\bnull\b'), (match) => '""',
+      );
     } else {
       return "";
     }
