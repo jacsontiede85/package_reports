@@ -20,7 +20,7 @@ abstract class FiltrosModelBase with Store {
   });
 
   FiltrosModelBase.fromJson(Map<String, dynamic> json){
-    codigo = json['codigo'];
+    codigo = json['codigo'].toString();
     titulo = json['titulo'];
     subtitulo = json['subtitulo']??'';
   }

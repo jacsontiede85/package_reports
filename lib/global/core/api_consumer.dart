@@ -38,10 +38,9 @@ class API with SettingsReports {
       ),
     );
 
-    //  print("${SettingsReports.enderecoRepositorio}$url");
-    //  print(banco);
-    //  print(token); 
-
+    //  print("URL: ${SettingsReports.enderecoRepositorio}$url");
+    //  log("TOKEN: $token"); 
+    //  print("BANCO: $banco");
     if (res.statusCode == 200) {
       return res.body.replaceAllMapped(
         RegExp(r'\bnull\b'), (match) => '""',
