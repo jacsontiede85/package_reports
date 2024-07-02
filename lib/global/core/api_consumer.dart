@@ -27,9 +27,6 @@ class API with SettingsReports {
     // log(token);
     Response res = await http.post(
       Uri.parse("${SettingsReports.enderecoRepositorio}$url"),
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: jsonEncode(
         {
           'connection': banco,
