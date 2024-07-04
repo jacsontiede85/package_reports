@@ -23,7 +23,7 @@ dependencies:
     sdk: flutter
     
   intl: ^0.19.0
-  mobx: ^2.3.3+2
+  mobx: ^2.3.3
   flutter_mobx: ^2.2.1+1
   http: ^1.2.1
   crypto: ^3.0.3
@@ -32,15 +32,15 @@ dependencies:
   universal_html: ^2.2.4
   path_provider: ^2.1.3
   open_filex: ^4.4.0
-  syncfusion_flutter_charts: ^25.2.4
-  syncfusion_flutter_xlsio: ^25.2.4
-  responsive_builder: ^0.7.0
+  syncfusion_flutter_charts: ^26.1.40
+  syncfusion_flutter_xlsio: ^26.1.40
+  responsive_builder: ^0.7.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0 
-  build_runner: ^2.4.10
+  build_runner: ^2.4.11
   mobx_codegen: ^2.6.1
 
 flutter:
