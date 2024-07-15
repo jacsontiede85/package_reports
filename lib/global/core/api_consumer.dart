@@ -13,8 +13,6 @@ class API with SettingsReports {
     };
     String header64 = base64Encode(jsonEncode(header).codeUnits);
 
-     //print(dados);
-
     //payload
     var payload = dados;
     String payload64 = base64Encode(utf8.encode(jsonEncode(payload))); //utf8.encode para caracteres especiais
@@ -24,7 +22,7 @@ class API with SettingsReports {
     Digest digest = hmac.convert("$header64.$payload64".codeUnits);
     String sign = base64Encode(digest.bytes);
     String token = "$header64.$payload64.$sign";
-    // log(token);
+
     Response res = await http.post(
       Uri.parse("${SettingsReports.enderecoRepositorio}$url"),
       body: jsonEncode(
@@ -37,10 +35,13 @@ class API with SettingsReports {
 
     //  print("URL: ${SettingsReports.enderecoRepositorio}$url");
     //  log("TOKEN: $token"); 
-    //  print("BANCO: $banco");
+    //  print("token: $token");
     if (res.statusCode == 200) {
       return res.body.replaceAllMapped(
-        RegExp(r'\bnull\b'), (match) => '""',
+        RegExp(r'\:\bnull\b\,'), 
+        (match) {
+          return ':"",';
+        },
       );
     } else {
       return "";

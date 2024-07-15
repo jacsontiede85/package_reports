@@ -27,40 +27,33 @@ class _ItensFiltroState extends State<ItensFiltro> {
         visible: widget.filtroPaginaAtual.qualPaginaFiltroPertence == widget.indexDapagina,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.black87,
-            surfaceTintColor: Colors.transparent,
-            title: Column(
-              children: [
-                Text(
-                  widget.filtroPaginaAtual.filtrosWidgetModel.titulo,
-                  style: const TextStyle(color: Colors.white, fontSize: 18),
-                ),
-                Observer(
-                  builder: (_) => Visibility(
-                    visible: widget.controller.getQtdeItensSelecionados > 0,
-                    child: Observer(
-                      builder: (_) => Text(
-                        "Qtde. selecionado: ${widget.controller.getQtdeItensSelecionados} de ${widget.controller.getListFiltrosComputed.length}",
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 10,
-                        ),
+            automaticallyImplyLeading: false,
+            leadingWidth: 0,
+            elevation: 15,
+            title: ListTile(
+              dense: true,
+              title: Text(
+                widget.filtroPaginaAtual.filtrosWidgetModel.titulo,
+                style: const TextStyle( fontSize: 18),
+              ),
+              subtitle: Observer(
+                builder: (_) => Visibility(
+                  visible: widget.controller.getQtdeItensSelecionados > 0,
+                  child: Observer(
+                    builder: (_) => Text(
+                      "Qtde. selecionado: ${widget.controller.getQtdeItensSelecionados} de ${widget.controller.getListFiltrosComputed.length}",
+                      style: const TextStyle(
+                        fontSize: 10,
                       ),
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-            leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios),
-                color: const Color.fromRGBO(255, 255, 255, 1),
-                onPressed: () async {
-                  Navigator.of(context).pop(true);
-                }),
             actions: [
               Observer(
                 builder: (_) => AnimatedContainer(
-                  height: 40,
+                  height: 30,
                   width: widget.controller.exibirBarraPesquisa ? 300 : 60,
                   margin: const EdgeInsets.only(right: 10),
                   duration: const Duration(milliseconds: 300),
@@ -78,7 +71,6 @@ class _ItensFiltroState extends State<ItensFiltro> {
                       icon: Icon(
                         widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,
                       ),
-                      color: Colors.white.withOpacity(0.7),
                     ),
                     textStyle: const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
                     hintStyle: WidgetStatePropertyAll(
@@ -112,7 +104,6 @@ class _ItensFiltroState extends State<ItensFiltro> {
                             value: widget.controller.verificaSeTodosEstaoSelecionados,
                             title: const Text(
                               "Todos",
-                              style: TextStyle(color: Colors.white),
                             ),
                             hoverColor: Colors.grey.shade700,
                             onChanged: (_) {
@@ -129,15 +120,12 @@ class _ItensFiltroState extends State<ItensFiltro> {
                       Expanded(
                         child: ListTile(
                           leading: const Icon(
-                            Icons.change_circle_outlined,
-                            color: Colors.white60,
+                            Icons.compare_arrows,
                           ),
                           title: const Text(
                             "Inverter seleção",
-                            style: TextStyle(color: Colors.white),
                           ),
                           dense: true,
-                          hoverColor: Colors.grey.shade700,
                           onTap: () {
                             widget.controller.inverterSelecao();
                           },
@@ -183,7 +171,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
                               widget.controller.adicionarItensSelecionado(itens: filtro);
                             },
                             title: Text(
-                              "${filtro.codigo} - ${filtro.titulo}",
+                              "${filtro.codigo} - ${filtro.titulo}".toUpperCase(),
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14,
@@ -191,7 +179,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
                             ),
                             subtitle: filtro.subtitulo.isNotEmpty
                                 ? Text(
-                                    filtro.subtitulo,
+                                    filtro.subtitulo.toUpperCase(),
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 12,
