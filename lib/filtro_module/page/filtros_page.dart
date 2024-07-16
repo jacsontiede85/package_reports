@@ -52,8 +52,9 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
               "Filtros",
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
             ),
-            automaticallyImplyLeading: false,
-            leadingWidth: 0,
+            automaticallyImplyLeading: true,
+            elevation: 0,
+            scrolledUnderElevation: 0.0,
             actions: [
               Observer(
                 builder: (_) => Visibility(

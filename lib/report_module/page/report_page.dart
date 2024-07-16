@@ -120,11 +120,27 @@ class _ReportPageState extends State<ReportPage> with Rows {
           backgroundColor: Colors.black87,
           surfaceTintColor: Colors.transparent,
           title: Observer(
-            builder: (_) => Text(
-              controller.configPagina['name'] ?? "",
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.white,
+            builder: (_) => ListTile(
+              isThreeLine: true,
+              dense: true,
+              title: Text(
+                controller.configPagina['name'] ?? "",
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+              subtitle: Visibility(
+                visible: controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty,
+                child: const Text(
+                  "Este relatório possui células interativas. Toque duas vezes na linha para mais detalhes.",
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12
+                  ),
+                )
               ),
             ),
           ),

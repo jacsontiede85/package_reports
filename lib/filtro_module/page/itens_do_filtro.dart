@@ -27,14 +27,14 @@ class _ItensFiltroState extends State<ItensFiltro> {
         visible: widget.filtroPaginaAtual.qualPaginaFiltroPertence == widget.indexDapagina,
         child: Scaffold(
           appBar: AppBar(
-            automaticallyImplyLeading: false,
-            leadingWidth: 0,
-            elevation: 15,
+            automaticallyImplyLeading: true,
+            elevation: 0,
+            scrolledUnderElevation: 0.0,
             title: ListTile(
               dense: true,
               title: Text(
                 widget.filtroPaginaAtual.filtrosWidgetModel.titulo,
-                style: const TextStyle( fontSize: 18),
+                style: const TextStyle( fontSize: 20, fontWeight: FontWeight.w500),
               ),
               subtitle: Observer(
                 builder: (_) => Visibility(
@@ -51,85 +51,97 @@ class _ItensFiltroState extends State<ItensFiltro> {
               ),
             ),
             actions: [
-              Observer(
-                builder: (_) => AnimatedContainer(
-                  height: 30,
-                  width: widget.controller.exibirBarraPesquisa ? 300 : 60,
-                  margin: const EdgeInsets.only(right: 10),
-                  duration: const Duration(milliseconds: 300),
-                  child: SearchBar(
-                    hintText: 'Pesquisar',
-                    elevation: const WidgetStatePropertyAll(0),
-                    side: const WidgetStatePropertyAll(
-                      BorderSide(color: Colors.white, width: 0.25),
-                    ),
-                    backgroundColor: const WidgetStatePropertyAll(Colors.black12),
-                    leading: IconButton(
-                      onPressed: () {
-                        widget.controller.exibirBarraPesquisa = !widget.controller.exibirBarraPesquisa;
-                      },
-                      icon: Icon(
-                        widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,
-                      ),
-                    ),
-                    textStyle: const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
-                    hintStyle: WidgetStatePropertyAll(
-                      TextStyle(color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.normal),
-                    ),
-                    onSubmitted: (value) {
-                      widget.controller.pesquisaItensDoFiltro = value;
-                      widget.controller.bodyPesquisarFiltros.addAll({"pesquisa": widget.controller.pesquisaItensDoFiltro});
-                      if (widget.controller.getListFiltrosComputed.isEmpty) {
-                        widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
-                      } else {
-                        if (widget.controller.pesquisaItensDoFiltro.isEmpty) {
-                          widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
-                        }
-                      }
-                    },
-                  ),
-                ),
-              ),
+              IconButton(
+                onPressed: (){
+                  widget.controller.exibirBarraPesquisa = !widget.controller.exibirBarraPesquisa;
+                },
+                icon: Icon(widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,),
+              )
             ],
             bottom: PreferredSize(
-              preferredSize: const Size(30, 40),
+              preferredSize: Size.fromHeight(widget.controller.exibirBarraPesquisa ? 90 : 40),
               child: Observer(
                 builder: (_) => Visibility(
                   visible: !widget.controller.loadingItensFiltros && widget.controller.getListFiltrosComputed.isNotEmpty,
-                  child: Row(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Observer(
-                          builder: (_) => CheckboxListTile(
-                            value: widget.controller.verificaSeTodosEstaoSelecionados,
-                            title: const Text(
-                              "Todos",
+                      Observer(
+                        builder: (_) => Visibility(
+                          visible: widget.controller.exibirBarraPesquisa,
+                          child: Container(
+                            height: 40,
+                            margin: const EdgeInsets.all(10),
+                            child: SearchBar(
+                              hintText: 'Pesquisar',
+                              elevation: const WidgetStatePropertyAll(0),
+                              side: const WidgetStatePropertyAll(
+                                BorderSide(color: Colors.white, width: 0.25),
+                              ),
+                              backgroundColor: const WidgetStatePropertyAll(Colors.black12),
+                              leading: IconButton(
+                                onPressed: () {
+                                  widget.controller.exibirBarraPesquisa = !widget.controller.exibirBarraPesquisa;
+                                },
+                                icon: Icon(
+                                  widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,
+                                ),
+                              ),
+                              textStyle: const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
+                              hintStyle: WidgetStatePropertyAll(
+                                TextStyle(color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.normal),
+                              ),
+                              onSubmitted: (value) {
+                                widget.controller.pesquisaItensDoFiltro = value;
+                                widget.controller.bodyPesquisarFiltros.addAll({"pesquisa": widget.controller.pesquisaItensDoFiltro});
+                                if (widget.controller.getListFiltrosComputed.isEmpty) {
+                                  widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
+                                } else {
+                                  if (widget.controller.pesquisaItensDoFiltro.isEmpty) {
+                                    widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
+                                  }
+                                }
+                              },
                             ),
-                            hoverColor: Colors.grey.shade700,
-                            onChanged: (_) {
-                              if (widget.controller.verificaSeTodosEstaoSelecionados) {
-                                widget.controller.limparSelecao();
-                              } else {
-                                widget.controller.selecionarTodos();
-                              }
-                            },
-                            controlAffinity: ListTileControlAffinity.leading,
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.compare_arrows,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Observer(
+                              builder: (_) => CheckboxListTile(
+                                value: widget.controller.verificaSeTodosEstaoSelecionados,
+                                title: const Text(
+                                  "Todos",
+                                ),
+                                hoverColor: Colors.grey.shade700,
+                                onChanged: (_) {
+                                  if (widget.controller.verificaSeTodosEstaoSelecionados) {
+                                    widget.controller.limparSelecao();
+                                  } else {
+                                    widget.controller.selecionarTodos();
+                                  }
+                                },
+                                controlAffinity: ListTileControlAffinity.leading,
+                              ),
+                            ),
                           ),
-                          title: const Text(
-                            "Inverter seleção",
+                          Expanded(
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.compare_arrows,
+                              ),
+                              title: const Text(
+                                "Inverter seleção",
+                              ),
+                              dense: true,
+                              onTap: () {
+                                widget.controller.inverterSelecao();
+                              },
+                            ),
                           ),
-                          dense: true,
-                          onTap: () {
-                            widget.controller.inverterSelecao();
-                          },
-                        ),
+                        ],
                       ),
                     ],
                   ),
