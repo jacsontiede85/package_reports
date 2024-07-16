@@ -215,18 +215,23 @@ class _ReportPageState extends State<ReportPage> with Rows {
             Wrap(
               spacing: 5,
               children: [
-                IconButton(
-                  onPressed: () {
-                    controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
-                    if(!controller.mostrarBarraPesquisar){
-                      controller.clearFiltros();
-                    }
-                    setState(() {});
-                  },
-                  icon: Icon(
-                    controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
-                    color:Colors.white,
-                    size: 20,
+                Observer(
+                  builder: (_) => Visibility(
+                    visible: controller.configPagina.isNotEmpty && !controller.loading && controller.dados.isNotEmpty,
+                    child: IconButton(
+                      onPressed: () {
+                        controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
+                        if(!controller.mostrarBarraPesquisar){
+                          controller.clearFiltros();
+                        }
+                        setState(() {});
+                      },
+                      icon: Icon(
+                        controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
+                        color:Colors.white,
+                        size: 20,
+                      ),
+                    ),
                   ),
                 ),
                 Observer(
