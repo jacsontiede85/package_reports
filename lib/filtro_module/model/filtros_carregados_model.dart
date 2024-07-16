@@ -16,6 +16,7 @@ abstract class FiltrosCarrregadosBase with Store {
   @observable
   List<FiltrosModel> listaFiltros = [];
 
+  @observable
   FiltrosModel? valorSelecionadoParaDropDown;
 
 

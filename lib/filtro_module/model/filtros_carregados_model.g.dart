@@ -73,6 +73,24 @@ mixin _$FiltrosCarrregados on FiltrosCarrregadosBase, Store {
     });
   }
 
+  late final _$valorSelecionadoParaDropDownAtom = Atom(
+      name: 'FiltrosCarrregadosBase.valorSelecionadoParaDropDown',
+      context: context);
+
+  @override
+  FiltrosModel? get valorSelecionadoParaDropDown {
+    _$valorSelecionadoParaDropDownAtom.reportRead();
+    return super.valorSelecionadoParaDropDown;
+  }
+
+  @override
+  set valorSelecionadoParaDropDown(FiltrosModel? value) {
+    _$valorSelecionadoParaDropDownAtom
+        .reportWrite(value, super.valorSelecionadoParaDropDown, () {
+      super.valorSelecionadoParaDropDown = value;
+    });
+  }
+
   late final _$tipoFiltroAtom =
       Atom(name: 'FiltrosCarrregadosBase.tipoFiltro', context: context);
 
@@ -96,6 +114,7 @@ indexFiltros: ${indexFiltros},
 indexPagina: ${indexPagina},
 pesquisaFeita: ${pesquisaFeita},
 listaFiltros: ${listaFiltros},
+valorSelecionadoParaDropDown: ${valorSelecionadoParaDropDown},
 tipoFiltro: ${tipoFiltro}
     ''';
   }

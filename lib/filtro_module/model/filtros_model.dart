@@ -6,6 +6,7 @@ class FiltrosModel = FiltrosModelBase with _$FiltrosModel;
 abstract class FiltrosModelBase with Store {
 
   String codigo = '';
+  @observable
   String titulo = '';
   String subtitulo = '';
 

@@ -542,6 +542,7 @@ abstract class FiltroControllerBase with Store {
     return novoIndexFiltro;
   }
 
+  @action
   void adicionarItensDropDown({required int index, required FiltrosModel valorSelecionado}) {
     int indexFiltrosCarregados = listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index);
     listaFiltrosCarregados[indexFiltrosCarregados].valorSelecionadoParaDropDown = valorSelecionado;

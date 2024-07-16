@@ -419,27 +419,38 @@ class Widgets {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: Builder(builder: (context) {
-                return Observer(builder: (_) {
+              child: FutureBuilder(
+                future: 
+                controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index) == -1 ? 
+                controller.funcaoBuscarDadosDeCadaFiltro(
+                  valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                  isBuscarDropDown: true,
+                  index: index,
+                ).then(
+                  (value) {
+                    controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.first;
+                  },
+                ) : null,
+                builder: (context, snapshot) {
                   if (controller.listaFiltrosCarregados.where((element) => element.indexFiltros == index).toList().isNotEmpty) {
-                    return Observer(
-                      builder: (_) => DropdownButton<FiltrosModel>(
-                        value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
-                        isExpanded: true,
-                        isDense: true,
-                        onChanged: (value) {
-                          controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
-                        },
-                        hint: Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
-                        items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((value) {
-                          return DropdownMenuItem<FiltrosModel>(
-                            value: value,
-                            child: Text(
-                              value.titulo,
-                            ),
-                          );
-                        }).toList(),
-                      ),
+                    return DropdownButton<FiltrosModel>(
+                      value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
+                      isExpanded: true,
+                      isDense: true,
+                      onChanged: (value) {
+                        controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value;
+                        controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
+                    
+                      },
+                      hint: Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
+                      items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((item) {
+                        return DropdownMenuItem<FiltrosModel>(
+                          value: item,
+                          child: Text(
+                            item.titulo,
+                          ),
+                        );
+                      }).toList(),
                     );
                   } else {
                     return InkWell(
@@ -466,8 +477,8 @@ class Widgets {
                       },
                     );
                   }
-                });
-              }),
+                },
+              ),
             ),
           ],
         ),

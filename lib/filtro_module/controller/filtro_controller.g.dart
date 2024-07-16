@@ -385,6 +385,19 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   }
 
   @override
+  void adicionarItensDropDown(
+      {required int index, required FiltrosModel valorSelecionado}) {
+    final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
+        name: 'FiltroControllerBase.adicionarItensDropDown');
+    try {
+      return super.adicionarItensDropDown(
+          index: index, valorSelecionado: valorSelecionado);
+    } finally {
+      _$FiltroControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 listaFiltrosCarregados: ${listaFiltrosCarregados},
