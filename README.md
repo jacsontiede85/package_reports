@@ -105,11 +105,8 @@ dentro de ```page```, ```page``` é a proxima pagina do relatorio e tambem pode 
         ],
 
         'page' => [
-            'menu'=> $menu,
-            'submenu'=> $submenu,
             'urlapi'=> 'repositorio/reports/query/compras/sql1.php',
             'name'=> 'Resumo de vendas (Por rca)',
-            'iconFlutterID'=> 'trending_up',
             'indexPage'=> 1,
             'selectedRow' => [],
             'filtros'=> [
@@ -128,11 +125,8 @@ dentro de ```page```, ```page``` é a proxima pagina do relatorio e tambem pode 
             ],
 
             'page' => [
-                'menu'=> $menu,
-                'submenu'=> $submenu,
                 'urlapi'=> 'repositorio/reports/query/compras/sql1.php',
                 'name'=> 'Teste segunda navegação',
-                'iconFlutterID'=> 'trending_up',
                 'indexPage'=> 2,
                 'selectedRow' => [],
             ]
