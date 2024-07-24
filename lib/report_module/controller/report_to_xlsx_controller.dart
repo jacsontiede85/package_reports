@@ -194,7 +194,7 @@ class WidgetReportXLSX extends WidgetXLSX {
 
       //STRING
     } else {
-      range.setText(text.toString());
+      range.setText(Features.formatarTextoPrimeirasLetrasMaiusculas(text.toString()));
       range.autoFitColumns();
     }
   }

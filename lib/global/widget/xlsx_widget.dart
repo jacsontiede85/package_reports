@@ -4,64 +4,40 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 class WidgetXLSX {
   String? titulo;
 
-  Style styleCabecalho({required workbook}) {
-    //------------- FORMATAÇÃO CABEÇALHO
-    //Defining a global style with all properties.
+  Style styleCabecalho({required Workbook workbook}) {
     Style style = workbook.styles.add('cabecalho');
-    //set back color by hexa decimal.
     style.backColor = '#1B4F72';
-    //set font color by hexa decimal.
     style.fontColor = '#FFFFFF';
-    //set font italic.
     style.italic = true;
-    //set font bold.
+    style.bold = true;
+    style.fontSize = 15.0;
+    return style;
+  }
+
+  Style styleColunas({required Workbook workbook}) {
+    Style style = workbook.styles.add('colunas');
+    style.backColor = '#1B4F72';
+    style.fontColor = '#FFFFFF';
+    style.italic = true;
     style.bold = true;
     style.fontSize = 12.0;
     return style;
   }
 
-  Style styleColunas({required workbook}) {
-    //------------- FORMATAÇÃO COLUNAS
-    //Defining a global style with all properties.
-    Style style = workbook.styles.add('colunas');
-    //set back color by hexa decimal.
-    style.backColor = '#1B4F72';
-    //set font color by hexa decimal.
-    style.fontColor = '#FFFFFF';
-    //set font italic.
-    style.italic = true;
-    //set font bold.
-    style.bold = true;
-    style.fontSize = 9.0;
-    return style;
-  }
-
-  Style styleCelulaCinza({required workbook}) {
-    //-------------FORMATAÇÃO LINHA CINZA
-    //Defining a global style with all properties.
+  Style styleCelulaCinza({required Workbook workbook}) {
     Style style = workbook.styles.add('linha');
-    //set back color by hexa decimal.
     style.backColor = '#EAE7E6';
-    //set font color by hexa decimal.
     style.fontColor = '#000000';
-    //set font italic.
     style.italic = true;
-    //set font bold.
     style.bold = false;
     return style;
   }
 
-  Style styleCelulaBranco({required workbook}) {
-    //-------------FORMATAÇÃO LINHA BRANCO
-    //Defining a global style with all properties.
+  Style styleCelulaBranco({required Workbook workbook}) {
     Style style = workbook.styles.add('linha1');
-    //set back color by hexa decimal.
     style.backColor = '#FFFFFF';
-    //set font color by hexa decimal.
     style.fontColor = '#000000';
-    //set font italic.
     style.italic = true;
-    //set font bold.
     style.bold = false;
     return style;
   }
