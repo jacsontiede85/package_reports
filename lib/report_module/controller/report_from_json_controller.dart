@@ -672,10 +672,9 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
   getSelectedRowParaNavegarParaNovaPage() {
     if (configPagina['page'].isNotEmpty && configPagina['page'] != null) {
-      configPagina['selectedRow'] = mapSelectedRow;
       bodySecundario.addAll(
         {
-          'selectedRow': configPagina['selectedRow'],
+          'selectedRow': mapSelectedRow,
         },
       );
       configPagina = configPagina['page'];

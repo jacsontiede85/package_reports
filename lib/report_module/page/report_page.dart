@@ -132,13 +132,13 @@ class _ReportPageState extends State<ReportPage> with Rows {
               ),
               subtitle: Visibility(
                 visible: controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty,
-                child: const Text(
-                  "Este relatório possui células interativas. Toque duas vezes na linha para mais detalhes.",
-                  style: TextStyle(
+                child: Text(
+                  "Este relatório possui células interativas. Toque duas vezes na linha para mais detalhes.\nProx rel. ${controller.configPagina['page']?['name']}",
+                  style: const TextStyle(
                     color: Colors.green,
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w500,
-                    fontSize: 12
+                    fontSize: 10
                   ),
                 )
               ),
@@ -630,15 +630,28 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return ReportPage(
-                                database: widget.database,
-                                buscarDadosNaEntrada: true,
-                                function: controller.configPagina['urlapi'],
-                              )..setMapSelectedRowPage(
+                              if(controller.bodySecundario.isEmpty){
+                                return ReportPage(
+                                  database: widget.database,
+                                  buscarDadosNaEntrada: true,
+                                  function: controller.configPagina['urlapi'],
+                                )..setMapSelectedRowPage(
                                   mapSelectedRow: val,
                                   bodyConfigBuscaRecursiva: controller.configPagina,
                                   getbodyPrimario: controller.bodyPrimario,
+                                );                                
+                              }else{
+                                return ReportPage(
+                                  database: widget.database,
+                                  buscarDadosNaEntrada: true,
+                                  function: controller.configPagina['urlapi'],
+                                )..setMapSelectedRowPage(
+                                  mapSelectedRow: val,
+                                  bodyConfigBuscaRecursiva: controller.configPagina,
+                                  getbodyPrimario: controller.bodySecundario,
                                 );
+                              }
+
                             },
                           ),
                         );
