@@ -30,11 +30,17 @@ class _ItensFiltroState extends State<ItensFiltro> {
             automaticallyImplyLeading: true,
             elevation: 0,
             scrolledUnderElevation: 0.0,
+            backgroundColor: Colors.transparent,
             title: ListTile(
               dense: true,
+              isThreeLine: true,
               title: Text(
                 widget.filtroPaginaAtual.filtrosWidgetModel.titulo,
-                style: const TextStyle( fontSize: 20, fontWeight: FontWeight.w500),
+                style: const TextStyle( 
+                  fontSize: 16, 
+                  fontWeight: FontWeight.w500,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
               subtitle: Observer(
                 builder: (_) => Visibility(

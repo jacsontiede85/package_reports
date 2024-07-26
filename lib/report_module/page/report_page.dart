@@ -126,14 +126,14 @@ class _ReportPageState extends State<ReportPage> with Rows {
               title: Text(
                 controller.configPagina['name'] ?? "",
                 style: const TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   color: Colors.white,
                 ),
               ),
               subtitle: Visibility(
                 visible: controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty,
                 child: Text(
-                  "Este relatório possui células interativas. Toque duas vezes na linha para mais detalhes.\nProx rel. ${controller.configPagina['page']?['name']}",
+                  "Relatório com linhas interativas. Clique duas vezes na linha para mais detalhes.Prox rel. ${controller.configPagina['page']?['name']}",
                   style: const TextStyle(
                     color: Colors.green,
                     fontStyle: FontStyle.italic,
@@ -152,7 +152,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             },
           ),
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(controller.mostrarBarraPesquisar ? kToolbarHeight : 0),
+            preferredSize: Size.fromHeight(controller.mostrarBarraPesquisar && controller.configPagina.isNotEmpty && !controller.loading && controller.dados.isNotEmpty ? kToolbarHeight : 0),
             child: Observer(
               builder: (_) => Visibility(
                 visible: controller.mostrarBarraPesquisar && controller.configPagina.isNotEmpty && !controller.loading && controller.dados.isNotEmpty,
@@ -201,126 +201,138 @@ class _ReportPageState extends State<ReportPage> with Rows {
             ),
           ),
           actions: [
-            Visibility(
-              visible: controller.colunasFiltradas.isNotEmpty || controller.searchString.text.isNotEmpty,
-              child: ElevatedButton.icon(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                    Colors.white.withOpacity(0.3),
-                  ),
+            Observer(
+              builder: (_) => Visibility(
+                visible: (controller.dadosFiltered().isNotEmpty && !controller.loading),
+                child: PopupMenuButton(
+                  tooltip: 'Opções',
+                  position: PopupMenuPosition.under,
+                  iconColor: Colors.white,
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem(
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Icon(Icons.search),
+                            ),
+                            Text("Pesquisar"),
+                          ],
+                        ),
+                        onTap: () {
+                          controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
+                          if(!controller.mostrarBarraPesquisar){
+                            controller.clearFiltros();
+                          }
+                          setState(() {});
+                        },
+                      ),
+
+                      if( !controller.loading && controller.dados.isNotEmpty && (controller.configPagina['graficosDisponiveis'] != null && controller.configPagina['graficosDisponiveis'].isNotEmpty))
+                      PopupMenuItem(
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Icon(Icons.bar_chart),
+                            ),
+                            Text("Graficos"),
+                          ],
+                        ),
+                        onTap: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChartsReport(
+                                reportFromJSONController: controller,
+                                title: controller.configPagina['name'],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+                      PopupMenuItem(
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Icon(Icons.analytics),
+                            ),
+                            Text("Excel"),
+                          ],
+                        ),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => exibirSelecaoDeColunasParaExporta(
+                              onPressedTudo: () {
+                                ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller, filtraTudo: true);
+                                Navigator.pop(context);
+                              },
+                              onPressedFiltrado: () {
+                                ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller, filtraTudo: false);
+                                Navigator.pop(context);
+                              },
+                              titulo: 'Exportar para Excel',
+                            ),
+                          );
+                        },
+                      ),
+                    ];
+                  },
                 ),
-                onPressed: () {
-                  controller.clearFiltros();
-                  setState(() {});
-                },
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.red,
-                ),
-                label: const Text(
-                  "Limpar Filtros",
-                  style: TextStyle(
+              ),
+            ),
+            
+            Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: Observer(
+                builder: (_) => Visibility(
+                  visible: (controller.configPagina.isNotEmpty && !controller.loading && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.filter_alt_outlined,
+                      size: 18,
+                    ),
                     color: Colors.white,
+                    onPressed: () {
+                      scaffoldKey.currentState!.openEndDrawer();
+                    },
                   ),
                 ),
               ),
             ),
-            const SizedBox(
-              width: 30,
-            ),
-            Wrap(
-              spacing: 5,
-              children: [
-                Observer(
-                  builder: (_) => Visibility(
-                    visible: controller.configPagina.isNotEmpty && !controller.loading && controller.dados.isNotEmpty,
-                    child: IconButton(
-                      onPressed: () {
-                        controller.mostrarBarraPesquisar = !controller.mostrarBarraPesquisar;
-                        if(!controller.mostrarBarraPesquisar){
-                          controller.clearFiltros();
-                        }
-                        setState(() {});
-                      },
-                      icon: Icon(
-                        controller.mostrarBarraPesquisar ? Icons.search_off : Icons.search,
-                        color:Colors.white,
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                ),
-                Observer(
-                  builder: (_) => Visibility(
-                    visible: !controller.loading && controller.dados.isNotEmpty && (controller.configPagina['graficosDisponiveis'] != null && controller.configPagina['graficosDisponiveis'].isNotEmpty),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.bar_chart,
-                        size: layout.desktop ? 20 : 15,
-                      ),
-                      color: Colors.white,
-                      onPressed: () async {
-                        await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChartsReport(
-                              reportFromJSONController: controller,
-                              title: controller.configPagina['name'],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Observer(
-                  builder: (_) => Visibility(
-                    visible: (controller.dadosFiltered().isNotEmpty && !controller.loading),
-                    child: IconButton(
-                      icon: const Text(
-                        "Excel",
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-                      ),
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => exibirSelecaoDeColunasParaExporta(
-                            onPressedTudo: () {
-                              ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller, filtraTudo: true);
-                              Navigator.pop(context);
-                            },
-                            onPressedFiltrado: () {
-                              ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller, filtraTudo: false);
-                              Navigator.pop(context);
-                            },
-                            titulo: 'Exportar para Excel',
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: Observer(
-                    builder: (_) => Visibility(
-                      visible: (controller.configPagina.isNotEmpty && !controller.loading && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.filter_alt_outlined,
-                          size: 18,
-                        ),
-                        color: Colors.white,
-                        onPressed: () {
-                          scaffoldKey.currentState!.openEndDrawer();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+        floatingActionButton: Visibility(
+          visible: controller.colunasFiltradas.isNotEmpty || controller.searchString.text.isNotEmpty,
+          child: ElevatedButton.icon(
+            style: const ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(
+                Colors.white,
+              ),
+            ),
+            onPressed: () {
+              controller.clearFiltros();
+              setState(() {});
+            },
+            icon: const Icon(
+              Icons.close,
+              color: Colors.red,
+            ),
+            label: const Text(
+              "Limpar Filtros",
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          ),
         ),
         endDrawer: Builder(
           builder: (context) {

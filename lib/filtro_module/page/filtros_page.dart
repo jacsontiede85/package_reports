@@ -48,9 +48,14 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
 
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.transparent,
             title: const Text(
               "Filtros",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 18, 
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             automaticallyImplyLeading: true,
             elevation: 0,
