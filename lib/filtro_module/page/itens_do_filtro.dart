@@ -30,7 +30,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
             automaticallyImplyLeading: true,
             elevation: 0,
             scrolledUnderElevation: 0.0,
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.black,
             title: ListTile(
               dense: true,
               isThreeLine: true,
@@ -40,6 +40,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
                   fontSize: 16, 
                   fontWeight: FontWeight.w500,
                   fontStyle: FontStyle.italic,
+                  color: Colors.white,
                 ),
               ),
               subtitle: Observer(
@@ -50,18 +51,29 @@ class _ItensFiltroState extends State<ItensFiltro> {
                       "Qtde. selecionado: ${widget.controller.getQtdeItensSelecionados} de ${widget.controller.getListFiltrosComputed.length}",
                       style: const TextStyle(
                         fontSize: 10,
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
               ),
             ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
             actions: [
               IconButton(
                 onPressed: (){
                   widget.controller.exibirBarraPesquisa = !widget.controller.exibirBarraPesquisa;
                 },
-                icon: Icon(widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,),
+                icon: Icon(
+                  widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,
+                  color: Colors.white,
+                ),
               )
             ],
             bottom: PreferredSize(
@@ -120,6 +132,9 @@ class _ItensFiltroState extends State<ItensFiltro> {
                                 value: widget.controller.verificaSeTodosEstaoSelecionados,
                                 title: const Text(
                                   "Todos",
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),
                                 ),
                                 hoverColor: Colors.grey.shade700,
                                 onChanged: (_) {
@@ -137,9 +152,13 @@ class _ItensFiltroState extends State<ItensFiltro> {
                             child: ListTile(
                               leading: const Icon(
                                 Icons.compare_arrows,
+                                color: Colors.white,
                               ),
                               title: const Text(
                                 "Inverter seleção",
+                                style: TextStyle(
+                                  color: Colors.white
+                                ),
                               ),
                               dense: true,
                               onTap: () {

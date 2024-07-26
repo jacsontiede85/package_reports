@@ -48,14 +48,22 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
 
         return Scaffold(
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Colors.black,
             title: const Text(
               "Filtros",
               style: TextStyle(
                 fontSize: 18, 
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.w500,
+                color: Colors.white,
               ),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              color: Colors.white,
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
             ),
             automaticallyImplyLeading: true,
             elevation: 0,
