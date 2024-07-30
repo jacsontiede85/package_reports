@@ -38,7 +38,7 @@ class API with SettingsReports {
     //  print("token: $token");
     if (res.statusCode == 200) {
       return res.body.replaceAllMapped(
-        RegExp(r'\:\bnull\b\,'), 
+        RegExp(r'\:\b(null)\b\,', caseSensitive: false), 
         (match) {
           return ':"",';
         },
