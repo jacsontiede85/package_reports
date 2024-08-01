@@ -4,9 +4,11 @@ import 'package:intl/intl.dart';
 mixin class SettingsReports{
   static String enderecoRepositorio = '';
   static int matricula = 0;
+  static String bancoDeDados = '';
 
   setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
   setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;
+  setBancoDeDados({required String banco}) => bancoDeDados = banco;
 
   static getDataPTBR() {
     final DateTime now = DateTime.now();

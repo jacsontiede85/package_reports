@@ -35,7 +35,7 @@ class API with SettingsReports {
 
     //  print("URL: ${SettingsReports.enderecoRepositorio}$url");
     //  log("TOKEN: $token"); 
-    //  print("token: $token");
+    //  print("body: $dados");
     if (res.statusCode == 200) {
       return res.body.replaceAllMapped(
         RegExp(r'\:\b(null)\b\,', caseSensitive: false), 
@@ -51,9 +51,8 @@ class API with SettingsReports {
   Future<Map<String, dynamic>> getConfigApi({required String function}) async {
     String matricula = base64Encode(utf8.encode('matricula=${SettingsReports.matricula}'));
     http.Response response = await http.get(
-      Uri.parse('${SettingsReports.enderecoRepositorio}$function?hash=$matricula'),
+      Uri.parse('${SettingsReports.enderecoRepositorio}$function?banco=${SettingsReports.bancoDeDados}&hash=$matricula'),
     );
-
     try {
       return jsonDecode(
         response.body,
