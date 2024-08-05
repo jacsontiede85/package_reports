@@ -315,6 +315,15 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$conjuntoDePeriodosAsyncAction =
+      AsyncAction('FiltroControllerBase.conjuntoDePeriodos', context: context);
+
+  @override
+  Future<void> conjuntoDePeriodos() {
+    return _$conjuntoDePeriodosAsyncAction
+        .run(() => super.conjuntoDePeriodos());
+  }
+
   late final _$FiltroControllerBaseActionController =
       ActionController(name: 'FiltroControllerBase', context: context);
 
@@ -357,17 +366,6 @@ mixin _$FiltroController on FiltroControllerBase, Store {
         name: 'FiltroControllerBase.inverterSelecao');
     try {
       return super.inverterSelecao();
-    } finally {
-      _$FiltroControllerBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void conjuntoDePeriodos() {
-    final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
-        name: 'FiltroControllerBase.conjuntoDePeriodos');
-    try {
-      return super.conjuntoDePeriodos();
     } finally {
       _$FiltroControllerBaseActionController.endAction(_$actionInfo);
     }

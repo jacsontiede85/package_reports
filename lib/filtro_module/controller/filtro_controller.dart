@@ -53,7 +53,7 @@ abstract class FiltroControllerBase with Store {
 
   Map<String, dynamic> bodyPesquisarFiltros = {};
 
-  List<String> listaDePeriodos = [];
+  List<dynamic> listaDePeriodos = [];
 
   @observable
   bool isDataFaturamento = false;
@@ -122,7 +122,7 @@ abstract class FiltroControllerBase with Store {
 
       listaFiltrosParaConstruirTela.add(FiltrosPageAtual(qualPaginaFiltroPertence: indexPagina, filtrosWidgetModel: FiltrosWidgetModel.fromJson(value, key)));
     });
-    conjuntoDePeriodos();
+    await conjuntoDePeriodos();
   }
 
   Future<void> funcaoBuscarDadosDeCadaFiltro({required FiltrosWidgetModel valor, required bool isBuscarDropDown, required int index, bool pesquisa = false}) async {
@@ -350,19 +350,21 @@ abstract class FiltroControllerBase with Store {
   }
 
   @action
-  void conjuntoDePeriodos() {
-    listaDePeriodos = [];
-    // List<AnosModel> anosmodel = await TotalizadorDados().getAnosDeVenda(order: 'desc');
-    listaDePeriodos.add('Hoje');
-    listaDePeriodos.add('Ontem');
-    listaDePeriodos.add('Semana atual');
-    listaDePeriodos.add('Semana anterior');
-    listaDePeriodos.add('Últimos 15 dias');
-    listaDePeriodos.add('Mês atual');
-    listaDePeriodos.add('Mês anterior');
-    // for (var element in anosmodel) {
-    //   listaDePeriodos.add('Ano ${element.aNO}');
-    // }
+  Future<void> conjuntoDePeriodos() async {
+
+    bodyPesquisarFiltros.addAll(
+      {
+        "function": "getConjnuntoDePeriodos",
+        "database": 'atacado',
+        "matricula": SettingsReports.matricula,
+      },
+    );
+    listaDePeriodos = jsonDecode(
+      await API().getDataReportApiJWT(
+        dados: bodyPesquisarFiltros,
+        url: 'filtros/query_filtros.php'
+      )
+    );
   }
 
   // FUNÇÃO PARA DEFINIR DATAS PARA O DROPDOWN DE PERIODOS

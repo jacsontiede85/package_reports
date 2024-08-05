@@ -189,7 +189,7 @@ class Widgets {
                         ).toList();
                       },
                       onSelected: (value) {
-                        controller.selecaoDeDataPorPeriodo(periodo: value);
+                        controller.selecaoDeDataPorPeriodo(periodo: value.toString());
                       },
                     )
                   ],
