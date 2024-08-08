@@ -6,8 +6,8 @@ import 'package:package_reports/report_module/page/report_page.dart';
 void main() {
   SettingsReports().setEnderecoApi(enderecoUrl: 'https://analytics.agnconsultoria.com.br/api/');
   // SettingsReports().setEnderecoApi(enderecoUrl: 'https://api.agnconsultoria.com.br/');
-  SettingsReports().setMatricula(matriculaUsu: 181);
-  SettingsReports().setBancoDeDados(banco: 'varejo');
+  SettingsReports().setMatricula(matriculaUsu: 3374);
+  SettingsReports().setBancoDeDados(banco: 'atacado');
   runApp(const MyApp());
 }
 
@@ -62,16 +62,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) => ReportPage(
                       database: SettingsReports.bancoDeDados,
                       buscarDadosNaEntrada: false,
-                      //function: 'vendas/venda-por-rca/index.php',
+                      // function: 'vendas/venda-por-rca/index.php',
                       //function: 'compras/pedido-de-compra-saldo/index.php',
                       // function: 'comercial/ultima-data-pedido-rca/index.php',
                       // function: 'comercial/consultar-clientes/index.php',
                       // function: 'quadro_kanban/index.php',
-                      function: 'vendas/venda-por-supervisor/index.php',
+                      // function: 'vendas/venda-por-supervisor/index.php',
                       // function: 'compras/leadtime-compras/index.php',
                       // function: 'compras/pedido-de-compra-saldo/index.php',
-                      // function: 'campanha_milionaria/campanha-milionaria-dca-sintetico-por-rca/index.php',
+                      // function: 'campanha_milionaria/campanha-milionaria-dca-sintetico-por-supervisor/index.php',
                       //function: 'dashboard/query_vendas/leadtime_analitico/index.php',
+                      function : "campanha/campanha-amakha-paris/index.php",
                     ),
                   ),
                 );

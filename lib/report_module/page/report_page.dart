@@ -123,7 +123,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             builder: (_) => ListTile(
               isThreeLine: true,
               dense: true,
-              title: Text(
+              title: SelectableText(
                 controller.configPagina['name'] ?? "",
                 style: const TextStyle(
                   fontSize: 14,
@@ -132,7 +132,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               ),
               subtitle: Visibility(
                 visible: controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty,
-                child: Text(
+                child: SelectableText(
                   "Relatório com linhas interativas. Clique duas vezes na linha para mais detalhes.Prox rel. ${controller.configPagina['page']?['name']}",
                   style: const TextStyle(
                     color: Colors.green,
