@@ -315,6 +315,22 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$loadingMoreDataAtom =
+      Atom(name: 'FiltroControllerBase.loadingMoreData', context: context);
+
+  @override
+  bool get loadingMoreData {
+    _$loadingMoreDataAtom.reportRead();
+    return super.loadingMoreData;
+  }
+
+  @override
+  set loadingMoreData(bool value) {
+    _$loadingMoreDataAtom.reportWrite(value, super.loadingMoreData, () {
+      super.loadingMoreData = value;
+    });
+  }
+
   late final _$conjuntoDePeriodosAsyncAction =
       AsyncAction('FiltroControllerBase.conjuntoDePeriodos', context: context);
 
@@ -415,6 +431,7 @@ novoIndexFiltro: ${novoIndexFiltro},
 valoresSelecionadorDropDown: ${valoresSelecionadorDropDown},
 erroBuscarItensFiltro: ${erroBuscarItensFiltro},
 dataCampanhaInicial: ${dataCampanhaInicial},
+loadingMoreData: ${loadingMoreData},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
 verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
 getListFiltrosComputed: ${getListFiltrosComputed}

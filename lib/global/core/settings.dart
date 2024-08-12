@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mobx/mobx.dart';
+import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.dart';
 
 mixin class SettingsReports{
   static String enderecoRepositorio = '';
   static int matricula = 0;
   static String bancoDeDados = '';
+
+  static Map<String,dynamic> mapJsonFiltroBusca = {};
+  static Map mapFiltroSalvo = {};
+
+  static ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([]);
 
   setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
   setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;

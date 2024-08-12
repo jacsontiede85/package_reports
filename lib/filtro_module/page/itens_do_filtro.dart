@@ -193,42 +193,54 @@ class _ItensFiltroState extends State<ItensFiltro> {
               ),
               child: widget.controller.novoIndexFiltro == -1
                   ? const SizedBox()
-                  : ListView.separated(
-                      separatorBuilder: (context, index) {
-                        return const Divider();
-                      },
-                      itemCount: widget.controller.getListFiltrosComputed.length,
-                      itemBuilder: (context, index) {
-                        FiltrosModel filtro = widget.controller.getListFiltrosComputed[index];
-                        return Observer(
-                          builder: (_) => CheckboxListTile(
-                            value: filtro.selecionado,
-                            onChanged: (valor) {
-                              filtro.selecionado = !filtro.selecionado;
-                              widget.controller.adicionarItensSelecionado(itens: filtro);
+                  : Column(
+                    children: [
+                      Expanded(
+                        child: ListView.separated(
+                            separatorBuilder: (context, index) {
+                              return const Divider();
                             },
-                            title: Text(
-                              "${filtro.codigo} - ${filtro.titulo}".toUpperCase(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                            subtitle: filtro.subtitulo.isNotEmpty
-                                ? Text(
-                                    filtro.subtitulo.toUpperCase(),
-                                    style: TextStyle(
+                            itemCount: widget.controller.getListFiltrosComputed.length,
+                            itemBuilder: (context, index) {
+                              FiltrosModel filtro = widget.controller.getListFiltrosComputed[index];
+                              return Observer(
+                                builder: (_) => CheckboxListTile(
+                                  value: filtro.selecionado,
+                                  onChanged: (valor) {
+                                    filtro.selecionado = !filtro.selecionado;
+                                    widget.controller.adicionarItensSelecionado(itens: filtro);
+                                  },
+                                  title: Text(
+                                    "${filtro.codigo} - ${filtro.titulo}".toUpperCase(),
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                      color: Theme.of(context).brightness == Brightness.light ? Colors.orange[700] : Colors.orangeAccent[100],
+                                      fontSize: 14,
                                     ),
-                                  )
-                                : null,
-                            controlAffinity: ListTileControlAffinity.leading,
+                                  ),
+                                  subtitle: filtro.subtitulo.isNotEmpty
+                                      ? Text(
+                                          filtro.subtitulo.toUpperCase(),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 12,
+                                            color: Theme.of(context).brightness == Brightness.light ? Colors.orange[700] : Colors.orangeAccent[100],
+                                          ),
+                                        )
+                                      : null,
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
+                      ),
+                      Observer(
+                        builder: (_) => Visibility(
+                          visible: widget.controller.loadingMoreData,
+                          child: const LinearProgressIndicator(),
+                        ),
+                      ),
+                    ],
+                  ),
             ),
           ),
         ),

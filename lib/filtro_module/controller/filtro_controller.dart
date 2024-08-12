@@ -81,6 +81,9 @@ abstract class FiltroControllerBase with Store {
 
   List<String> datasMeses = [];
 
+  @observable
+  bool loadingMoreData = false;
+
   List<String> monthNames = [
     "janeiro", "fevereiro", "março", "abril", "maio", "junho", 
     "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
@@ -146,7 +149,7 @@ abstract class FiltroControllerBase with Store {
             },
           );
 
-          var response = await API().getDataReportApiJWT(dados: bodyPesquisarFiltros, url: "filtros/${valor.arquivoQuery}");
+          String response = await API().getDataReportApiJWT(dados: bodyPesquisarFiltros, url: "filtros/${valor.arquivoQuery}");
 
           List dados = jsonDecode(response);
 
@@ -177,7 +180,7 @@ abstract class FiltroControllerBase with Store {
             "matricula": SettingsReports.matricula,
           });
 
-          var response = await API().getDataReportApiJWT(dados: bodyPesquisarFiltros, url: "filtros/${valor.arquivoQuery}");
+          String response = await API().getDataReportApiJWT(dados: bodyPesquisarFiltros, url: "filtros/${valor.arquivoQuery}");
 
           bodyPesquisarFiltros.remove('pesquisa');
           List dados = jsonDecode(response);
@@ -259,6 +262,9 @@ abstract class FiltroControllerBase with Store {
   }
 
   Future<void> criarNovoBody() async {
+    
+    getSalvarFiltrosAplicados();
+
     for (FiltrosPageAtual valores in listaFiltrosParaConstruirTela) {
       if (valores.qualPaginaFiltroPertence == indexPagina) {
         filtrosSalvosParaAdicionarNoBody.addAll(
@@ -266,6 +272,7 @@ abstract class FiltroControllerBase with Store {
         );
       }
     }
+
     if (controllerReports.bodySecundario.isEmpty) {
       controllerReports.bodyPrimario.update(
         'dtinicio',
@@ -560,5 +567,71 @@ abstract class FiltroControllerBase with Store {
     adicionarItensSelecionado(
       itens: listaFiltrosCarregados[indexFiltrosCarregados].listaFiltros[indexFiltrosSelecionado],
     );
+  }
+
+  void getSalvarFiltrosAplicados (){
+    if(SettingsReports.mapJsonFiltroBusca.isEmpty){
+      SettingsReports.mapJsonFiltroBusca = filtrosSalvosParaAdicionarNoBody;      
+    }else{
+    }
+  }
+
+  void getItensSelecionadosSalvos(){
+
+    // * CRIAÇÃO DE UMA LISTA TEMPORARIA, PARA GUARDAR TODOS OS FILTROS SELECIONADOS
+    for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
+      if(SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty){
+        for(FiltrosPageAtual item in SettingsReports.listaFiltrosParaConstruirTelaTemp){
+          if(item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro){
+            item.filtrosWidgetModel.itensSelecionados = value.filtrosWidgetModel.itensSelecionados;
+          } 
+        }
+      }
+      else {
+        SettingsReports.listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([...listaFiltrosParaConstruirTela]);
+      }
+    }
+    
+    // listaFiltrosParaConstruirTela.clear();
+    // getDadosCriarFiltros();
+
+    // // * LOOP PARA VEREFICAR QUAIS FILTROS ESTÃO JA SELECIONADOS
+    // for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
+    //   for(FiltrosPageAtual item in listaFiltrosParaConstruirTela){
+    //     if(value.filtrosWidgetModel.tipoFiltro == item.filtrosWidgetModel.tipoFiltro) {
+    //       item.filtrosWidgetModel.itensSelecionados = value.filtrosWidgetModel.itensSelecionados;
+    //     }
+    //   }
+    // }
+      
+    // // * LOOP PARA VERIFICAR QUAIS ITENS DOS FILTROS ESTÃO SELECIONADOS QUANDO MUDAR DE TAB
+    // for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
+    //   for(FiltrosCarrregados item in listaFiltrosCarregados){
+    //     if(value.filtrosWidgetModel.tipoFiltro == item.tipoFiltro){
+    //       item.indexFiltros = listaFiltrosParaConstruirTela.indexWhere((element) => element.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro); 
+    //     }
+    //   }
+    // }
+
+    if(SettingsReports.mapJsonFiltroBusca.isNotEmpty){
+      for(FiltrosPageAtual filtros in SettingsReports.listaFiltrosParaConstruirTelaTemp){
+        if(filtros.filtrosWidgetModel.tipoFiltro == 'cardFilial'){
+          for(Map<String,dynamic> itensSalvos in SettingsReports.mapJsonFiltroBusca[filtros.filtrosWidgetModel.tipoFiltro]){
+            filtros.filtrosWidgetModel.itensSelecionados.add(FiltrosModel.fromJson(itensSalvos));
+            for(FiltrosModel itensSelecionados in filtros.filtrosWidgetModel.itensSelecionados){
+              itensSelecionados.selecionado = true;
+            }
+            filtros.filtrosWidgetModel.toJsonItensSelecionados();
+
+            for(FiltrosCarrregados item in listaFiltrosCarregados){
+              if(filtros.filtrosWidgetModel.tipoFiltro == item.tipoFiltro){
+                item.indexFiltros = SettingsReports.listaFiltrosParaConstruirTelaTemp.indexWhere((element) => element.filtrosWidgetModel.tipoFiltro == 'cardFilial'); 
+              }
+            }
+          }            
+        }
+      }      
+    }
+
   }
 }

@@ -27,6 +27,15 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
   LayoutControllerPackage layout = LayoutControllerPackage();
 
   @override
+  void initState() {
+    super.initState();
+    controllerFiltro.getItensSelecionadosSalvos();
+    setState(() {
+      
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ResponsiveBuilder(
       builder: (context, sizingInformation) {
