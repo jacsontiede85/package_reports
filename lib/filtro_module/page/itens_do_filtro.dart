@@ -77,54 +77,71 @@ class _ItensFiltroState extends State<ItensFiltro> {
               )
             ],
             bottom: PreferredSize(
-              preferredSize: Size.fromHeight(widget.controller.exibirBarraPesquisa ? 90 : 40),
-              child: Observer(
-                builder: (_) => Visibility(
-                  visible: !widget.controller.loadingItensFiltros && widget.controller.getListFiltrosComputed.isNotEmpty,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Observer(
-                        builder: (_) => Visibility(
-                          visible: widget.controller.exibirBarraPesquisa,
-                          child: Container(
-                            height: 40,
-                            margin: const EdgeInsets.all(10),
-                            child: SearchBar(
-                              hintText: 'Pesquisar',
-                              elevation: const WidgetStatePropertyAll(0),
-                              side: const WidgetStatePropertyAll(
-                                BorderSide(color: Colors.white, width: 0.25),
-                              ),
-                              backgroundColor: const WidgetStatePropertyAll(Colors.black12),
-                              leading: IconButton(
-                                onPressed: () {
-                                  widget.controller.exibirBarraPesquisa = !widget.controller.exibirBarraPesquisa;
-                                },
-                                icon: Icon(
-                                  widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,
-                                ),
-                              ),
-                              textStyle: const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
-                              hintStyle: WidgetStatePropertyAll(
-                                TextStyle(color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.normal),
-                              ),
-                              onSubmitted: (value) {
-                                widget.controller.pesquisaItensDoFiltro = value;
-                                widget.controller.bodyPesquisarFiltros.addAll({"pesquisa": widget.controller.pesquisaItensDoFiltro});
-                                if (widget.controller.getListFiltrosComputed.isEmpty) {
-                                  widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
-                                } else {
-                                  if (widget.controller.pesquisaItensDoFiltro.isEmpty) {
-                                    widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
-                                  }
-                                }
-                              },
+              preferredSize: Size.fromHeight(
+                widget.controller.exibirBarraPesquisa && (!widget.controller.loadingItensFiltros && widget.controller.getListFiltrosComputed.isNotEmpty) 
+                ? 90 
+                : !widget.controller.exibirBarraPesquisa && (!widget.controller.loadingItensFiltros && widget.controller.getListFiltrosComputed.isNotEmpty) 
+                ?
+                40
+                :
+                widget.controller.exibirBarraPesquisa && (!widget.controller.loadingItensFiltros && widget.controller.getListFiltrosComputed.isEmpty)
+                ?
+                40
+                :
+                widget.controller.exibirBarraPesquisa && widget.controller.loadingItensFiltros
+                ?
+                40
+                :
+                0
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Observer(
+                    builder: (_) => Visibility(
+                      visible: widget.controller.exibirBarraPesquisa,
+                      child: Container(
+                        height: 40,
+                        margin: const EdgeInsets.all(10),
+                        child: SearchBar(
+                          hintText: 'Pesquisar',
+                          elevation: const WidgetStatePropertyAll(0),
+                          side: const WidgetStatePropertyAll(
+                            BorderSide(color: Colors.white, width: 0.25),
+                          ),
+                          backgroundColor: const WidgetStatePropertyAll(Colors.black12),
+                          leading: IconButton(
+                            onPressed: () {
+                              widget.controller.exibirBarraPesquisa = !widget.controller.exibirBarraPesquisa;
+                            },
+                            icon: Icon(
+                              widget.controller.exibirBarraPesquisa ? Icons.search_off : Icons.search,
+                              color: Colors.white,
                             ),
                           ),
+                          textStyle: const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
+                          hintStyle: WidgetStatePropertyAll(
+                            TextStyle(color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.normal),
+                          ),
+                          onSubmitted: (value) {
+                            widget.controller.pesquisaItensDoFiltro = value;
+                            widget.controller.bodyPesquisarFiltros.addAll({"pesquisa": widget.controller.pesquisaItensDoFiltro});
+                            if (widget.controller.getListFiltrosComputed.isEmpty) {
+                              widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
+                            } else {
+                              if (widget.controller.pesquisaItensDoFiltro.isEmpty) {
+                                widget.controller.funcaoBuscarDadosDeCadaFiltro(valor: widget.filtroPaginaAtual.filtrosWidgetModel, isBuscarDropDown: false, index: widget.controller.indexFiltro, pesquisa: true);
+                              }
+                            }
+                          },
                         ),
                       ),
-                      Row(
+                    ),
+                  ),
+                  Observer(
+                    builder: (_) => Visibility(
+                      visible: !widget.controller.loadingItensFiltros && widget.controller.getListFiltrosComputed.isNotEmpty,
+                      child: Row(
                         children: [
                           Expanded(
                             child: Observer(
@@ -168,9 +185,9 @@ class _ItensFiltroState extends State<ItensFiltro> {
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),

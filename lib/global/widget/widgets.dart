@@ -41,30 +41,7 @@ class Widgets {
         case const (ItensFiltro):
           Widget widgetContrucao = Row(
             mainAxisAlignment: MainAxisAlignment.end,
-            children:
-                // isToShowFiltroNoMeio ?
-                // [
-                //   GestureDetector(
-                //     onTap: onTap ?? () {
-                //       Navigator.of(context).pop();
-                //     },
-                //     child: Container(color: Colors.transparent, width: (layout.width - layout.larguraJanelaFiltrosPesquisa)/2,),
-                //   ),
-                //   Expanded(
-                //     child: Padding(
-                //       padding: const EdgeInsets.only(top: 30, bottom: 30),
-                //       child: pagina,
-                //     )
-                //   ),
-                //   GestureDetector(
-                //     onTap: onTap ?? () {
-                //       Navigator.of(context).pop();
-                //     },
-                //     child: Container(color: Colors.transparent, width: (layout.width - layout.larguraJanelaFiltrosPesquisa)/2,),
-                //   ),
-                // ]
-                // :
-                [
+            children: [
               Expanded(
                 child: GestureDetector(
                   onTap: () {
