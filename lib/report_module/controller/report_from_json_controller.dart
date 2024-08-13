@@ -125,7 +125,11 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   Future<void> scrollListener() async {
     try {
       double position = double.parse(horizontalScroll.position.pixels.toString());
-      if (!loading) setPositionScroll(position);
+      double positionVertical = double.parse(verticalScroll.position.pixels.toString());
+      if (!loading){
+        setPositionScroll(position);
+        setPositionScroll(positionVertical);
+      } 
       _listenerStarted = true;
     } catch (e) {
       //printE('scrollListener : ERRO');
@@ -136,6 +140,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     await Future.delayed(const Duration(seconds: 1));
     try {
       horizontalScroll.addListener(scrollListener);
+      verticalScroll.addListener(scrollListener);
     } catch (e) {
       //printE("_startListener");
     }
@@ -144,6 +149,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   void _removeListener() {
     try {
       horizontalScroll.removeListener(() {});
+      verticalScroll.removeListener(() {});
     } catch (e) {
       //printE("_startListener");
     }

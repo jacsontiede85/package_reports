@@ -262,8 +262,6 @@ abstract class FiltroControllerBase with Store {
   }
 
   Future<void> criarNovoBody() async {
-    
-    getSalvarFiltrosAplicados();
 
     for (FiltrosPageAtual valores in listaFiltrosParaConstruirTela) {
       if (valores.qualPaginaFiltroPertence == indexPagina) {
@@ -569,68 +567,35 @@ abstract class FiltroControllerBase with Store {
     );
   }
 
-  void getSalvarFiltrosAplicados (){
-    if(SettingsReports.mapJsonFiltroBusca.isEmpty){
-      SettingsReports.mapJsonFiltroBusca = filtrosSalvosParaAdicionarNoBody;      
-    }else{
-    }
-  }
-
   void getItensSelecionadosSalvos(){
-
+    
     // * CRIAÇÃO DE UMA LISTA TEMPORARIA, PARA GUARDAR TODOS OS FILTROS SELECIONADOS
     for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
       if(SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty){
+        listaFiltrosCarregados = SettingsReports.listaFiltrosCarregadosSalvos;
         for(FiltrosPageAtual item in SettingsReports.listaFiltrosParaConstruirTelaTemp){
           if(item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro){
-            item.filtrosWidgetModel.itensSelecionados = value.filtrosWidgetModel.itensSelecionados;
+            value.filtrosWidgetModel.itensSelecionados = item.filtrosWidgetModel.itensSelecionados;
           } 
         }
       }
       else {
         SettingsReports.listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([...listaFiltrosParaConstruirTela]);
+        SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
       }
     }
     
-    // listaFiltrosParaConstruirTela.clear();
-    // getDadosCriarFiltros();
+    listaFiltrosParaConstruirTela.clear();
+    getDadosCriarFiltros();
 
-    // // * LOOP PARA VEREFICAR QUAIS FILTROS ESTÃO JA SELECIONADOS
-    // for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
-    //   for(FiltrosPageAtual item in listaFiltrosParaConstruirTela){
-    //     if(value.filtrosWidgetModel.tipoFiltro == item.filtrosWidgetModel.tipoFiltro) {
-    //       item.filtrosWidgetModel.itensSelecionados = value.filtrosWidgetModel.itensSelecionados;
-    //     }
-    //   }
-    // }
-      
-    // // * LOOP PARA VERIFICAR QUAIS ITENS DOS FILTROS ESTÃO SELECIONADOS QUANDO MUDAR DE TAB
-    // for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
-    //   for(FiltrosCarrregados item in listaFiltrosCarregados){
-    //     if(value.filtrosWidgetModel.tipoFiltro == item.tipoFiltro){
-    //       item.indexFiltros = listaFiltrosParaConstruirTela.indexWhere((element) => element.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro); 
-    //     }
-    //   }
-    // }
+    // * LOOP PARA VEREFICAR QUAIS FILTROS ESTÃO JA SELECIONADOS
+    for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
+      for(FiltrosPageAtual item in listaFiltrosParaConstruirTela){
+        if(value.filtrosWidgetModel.tipoFiltro == item.filtrosWidgetModel.tipoFiltro) {
+          item.filtrosWidgetModel.itensSelecionados = value.filtrosWidgetModel.itensSelecionados;
 
-    if(SettingsReports.mapJsonFiltroBusca.isNotEmpty){
-      for(FiltrosPageAtual filtros in SettingsReports.listaFiltrosParaConstruirTelaTemp){
-        if(filtros.filtrosWidgetModel.tipoFiltro == 'cardFilial'){
-          for(Map<String,dynamic> itensSalvos in SettingsReports.mapJsonFiltroBusca[filtros.filtrosWidgetModel.tipoFiltro]){
-            filtros.filtrosWidgetModel.itensSelecionados.add(FiltrosModel.fromJson(itensSalvos));
-            for(FiltrosModel itensSelecionados in filtros.filtrosWidgetModel.itensSelecionados){
-              itensSelecionados.selecionado = true;
-            }
-            filtros.filtrosWidgetModel.toJsonItensSelecionados();
-
-            for(FiltrosCarrregados item in listaFiltrosCarregados){
-              if(filtros.filtrosWidgetModel.tipoFiltro == item.tipoFiltro){
-                item.indexFiltros = SettingsReports.listaFiltrosParaConstruirTelaTemp.indexWhere((element) => element.filtrosWidgetModel.tipoFiltro == 'cardFilial'); 
-              }
-            }
-          }            
         }
-      }      
+      }
     }
 
   }
