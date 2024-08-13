@@ -597,6 +597,15 @@ abstract class FiltroControllerBase with Store {
         }
       }
     }
+      
+    // * LOOP PARA VERIFICAR QUAIS ITENS DOS FILTROS ESTÃO SELECIONADOS QUANDO MUDAR DE TAB
+    for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
+      for(FiltrosCarrregados item in listaFiltrosCarregados){
+        if(value.filtrosWidgetModel.tipoFiltro == item.tipoFiltro){
+          item.indexFiltros = listaFiltrosParaConstruirTela.indexWhere((element) => element.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro); 
+        }
+      }
+    }
 
   }
 }

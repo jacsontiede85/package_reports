@@ -77,6 +77,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );
               },
+            ),
+            IconButton.filledTonal(
+              icon: const Icon(
+                CupertinoIcons.settings,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ReportPage(
+                      database: SettingsReports.bancoDeDados,
+                      buscarDadosNaEntrada: false,
+                      function: 'comercial/consultar-clientes/index.php',
+                    ),
+                  ),
+                );
+              },
             )
           ],
         ),
