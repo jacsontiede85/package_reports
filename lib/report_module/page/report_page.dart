@@ -294,6 +294,23 @@ class _ReportPageState extends State<ReportPage> with Rows {
               child: Observer(
                 builder: (_) => Visibility(
                   visible: (controller.configPagina.isNotEmpty && !controller.loading && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty),
+                  replacement: Visibility(
+                    visible: !controller.loadingConfigFiltros,
+                    child: TextButton(
+                      style: const ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(Colors.green),
+                      ),
+                      onPressed: () async {
+                        await controllerFiltro.criarNovoBody();
+                      },
+                      child: const Text(
+                        "Buscar",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
                   child: IconButton(
                     icon: const Icon(
                       Icons.filter_alt_outlined,

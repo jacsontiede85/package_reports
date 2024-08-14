@@ -96,6 +96,8 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
   bool primeiraBusca = true;
 
+  bool loadingConfigFiltros = false;
+
   // ? VAREAVEIS E FUNÇÕES PARA PERMITIR A NAVEGAÇÃO ENTRE VARIOS RELATORIOS
   Map<String, dynamic> mapSelectedRow = {};
   Map<String, dynamic> configPageBuscaRecursiva = {};
@@ -165,18 +167,24 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   //BUSCAR DADOS PARA MONTAGEM DO RELATORIO
   Future<void> getConfig() async {
     loading = true;
-    var response = await API().getConfigApi(function: nomeFunction);
-    configPagina = configPageBuscaRecursiva;
-    if (habilitarNovoRelatorio && configPagina.isNotEmpty) {
-      getSelectedRowParaNavegarParaNovaPage();
-    } else {
-      configPagina = response;
-      bodyPrimario.addAll(
-        {
-          "indexPage": configPagina['indexPage'],
-        },
-      );
+    loadingConfigFiltros = true;
+    try{
+      Map<String,dynamic> response = await API().getConfigApi(function: nomeFunction);
+      configPagina = configPageBuscaRecursiva;
+      if (habilitarNovoRelatorio && configPagina.isNotEmpty) {
+        getSelectedRowParaNavegarParaNovaPage();
+      } else {
+        configPagina = response;
+        bodyPrimario.addAll(
+          {
+            "indexPage": configPagina['indexPage'],
+          },
+        );
+      }      
+    }finally{
+      loadingConfigFiltros = false;
     }
+
   }
 
   void limparCamposVareaveis() {
