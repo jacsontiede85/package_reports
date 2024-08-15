@@ -169,6 +169,7 @@ abstract class FiltroControllerBase with Store {
           novoIndexFiltro = retornarIndexListaFiltrosCarregados();
         } catch (e) {
           erroBuscarItensFiltro = true;
+          listaFiltrosCarregados[novoIndexFiltro].listaFiltros = [];
         } finally {
           listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = true;
         }
