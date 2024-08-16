@@ -169,7 +169,6 @@ abstract class FiltroControllerBase with Store {
           novoIndexFiltro = retornarIndexListaFiltrosCarregados();
         } catch (e) {
           erroBuscarItensFiltro = true;
-          listaFiltrosCarregados[novoIndexFiltro].listaFiltros = [];
         } finally {
           listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = true;
         }
@@ -189,6 +188,7 @@ abstract class FiltroControllerBase with Store {
           listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
         } catch (e) {
           erroBuscarItensFiltro = true;
+          listaFiltrosCarregados[novoIndexFiltro].listaFiltros = [];
         } finally {
           listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = false;
         }
