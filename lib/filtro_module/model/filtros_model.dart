@@ -21,9 +21,12 @@ abstract class FiltrosModelBase with Store {
   });
 
   FiltrosModelBase.fromJson(Map<String, dynamic> json){
-    codigo = json['codigo'].toString();
+    if(json['codigo'] == null && json['titulo'] && json['subtitulo']){
+      throw 'Erro model FiltrosModel .fromjson, json nulo';
+    }
+    codigo = json['codigo'];
     titulo = json['titulo'];
-    subtitulo = json['subtitulo']??'';
+    subtitulo = json['subtitulo'];
   }
 
   Map<String, dynamic> toJson() {

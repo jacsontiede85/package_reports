@@ -295,7 +295,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 builder: (_) => Visibility(
                   visible: (controller.configPagina.isNotEmpty && !controller.loading && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty),
                   replacement: Visibility(
-                    visible: !controller.loadingConfigFiltros,
+                    visible: !controller.loadingConfigFiltros && controller.configPagina['filtros'] == null,
                     child: TextButton(
                       style: const ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(Colors.green),
