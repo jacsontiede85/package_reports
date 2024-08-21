@@ -461,7 +461,12 @@ abstract class FiltroControllerBase with Store {
     novoIndexFiltro = retornarIndexListaFiltrosCarregados();
 
     List<FiltrosModel> list = [];
-    list = listaFiltrosCarregados[novoIndexFiltro].listaFiltros;
+    try{
+      list = listaFiltrosCarregados[novoIndexFiltro].listaFiltros;
+    }catch(e){
+      list = [];
+    }
+    
 
     if (list.isEmpty) {
       return list;

@@ -368,6 +368,26 @@ class Widgets {
     );
   }
 
+  Widget cardSalvarFiltros ({required FiltrosWidgetModel filtrosDados, required BuildContext context}){
+    return Card(
+      child: SwitchListTile(
+        value: SettingsReports.listaFiltrosCarregadosSalvosGlobal.isEmpty,
+        title: tituloCards(
+          titulo: "Salvar Filtros",
+          context: context,
+        ),
+        subtitle: Text(
+          filtrosDados.titulo,
+          style: const TextStyle(
+            fontSize: 11.0,
+          ),
+        ),
+        onChanged: (value) {
+        },
+      )
+    );
+  }
+
   Widget cardFiltroDropDown({
     required BuildContext context,
     required FiltrosWidgetModel filtrosDados,
@@ -534,7 +554,7 @@ class Widgets {
           controller: controller,
           indexFiltro: index,
         );
-        break;
+      break;
 
       case "datapicker" || "datapickerfaturamento":
         retornoFuncao = selecaoDePeriodo(
@@ -543,7 +563,7 @@ class Widgets {
           controller: controller,
           tipo: filtrosDados.tipoWidget,
         );
-        break;
+      break;
 
       case "datapickermensal":
         retornoFuncao = selecaoDePeriodoMensal(
@@ -552,7 +572,7 @@ class Widgets {
           controller: controller,
           index: index,
         );
-        break;
+      break;
 
       case "dropdown":
         retornoFuncao = cardFiltroDropDown(
@@ -561,7 +581,7 @@ class Widgets {
           controller: controller,
           index: index,
         );
-        break;
+      break;
 
       case "textolivre":
         retornoFuncao = cardCampoDigitavel(
@@ -570,7 +590,11 @@ class Widgets {
           controller: controller,
           index: index,
         );
-        break;
+      break;
+
+      case "salvarFiltros" :
+        retornoFuncao = cardSalvarFiltros(filtrosDados: filtrosDados, context: context);
+      break;
     }
     return retornoFuncao;
   }

@@ -11,6 +11,7 @@ mixin class SettingsReports{
 
   static ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([]);
   static ObservableList<FiltrosCarrregados> listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([]);
+  static ObservableList<FiltrosCarrregados> listaFiltrosCarregadosSalvosGlobal = ObservableList<FiltrosCarrregados>.of([]);
 
   setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
   setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;
