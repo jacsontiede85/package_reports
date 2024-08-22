@@ -115,7 +115,7 @@ abstract class FiltroControllerBase with Store {
 
   // RETORNAR QTDE DE ITENS SELECIONADOS
   @computed
-  int get getQtdeItensSelecionados => (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.length);
+  int get getQtdeItensSelecionados => (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.length);
 
   void getDadosCriarFiltros() async {
     mapaFiltrosWidget.forEach((key, value) {
@@ -193,18 +193,20 @@ abstract class FiltroControllerBase with Store {
           listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita = false;
         }
       }
-
       indexFiltro = index;
       for (FiltrosModel itens in getListFiltrosComputed) {
         if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
-          for (FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados) {
+          print('AAAAAAAAAAAAAAAAAAAAAAAA');
+          for (FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!) {
             if (itens.codigo == itensSelecionados.codigo) {
+              print(itens);
               itens = itensSelecionados;
               getListFiltrosComputed[listaFiltrosCarregados[novoIndexFiltro].listaFiltros.indexOf(itens)] = itens;
             }
           }
         }
       }
+      print('BBBBBBBBBBBBBBBBBBB');
     } finally {
       loadingItensFiltros = false;
       if (isBuscarDropDown) validarListaParaDropDown = isBuscarDropDown;
@@ -215,15 +217,15 @@ abstract class FiltroControllerBase with Store {
   void adicionarItensSelecionado({required FiltrosModel itens}) {
     if (itens.selecionado) {
       if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
-        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.add(itens);
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.add(itens);
       }
     } else {
       if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
         removerItensSelecionadosBody(
           itens: itens,
-          index: listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.toList().indexWhere((element) => element == itens)
+          index: listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.toList().indexWhere((element) => element == itens)
         );
-        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.remove(itens); 
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.remove(itens); 
       }
     }
 
@@ -263,7 +265,7 @@ abstract class FiltroControllerBase with Store {
   }
 
   Future<void> criarNovoBody() async {
-
+    
     for (FiltrosPageAtual valores in listaFiltrosParaConstruirTela) {
       if (valores.qualPaginaFiltroPertence == indexPagina) {
         filtrosSalvosParaAdicionarNoBody.addAll(
@@ -313,7 +315,7 @@ abstract class FiltroControllerBase with Store {
   // VERIFICAR SE TODOS OS ITENS ESTÃO SELECIONADOS
   @computed
   bool get verificaSeTodosEstaoSelecionados {
-    return (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.where(
+    return (listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.where(
       (element) => element.selecionado == true,
     ).length) == getListFiltrosComputed.length;
   }
@@ -323,10 +325,10 @@ abstract class FiltroControllerBase with Store {
   void limparSelecao() {
     String tipoFiltro = listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.tipoFiltro;
     if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
-      listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.clear();
+      listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.clear();
       for (FiltrosModel value in getListFiltrosComputed) {
         value.selecionado = false;
-        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.removeAll({value});
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.removeAll({value});
         listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
       }
       controllerReports.bodyPrimario.removeWhere((key, value) => key == tipoFiltro);
@@ -340,7 +342,7 @@ abstract class FiltroControllerBase with Store {
     for (FiltrosModel value in getListFiltrosComputed) {
       if (!value.selecionado) {
         value.selecionado = true;
-        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.addAll({value});
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.addAll({value});
         listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
       }
     }
@@ -530,7 +532,7 @@ abstract class FiltroControllerBase with Store {
       bodyParaSerLimpo.remove(chaves);
     }
     for (FiltrosPageAtual filtros in listaFiltrosParaConstruirTela) {
-      filtros.filtrosWidgetModel.itensSelecionados.clear();
+      filtros.filtrosWidgetModel.itensSelecionados!.clear();
 
       // Voltar o valor do dropdown para o primeiro index
       if(filtros.filtrosWidgetModel.tipoWidget.contains("dropdown")){
@@ -563,7 +565,7 @@ abstract class FiltroControllerBase with Store {
 
     for (FiltrosModel itens in listaFiltrosCarregados[indexFiltrosCarregados].listaFiltros) {
       itens.selecionado = false;
-      listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.remove(itens);
+      listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.remove(itens);
     }
 
     listaFiltrosCarregados[indexFiltrosCarregados].listaFiltros[indexFiltrosSelecionado].selecionado = true;
@@ -574,7 +576,7 @@ abstract class FiltroControllerBase with Store {
   }
 
   void getItensSelecionadosSalvos(){
-    
+
     // * CRIAÇÃO DE UMA LISTA TEMPORARIA, PARA GUARDAR TODOS OS FILTROS SELECIONADOS
     for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
       if(SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty){
@@ -587,7 +589,7 @@ abstract class FiltroControllerBase with Store {
       }
       else {
         SettingsReports.listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([...listaFiltrosParaConstruirTela]);
-        SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
+        if(SettingsReports.listaFiltrosCarregadosSalvos.isEmpty) SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
       }
     }
     

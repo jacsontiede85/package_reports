@@ -318,7 +318,7 @@ class Widgets {
                     children: [
                       Observer(
                         builder: (_) => Visibility(
-                          visible: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.isEmpty,
+                          visible: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.isEmpty,
                           child: Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10.0),
@@ -337,7 +337,7 @@ class Widgets {
                           ),
                         ),
                       ),
-                      for (FiltrosModel valores in controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados.take(20))
+                      for (FiltrosModel valores in controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.take(20))
                         Observer(builder: (context) {
                           return Visibility(
                             visible: valores.selecionado,
@@ -373,7 +373,7 @@ class Widgets {
   Widget cardSalvarFiltros ({required FiltroController controller, required FiltrosWidgetModel filtrosDados, required BuildContext context}){
     return Card(
       child: SwitchListTile(
-        value: SettingsReports.filtrosSalvosApp.isNotEmpty,
+        value: SettingsReports.isfiltrosSalvosApp,
         title: tituloCards(
           titulo: "Salvar Filtros",
           context: context,
@@ -385,6 +385,7 @@ class Widgets {
           ),
         ),
         onChanged: (value) {
+          SettingsReports.isfiltrosSalvosApp = !SettingsReports.isfiltrosSalvosApp;
           SettingsReports.salvarFiltrosShared();
         },
       )

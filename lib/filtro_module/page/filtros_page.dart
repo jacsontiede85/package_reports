@@ -80,7 +80,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
             actions: [
               Observer(
                 builder: (_) => Visibility(
-                  visible: (controllerFiltro.isRCAativo || controllerFiltro.isRCAsemVenda) || controllerFiltro.filtrosSalvosParaAdicionarNoBody.isNotEmpty || controllerFiltro.listaFiltrosParaConstruirTela.any((element) => element.filtrosWidgetModel.itensSelecionados.isNotEmpty),
+                  visible: (controllerFiltro.isRCAativo || controllerFiltro.isRCAsemVenda) || controllerFiltro.filtrosSalvosParaAdicionarNoBody.isNotEmpty || controllerFiltro.listaFiltrosParaConstruirTela.any((element) => element.filtrosWidgetModel.itensSelecionados!.isNotEmpty),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: TextButton.icon(

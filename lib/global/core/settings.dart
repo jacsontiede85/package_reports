@@ -15,7 +15,7 @@ mixin class SettingsReports{
   static ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([]);
   static ObservableList<FiltrosCarrregados> listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([]);
 
-  static Map<int,dynamic> filtrosSalvosApp = {};
+  static bool isfiltrosSalvosApp = false;
 
   setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
   setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;
@@ -118,9 +118,13 @@ mixin class SettingsReports{
 
   static void salvarFiltrosShared () async {
     List<String> teste = [];
+    List<String> teste2 = [];
     if (listaFiltrosCarregadosSalvos.isNotEmpty) {
       final prefs = await SharedPreferences.getInstance();
+
       prefs.remove('filtrosSalvos');
+      prefs.remove('filtrosContruirTela');
+
       for (FiltrosCarrregados itens in listaFiltrosCarregadosSalvos) {
         Map<String, dynamic> itemMap = {
           'indexFiltros': itens.indexFiltros,
@@ -140,17 +144,48 @@ mixin class SettingsReports{
         teste.add(jsonString);
       }
 
+      for (FiltrosPageAtual itens in listaFiltrosParaConstruirTelaTemp) {
+        Map<String, dynamic> itemMap = {
+          'qualPaginaFiltroPertence': itens.qualPaginaFiltroPertence,
+          'filtrosWidgetModel': {
+            "arquivoQuery" : itens.filtrosWidgetModel.arquivoQuery,
+            "bancoBuscarFiltros" : itens.filtrosWidgetModel.bancoBuscarFiltros,
+            "funcaoPrincipal" : itens.filtrosWidgetModel.funcaoPrincipal,
+            "subtitulo" : itens.filtrosWidgetModel.subtitulo,
+            "tipoFiltro" : itens.filtrosWidgetModel.tipoFiltro,
+            "tipoWidget" : itens.filtrosWidgetModel.tipoWidget,
+            "titulo" : itens.filtrosWidgetModel.titulo,
+            "itensSelecionados" : itens.filtrosWidgetModel.itensSelecionados!.map((e) => {
+              'titulo': e.titulo,
+              'codigo' : e.codigo,
+              'subtitulo' : e.subtitulo,
+              'selecionado': e.selecionado,
+            },).toList(),
+          }
+        };
+
+        String jsonString = jsonEncode(itemMap);
+        teste2.add(jsonString);
+      }
+      
       prefs.setStringList('filtrosSalvos', teste);
+      prefs.setStringList('filtrosContruirTela', teste2);
     }
   }
 
   static void getFiltrosSalvos() async {
     final prefs = await SharedPreferences.getInstance();
     List<String> dados = prefs.getStringList('filtrosSalvos')!;
+    List<String> dados2 = prefs.getStringList('filtrosContruirTela')!;
     
     List<FiltrosCarrregados> listaRecuperada = dados.map((jsonString) => FiltrosCarrregados.fromJson(jsonDecode(jsonString))).toList();
+    List<FiltrosPageAtual> listaRecuperada2 = dados2.map((jsonString) => FiltrosPageAtual.fromJson(jsonDecode(jsonString))).toList();
 
     listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of(listaRecuperada);
+    listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of(listaRecuperada2);
+    if(listaFiltrosCarregadosSalvos.isNotEmpty){
+      isfiltrosSalvosApp = true;
+    }
   
   }
 

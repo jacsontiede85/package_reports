@@ -15,7 +15,7 @@ abstract class FiltrosWidgetModelBase with Store {
   String tipoWidget = '';
 
   @observable
-  Set<FiltrosModel> itensSelecionados = {};
+  Set<FiltrosModel>? itensSelecionados = {};
 
   FiltrosWidgetModelBase({
     this.tipoFiltro = '',
@@ -25,6 +25,7 @@ abstract class FiltrosWidgetModelBase with Store {
     this.funcaoPrincipal = '',
     this.bancoBuscarFiltros = '',
     this.tipoWidget = '',
+    this.itensSelecionados,
   });
 
   FiltrosWidgetModelBase.fromJson(Map<String, dynamic> json, String key){
@@ -41,7 +42,7 @@ abstract class FiltrosWidgetModelBase with Store {
     Map<String, List<Map<String, dynamic>>> mapItensSelecionados = <String, List<Map<String, dynamic>>>{};
     List<Map<String, dynamic>> json = [];
 
-    for(FiltrosModel item in itensSelecionados){
+    for(FiltrosModel item in itensSelecionados!){
       json.add(item.toJson());
       mapItensSelecionados.addAll({ tipoFiltro: json});
     }
