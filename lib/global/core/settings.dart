@@ -122,7 +122,8 @@ mixin class SettingsReports{
 
     if(!isfiltrosSalvosApp){
       final prefs = await SharedPreferences.getInstance();
-      prefs.clear();
+      prefs.remove('filtrosSalvos');
+      prefs.remove('filtrosContruirTela');
       isfiltrosSalvosApp = false;
     }else{
       if (listaFiltrosCarregadosSalvos.isNotEmpty) {
