@@ -31,7 +31,6 @@ abstract class FiltrosPageAtualBase with Store {
       }).toSet(),
     );
 
-
   }
 
 }

@@ -196,17 +196,14 @@ abstract class FiltroControllerBase with Store {
       indexFiltro = index;
       for (FiltrosModel itens in getListFiltrosComputed) {
         if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
-          print('AAAAAAAAAAAAAAAAAAAAAAAA');
           for (FiltrosModel itensSelecionados in listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!) {
             if (itens.codigo == itensSelecionados.codigo) {
-              print(itens);
               itens = itensSelecionados;
               getListFiltrosComputed[listaFiltrosCarregados[novoIndexFiltro].listaFiltros.indexOf(itens)] = itens;
             }
           }
         }
       }
-      print('BBBBBBBBBBBBBBBBBBB');
     } finally {
       loadingItensFiltros = false;
       if (isBuscarDropDown) validarListaParaDropDown = isBuscarDropDown;

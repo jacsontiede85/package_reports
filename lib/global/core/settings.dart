@@ -117,73 +117,91 @@ mixin class SettingsReports{
   }
 
   static void salvarFiltrosShared () async {
-    List<String> teste = [];
-    List<String> teste2 = [];
-    if (listaFiltrosCarregadosSalvos.isNotEmpty) {
+    List<String> valoresSalvosCarregados = [];
+    List<String> valoresSalvosConstruirTela = [];
+    
+    if(!isfiltrosSalvosApp){
       final prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      isfiltrosSalvosApp = false;
+    }else{
+      if (listaFiltrosCarregadosSalvos.isNotEmpty) {
+        final prefs = await SharedPreferences.getInstance();
 
-      prefs.remove('filtrosSalvos');
-      prefs.remove('filtrosContruirTela');
+        prefs.remove('filtrosSalvos');
+        prefs.remove('filtrosContruirTela');
 
-      for (FiltrosCarrregados itens in listaFiltrosCarregadosSalvos) {
-        Map<String, dynamic> itemMap = {
-          'indexFiltros': itens.indexFiltros,
-          'indexPagina': itens.indexPagina,
-          'pesquisaFeita': itens.pesquisaFeita,
-          'listaFiltros': itens.listaFiltros.map((filtro) => {
-            'titulo': filtro.titulo,
-            'codigo' : filtro.codigo,
-            'subtitulo' : filtro.subtitulo,
-            'selecionado': filtro.selecionado,
-          }).toList(),
-          'valorSelecionadoParaDropDown': itens.valorSelecionadoParaDropDown,
-          'tipoFiltro': itens.tipoFiltro,
-        };
+        for (FiltrosCarrregados itens in listaFiltrosCarregadosSalvos) {
+          Map<String, dynamic> itemMap = {
+            'indexFiltros': itens.indexFiltros,
+            'indexPagina': itens.indexPagina,
+            'pesquisaFeita': itens.pesquisaFeita,
+            'listaFiltros': itens.listaFiltros.map((filtro) => {
+              'titulo': filtro.titulo,
+              'codigo' : filtro.codigo,
+              'subtitulo' : filtro.subtitulo,
+              'selecionado': filtro.selecionado,
+            }).toList(),
+            'valorSelecionadoParaDropDown': itens.valorSelecionadoParaDropDown,
+            'tipoFiltro': itens.tipoFiltro,
+          };
 
-        String jsonString = jsonEncode(itemMap);
-        teste.add(jsonString);
-      }
+          String jsonString = jsonEncode(itemMap);
+          valoresSalvosCarregados.add(jsonString);
+        }
 
-      for (FiltrosPageAtual itens in listaFiltrosParaConstruirTelaTemp) {
-        Map<String, dynamic> itemMap = {
-          'qualPaginaFiltroPertence': itens.qualPaginaFiltroPertence,
-          'filtrosWidgetModel': {
-            "arquivoQuery" : itens.filtrosWidgetModel.arquivoQuery,
-            "bancoBuscarFiltros" : itens.filtrosWidgetModel.bancoBuscarFiltros,
-            "funcaoPrincipal" : itens.filtrosWidgetModel.funcaoPrincipal,
-            "subtitulo" : itens.filtrosWidgetModel.subtitulo,
-            "tipoFiltro" : itens.filtrosWidgetModel.tipoFiltro,
-            "tipoWidget" : itens.filtrosWidgetModel.tipoWidget,
-            "titulo" : itens.filtrosWidgetModel.titulo,
-            "itensSelecionados" : itens.filtrosWidgetModel.itensSelecionados!.map((e) => {
-              'titulo': e.titulo,
-              'codigo' : e.codigo,
-              'subtitulo' : e.subtitulo,
-              'selecionado': e.selecionado,
-            },).toList(),
-          }
-        };
+        for (FiltrosPageAtual itens in listaFiltrosParaConstruirTelaTemp) {
+          Map<String, dynamic> itemMap = {
+            'qualPaginaFiltroPertence': itens.qualPaginaFiltroPertence,
+            'filtrosWidgetModel': {
+              "arquivoQuery" : itens.filtrosWidgetModel.arquivoQuery,
+              "bancoBuscarFiltros" : itens.filtrosWidgetModel.bancoBuscarFiltros,
+              "funcaoPrincipal" : itens.filtrosWidgetModel.funcaoPrincipal,
+              "subtitulo" : itens.filtrosWidgetModel.subtitulo,
+              "tipoFiltro" : itens.filtrosWidgetModel.tipoFiltro,
+              "tipoWidget" : itens.filtrosWidgetModel.tipoWidget,
+              "titulo" : itens.filtrosWidgetModel.titulo,
+              "itensSelecionados" : itens.filtrosWidgetModel.itensSelecionados!.map((e) => {
+                'titulo': e.titulo,
+                'codigo' : e.codigo,
+                'subtitulo' : e.subtitulo,
+                'selecionado': e.selecionado,
+              },).toList(),
+            }
+          };
 
-        String jsonString = jsonEncode(itemMap);
-        teste2.add(jsonString);
-      }
-      
-      prefs.setStringList('filtrosSalvos', teste);
-      prefs.setStringList('filtrosContruirTela', teste2);
+          String jsonString = jsonEncode(itemMap);
+          valoresSalvosConstruirTela.add(jsonString);
+        }
+        
+        prefs.setStringList('filtrosSalvos', valoresSalvosCarregados);
+        prefs.setStringList('filtrosContruirTela', valoresSalvosConstruirTela);
+      }      
     }
+
   }
 
   static void getFiltrosSalvos() async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> dados = prefs.getStringList('filtrosSalvos')!;
-    List<String> dados2 = prefs.getStringList('filtrosContruirTela')!;
+    final prefs = await SharedPreferences.getInstance();    
+    List<String> dados = [];
+    List<String> dados2 = [];
+
+    try{
+      dados = prefs.getStringList('filtrosSalvos')!;
+      dados2 = prefs.getStringList('filtrosContruirTela')!;
+    }catch(e){
+      dados = [];
+      dados2 = [];
+    }
+
     
     List<FiltrosCarrregados> listaRecuperada = dados.map((jsonString) => FiltrosCarrregados.fromJson(jsonDecode(jsonString))).toList();
     List<FiltrosPageAtual> listaRecuperada2 = dados2.map((jsonString) => FiltrosPageAtual.fromJson(jsonDecode(jsonString))).toList();
-
     listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of(listaRecuperada);
     listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of(listaRecuperada2);
-    if(listaFiltrosCarregadosSalvos.isNotEmpty){
+    
+    if(dados.isNotEmpty){
+      print('object');
       isfiltrosSalvosApp = true;
     }
   
