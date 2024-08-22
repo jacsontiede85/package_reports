@@ -38,7 +38,9 @@ abstract class FiltrosCarrregadosBase with Store {
     listaFiltros = (json['listaFiltros'] as List).map((item) {
       return FiltrosModel.fromJson(item);
     }).toList();
-    valorSelecionadoParaDropDown =  FiltrosModel.fromJson(json['valorSelecionadoParaDropDown']);
+    if(json['valorSelecionadoParaDropDown'] != null){
+      valorSelecionadoParaDropDown = FiltrosModel.fromJson(json['valorSelecionadoParaDropDown']);
+    }
     tipoFiltro = json['tipoFiltro'];
     pesquisaFeita = json['pesquisaFeita'];
   }
