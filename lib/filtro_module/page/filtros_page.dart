@@ -28,7 +28,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();    
     controllerFiltro.getItensSelecionadosSalvos();
     setState(() {
       

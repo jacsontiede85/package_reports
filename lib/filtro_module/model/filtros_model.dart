@@ -27,6 +27,7 @@ abstract class FiltrosModelBase with Store {
     codigo = json['codigo'];
     titulo = json['titulo'];
     subtitulo = json['subtitulo'] ?? '';
+    selecionado = json['selecionado'] ?? false;
   }
 
   Map<String, dynamic> toJson() {

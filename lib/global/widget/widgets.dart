@@ -250,21 +250,22 @@ class Widgets {
                     visible: filtrosDados.tipoWidget == "checkboxrca",
                     child: Expanded(
                       child: CheckboxListTile(
-                          splashRadius: 15,
-                          contentPadding: EdgeInsets.zero,
-                          title: const Text(
-                            "EXIBIR RCA SEM VENDAS",
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        splashRadius: 15,
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text(
+                          "EXIBIR RCA SEM VENDAS",
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
                           ),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: controller.isRCAsemVenda,
-                          onChanged: (s) {
-                            controller.isRCAsemVenda = !controller.isRCAsemVenda;
-                            controller.validarCondicaoDebuscaRCA();
-                          }),
+                        ),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        value: controller.isRCAsemVenda,
+                        onChanged: (s) {
+                          controller.isRCAsemVenda = !controller.isRCAsemVenda;
+                          controller.validarCondicaoDebuscaRCA();
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -273,20 +274,21 @@ class Widgets {
                     visible: filtrosDados.tipoWidget == "checkboxrca",
                     child: Expanded(
                       child: CheckboxListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: const Text(
-                            "SOMENTE ATIVOS",
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text(
+                          "SOMENTE ATIVOS",
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
                           ),
-                          controlAffinity: ListTileControlAffinity.leading,
-                          value: controller.isRCAativo,
-                          onChanged: (s) {
-                            controller.isRCAativo = !controller.isRCAativo;
-                            controller.validarCondicaoDebuscaRCA();
-                          }),
+                        ),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        value: controller.isRCAativo,
+                        onChanged: (s) {
+                          controller.isRCAativo = !controller.isRCAativo;
+                          controller.validarCondicaoDebuscaRCA();
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -368,10 +370,10 @@ class Widgets {
     );
   }
 
-  Widget cardSalvarFiltros ({required FiltrosWidgetModel filtrosDados, required BuildContext context}){
+  Widget cardSalvarFiltros ({required FiltroController controller, required FiltrosWidgetModel filtrosDados, required BuildContext context}){
     return Card(
       child: SwitchListTile(
-        value: SettingsReports.listaFiltrosCarregadosSalvosGlobal.isEmpty,
+        value: SettingsReports.filtrosSalvosApp.isNotEmpty,
         title: tituloCards(
           titulo: "Salvar Filtros",
           context: context,
@@ -383,6 +385,7 @@ class Widgets {
           ),
         ),
         onChanged: (value) {
+          SettingsReports.salvarFiltrosShared();
         },
       )
     );
@@ -593,7 +596,7 @@ class Widgets {
       break;
 
       case "salvarFiltros" :
-        retornoFuncao = cardSalvarFiltros(filtrosDados: filtrosDados, context: context);
+        retornoFuncao = cardSalvarFiltros(controller: controller, filtrosDados: filtrosDados, context: context);
       break;
     }
     return retornoFuncao;

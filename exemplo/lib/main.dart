@@ -8,6 +8,7 @@ void main() {
   // SettingsReports().setEnderecoApi(enderecoUrl: 'https://api.agnconsultoria.com.br/');
   SettingsReports().setMatricula(matriculaUsu: 3374);
   SettingsReports().setBancoDeDados(banco: 'atacado');
+  SettingsReports.getFiltrosSalvos();
   runApp(const MyApp());
 }
 

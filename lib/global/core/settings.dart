@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:package_reports/filtro_module/model/filtros_carregados_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 mixin class SettingsReports{
   static String enderecoRepositorio = '';
@@ -11,7 +14,8 @@ mixin class SettingsReports{
 
   static ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([]);
   static ObservableList<FiltrosCarrregados> listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([]);
-  static ObservableList<FiltrosCarrregados> listaFiltrosCarregadosSalvosGlobal = ObservableList<FiltrosCarrregados>.of([]);
+
+  static Map<int,dynamic> filtrosSalvosApp = {};
 
   setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
   setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;
@@ -111,5 +115,44 @@ mixin class SettingsReports{
         return 1;
     }
   }
+
+  static void salvarFiltrosShared () async {
+    List<String> teste = [];
+    if (listaFiltrosCarregadosSalvos.isNotEmpty) {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.remove('filtrosSalvos');
+      for (FiltrosCarrregados itens in listaFiltrosCarregadosSalvos) {
+        Map<String, dynamic> itemMap = {
+          'indexFiltros': itens.indexFiltros,
+          'indexPagina': itens.indexPagina,
+          'pesquisaFeita': itens.pesquisaFeita,
+          'listaFiltros': itens.listaFiltros.map((filtro) => {
+            'titulo': filtro.titulo,
+            'codigo' : filtro.codigo,
+            'subtitulo' : filtro.subtitulo,
+            'selecionado': filtro.selecionado,
+          }).toList(),
+          'valorSelecionadoParaDropDown': itens.valorSelecionadoParaDropDown,
+          'tipoFiltro': itens.tipoFiltro,
+        };
+
+        String jsonString = jsonEncode(itemMap);
+        teste.add(jsonString);
+      }
+
+      prefs.setStringList('filtrosSalvos', teste);
+    }
+  }
+
+  static void getFiltrosSalvos() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> dados = prefs.getStringList('filtrosSalvos')!;
+    
+    List<FiltrosCarrregados> listaRecuperada = dados.map((jsonString) => FiltrosCarrregados.fromJson(jsonDecode(jsonString))).toList();
+
+    listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of(listaRecuperada);
+  
+  }
+
 
 }
