@@ -6,6 +6,7 @@ import 'package:package_reports/filtro_module/controller/filtro_controller.dart'
 import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/global/core/layout_controller.dart';
+import 'package:package_reports/global/core/settings.dart';
 import 'package:package_reports/global/widget/widgets.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
@@ -157,6 +158,13 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                           isToShowFiltroNoMeio: true,
                           layout: layout,
                         );
+                      },
+                      onChanged: (value) {
+                        SettingsReports.isfiltrosSalvosApp = !SettingsReports.isfiltrosSalvosApp;
+                        SettingsReports.salvarFiltrosShared();
+                        setState(() {
+                          
+                        });
                       },
                     );
                   } else {

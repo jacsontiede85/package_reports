@@ -370,10 +370,14 @@ class Widgets {
     );
   }
 
-  Widget cardSalvarFiltros ({required FiltroController controller, required FiltrosWidgetModel filtrosDados, required BuildContext context}){
+  Widget cardSalvarFiltros ({required FiltrosWidgetModel filtrosDados, required BuildContext context, required void Function(bool)? onChanged}){
     return Card(
+      margin: const EdgeInsets.only(top: 40, bottom: 10, left: 5, right: 5),
+      elevation: 10,
       child: SwitchListTile(
         value: SettingsReports.isfiltrosSalvosApp,
+        activeTrackColor: Colors.green,
+        inactiveTrackColor: Colors.grey,
         title: tituloCards(
           titulo: "Salvar Filtros",
           context: context,
@@ -381,13 +385,10 @@ class Widgets {
         subtitle: Text(
           filtrosDados.titulo,
           style: const TextStyle(
-            fontSize: 11.0,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        onChanged: (value) {
-          SettingsReports.isfiltrosSalvosApp = !SettingsReports.isfiltrosSalvosApp;
-          SettingsReports.salvarFiltrosShared();
-        },
+        onChanged: onChanged
       )
     );
   }
@@ -546,6 +547,7 @@ class Widgets {
     required void Function()? onTap,
     required FiltroController controller,
     required int index,
+    required void Function(bool)? onChanged
   }) {
     Widget retornoFuncao = const SizedBox();
 
@@ -597,7 +599,7 @@ class Widgets {
       break;
 
       case "salvarFiltros" :
-        retornoFuncao = cardSalvarFiltros(controller: controller, filtrosDados: filtrosDados, context: context);
+        retornoFuncao = cardSalvarFiltros(filtrosDados: filtrosDados, context: context, onChanged: onChanged);
       break;
     }
     return retornoFuncao;

@@ -119,7 +119,7 @@ mixin class SettingsReports{
   static void salvarFiltrosShared () async {
     List<String> valoresSalvosCarregados = [];
     List<String> valoresSalvosConstruirTela = [];
-    
+
     if(!isfiltrosSalvosApp){
       final prefs = await SharedPreferences.getInstance();
       prefs.clear();
@@ -201,7 +201,6 @@ mixin class SettingsReports{
     listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of(listaRecuperada2);
     
     if(dados.isNotEmpty){
-      print('object');
       isfiltrosSalvosApp = true;
     }
   
