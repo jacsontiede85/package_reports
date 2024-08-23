@@ -127,10 +127,8 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   Future<void> scrollListener() async {
     try {
       double position = double.parse(horizontalScroll.position.pixels.toString());
-      double positionVertical = double.parse(verticalScroll.position.pixels.toString());
       if (!loading){
         setPositionScroll(position);
-        setPositionScroll(positionVertical);
       } 
       _listenerStarted = true;
     } catch (e) {
@@ -142,7 +140,6 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     await Future.delayed(const Duration(seconds: 1));
     try {
       horizontalScroll.addListener(scrollListener);
-      verticalScroll.addListener(scrollListener);
     } catch (e) {
       //printE("_startListener");
     }
@@ -204,7 +201,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
     if (_listenerStarted) _removeListener();
 
-    // ! Necessario criar forma de limpar campos que estão indo fazer a busca de relatorios recursivos
+    // ! NECESSARIO CRIAR FORMA DE LIMPAR CAMPOS QUE ESTÃO INDO FAZER A BUSCA DE RELATORIOS RECURSIVOS
   }
 
   getDados() async {

@@ -9,12 +9,14 @@ class ReportPDFController = ReportPDFControllerBase with _$ReportPDFController;
 
 abstract class ReportPDFControllerBase with Store {
   
-  String titulo ='';
+  late String titulo;
+  late bool filtraTudo;
   late ReportFromJSONController reportController;
 
   ReportPDFControllerBase({
     required this.titulo,
     required this.reportController,
+    required this.filtraTudo,
   });
 
 
@@ -69,7 +71,7 @@ abstract class ReportPDFControllerBase with Store {
 
   List<Widget> cabecalhoColunasPdf(){
     List<Widget> colunasDados = [];
-    for(var colunas in reportController.colunas){
+    for(Map<String,dynamic> colunas in reportController.colunas){
       if(colunas['selecionado']){
         colunasDados.add(
           Expanded( 
@@ -97,28 +99,54 @@ abstract class ReportPDFControllerBase with Store {
 
     for( Map<String, dynamic> model in reportController.dados ){
       List<Widget> row = [];
-
-      model.forEach((key, value) {
-        if(!key.toString().contains('__INVISIBLE') && reportController.colunas.where((element) => element['key'].toString() == key.toString() && element['selecionado']).toList().isNotEmpty ) {
-          row.add(
-            Expanded(
-              flex: 2,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Text(
-                  Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString()),
-                  style: TextStyle(
-                    color: PdfColors.black,
-                    fontWeight: FontWeight.normal,
-                    fontSize: 10,
+      if(bool.parse(model['isFiltered'].toString()) == true && !filtraTudo){
+        model.forEach((key, value) {
+          if(!key.toString().contains('__INVISIBLE') && reportController.colunas.where((element) => element['key'].toString() == key.toString() && element['selecionado']).toList().isNotEmpty ) {
+            row.add(
+              Expanded(
+                flex: 2,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: Text(
+                    Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString()),
+                    style: TextStyle(
+                      color: PdfColors.black,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 10,
+                    ),
+                    textAlign: TextAlign.left,
                   ),
-                  textAlign: TextAlign.left,
                 ),
               ),
-            ),
-          );
-        }
-      });
+            );
+          }
+        });        
+      }
+
+      if(filtraTudo){
+        model.forEach((key, value) {
+          if(!key.toString().contains('__INVISIBLE') && reportController.colunas.where((element) => element['key'].toString() == key.toString() && element['selecionado']).toList().isNotEmpty ) {
+            row.add(
+              Expanded(
+                flex: 2,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: Text(
+                    Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString()),
+                    style: TextStyle(
+                      color: PdfColors.black,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 10,
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                ),
+              ),
+            );
+          }
+        });
+      }
+
 
       table.add(
         Container(

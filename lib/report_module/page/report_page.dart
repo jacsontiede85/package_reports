@@ -303,12 +303,22 @@ class _ReportPageState extends State<ReportPage> with Rows {
                             context: context, 
                             builder: (context) => exibirSelecaoDeColunasParaExporta(
                               onPressedFiltrado: (){
-                    
+                                ReportPDFController controllerPDF = ReportPDFController(
+                                  titulo: controller.configPagina['name'],
+                                  reportController: controller,
+                                  filtraTudo: false,
+                                );
+                                controllerPDF.getDados(controller: controller, titulo: controller.configPagina['name']);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => PrintingPDFPage(controller: controllerPDF),
+                                );                      
                               },
                               onPressedTudo: () {
                                 ReportPDFController controllerPDF = ReportPDFController(
                                   titulo: controller.configPagina['name'],
-                                  reportController: controller
+                                  reportController: controller,
+                                  filtraTudo: true,
                                 );
                                 controllerPDF.getDados(controller: controller, titulo: controller.configPagina['name']);
                                 showDialog(
