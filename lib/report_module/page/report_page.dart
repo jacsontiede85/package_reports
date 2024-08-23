@@ -210,6 +210,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   tooltip: 'Opções',
                   position: PopupMenuPosition.under,
                   iconColor: Colors.white,
+                  color: Colors.black87,
                   itemBuilder: (context) {
                     return [
                       PopupMenuItem(
@@ -218,9 +219,14 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(right: 10),
-                              child: Icon(Icons.search),
+                              child: Icon(Icons.search, color: Colors.white,),
                             ),
-                            Text("Pesquisar"),
+                            Text(
+                              "Pesquisar",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),                              
+                            ),
                           ],
                         ),
                         onTap: () {
@@ -239,9 +245,14 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(right: 10),
-                              child: Icon(Icons.bar_chart),
+                              child: Icon(Icons.bar_chart, color: Colors.white,),
                             ),
-                            Text("Graficos"),
+                            Text(
+                              "Graficos",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),                              
+                            ),
                           ],
                         ),
                         onTap: () async {
@@ -263,9 +274,14 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(right: 10),
-                              child: Icon(Icons.analytics),
+                              child: Icon(Icons.analytics, color: Colors.white,),
                             ),
-                            Text("Excel"),
+                            Text(
+                              "Excel",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                           ],
                         ),
                         onTap: () {
@@ -292,9 +308,14 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(right: 10),
-                              child: Icon(Icons.analytics),
+                              child: Icon(Icons.paste, color: Colors.white,),
                             ),
-                            Text("PDF"),
+                            Text(
+                              "PDF",
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
                           ],
                         ),
                         onTap: () {
@@ -343,7 +364,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 builder: (_) => Visibility(
                   visible: (controller.configPagina.isNotEmpty && !controller.loading && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty),
                   replacement: Visibility(
-                    visible: !controller.loadingConfigFiltros && controller.configPagina['filtros'] == null,
+                    visible: controller.configPagina['indexPage'] == 0 && !controller.loadingConfigFiltros && controller.configPagina['filtros'] == null,
                     child: TextButton(
                       style: const ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(Colors.green),
@@ -376,7 +397,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         floatingActionButton: Visibility(
-          visible: controller.colunasFiltradas.isNotEmpty || controller.searchString.text.isNotEmpty,
+          visible: controller.filtrosSelected.isNotEmpty || controller.searchString.text.isNotEmpty,
           child: ElevatedButton.icon(
             style: const ButtonStyle(
               backgroundColor: WidgetStatePropertyAll(
