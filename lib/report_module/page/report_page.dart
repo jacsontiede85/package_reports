@@ -7,7 +7,9 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/page/filtros_page.dart';
 import 'package:package_reports/global/core/layout_controller.dart';
+import 'package:package_reports/global/widget/pdf_page.dart';
 import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
+import 'package:package_reports/report_module/controller/report_to_pdf.dart';
 import 'package:package_reports/report_module/controller/report_to_xlsx_controller.dart';
 import 'package:package_reports/global/core/features.dart';
 import 'package:package_reports/report_module/page/report_chart_page.dart';
@@ -279,6 +281,42 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                 Navigator.pop(context);
                               },
                               titulo: 'Exportar para Excel',
+                            ),
+                          );
+                        },
+                      ),
+
+                      PopupMenuItem(
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Icon(Icons.analytics),
+                            ),
+                            Text("PDF"),
+                          ],
+                        ),
+                        onTap: () {
+
+                          showDialog(
+                            context: context, 
+                            builder: (context) => exibirSelecaoDeColunasParaExporta(
+                              onPressedFiltrado: (){
+                    
+                              },
+                              onPressedTudo: () {
+                                ReportPDFController controllerPDF = ReportPDFController(
+                                  titulo: controller.configPagina['name'],
+                                  reportController: controller
+                                );
+                                controllerPDF.getDados(controller: controller, titulo: controller.configPagina['name']);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => PrintingPDFPage(controller: controllerPDF),
+                                );                                    
+                              },
+                              titulo: 'Selecione as colunas para exportar para PDF'
                             ),
                           );
                         },

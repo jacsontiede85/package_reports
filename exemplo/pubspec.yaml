@@ -16,6 +16,8 @@ dependencies:
     path: ../
   responsive_builder: ^0.7.0
   shared_preferences: ^2.3.2
+  pdf: ^3.11.1
+  printing: ^5.13.2
 
 dev_dependencies:
   flutter_test:

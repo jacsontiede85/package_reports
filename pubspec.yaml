@@ -36,6 +36,8 @@ dependencies:
   syncfusion_flutter_xlsio: ^26.1.40
   responsive_builder: ^0.7.1
   shared_preferences: ^2.3.2
+  pdf: ^3.11.1
+  printing: ^5.13.2
 
 dev_dependencies:
   flutter_test:
