@@ -124,6 +124,7 @@ mixin class SettingsReports{
       final prefs = await SharedPreferences.getInstance();
       prefs.remove('filtrosSalvos.$bancoDeDados.$matricula');
       prefs.remove('filtrosContruirTela.$bancoDeDados.$matricula');
+      prefs.remove('isfiltrosSalvosApp.$bancoDeDados.$matricula');
       isfiltrosSalvosApp = false;
     }else{
       if (listaFiltrosCarregadosSalvos.isNotEmpty) {
@@ -131,6 +132,7 @@ mixin class SettingsReports{
 
         prefs.remove('filtrosSalvos.$bancoDeDados.$matricula');
         prefs.remove('filtrosContruirTela.$bancoDeDados.$matricula');
+        prefs.remove('isfiltrosSalvosApp.$bancoDeDados.$matricula');
 
         for (FiltrosCarrregados itens in listaFiltrosCarregadosSalvos) {
           Map<String, dynamic> itemMap = {
@@ -177,6 +179,7 @@ mixin class SettingsReports{
         
         prefs.setStringList('filtrosSalvos.$bancoDeDados.$matricula', valoresSalvosCarregados);
         prefs.setStringList('filtrosContruirTela.$bancoDeDados.$matricula', valoresSalvosConstruirTela);
+        prefs.setBool('isfiltrosSalvosApp.$bancoDeDados.$matricula', isfiltrosSalvosApp);
       }      
     }
 
@@ -186,10 +189,12 @@ mixin class SettingsReports{
     final prefs = await SharedPreferences.getInstance();    
     List<String> dados = [];
     List<String> dados2 = [];
+    bool salvo = false;
 
     try{
       dados = prefs.getStringList('filtrosSalvos.$bancoDeDados.$matricula')!;
       dados2 = prefs.getStringList('filtrosContruirTela.$bancoDeDados.$matricula')!;
+      salvo = prefs.getBool('isfiltrosSalvosApp.$bancoDeDados.$matricula') ?? false;
     }catch(e){
       dados = [];
       dados2 = [];
@@ -202,7 +207,7 @@ mixin class SettingsReports{
     listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of(listaRecuperada2);
     
     if(dados.isNotEmpty){
-      isfiltrosSalvosApp = true;
+      isfiltrosSalvosApp = salvo;
     }
   
   }
