@@ -38,9 +38,9 @@ class API with SettingsReports {
     //  print("body: $dados");
     if (res.statusCode == 200) {
       return res.body.replaceAllMapped(
-        RegExp(r'\:\b(null)\b\,', caseSensitive: false), 
+        RegExp(r'\:\b(null)\b', caseSensitive: false), 
         (match) {
-          return ':"",';
+          return ':""';
         },
       );
     } else {
