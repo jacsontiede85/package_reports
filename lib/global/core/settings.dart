@@ -122,15 +122,15 @@ mixin class SettingsReports{
 
     if(!isfiltrosSalvosApp){
       final prefs = await SharedPreferences.getInstance();
-      prefs.remove('filtrosSalvos');
-      prefs.remove('filtrosContruirTela');
+      prefs.remove('filtrosSalvos.$bancoDeDados.$matricula');
+      prefs.remove('filtrosContruirTela.$bancoDeDados.$matricula');
       isfiltrosSalvosApp = false;
     }else{
       if (listaFiltrosCarregadosSalvos.isNotEmpty) {
         final prefs = await SharedPreferences.getInstance();
 
-        prefs.remove('filtrosSalvos');
-        prefs.remove('filtrosContruirTela');
+        prefs.remove('filtrosSalvos.$bancoDeDados.$matricula');
+        prefs.remove('filtrosContruirTela.$bancoDeDados.$matricula');
 
         for (FiltrosCarrregados itens in listaFiltrosCarregadosSalvos) {
           Map<String, dynamic> itemMap = {
@@ -188,8 +188,8 @@ mixin class SettingsReports{
     List<String> dados2 = [];
 
     try{
-      dados = prefs.getStringList('filtrosSalvos')!;
-      dados2 = prefs.getStringList('filtrosContruirTela')!;
+      dados = prefs.getStringList('filtrosSalvos.$bancoDeDados.$matricula')!;
+      dados2 = prefs.getStringList('filtrosContruirTela.$bancoDeDados.$matricula')!;
     }catch(e){
       dados = [];
       dados2 = [];
