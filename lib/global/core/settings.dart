@@ -175,8 +175,8 @@ mixin class SettingsReports{
           valoresSalvosConstruirTela.add(jsonString);
         }
         
-        prefs.setStringList('filtrosSalvos', valoresSalvosCarregados);
-        prefs.setStringList('filtrosContruirTela', valoresSalvosConstruirTela);
+        prefs.setStringList('filtrosSalvos.$bancoDeDados.$matricula', valoresSalvosCarregados);
+        prefs.setStringList('filtrosContruirTela.$bancoDeDados.$matricula', valoresSalvosConstruirTela);
       }      
     }
 
