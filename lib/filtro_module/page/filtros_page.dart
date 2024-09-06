@@ -12,7 +12,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 class FiltrosReportPage extends StatefulWidget {
   final FiltroController controllerFiltro;
-  Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela, String dtinicio, String dtfim)? onAplicar;
+  Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela, String dtinicio, String dtfim, String dataCampanhaInicial)? onAplicar;
   Map<String, dynamic> bodypesquisaAtual;
 
   FiltrosReportPage({super.key, required this.controllerFiltro, required this.bodypesquisaAtual, this.onAplicar});
@@ -112,7 +112,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                     if (widget.onAplicar == null) {
                       await controllerFiltro.criarNovoBody();
                     } else {
-                      widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim);
+                      widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim, controllerFiltro.dataCampanhaInicial);
                     }
                   },
                   child: const Text(
