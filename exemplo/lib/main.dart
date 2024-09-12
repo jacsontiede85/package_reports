@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       // function: 'comercial/ultima-data-pedido-rca/index.php',
                       // function: 'comercial/consultar-clientes/index.php',
                       // function: 'quadro_kanban/index.php',
-                      function: 'vendas/venda-por-supervisor/index.php',
+                      function: 'campanha_milionaria/campanha-milionaria-dca-por-rca/index.php',
                       // function: 'compras/leadtime-compras/index.php',
                       // function: 'compras/pedido-de-compra-saldo/index.php',
                       // function: 'campanha_milionaria/campanha-milionaria-dca-sintetico-por-supervisor/index.php',

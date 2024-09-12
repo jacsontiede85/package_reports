@@ -90,6 +90,7 @@ abstract class FiltroControllerBase with Store {
   ];
 
   void getDataMensal({required String mesInicial}) async{
+    datasMeses = [];
     dataCampanhaInicial = "${DateTime.now().month}/${DateFormat.y().format(DateTime.now())}";
     if(dataCampanhaInicial.length != 7) dataCampanhaInicial = "0$dataCampanhaInicial";
     var data1 = DateTime(int.parse(mesInicial.split("/").last), int.parse(mesInicial.split("/").first), 01);
@@ -97,7 +98,7 @@ abstract class FiltroControllerBase with Store {
     int year = data2.year;
     int month = data2.month;
     int temp = ((data2.year - data1.year) * 12 + data2.month - data1.month) + 1;
-
+      
     for(var i = 0; i<temp; i++){
       if(data2.month - i > 0){
         datasMeses.add("${(month - i)}/$year");
