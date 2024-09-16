@@ -226,7 +226,7 @@ class Widgets {
                       isExpanded: true,
                       isDense: true,
                       onChanged: (value) {
-                        controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value;
+                        //controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value;
                         controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
                       },
                       hint: null,//Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),

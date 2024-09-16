@@ -135,6 +135,10 @@ abstract class FiltroControllerBase with Store {
 
   void getDadosCriarFiltros() async {
     mapaFiltrosWidget.forEach((key, value) {
+      print("$key -- ${value}");
+      if(key == "cardPeriodoMensal"){
+        key = "$key${value["mesInicial"]}";
+      }
       listaFiltrosParaConstruirTela.add(FiltrosPageAtual(qualPaginaFiltroPertence: indexPagina, filtrosWidgetModel: FiltrosWidgetModel.fromJson(value, key)));
     });
     await conjuntoDePeriodos();
@@ -619,6 +623,7 @@ abstract class FiltroControllerBase with Store {
 
     // * CRIAÇÃO DE UMA LISTA TEMPORARIA, PARA GUARDAR TODOS OS FILTROS SELECIONADOS
     if(SettingsReports.listaFiltrosCarregadosSalvos.isEmpty) SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
+    
     if(SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty){
       listaFiltrosCarregados = ObservableList<FiltrosCarrregados>.of([...SettingsReports.listaFiltrosCarregadosSalvos]);
       for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
