@@ -208,22 +208,38 @@ class Widgets {
             Padding(
               padding: const EdgeInsets.only(top: 10, bottom: 10),
               child: Observer(builder: (_) {
-                return DropdownButton(
-                  isExpanded: true,
-                  isDense: true,
-                  onChanged: (value) {
-                    controller.dataCampanhaInicial = value!;
-                    if(controller.dataCampanhaInicial.length != 7) controller.dataCampanhaInicial = "0${controller.dataCampanhaInicial}";
-                  },
-                  hint: Text("${controller.monthNames[int.parse(controller.dataCampanhaInicial.split("/").first)-1]}/${controller.dataCampanhaInicial.split("/").last}", style: const TextStyle(fontWeight: FontWeight.bold),),
-                  items: controller.datasMeses.map((value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(
-                        "${controller.monthNames[int.parse(value.split("/").first)-1]}/${value.split("/").last}",
-                      ),
+                return FutureBuilder(
+                  future: controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index) == -1 ? 
+                  controller.funcaoBuscarDadosDeCadaFiltro(
+                    valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                    isBuscarDropDown: true,
+                    index: index,
+                    isDataMensal: true
+                  ).then(
+                    (value) {
+                      controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.first;
+                    },
+                  ) : null,
+                  builder: (context, snapshot) {
+                    return DropdownButton<FiltrosModel>(
+                      value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
+                      isExpanded: true,
+                      isDense: true,
+                      onChanged: (value) {
+                        controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value;
+                        controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
+                      },
+                      hint: null,//Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
+                      items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((item) {
+                        return DropdownMenuItem<FiltrosModel>(
+                          value: item,
+                          child: Text(
+                            item.titulo,
+                          ),
+                        );
+                      }).toList(),
                     );
-                  }).toList(),
+                  }
                 );
               }),
             ),

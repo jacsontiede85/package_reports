@@ -79,8 +79,6 @@ abstract class FiltroControllerBase with Store {
   @observable
   String dataCampanhaInicial = "";
 
-  List<String> datasMeses = [];
-
   @observable
   bool loadingMoreData = false;
 
@@ -89,29 +87,46 @@ abstract class FiltroControllerBase with Store {
     "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
   ];
 
-  void getDataMensal({required String mesInicial}) async{
-    datasMeses = [];
-    dataCampanhaInicial = "${DateTime.now().month}/${DateFormat.y().format(DateTime.now())}";
-    if(dataCampanhaInicial.length != 7) dataCampanhaInicial = "0$dataCampanhaInicial";
+  List<FiltrosModel> getDataMensal({required String mesInicial}) {
+    List<FiltrosModel> filtro = [];
+    dataCampanhaInicial = ("${DateTime.now().month}/${DateFormat.y().format(DateTime.now())}").padLeft(7, "0");
+
     var data1 = DateTime(int.parse(mesInicial.split("/").last), int.parse(mesInicial.split("/").first), 01);
     var data2 = DateTime.now();
     int year = data2.year;
     int month = data2.month;
     int temp = ((data2.year - data1.year) * 12 + data2.month - data1.month) + 1;
-      
+
     for(var i = 0; i<temp; i++){
       if(data2.month - i > 0){
-        datasMeses.add("${(month - i)}/$year");
+        filtro.add(
+          FiltrosModel(
+            codigo: "${(month - i)}/$year",
+            titulo: "${(monthNames[month - i - 1])}/$year"
+          )
+        );
       }
       else{
         if(month - i + ((data2.year - year) * 12) <= 0){
           year--;
-          datasMeses.add("${(month - i + ((data2.year - year) * 12))}/$year");
+          filtro.add(
+            FiltrosModel(
+              codigo: "${(month - i + ((data2.year - year) * 12))}/$year",
+              titulo: "${monthNames[(month - i + ((data2.year - year) * 12)) -1]}/$year"
+            )
+          );
         }else {
-          datasMeses.add("${(month - i + ((data2.year - year) * 12))}/$year");
+          filtro.add(
+            FiltrosModel(
+              codigo: "${(month - i + ((data2.year - year) * 12))}/$year",
+              titulo: "${monthNames[(month - i + ((data2.year - year) * 12))-1]}/$year"
+            )
+          );
         }
       }
     }
+
+    return filtro;
   }
 
   // RETORNAR QTDE DE ITENS SELECIONADOS
@@ -120,16 +135,12 @@ abstract class FiltroControllerBase with Store {
 
   void getDadosCriarFiltros() async {
     mapaFiltrosWidget.forEach((key, value) {
-      if(value["tipo"] == "datapickermensal"){
-        getDataMensal(mesInicial: value["mesInicial"]);
-      }
-
       listaFiltrosParaConstruirTela.add(FiltrosPageAtual(qualPaginaFiltroPertence: indexPagina, filtrosWidgetModel: FiltrosWidgetModel.fromJson(value, key)));
     });
     await conjuntoDePeriodos();
   }
 
-  Future<void> funcaoBuscarDadosDeCadaFiltro({required FiltrosWidgetModel valor, required bool isBuscarDropDown, required int index, bool pesquisa = false}) async {
+  Future<void> funcaoBuscarDadosDeCadaFiltro({required FiltrosWidgetModel valor, required bool isBuscarDropDown, required int index, bool pesquisa = false, bool isDataMensal = false}) async {
     erroBuscarItensFiltro = false;
     if (isBuscarDropDown == false) validarListaParaDropDown = isBuscarDropDown;
 
@@ -142,30 +153,53 @@ abstract class FiltroControllerBase with Store {
 
       if (novoIndexFiltro == -1 || (!listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita && !pesquisa)) {
         try {
-          bodyPesquisarFiltros.addAll(
-            {
-              "function": valor.funcaoPrincipal,
-              "database": valor.bancoBuscarFiltros,
-              "matricula": SettingsReports.matricula,
-            },
-          );
+          if(isDataMensal){
+            String mesinit = "";
+            mapaFiltrosWidget.forEach((key, value) {
+              if(value["tipo"] == "datapickermensal"){
+                mesinit = value["mesInicial"];
+              }
+            });
 
-          String response = await API().getDataReportApiJWT(dados: bodyPesquisarFiltros, url: "filtros/${valor.arquivoQuery}");
-
-          List dados = jsonDecode(response);
-
-          if (novoIndexFiltro == -1 || listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita) {
-            listaFiltrosCarregados.add(
-              FiltrosCarrregados(
-                tipoFiltro: listaFiltrosParaConstruirTela[index].filtrosWidgetModel.tipoFiltro,
-                indexFiltros: index,
-                indexPagina: indexPagina,
-                listaFiltros: dados.map((e) => FiltrosModel.fromJson(e)).toList(),
-              ),
+            if (novoIndexFiltro == -1 || listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita) {
+              listaFiltrosCarregados.add(
+                FiltrosCarrregados(
+                  tipoFiltro: listaFiltrosParaConstruirTela[index].filtrosWidgetModel.tipoFiltro,
+                  indexFiltros: index,
+                  indexPagina: indexPagina,
+                  listaFiltros: getDataMensal(mesInicial: mesinit),
+                ),
+              );
+            } else {
+              listaFiltrosCarregados[novoIndexFiltro].listaFiltros = getDataMensal(mesInicial: mesinit);
+            }
+          }else{
+             bodyPesquisarFiltros.addAll(
+              {
+                "function": valor.funcaoPrincipal,
+                "database": valor.bancoBuscarFiltros,
+                "matricula": SettingsReports.matricula,
+              },
             );
-          } else {
-            listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
+
+            String response = await API().getDataReportApiJWT(dados: bodyPesquisarFiltros, url: "filtros/${valor.arquivoQuery}");
+
+            List dados = jsonDecode(response);
+
+            if (novoIndexFiltro == -1 || listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita) {
+              listaFiltrosCarregados.add(
+                FiltrosCarrregados(
+                  tipoFiltro: listaFiltrosParaConstruirTela[index].filtrosWidgetModel.tipoFiltro,
+                  indexFiltros: index,
+                  indexPagina: indexPagina,
+                  listaFiltros: dados.map((e) => FiltrosModel.fromJson(e)).toList(),
+                ),
+              );
+            } else {
+              listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
+            }
           }
+
           indexFiltro = index;
           novoIndexFiltro = retornarIndexListaFiltrosCarregados();
         } catch (e) {
@@ -576,20 +610,21 @@ abstract class FiltroControllerBase with Store {
   void getItensSelecionadosSalvos(){
 
     // * CRIAÇÃO DE UMA LISTA TEMPORARIA, PARA GUARDAR TODOS OS FILTROS SELECIONADOS
-    for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
-      if(SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty){
-        listaFiltrosCarregados = SettingsReports.listaFiltrosCarregadosSalvos;
+    if(SettingsReports.listaFiltrosCarregadosSalvos.isEmpty) SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
+    if(SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty){
+      listaFiltrosCarregados = ObservableList<FiltrosCarrregados>.of([...SettingsReports.listaFiltrosCarregadosSalvos]);
+      for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
         for(FiltrosPageAtual item in SettingsReports.listaFiltrosParaConstruirTelaTemp){
           if(item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro){
             value.filtrosWidgetModel.itensSelecionados = item.filtrosWidgetModel.itensSelecionados;
           } 
         }
       }
-      else {
-        SettingsReports.listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([...listaFiltrosParaConstruirTela]);
-        if(SettingsReports.listaFiltrosCarregadosSalvos.isEmpty) SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
-      }
     }
+    else {
+      SettingsReports.listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([...listaFiltrosParaConstruirTela]);
+    }
+    
     
     listaFiltrosParaConstruirTela.clear();
     getDadosCriarFiltros();
@@ -599,7 +634,6 @@ abstract class FiltroControllerBase with Store {
       for(FiltrosPageAtual item in listaFiltrosParaConstruirTela){
         if(value.filtrosWidgetModel.tipoFiltro == item.filtrosWidgetModel.tipoFiltro) {
           item.filtrosWidgetModel.itensSelecionados = value.filtrosWidgetModel.itensSelecionados;
-
         }
       }
     }
@@ -612,6 +646,5 @@ abstract class FiltroControllerBase with Store {
         }
       }
     }
-
   }
 }
