@@ -306,6 +306,14 @@ abstract class FiltroControllerBase with Store {
       }
     }
 
+    if(filtrosSalvosParaAdicionarNoBody.containsKey("cardPeriodoMensal")){
+      filtrosSalvosParaAdicionarNoBody.forEach((key, value) {
+        if(key == "cardPeriodoMensal"){
+          dataCampanhaInicial = value.first["codigo"].toString().padLeft(7, "0");
+        }
+      },);
+    }
+
     if (controllerReports.bodySecundario.isEmpty) {
       controllerReports.bodyPrimario.update(
         'dtinicio',
