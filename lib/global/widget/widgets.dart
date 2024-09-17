@@ -229,7 +229,7 @@ class Widgets {
                         //controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value;
                         controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
                       },
-                      hint: null,//Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
+                      hint: null,
                       items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((item) {
                         return DropdownMenuItem<FiltrosModel>(
                           value: item,
@@ -328,35 +328,14 @@ class Widgets {
               child: Stack(
                 alignment: Alignment.centerLeft,
                 children: [
-                  Wrap(
-                    spacing: 2.0,
-                    direction: Axis.horizontal,
-                    children: [
-                      Observer(
-                        builder: (_) => Visibility(
-                          visible: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.isEmpty,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: Colors.grey[300],
-                            ),
-                            margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
-                            padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
-                            child: const Text(
-                              "\u{2718} Sem filtro",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 11,
-                                color: Colors.blueGrey,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      for (FiltrosModel valores in controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.take(20))
-                        Observer(builder: (context) {
-                          return Visibility(
-                            visible: valores.selecionado,
+                  Observer(
+                    builder: (_) => Wrap(
+                      spacing: 2.0,
+                      direction: Axis.horizontal,
+                      children: [
+                        Observer(
+                          builder: (_) => Visibility(
+                            visible: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.isEmpty,
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10.0),
@@ -364,18 +343,41 @@ class Widgets {
                               ),
                               margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
                               padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
-                              child: Text(
-                                "\u{2705} ${valores.codigo}",
-                                style: const TextStyle(
+                              child: const Text(
+                                "\u{2718} Sem filtro",
+                                style: TextStyle(
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 14,
+                                  fontSize: 11,
                                   color: Colors.blueGrey,
                                 ),
                               ),
                             ),
-                          );
-                        }),
-                    ],
+                          ),
+                        ),
+                        for (FiltrosModel valores in controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.take(20))
+                          Observer(builder: (context) {
+                            return Visibility(
+                              visible: valores.selecionado,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  color: Colors.grey[300],
+                                ),
+                                margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
+                                padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
+                                child: Text(
+                                  "\u{2705} ${valores.codigo}",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                    color: Colors.blueGrey,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                      ],
+                    ),
                   ),
                 ],
               ),

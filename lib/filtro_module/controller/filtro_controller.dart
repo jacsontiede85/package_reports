@@ -135,7 +135,6 @@ abstract class FiltroControllerBase with Store {
 
   void getDadosCriarFiltros() async {
     mapaFiltrosWidget.forEach((key, value) {
-      print("$key -- ${value}");
       if(key == "cardPeriodoMensal"){
         key = "$key${value["mesInicial"]}";
       }
@@ -310,13 +309,11 @@ abstract class FiltroControllerBase with Store {
       }
     }
 
-    if(filtrosSalvosParaAdicionarNoBody.containsKey("cardPeriodoMensal")){
-      filtrosSalvosParaAdicionarNoBody.forEach((key, value) {
-        if(key == "cardPeriodoMensal"){
-          dataCampanhaInicial = value.first["codigo"].toString().padLeft(7, "0");
-        }
-      },);
-    }
+    filtrosSalvosParaAdicionarNoBody.forEach((key, value) {
+      if(key.contains("cardPeriodoMensal")){
+        dataCampanhaInicial = value.first["codigo"].toString().padLeft(7, "0");
+      }
+    },);
 
     if (controllerReports.bodySecundario.isEmpty) {
       controllerReports.bodyPrimario.update(
@@ -324,7 +321,6 @@ abstract class FiltroControllerBase with Store {
         (value) => value = dtinicio,
       );
       controllerReports.bodyPrimario.update('dtfim', (value) => value = dtfim);
-
       controllerReports.bodyPrimario.addAll(filtrosSalvosParaAdicionarNoBody);
 
       //Data mensal das campanhas
@@ -342,6 +338,14 @@ abstract class FiltroControllerBase with Store {
       );
       controllerReports.bodySecundario.update('dtfim', (value) => value = dtfim);
 
+      if(controllerReports.bodyPrimario.containsKey("dataMensal")) {
+        controllerReports.bodyPrimario.update("dataMensal", (value) => value = dataCampanhaInicial,);
+      } else {
+        controllerReports.bodyPrimario.addAll(
+          {"dataMensal": dataCampanhaInicial}
+        );
+      }
+
       controllerReports.bodySecundario.addAll(filtrosSalvosParaAdicionarNoBody);
     }
 
@@ -353,6 +357,7 @@ abstract class FiltroControllerBase with Store {
           {"dataMensal": dataCampanhaInicial}
         );
       }
+
     await controllerReports.getDados();
   }
 
@@ -579,9 +584,12 @@ abstract class FiltroControllerBase with Store {
       filtros.filtrosWidgetModel.itensSelecionados!.clear();
 
       // Voltar o valor do dropdown para o primeiro index
-      if(filtros.filtrosWidgetModel.tipoWidget.contains("dropdown")){
+      if(filtros.filtrosWidgetModel.tipoWidget.contains("dropdown") || filtros.filtrosWidgetModel.tipoWidget.contains("datapickermensal")){
         for(var value in listaFiltrosCarregados){
           value.valorSelecionadoParaDropDown = value.listaFiltros.first;
+          if(value.tipoFiltro.contains("cardPeriodoMensal")){
+            dataCampanhaInicial = value.listaFiltros.first.codigo.padLeft(7, "0");
+          }
         }
       }
     }
@@ -590,6 +598,7 @@ abstract class FiltroControllerBase with Store {
         itens.selecionado = false;
       }
     }
+
     filtrosSalvosParaAdicionarNoBody.clear();
     isRCAativo = false;
     isRCAsemVenda = false;
@@ -620,7 +629,6 @@ abstract class FiltroControllerBase with Store {
   }
 
   void getItensSelecionadosSalvos(){
-
     // * CRIAÇÃO DE UMA LISTA TEMPORARIA, PARA GUARDAR TODOS OS FILTROS SELECIONADOS
     if(SettingsReports.listaFiltrosCarregadosSalvos.isEmpty) SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
     
@@ -630,7 +638,7 @@ abstract class FiltroControllerBase with Store {
         for(FiltrosPageAtual item in SettingsReports.listaFiltrosParaConstruirTelaTemp){
           if(item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro){
             value.filtrosWidgetModel.itensSelecionados = item.filtrosWidgetModel.itensSelecionados;
-          } 
+          }
         }
       }
     }
@@ -647,6 +655,9 @@ abstract class FiltroControllerBase with Store {
       for(FiltrosPageAtual item in listaFiltrosParaConstruirTela){
         if(value.filtrosWidgetModel.tipoFiltro == item.filtrosWidgetModel.tipoFiltro) {
           item.filtrosWidgetModel.itensSelecionados = value.filtrosWidgetModel.itensSelecionados;
+          if(item.filtrosWidgetModel.itensSelecionados!.isEmpty && value.filtrosWidgetModel.tipoFiltro.contains("cardPeriodoMensal")){
+            dataCampanhaInicial = ("${DateTime.now().month}/${DateFormat.y().format(DateTime.now())}").padLeft(7, "0");
+          }
         }
       }
     }

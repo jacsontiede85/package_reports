@@ -15,7 +15,7 @@ abstract class FiltrosWidgetModelBase with Store {
   String tipoWidget = '';
 
   @observable
-  Set<FiltrosModel>? itensSelecionados = {};
+  ObservableSet<FiltrosModel>? itensSelecionados = ObservableSet.of({});
 
   FiltrosWidgetModelBase({
     this.tipoFiltro = '',

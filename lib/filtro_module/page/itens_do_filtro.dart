@@ -57,6 +57,48 @@ class _ItensFiltroState extends State<ItensFiltro> {
                   ),
                 ),
               ),
+              trailing: Observer(
+                builder: (_) => Visibility(
+                  visible: widget.filtroPaginaAtual.filtrosWidgetModel.itensSelecionados!.isNotEmpty,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: TextButton.icon(
+                      style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.redAccent.shade400)),
+                      onPressed: () {
+                        //Limpando as variaveis
+                        widget.filtroPaginaAtual.filtrosWidgetModel.itensSelecionados!.clear();  
+                        for(var value in widget.controller.listaFiltrosCarregados){
+                          if(value.indexFiltros == widget.indexDofiltro){
+                            for(var item in value.listaFiltros){
+                              item.selecionado = false;
+                            }
+                          }
+                        }
+                        widget.controller.filtrosSalvosParaAdicionarNoBody.removeWhere((key, value) => key == widget.filtroPaginaAtual.filtrosWidgetModel.tipoFiltro,);
+                        
+                        //Limpando o body de pesquisa
+                        if (widget.controller.controllerReports.bodySecundario.isEmpty) {
+                          widget.controller.controllerReports.bodyPrimario.removeWhere((key, value) {
+                            return key == widget.filtroPaginaAtual.filtrosWidgetModel.tipoFiltro;
+                          },);
+                        } else {
+                          widget.controller.controllerReports.bodySecundario.removeWhere((key, value) {
+                            return key == widget.filtroPaginaAtual.filtrosWidgetModel.tipoFiltro;
+                          },);
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.clear_rounded,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        "Limpar Itens",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios),

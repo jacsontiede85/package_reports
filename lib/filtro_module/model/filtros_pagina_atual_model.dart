@@ -26,9 +26,9 @@ abstract class FiltrosPageAtualBase with Store {
       tipoFiltro : json['filtrosWidgetModel']['tipoFiltro'],
       tipoWidget : json['filtrosWidgetModel']['tipoWidget'],
       titulo : json['filtrosWidgetModel']['titulo'],
-      itensSelecionados :  (json['filtrosWidgetModel']['itensSelecionados'] as List).map((e) {
+      itensSelecionados :  ObservableSet.of((json['filtrosWidgetModel']['itensSelecionados'] as List).map((e) {
         return FiltrosModel.fromJson(e);
-      }).toSet(),
+      }).toSet(),)  
     );
 
   }

@@ -13,13 +13,13 @@ mixin _$FiltrosWidgetModel on FiltrosWidgetModelBase, Store {
       Atom(name: 'FiltrosWidgetModelBase.itensSelecionados', context: context);
 
   @override
-  Set<FiltrosModel>? get itensSelecionados {
+  ObservableSet<FiltrosModel>? get itensSelecionados {
     _$itensSelecionadosAtom.reportRead();
     return super.itensSelecionados;
   }
 
   @override
-  set itensSelecionados(Set<FiltrosModel>? value) {
+  set itensSelecionados(ObservableSet<FiltrosModel>? value) {
     _$itensSelecionadosAtom.reportWrite(value, super.itensSelecionados, () {
       super.itensSelecionados = value;
     });
