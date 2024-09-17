@@ -109,14 +109,23 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                   ),
                   onPressed: () async {
                     Navigator.of(context).pop(true);
-                    controllerFiltro.filtrosSalvosParaAdicionarNoBody.forEach((key, value) {
-                      if(key.contains("cardPeriodoMensal")){
-                        controllerFiltro.dataCampanhaInicial = value.first["codigo"].toString().padLeft(7, "0");
-                      }
-                    },);
                     if (widget.onAplicar == null) {
                       await controllerFiltro.criarNovoBody();
                     } else {
+                      //Ajuste para passar a data mensal
+                      for (FiltrosPageAtual valores in controllerFiltro.listaFiltrosParaConstruirTela) {
+                        if (valores.qualPaginaFiltroPertence == controllerFiltro.indexPagina) {
+                          controllerFiltro.filtrosSalvosParaAdicionarNoBody.addAll(
+                            valores.filtrosWidgetModel.toJsonItensSelecionados(),
+                          );
+                        }
+                      }
+
+                      controllerFiltro.filtrosSalvosParaAdicionarNoBody.forEach((key, value) {
+                        if(key.contains("cardPeriodoMensal")){
+                          controllerFiltro.dataCampanhaInicial = value.first["codigo"].toString().padLeft(7, "0");
+                        }
+                      },);
                       widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim, controllerFiltro.dataCampanhaInicial);
                     }
                   },
