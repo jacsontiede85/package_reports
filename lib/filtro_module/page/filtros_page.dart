@@ -12,7 +12,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 class FiltrosReportPage extends StatefulWidget {
   final FiltroController controllerFiltro;
-  Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela, String dtinicio, String dtfim)? onAplicar;
+  Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela, String dtinicio, String dtfim, String dataMensal)? onAplicar;
   Map<String, dynamic> bodypesquisaAtual;
 
   FiltrosReportPage({super.key, required this.controllerFiltro, required this.bodypesquisaAtual, this.onAplicar});
@@ -109,10 +109,15 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                   ),
                   onPressed: () async {
                     Navigator.of(context).pop(true);
+                    controllerFiltro.filtrosSalvosParaAdicionarNoBody.forEach((key, value) {
+                      if(key.contains("cardPeriodoMensal")){
+                        controllerFiltro.dataCampanhaInicial = value.first["codigo"].toString().padLeft(7, "0");
+                      }
+                    },);
                     if (widget.onAplicar == null) {
                       await controllerFiltro.criarNovoBody();
                     } else {
-                      widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim);
+                      widget.onAplicar!(controllerFiltro.listaFiltrosParaConstruirTela, controllerFiltro.dtinicio, controllerFiltro.dtfim, controllerFiltro.dataCampanhaInicial);
                     }
                   },
                   child: const Text(
