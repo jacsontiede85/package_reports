@@ -143,7 +143,13 @@ abstract class FiltroControllerBase with Store {
     await conjuntoDePeriodos();
   }
 
-  Future<void> funcaoBuscarDadosDeCadaFiltro({required FiltrosWidgetModel valor, required bool isBuscarDropDown, required int index, bool pesquisa = false, bool isDataMensal = false}) async {
+  Future<void> funcaoBuscarDadosDeCadaFiltro({
+    required FiltrosWidgetModel valor,
+    required bool isBuscarDropDown,
+    required int index,
+    bool pesquisa = false,
+    bool isDataMensal = false,
+  }) async {
     erroBuscarItensFiltro = false;
     if (isBuscarDropDown == false) validarListaParaDropDown = isBuscarDropDown;
 
@@ -151,7 +157,6 @@ abstract class FiltroControllerBase with Store {
       validarListaParaDropDown = isBuscarDropDown;
 
       loadingItensFiltros = true;
-
       novoIndexFiltro = retornarIndexListaFiltrosCarregados(index: index);
 
       if (novoIndexFiltro == -1 || (!listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita && !pesquisa)) {
@@ -177,7 +182,7 @@ abstract class FiltroControllerBase with Store {
               listaFiltrosCarregados[novoIndexFiltro].listaFiltros = getDataMensal(mesInicial: mesinit);
             }
           }else{
-             bodyPesquisarFiltros.addAll(
+            bodyPesquisarFiltros.addAll(
               {
                 "function": valor.funcaoPrincipal,
                 "database": valor.bancoBuscarFiltros,
@@ -202,7 +207,6 @@ abstract class FiltroControllerBase with Store {
               listaFiltrosCarregados[novoIndexFiltro].listaFiltros = dados.map((e) => FiltrosModel.fromJson(e)).toList();
             }
           }
-
           indexFiltro = index;
           novoIndexFiltro = retornarIndexListaFiltrosCarregados();
         } catch (e) {
@@ -633,7 +637,7 @@ abstract class FiltroControllerBase with Store {
     if(SettingsReports.listaFiltrosCarregadosSalvos.isEmpty) SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
     
     if(SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty){
-      listaFiltrosCarregados = ObservableList<FiltrosCarrregados>.of([...SettingsReports.listaFiltrosCarregadosSalvos]);
+      listaFiltrosCarregados = SettingsReports.listaFiltrosCarregadosSalvos;
       for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
         for(FiltrosPageAtual item in SettingsReports.listaFiltrosParaConstruirTelaTemp){
           if(item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro){
