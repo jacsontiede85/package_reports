@@ -450,32 +450,32 @@ abstract class FiltroControllerBase with Store {
       case 'Hoje':
         dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${DateTime.now().toLocal()}");
         dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${DateTime.now().toLocal()}");
-        break;
+      break;
 
       case 'Ontem':
         dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(const Duration(days: -1))}");
         dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(const Duration(days: -1))}");
-        break;
+      break;
 
       case 'Semanaatual':
         dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(Duration(days: -1 * diaDaSemana))}");
         dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(Duration(days: (6 - diaDaSemana)))}");
-        break;
+      break;
 
       case 'Semanaanterior':
         dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(Duration(days: (6 - diaDaSemana) - 7 - 6))}");
         dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(Duration(days: -1 * (diaDaSemana + 1)))}");
-        break;
+      break;
 
       case 'Últimos15dias':
         dtinicioFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(const Duration(days: -15))}");
         dtfimFiltro = SettingsReports.formatarDataPadraoBR(data: "${today.add(const Duration(days: 0))}");
-        break;
+      break;
 
       case 'Mêsatual':
         dtinicioFiltro = '01/${today.toString().substring(5, 7)}/${today.toString().substring(0, 4)}';
         dtfimFiltro = '${SettingsReports.qtdDiasDoMes(mes, ano)}/${today.toString().substring(5, 7)}/${today.toString().substring(0, 4)}';
-        break;
+      break;
 
       case 'Mêsanterior':
         ano = (mes - 1 == 0 ? ano - 1 : ano);
@@ -487,22 +487,22 @@ abstract class FiltroControllerBase with Store {
           dtinicioFiltro = '01/$mes/$ano';
           dtfimFiltro = '${SettingsReports.qtdDiasDoMes(mes, ano)}/$mes/$ano';
         }
-        break;
+      break;
 
       case 'Anoatual':
         dtinicioFiltro = '01/01/$ano';
         dtfimFiltro = '31/12/$ano';
-        break;
+      break;
 
       case 'Anoanterior':
         dtinicioFiltro = '01/01/${ano - 1}';
         dtfimFiltro = '31/12/${ano - 1}';
-        break;
+      break;
 
       default:
         dtinicioFiltro = '01/01/${periodo.toString().replaceAll('Ano', '')}';
         dtfimFiltro = '31/12/${periodo.toString().replaceAll('Ano', '')}';
-        break;
+      break;
     }
 
     dtinicio = dtinicioFiltro;
@@ -526,8 +526,7 @@ abstract class FiltroControllerBase with Store {
     if (list.isEmpty) {
       return list;
     } else {
-      return list
-          .where((element) => (Features.removerAcentos(
+      return list.where((element) => (Features.removerAcentos(
                 string: element.codigo.toString().toLowerCase(),
               ).contains(
                 Features.removerAcentos(

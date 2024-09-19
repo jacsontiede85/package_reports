@@ -554,7 +554,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                                 colunasWidget(),
                                                 Observer(
                                                   builder: (_) => Visibility(
-                                                    visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dadosFiltered().length <= 500,
+                                                    visible: controller.positionScroll > 200 && controller.visibleColElevated,
                                                     child: Positioned(
                                                       top: 0,
                                                       left: controller.positionScroll,
@@ -601,7 +601,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                               rodape(),
                                               Observer(
                                                 builder: (_) => Visibility(
-                                                  visible: controller.positionScroll > 200 && controller.visibleColElevated && controller.dadosFiltered().length <= 500,
+                                                  visible: controller.positionScroll > 200 && controller.visibleColElevated,
                                                   child: Positioned(
                                                     top: 0,
                                                     left: controller.positionScroll,
