@@ -18,10 +18,14 @@ mixin _$FiltrosCarrregados on FiltrosCarrregadosBase, Store {
     return super.indexFiltros;
   }
 
+  bool _indexFiltrosIsInitialized = false;
+
   @override
   set indexFiltros(int value) {
-    _$indexFiltrosAtom.reportWrite(value, super.indexFiltros, () {
+    _$indexFiltrosAtom.reportWrite(
+        value, _indexFiltrosIsInitialized ? super.indexFiltros : null, () {
       super.indexFiltros = value;
+      _indexFiltrosIsInitialized = true;
     });
   }
 
@@ -34,10 +38,14 @@ mixin _$FiltrosCarrregados on FiltrosCarrregadosBase, Store {
     return super.indexPagina;
   }
 
+  bool _indexPaginaIsInitialized = false;
+
   @override
   set indexPagina(int value) {
-    _$indexPaginaAtom.reportWrite(value, super.indexPagina, () {
+    _$indexPaginaAtom.reportWrite(
+        value, _indexPaginaIsInitialized ? super.indexPagina : null, () {
       super.indexPagina = value;
+      _indexPaginaIsInitialized = true;
     });
   }
 
@@ -50,10 +58,54 @@ mixin _$FiltrosCarrregados on FiltrosCarrregadosBase, Store {
     return super.pesquisaFeita;
   }
 
+  bool _pesquisaFeitaIsInitialized = false;
+
   @override
   set pesquisaFeita(bool value) {
-    _$pesquisaFeitaAtom.reportWrite(value, super.pesquisaFeita, () {
+    _$pesquisaFeitaAtom.reportWrite(
+        value, _pesquisaFeitaIsInitialized ? super.pesquisaFeita : null, () {
       super.pesquisaFeita = value;
+      _pesquisaFeitaIsInitialized = true;
+    });
+  }
+
+  late final _$tipoFiltroAtom =
+      Atom(name: 'FiltrosCarrregadosBase.tipoFiltro', context: context);
+
+  @override
+  String get tipoFiltro {
+    _$tipoFiltroAtom.reportRead();
+    return super.tipoFiltro;
+  }
+
+  bool _tipoFiltroIsInitialized = false;
+
+  @override
+  set tipoFiltro(String value) {
+    _$tipoFiltroAtom.reportWrite(
+        value, _tipoFiltroIsInitialized ? super.tipoFiltro : null, () {
+      super.tipoFiltro = value;
+      _tipoFiltroIsInitialized = true;
+    });
+  }
+
+  late final _$tipoWidgetAtom =
+      Atom(name: 'FiltrosCarrregadosBase.tipoWidget', context: context);
+
+  @override
+  String get tipoWidget {
+    _$tipoWidgetAtom.reportRead();
+    return super.tipoWidget;
+  }
+
+  bool _tipoWidgetIsInitialized = false;
+
+  @override
+  set tipoWidget(String value) {
+    _$tipoWidgetAtom.reportWrite(
+        value, _tipoWidgetIsInitialized ? super.tipoWidget : null, () {
+      super.tipoWidget = value;
+      _tipoWidgetIsInitialized = true;
     });
   }
 
@@ -66,10 +118,14 @@ mixin _$FiltrosCarrregados on FiltrosCarrregadosBase, Store {
     return super.listaFiltros;
   }
 
+  bool _listaFiltrosIsInitialized = false;
+
   @override
   set listaFiltros(List<FiltrosModel> value) {
-    _$listaFiltrosAtom.reportWrite(value, super.listaFiltros, () {
+    _$listaFiltrosAtom.reportWrite(
+        value, _listaFiltrosIsInitialized ? super.listaFiltros : null, () {
       super.listaFiltros = value;
+      _listaFiltrosIsInitialized = true;
     });
   }
 
@@ -91,31 +147,16 @@ mixin _$FiltrosCarrregados on FiltrosCarrregadosBase, Store {
     });
   }
 
-  late final _$tipoFiltroAtom =
-      Atom(name: 'FiltrosCarrregadosBase.tipoFiltro', context: context);
-
-  @override
-  String get tipoFiltro {
-    _$tipoFiltroAtom.reportRead();
-    return super.tipoFiltro;
-  }
-
-  @override
-  set tipoFiltro(String value) {
-    _$tipoFiltroAtom.reportWrite(value, super.tipoFiltro, () {
-      super.tipoFiltro = value;
-    });
-  }
-
   @override
   String toString() {
     return '''
 indexFiltros: ${indexFiltros},
 indexPagina: ${indexPagina},
 pesquisaFeita: ${pesquisaFeita},
+tipoFiltro: ${tipoFiltro},
+tipoWidget: ${tipoWidget},
 listaFiltros: ${listaFiltros},
-valorSelecionadoParaDropDown: ${valorSelecionadoParaDropDown},
-tipoFiltro: ${tipoFiltro}
+valorSelecionadoParaDropDown: ${valorSelecionadoParaDropDown}
     ''';
   }
 }

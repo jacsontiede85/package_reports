@@ -7,29 +7,28 @@ class FiltrosCarrregados = FiltrosCarrregadosBase with _$FiltrosCarrregados;
 abstract class FiltrosCarrregadosBase with Store {
   
   @observable
-  int indexFiltros = 0;
+  late int indexFiltros;
   @observable
-  int indexPagina = 0;
+  late int indexPagina;
   @observable
-  bool pesquisaFeita = false;
-
+  late bool pesquisaFeita;
   @observable
-  List<FiltrosModel> listaFiltros = [];
-
+  late String tipoFiltro;
+  @observable
+  late String tipoWidget;
+  @observable
+  late List<FiltrosModel> listaFiltros;
+  
   @observable
   FiltrosModel? valorSelecionadoParaDropDown;
 
-
-  //Variavel adicionada para uso do dashboard
-  @observable
-  String tipoFiltro = "";
-
   FiltrosCarrregadosBase({
-    this.indexFiltros = 0, 
-    this.indexPagina = 0,
+    required this.indexFiltros, 
+    required this.indexPagina,
     required this.listaFiltros,
     this.valorSelecionadoParaDropDown,
-    this.tipoFiltro = ""
+    required this.tipoFiltro,
+    required this.tipoWidget,
   });
 
   FiltrosCarrregadosBase.fromJson(Map<String, dynamic> json){
@@ -42,6 +41,7 @@ abstract class FiltrosCarrregadosBase with Store {
       valorSelecionadoParaDropDown = FiltrosModel.fromJson(json['valorSelecionadoParaDropDown']);
     }
     tipoFiltro = json['tipoFiltro'];
+    tipoWidget = json['tipoWidget'];
     pesquisaFeita = json['pesquisaFeita'];
   }
 

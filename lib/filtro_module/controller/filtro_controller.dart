@@ -157,7 +157,7 @@ abstract class FiltroControllerBase with Store {
       validarListaParaDropDown = isBuscarDropDown;
 
       loadingItensFiltros = true;
-      novoIndexFiltro = retornarIndexListaFiltrosCarregados(index: index);
+      novoIndexFiltro = retornarIndexListaFiltrosCarregados(index: index,);
 
       if (novoIndexFiltro == -1 || (!listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita && !pesquisa)) {
         try {
@@ -175,6 +175,7 @@ abstract class FiltroControllerBase with Store {
                   tipoFiltro: listaFiltrosParaConstruirTela[index].filtrosWidgetModel.tipoFiltro,
                   indexFiltros: index,
                   indexPagina: indexPagina,
+                  tipoWidget: listaFiltrosParaConstruirTela[index].filtrosWidgetModel.tipoWidget,
                   listaFiltros: getDataMensal(mesInicial: mesinit),
                 ),
               );
@@ -193,13 +194,13 @@ abstract class FiltroControllerBase with Store {
             String response = await API().getDataReportApiJWT(dados: bodyPesquisarFiltros, url: "filtros/${valor.arquivoQuery}");
 
             List dados = jsonDecode(response);
-
             if (novoIndexFiltro == -1 || listaFiltrosCarregados[novoIndexFiltro].pesquisaFeita) {
               listaFiltrosCarregados.add(
                 FiltrosCarrregados(
                   tipoFiltro: listaFiltrosParaConstruirTela[index].filtrosWidgetModel.tipoFiltro,
                   indexFiltros: index,
                   indexPagina: indexPagina,
+                  tipoWidget: listaFiltrosParaConstruirTela[index].filtrosWidgetModel.tipoWidget,
                   listaFiltros: dados.map((e) => FiltrosModel.fromJson(e)).toList(),
                 ),
               );
@@ -352,16 +353,14 @@ abstract class FiltroControllerBase with Store {
 
       controllerReports.bodySecundario.addAll(filtrosSalvosParaAdicionarNoBody);
     }
-
-      //Data mensal das campanhas
-      if(controllerReports.bodyPrimario.containsKey("dataMensal")) {
-        controllerReports.bodyPrimario.update("dataMensal", (value) => value = dataCampanhaInicial,);
-      } else {
-        controllerReports.bodyPrimario.addAll(
-          {"dataMensal": dataCampanhaInicial}
-        );
-      }
-
+    //Data mensal das campanhas
+    if(controllerReports.bodyPrimario.containsKey("dataMensal")) {
+      controllerReports.bodyPrimario.update("dataMensal", (value) => value = dataCampanhaInicial,);
+    } else {
+      controllerReports.bodyPrimario.addAll(
+        {"dataMensal": dataCampanhaInicial}
+      );
+    }
     await controllerReports.getDados();
   }
 
@@ -513,11 +512,11 @@ abstract class FiltroControllerBase with Store {
 
   @computed
   List<FiltrosModel> get getListFiltrosComputed {
-    novoIndexFiltro = retornarIndexListaFiltrosCarregados();
 
     List<FiltrosModel> list = [];
     try{
-      list = listaFiltrosCarregados[novoIndexFiltro].listaFiltros ;
+      novoIndexFiltro = retornarIndexListaFiltrosCarregados();
+      list = listaFiltrosCarregados[novoIndexFiltro].listaFiltros;
     }catch(e){
       list = [];
     }
@@ -608,7 +607,7 @@ abstract class FiltroControllerBase with Store {
     listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
   }
 
-  int retornarIndexListaFiltrosCarregados({int? index}) {
+  int retornarIndexListaFiltrosCarregados({int? index,}) {
     int novoIndexFiltro = listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == (index ?? indexFiltro) && element.indexPagina == indexPagina);
     return novoIndexFiltro;
   }
@@ -639,7 +638,7 @@ abstract class FiltroControllerBase with Store {
       listaFiltrosCarregados = SettingsReports.listaFiltrosCarregadosSalvos;
       for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
         for(FiltrosPageAtual item in SettingsReports.listaFiltrosParaConstruirTelaTemp){
-          if(item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro){
+          if(item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro && item.filtrosWidgetModel.tipoWidget == value.filtrosWidgetModel.tipoWidget){
             value.filtrosWidgetModel.itensSelecionados = item.filtrosWidgetModel.itensSelecionados;
           }
         }
@@ -656,7 +655,7 @@ abstract class FiltroControllerBase with Store {
     // * LOOP PARA VEREFICAR QUAIS FILTROS ESTÃO JA SELECIONADOS
     for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
       for(FiltrosPageAtual item in listaFiltrosParaConstruirTela){
-        if(value.filtrosWidgetModel.tipoFiltro == item.filtrosWidgetModel.tipoFiltro) {
+        if(value.filtrosWidgetModel.tipoFiltro == item.filtrosWidgetModel.tipoFiltro && value.filtrosWidgetModel.tipoWidget == item.filtrosWidgetModel.tipoWidget) {
           item.filtrosWidgetModel.itensSelecionados = value.filtrosWidgetModel.itensSelecionados;
           if(item.filtrosWidgetModel.itensSelecionados!.isEmpty && value.filtrosWidgetModel.tipoFiltro.contains("cardPeriodoMensal")){
             dataCampanhaInicial = ("${DateTime.now().month}/${DateFormat.y().format(DateTime.now())}").padLeft(7, "0");
@@ -668,8 +667,8 @@ abstract class FiltroControllerBase with Store {
     // * LOOP PARA VERIFICAR QUAIS ITENS DOS FILTROS ESTÃO SELECIONADOS QUANDO MUDAR DE TAB
     for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
       for(FiltrosCarrregados item in listaFiltrosCarregados){
-        if(value.filtrosWidgetModel.tipoFiltro == item.tipoFiltro){
-          item.indexFiltros = listaFiltrosParaConstruirTela.indexWhere((element) => element.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro); 
+        if(value.filtrosWidgetModel.tipoFiltro == item.tipoFiltro && value.filtrosWidgetModel.tipoWidget == item.tipoWidget){
+          item.indexFiltros = listaFiltrosParaConstruirTela.indexWhere((element) => element.filtrosWidgetModel.tipoWidget == value.filtrosWidgetModel.tipoWidget && element.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro); 
         }
       }
     }
