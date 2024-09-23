@@ -893,40 +893,92 @@ class _ReportPageState extends State<ReportPage> with Rows {
   Widget exibirSelecaoDeColunasParaExporta({required void Function()? onPressedFiltrado, required void Function()? onPressedTudo, required String titulo}) {
     return AlertDialog(
       elevation: 0,
-      title: Text(
-        titulo,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            titulo,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Observer(
+              builder: (_) => TextButton(
+                onPressed: (){
+                  if(controller.colunas.every((element) => element['selecionado'] == true,)){
+                    for(Map<String,dynamic> valor in controller.colunas){
+                      valor['selecionado'] = false;
+                    }
+                  }
+                  else{
+                    for(Map<String,dynamic> valor in controller.colunas){
+                      valor['selecionado'] = true;
+                    }
+                  }
+                }, 
+                child: Text(controller.colunas.every((element) => element['selecionado'] == true,) ? 'Desmarcar todas' : 'Marcar todos'),
+              ),
+            ),
+          ),
+        ],
       ),
+      actionsAlignment: MainAxisAlignment.center,
       actions: [
         Observer(
           builder: (_) => Visibility(
             visible: controller.colunasFiltradas.isNotEmpty,
-            child: ElevatedButton.icon(
+            child: TextButton.icon(
               onPressed: onPressedFiltrado,
               icon: Icon(
-                Icons.file_download,
+                Icons.downloading_sharp,
                 color: Colors.blue[500],
+              ),
+              style: ButtonStyle(
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    side: const BorderSide(
+                      color: Colors.teal,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                overlayColor: const WidgetStatePropertyAll(
+                  Color.fromARGB(106, 133, 138, 141),
+                ),
               ),
               label: Text(
                 "Linhas filtradas",
                 style: TextStyle(
-                  fontSize: 19,
+                  fontSize: 15,
                   color: Colors.blue[500],
                 ),
               ),
             ),
           ),
         ),
-        ElevatedButton.icon(
+        TextButton.icon(
           onPressed: onPressedTudo,
           icon: Icon(
-            Icons.file_download,
-            color: Colors.green[500],
+            Icons.downloading_sharp,
+              color: Colors.green[500],
+          ),
+          style: ButtonStyle(
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(
+                side: const BorderSide(
+                  color: Colors.teal,
+                ),
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
+            overlayColor: const WidgetStatePropertyAll(
+              Color.fromARGB(106, 133, 138, 141),
+            ),
           ),
           label: Text(
             "Exportar tudo",
             style: TextStyle(
-              fontSize: 19,
+              fontSize: 15,
               color: Colors.green[500],
             ),
           ),

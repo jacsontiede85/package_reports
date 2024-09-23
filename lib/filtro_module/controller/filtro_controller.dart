@@ -517,7 +517,7 @@ abstract class FiltroControllerBase with Store {
 
     List<FiltrosModel> list = [];
     try{
-      list = listaFiltrosCarregados[novoIndexFiltro].listaFiltros;
+      list = listaFiltrosCarregados[novoIndexFiltro].listaFiltros ;
     }catch(e){
       list = [];
     }
