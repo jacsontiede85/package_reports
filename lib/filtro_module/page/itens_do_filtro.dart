@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
+import 'package:package_reports/filtro_module/model/filtros_carregados_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.dart';
 
@@ -67,13 +68,18 @@ class _ItensFiltroState extends State<ItensFiltro> {
                       onPressed: () {
                         //Limpando as variaveis
                         widget.filtroPaginaAtual.filtrosWidgetModel.itensSelecionados!.clear();  
-                        for(var value in widget.controller.listaFiltrosCarregados){
+                        for(FiltrosCarrregados  value in widget.controller.listaFiltrosCarregados){
                           if(value.indexFiltros == widget.indexDofiltro){
-                            for(var item in value.listaFiltros){
+                            for(FiltrosModel item in value.listaFiltros){
                               item.selecionado = false;
                             }
                           }
                         }
+                        
+                        for (FiltrosModel value in widget.controller.getListFiltrosComputed) {
+                          value.selecionado = false;
+                        }
+
                         widget.controller.filtrosSalvosParaAdicionarNoBody.removeWhere((key, value) => key == widget.filtroPaginaAtual.filtrosWidgetModel.tipoFiltro,);
                         
                         //Limpando o body de pesquisa

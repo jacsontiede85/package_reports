@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) => ReportPage(
                       database: SettingsReports.bancoDeDados,
                       buscarDadosNaEntrada: false,
-                      function: 'comercial/consultar-clientes/index.php',
+                      function: 'vendas/venda-por-supervisor/index.php',
                     ),
                   ),
                 );

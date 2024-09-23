@@ -253,6 +253,34 @@ abstract class FiltroControllerBase with Store {
     }
   }
 
+  @computed
+  List<FiltrosModel> get getListFiltrosComputed {
+    List<FiltrosModel> list = [];
+
+    try {
+      // Obtem o index da lista de filtros carregados sem alterar diretamente o observável
+      int index = retornarIndexListaFiltrosCarregados();
+      list = listaFiltrosCarregados[index].listaFiltros;
+    } catch (e) {
+      list = [];
+    }
+
+    if (list.isEmpty) {
+      return list;
+    } else {
+      return list.where((element) =>_verificarElementoContemPesquisa(element, pesquisaItensDoFiltro)).toList();
+    }
+  }
+
+  // Função auxiliar para remoção de acentos e verificação de pesquisa
+  bool _verificarElementoContemPesquisa(FiltrosModel element, String pesquisa) {
+    String pesquisaNormalizada = Features.removerAcentos(string: pesquisa.toLowerCase());
+    return Features.removerAcentos(string: element.codigo.toString().toLowerCase()).contains(pesquisaNormalizada) ||
+        Features.removerAcentos(string: element.titulo.toString().toLowerCase()).contains(pesquisaNormalizada) ||
+        Features.removerAcentos(string: element.subtitulo.toString().toLowerCase()).contains(pesquisaNormalizada);
+  }
+
+
   @action
   void adicionarItensSelecionado({required FiltrosModel itens}) {
     if (itens.selecionado) {
@@ -508,46 +536,6 @@ abstract class FiltroControllerBase with Store {
     dtfim = dtfimFiltro;
 
     return {'dtinicioFiltro': dtinicioFiltro, 'dtfimFiltro': dtfimFiltro};
-  }
-
-  @computed
-  List<FiltrosModel> get getListFiltrosComputed {
-
-    List<FiltrosModel> list = [];
-    try{
-      novoIndexFiltro = retornarIndexListaFiltrosCarregados();
-      list = listaFiltrosCarregados[novoIndexFiltro].listaFiltros;
-    }catch(e){
-      list = [];
-    }
-    
-
-    if (list.isEmpty) {
-      return list;
-    } else {
-      return list.where((element) => (Features.removerAcentos(
-                string: element.codigo.toString().toLowerCase(),
-              ).contains(
-                Features.removerAcentos(
-                  string: pesquisaItensDoFiltro.toLowerCase(),
-                ),
-              ) ||
-              Features.removerAcentos(
-                string: element.titulo.toString().toLowerCase(),
-              ).contains(
-                Features.removerAcentos(
-                  string: pesquisaItensDoFiltro.toLowerCase(),
-                ),
-              ) ||
-              Features.removerAcentos(
-                string: element.subtitulo.toString().toLowerCase(),
-              ).contains(
-                Features.removerAcentos(
-                  string: pesquisaItensDoFiltro.toLowerCase(),
-                ),
-              )))
-          .toList();
-    }
   }
 
   void validarSeDataSeraDeFaturamento() {
