@@ -631,7 +631,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     }
 
     for (var col in colunas) {
-      recalcularRodape(col: col);
+      recalcularRodape(col: col, filtra: true);
 
       if (colunasFiltradas.any((element) => element == col["key"]))
         col["isFiltered"] = true;
@@ -681,29 +681,31 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     }
   }
 
-  void recalcularRodape ({required Map<String,dynamic> col}){
-    if(!col['key'].contains('__DONTSUM')){
+  void recalcularRodape ({required Map<String,dynamic> col, bool filtra = false}){
+    if(!col['key'].toString().toUpperCase().contains('__DONTSUM')){
       col['vlrTotalDaColuna'] = 0;
       col['mediaDaColuna'] = 0;
-      int contador = 0;
 
       for (var row in dados){
         for (var key in row.keys){
           if (key == col['key'] && row[key].toString().isNotEmpty) {
             if (col['type'] != String) {
-              if(row[key].runtimeType == String) row[key] = double.parse(row[key]);
-              col['vlrTotalDaColuna'] += row[key];
-              contador++;
+              if(!filtra)
+                col['vlrTotalDaColuna'] +=  row[key];
+              else
+                col['vlrTotalDaColuna'] +=  bool.parse(row['isFiltered'].toString()) ? row[key] : 0;
             }
           }
         }
       }
 
-      if (contador > 0) {
-        col['mediaDaColuna'] = col['vlrTotalDaColuna'] / contador;
-      }
+        col['mediaDaColuna'] = col['vlrTotalDaColuna'] / dadosFiltered().length;
+      
     }
   }
+
+  @observable
+  String tipoCalc = 'soma';
 
   dynamic valoresRodape ({required Map<String, dynamic> element}){
     if(colunas.indexOf(element) == 0)

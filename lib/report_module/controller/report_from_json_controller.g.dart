@@ -208,6 +208,22 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$tipoCalcAtom =
+      Atom(name: 'ReportFromJSONControllerBase.tipoCalc', context: context);
+
+  @override
+  String get tipoCalc {
+    _$tipoCalcAtom.reportRead();
+    return super.tipoCalc;
+  }
+
+  @override
+  set tipoCalc(String value) {
+    _$tipoCalcAtom.reportWrite(value, super.tipoCalc, () {
+      super.tipoCalc = value;
+    });
+  }
+
   late final _$ReportFromJSONControllerBaseActionController =
       ActionController(name: 'ReportFromJSONControllerBase', context: context);
 
@@ -236,7 +252,8 @@ colunaSelecionadaParaExportacao: ${colunaSelecionadaParaExportacao},
 colunasRodapePerson: ${colunasRodapePerson},
 widthTable: ${widthTable},
 positionScroll: ${positionScroll},
-visibleColElevated: ${visibleColElevated}
+visibleColElevated: ${visibleColElevated},
+tipoCalc: ${tipoCalc}
     ''';
   }
 }

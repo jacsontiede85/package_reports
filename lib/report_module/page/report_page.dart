@@ -820,43 +820,55 @@ class _ReportPageState extends State<ReportPage> with Rows {
   }
 
   Widget rodape() {
-    return Container(
-      decoration: const BoxDecoration(color: Colors.black38, border: Border(top: BorderSide(color: Colors.blue, width: 1))),
-      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        if (controller.colunas.isNotEmpty && controller.colunasRodapePerson.isEmpty)
-          ...controller.colunas.map(
-            (element) => rowTextFormatted(
-              width: controller.getWidthCol(
-                key: element['key'],
-              ),
-              height: 40,
-              controller: controller,
-              key: element['key'],
-              type: element['key'].toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
-              value: controller.valoresRodape(element: element),
-              isSelected: element['isSelected'],
-              isRodape: true,
-              order: element['order'],
-              setStateRows: setStatee,
-            ),
-          )
-        else
-          ...controller.colunasRodapePerson.map((element) {
-            for (var value in controller.dadosFiltered()) {
-              if (element['key'].toString().toUpperCase().contains('__ISRODAPE')) {
-                return rowTextComLable(
-                  width: controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().toUpperCase().contains('__ISRODAPE')).length,
+    return GestureDetector(
+      onLongPressStart: (LongPressStartDetails details) {
+        _showContextMenu(context, details.globalPosition, controller: controller);
+      },
+      child: Listener(
+        onPointerDown: (PointerDownEvent event) {
+          if (event.kind == PointerDeviceKind.mouse && event.buttons == kSecondaryMouseButton) {
+            _showContextMenu(context, event.position, controller: controller);
+          }
+        },
+        child: Container(
+          decoration: const BoxDecoration(color: Colors.black38, border: Border(top: BorderSide(color: Colors.blue, width: 1))),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            if (controller.colunas.isNotEmpty && controller.colunasRodapePerson.isEmpty)
+              ...controller.colunas.map(
+                (element) => rowTextFormatted(
+                  width: controller.getWidthCol(
+                    key: element['key'],
+                  ),
                   height: 40,
                   controller: controller,
-                  key: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado']),
-                  type: element['type'],
-                  value: value[element['key']],
-                );
-              }
-            }
-            return const SizedBox();
-          }),
-      ]),
+                  key: element['key'],
+                  type: element['key'].toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
+                  value: controller.valoresRodape(element: element),
+                  isSelected: element['isSelected'],
+                  isRodape: true,
+                  order: element['order'],
+                  setStateRows: setStatee,
+                ),
+              )
+            else
+              ...controller.colunasRodapePerson.map((element) {
+                for (var value in controller.dadosFiltered()) {
+                  if (element['key'].toString().toUpperCase().contains('__ISRODAPE')) {
+                    return rowTextComLable(
+                      width: controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().toUpperCase().contains('__ISRODAPE')).length,
+                      height: 40,
+                      controller: controller,
+                      key: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado']),
+                      type: element['type'],
+                      value: value[element['key']],
+                    );
+                  }
+                }
+                return const SizedBox();
+              }),
+          ]),
+        ),
+      ),
     );
   }
 
@@ -1137,6 +1149,33 @@ mixin Rows {
           )
       ],
     );
+  }
+
+  void _showContextMenu(BuildContext context, Offset position, {required ReportFromJSONController controller}) {
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx,
+        position.dy,
+        overlay.size.width - position.dx,
+        overlay.size.height - position.dy,
+      ),
+      items: const [
+        PopupMenuItem<String>(
+          value: 'Soma',
+          child: Text('Soma'),
+        ),
+        PopupMenuItem<String>(
+          value: 'Media',
+          child: Text('Media'),
+        ),
+      ],
+    ).then((value) {
+      if(value != null){
+        controller.tipoCalc = value;
+      }
+    });
   }
 
   Widget rowTextComLable({
