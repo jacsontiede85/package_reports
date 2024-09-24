@@ -305,6 +305,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
                 'type': key.toString().toUpperCase().toUpperCase().contains('__INT_STRING') ? String : getType(dados[0][key]),
                 'order': 'asc',
                 'isSelected': false,
+                'isMedia' : false,
                 'vlrTotalDaColuna': 0.0,
                 'mediaDaColuna': 0.0,
                 'widthCol': 0.0,
@@ -321,6 +322,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
                 'type': key.toString().toUpperCase().contains('__INT_STRING') ? String : getType(dados[0][key]),
                 'order': 'asc',
                 'isSelected': false,
+                'isMedia' : false,
                 'vlrTotalDaColuna': 0.0,
                 'mediaDaColuna': 0.0,
                 'widthCol': 0.0,
@@ -699,24 +701,31 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         }
       }
 
-        col['mediaDaColuna'] = col['vlrTotalDaColuna'] / dadosFiltered().length;
+      col['mediaDaColuna'] = col['vlrTotalDaColuna'] / dadosFiltered().length;
       
     }
   }
 
-  @observable
-  String tipoCalc = 'soma';
 
+  @action
   dynamic valoresRodape ({required Map<String, dynamic> element}){
-    if(colunas.indexOf(element) == 0)
-      return dadosFiltered().length;
-    else if (element['type'] == String || element['key'].toString().toUpperCase().contains('__DONTSUM'))
-      return '';
-    else if (element['key'].toString().toUpperCase().contains('__PERC') || element['key'].toString().toUpperCase().contains('%'))
-      return element['mediaDaColuna'];
-    else
-      return element['vlrTotalDaColuna'];
+
+      if(colunas.indexOf(element) == 0)
+        return dadosFiltered().length;
+      else if (element['type'] == String || element['key'].toString().toUpperCase().contains('__DONTSUM'))
+        return '';
+      else if (element['key'].toString().toUpperCase().contains('__PERC') || element['key'].toString().toUpperCase().contains('%'))
+        return element['mediaDaColuna'];
+      if(element['type'] != String  && !element['key'].toString().toUpperCase().contains('__DONTSUM') && element['isMedia'])
+        return element['mediaDaColuna'];
+      else if (element['type'] != String  && !element['key'].toString().toUpperCase().contains('__DONTSUM') && !element['isMedia'])
+        return element['vlrTotalDaColuna'];
+      else 
+        return '';
+    
+
   }
+
 }
 
 

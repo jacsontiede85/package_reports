@@ -641,6 +641,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             (element) => InkWell(
               onTap: () => controller.setOrderBy(key: element['key'], order: element['order']),
               child: rowTextFormatted(
+                context: context,
                 width: controller.getWidthCol(
                   key: element['key'],
                 ),
@@ -671,6 +672,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
         InkWell(
           onTap: () => controller.setOrderBy(key: controller.keyFreeze, order: element['order']),
           child: rowTextFormatted(
+            context: context,
             width: controller.getWidthCol(
               key: controller.keyFreeze,
             ),
@@ -705,6 +707,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
             controller.row.add(
               rowTextFormatted(
+                context: context,
                 width: controller.getWidthCol(
                   key: key,
                 ),
@@ -767,6 +770,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   top: 0,
                   left: controller.positionScroll,
                   child: rowTextFormatted(
+                    context: context,
                     width: controller.getWidthCol(
                       key: controller.keyFreeze,
                     ),
@@ -799,6 +803,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   controller.row = [];
                   controller.row.add(
                     rowTextFormatted(
+                      context: context,                      
                       width: controller.getWidthCol(
                         key: controller.keyFreeze,
                       ),
@@ -820,54 +825,47 @@ class _ReportPageState extends State<ReportPage> with Rows {
   }
 
   Widget rodape() {
-    return GestureDetector(
-      onLongPressStart: (LongPressStartDetails details) {
-        _showContextMenu(context, details.globalPosition, controller: controller);
-      },
-      child: Listener(
-        onPointerDown: (PointerDownEvent event) {
-          if (event.kind == PointerDeviceKind.mouse && event.buttons == kSecondaryMouseButton) {
-            _showContextMenu(context, event.position, controller: controller);
-          }
-        },
-        child: Container(
-          decoration: const BoxDecoration(color: Colors.black38, border: Border(top: BorderSide(color: Colors.blue, width: 1))),
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            if (controller.colunas.isNotEmpty && controller.colunasRodapePerson.isEmpty)
-              ...controller.colunas.map(
-                (element) => rowTextFormatted(
-                  width: controller.getWidthCol(
-                    key: element['key'],
-                  ),
-                  height: 40,
-                  controller: controller,
+    return Container(
+      decoration: const BoxDecoration(color: Colors.black38, border: Border(top: BorderSide(color: Colors.blue, width: 1))),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center, 
+        children: [
+          if (controller.colunas.isNotEmpty && controller.colunasRodapePerson.isEmpty)
+            ...controller.colunas.map(
+              (element) => rowTextFormatted(
+                context: context,
+                width: controller.getWidthCol(
                   key: element['key'],
-                  type: element['key'].toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
-                  value: controller.valoresRodape(element: element),
-                  isSelected: element['isSelected'],
-                  isRodape: true,
-                  order: element['order'],
-                  setStateRows: setStatee,
                 ),
-              )
-            else
-              ...controller.colunasRodapePerson.map((element) {
-                for (var value in controller.dadosFiltered()) {
-                  if (element['key'].toString().toUpperCase().contains('__ISRODAPE')) {
-                    return rowTextComLable(
-                      width: controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().toUpperCase().contains('__ISRODAPE')).length,
-                      height: 40,
-                      controller: controller,
-                      key: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado']),
-                      type: element['type'],
-                      value: value[element['key']],
-                    );
-                  }
+                height: 40,
+                controller: controller,
+                key: element['key'],
+                type: element['key'].toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
+                value: controller.valoresRodape(element: element),
+                element: element,
+                isSelected: element['isSelected'],
+                isRodape: true,
+                order: element['order'],
+                setStateRows: setStatee,
+              ),
+            )
+          else
+            ...controller.colunasRodapePerson.map((element) {
+              for (var value in controller.dadosFiltered()) {
+                if (element['key'].toString().toUpperCase().contains('__ISRODAPE')) {
+                  return rowTextComLable(
+                    width: controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().toUpperCase().contains('__ISRODAPE')).length,
+                    height: 40,
+                    controller: controller,
+                    key: Features.formatarTextoPrimeirasLetrasMaiusculas(element['nomeFormatado']),
+                    type: element['type'],
+                    value: value[element['key']],
+                  );
                 }
-                return const SizedBox();
-              }),
-          ]),
-        ),
+              }
+              return const SizedBox();
+            }),
+        ],
       ),
     );
   }
@@ -878,6 +876,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
       mainAxisSize: MainAxisSize.max,
       children: [
         rowTextFormatted(
+          context: context,
           width: controller.getWidthCol(
             key: controller.keyFreeze,
           ),
@@ -1029,129 +1028,143 @@ mixin Rows {
   rowTextFormatted({
     required ReportFromJSONController controller,
     required double width,
-    double? height,
-    required key,
+    required String key,
     required Type type,
-    required value,
+    required dynamic value,
+    required Function setStateRows,
+    required BuildContext context,
     bool isTitle = false,
     bool isRodape = false,
     bool isSelected = false,
+    bool isFiltered = false,
+    Map<String,dynamic>? element,
     String order = 'asc',
     Color? cor,
-    bool isFiltered = false,
-    required Function setStateRows,
+    double? height,
   }) {
     double fontSize = 12;
-    return Stack(
-      children: [
-        Container(
-          width: width * 1.10,
-          height: height,
-          decoration: BoxDecoration(
-            color: cor ??
-                (isTitle
-                    ? Colors.grey[40]
-                    : isRodape
-                        ? Colors.black54
-                        : Colors.grey[300]),
-            border: Border.all(
-              color: Colors.purple.withOpacity(0.3),
-              width: 0.25,
+    return GestureDetector(
+      onLongPressStart: !isRodape ? null : (LongPressStartDetails details) {
+        _showContextMenu(context, details.globalPosition, controller: controller, setStateRows: setStateRows, element: element!);
+      },
+      child: Listener(
+        onPointerDown: !isRodape ? null : (PointerDownEvent event) {
+          if (event.kind == PointerDeviceKind.mouse && event.buttons == kSecondaryMouseButton) {
+            _showContextMenu(context, event.position, controller: controller, setStateRows: setStateRows, element: element!);
+          }
+        },
+        child: Stack(
+          children: [
+            Container(
+              width: width * 1.10,
+              height: height,
+              decoration: BoxDecoration(
+                color: cor ??
+                    (isTitle
+                        ? Colors.grey[40]
+                        : isRodape
+                            ? Colors.black54
+                            : Colors.grey[300]),
+                border: Border.all(
+                  color: Colors.purple.withOpacity(0.3),
+                  width: 0.25,
+                ),
+              ),
+              padding: EdgeInsets.only(left: 5, right: 5, bottom: isRodape ? 5 : 0),
+              alignment: (isTitle)
+                  ? Alignment.centerLeft
+                  : type != String
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+              child: Text(
+                type == DateTime
+                    ? value.toString()
+                    : type == String || isTitle
+                        ? Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString().replaceAll('_', ' '))
+                        : type == double
+                            ? Features.toFormatNumber(value.toString().replaceAll('_', ' '))
+                            : type == int
+                                ? Features.toFormatInteger(
+                                    value.toString().replaceAll('_', ' '),
+                                  )
+                                : value.toString(),
+                style: TextStyle(
+                  fontWeight: isRodape || isTitle ? FontWeight.bold : FontWeight.normal,
+                  fontSize: fontSize,
+                  color: isRodape ? Colors.white : Colors.black,
+                ),
+              ),
             ),
-          ),
-          padding: EdgeInsets.only(left: 5, right: 5, bottom: isRodape ? 5 : 0),
-          alignment: (isTitle)
-              ? Alignment.centerLeft
-              : type != String
-                  ? Alignment.centerRight
-                  : Alignment.centerLeft,
-          child: Text(
-            type == DateTime
-                ? value.toString()
-                : type == String || isTitle
-                    ? Features.formatarTextoPrimeirasLetrasMaiusculas(value.toString().replaceAll('_', ' '))
-                    : type == double
-                        ? Features.toFormatNumber(value.toString().replaceAll('_', ' '))
-                        : type == int
-                            ? Features.toFormatInteger(
-                                value.toString().replaceAll('_', ' '),
-                              )
-                            : value.toString(),
-            style: TextStyle(
-              fontWeight: isRodape || isTitle ? FontWeight.bold : FontWeight.normal,
-              fontSize: fontSize,
-              color: isRodape ? Colors.white : Colors.black,
-            ),
-          ),
+            if (isTitle && isSelected)
+              Positioned(
+                left: 0,
+                bottom: -10,
+                child: IconButton(
+                  icon: Icon(
+                    order == 'asc' ? Icons.arrow_upward : Icons.arrow_downward,
+                    size: 17,
+                    color: Colors.blueAccent,
+                  ),
+                  onPressed: null,
+                ),
+              ),
+            if (isTitle)
+              Positioned(
+                right: 0,
+                bottom: -10,
+                child: PopupMenuButton(
+                  tooltip: "",
+                  splashRadius: 1,
+                  position: PopupMenuPosition.under,
+                  constraints: const BoxConstraints(
+                    maxHeight: 400,
+                    minWidth: 90,
+                  ),
+                  icon: Icon(
+                    isFiltered ? Icons.filter_alt_outlined : Icons.arrow_drop_down_outlined,
+                    size: 22,
+                    color: Colors.blue,
+                  ),
+                  itemBuilder: (context) {
+                    return controller.createlistaFiltrarLinhas(chave: key).map((e) {
+                      return PopupMenuItem(
+                        padding: EdgeInsets.zero,
+                        child: Observer(
+                          builder: (_) => CheckboxListTile(
+                            value: e.selecionado,
+                            title: Text(e.valor.toString()),
+                            onChanged: (v) {
+                              e.selecionado = !e.selecionado;
+                              if (e.selecionado)
+                                controller.colunasFiltradas.add(e.coluna);
+                              else
+                                controller.colunasFiltradas.removeWhere((element) => element == e.coluna);
+                              setStateRows(() {
+                                if (e.selecionado)
+                                  controller.filtrosSelected.add(
+                                    {"coluna": e.coluna, "valor": e.valor},
+                                  );
+                                else
+                                  controller.filtrosSelected.removeWhere((element) => element['coluna'] == e.coluna && element['valor'] == e.valor);
+                                controller.getTheSelectedFilteredRows();
+                                controller.dadosFiltered();
+                              });
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                        ),
+                      );
+                    }).toList();
+                  },
+                ),
+              )
+          ],
         ),
-        if (isTitle && isSelected)
-          Positioned(
-            left: 0,
-            bottom: -10,
-            child: IconButton(
-              icon: Icon(
-                order == 'asc' ? Icons.arrow_upward : Icons.arrow_downward,
-                size: 17,
-                color: Colors.blueAccent,
-              ),
-              onPressed: null,
-            ),
-          ),
-        if (isTitle)
-          Positioned(
-            right: 0,
-            bottom: -10,
-            child: PopupMenuButton(
-              tooltip: "",
-              splashRadius: 1,
-              position: PopupMenuPosition.under,
-              constraints: const BoxConstraints(
-                maxHeight: 400,
-                minWidth: 90,
-              ),
-              icon: Icon(
-                isFiltered ? Icons.filter_alt_outlined : Icons.arrow_drop_down_outlined,
-                size: 22,
-                color: Colors.blue,
-              ),
-              itemBuilder: (context) {
-                return controller.createlistaFiltrarLinhas(chave: key).map((e) {
-                  return PopupMenuItem(
-                    padding: EdgeInsets.zero,
-                    child: Observer(
-                      builder: (_) => CheckboxListTile(
-                        value: e.selecionado,
-                        title: Text(e.valor.toString()),
-                        onChanged: (v) {
-                          e.selecionado = !e.selecionado;
-                          if (e.selecionado)
-                            controller.colunasFiltradas.add(e.coluna);
-                          else
-                            controller.colunasFiltradas.removeWhere((element) => element == e.coluna);
-                          setStateRows(() {
-                            if (e.selecionado)
-                              controller.filtrosSelected.add(
-                                {"coluna": e.coluna, "valor": e.valor},
-                              );
-                            else
-                              controller.filtrosSelected.removeWhere((element) => element['coluna'] == e.coluna && element['valor'] == e.valor);
-                            controller.getTheSelectedFilteredRows();
-                            controller.dadosFiltered();
-                          });
-                        },
-                        controlAffinity: ListTileControlAffinity.leading,
-                      ),
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          )
-      ],
+      ),
     );
   }
 
-  void _showContextMenu(BuildContext context, Offset position, {required ReportFromJSONController controller}) {
+  void _showContextMenu(BuildContext context, Offset position, {required ReportFromJSONController controller, required Function setStateRows,required Map<String,dynamic> element}) {
     final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     showMenu(
       context: context,
@@ -1162,19 +1175,25 @@ mixin Rows {
         overlay.size.height - position.dy,
       ),
       items: const [
-        PopupMenuItem<String>(
-          value: 'Soma',
+        PopupMenuItem<bool>(
+          value: false,
           child: Text('Soma'),
         ),
-        PopupMenuItem<String>(
-          value: 'Media',
+        PopupMenuItem<bool>(
+          value: true,
           child: Text('Media'),
         ),
       ],
-    ).then((value) {
-      if(value != null){
-        controller.tipoCalc = value;
-      }
+    ).then((valor) {
+      setStateRows ((){
+        if(valor != null){
+          for (var value in controller.colunas)
+            if (value['key'] == element['key']) {
+              value['isMedia'] = valor;
+            } 
+        }        
+      });
+
     });
   }
 

@@ -208,22 +208,6 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
-  late final _$tipoCalcAtom =
-      Atom(name: 'ReportFromJSONControllerBase.tipoCalc', context: context);
-
-  @override
-  String get tipoCalc {
-    _$tipoCalcAtom.reportRead();
-    return super.tipoCalc;
-  }
-
-  @override
-  set tipoCalc(String value) {
-    _$tipoCalcAtom.reportWrite(value, super.tipoCalc, () {
-      super.tipoCalc = value;
-    });
-  }
-
   late final _$ReportFromJSONControllerBaseActionController =
       ActionController(name: 'ReportFromJSONControllerBase', context: context);
 
@@ -233,6 +217,17 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
         .startAction(name: 'ReportFromJSONControllerBase.setOrderBy');
     try {
       return super.setOrderBy(key: key, order: order);
+    } finally {
+      _$ReportFromJSONControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  dynamic valoresRodape({required Map<String, dynamic> element}) {
+    final _$actionInfo = _$ReportFromJSONControllerBaseActionController
+        .startAction(name: 'ReportFromJSONControllerBase.valoresRodape');
+    try {
+      return super.valoresRodape(element: element);
     } finally {
       _$ReportFromJSONControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -252,8 +247,7 @@ colunaSelecionadaParaExportacao: ${colunaSelecionadaParaExportacao},
 colunasRodapePerson: ${colunasRodapePerson},
 widthTable: ${widthTable},
 positionScroll: ${positionScroll},
-visibleColElevated: ${visibleColElevated},
-tipoCalc: ${tipoCalc}
+visibleColElevated: ${visibleColElevated}
     ''';
   }
 }
