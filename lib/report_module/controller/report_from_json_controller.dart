@@ -306,6 +306,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
                 'order': 'asc',
                 'isSelected': false,
                 'vlrTotalDaColuna': 0.0,
+                'mediaDaColuna': 0.0,
                 'widthCol': 0.0,
                 'selecionado': colunaSelecionadaParaExportacao,
               },
@@ -321,6 +322,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
                 'order': 'asc',
                 'isSelected': false,
                 'vlrTotalDaColuna': 0.0,
+                'mediaDaColuna': 0.0,
                 'widthCol': 0.0,
                 'selecionado': colunaSelecionadaParaExportacao,
                 'isFiltered': false,
@@ -330,18 +332,8 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         }
       }
 
-      //calcular totalizadores de rodape
       for (var col in colunas)
-        for (var row in dados){
-          for (var key in row.keys){
-            if (key == col['key'] && row[key].toString().isNotEmpty) {
-              if (col['type'] != String) {
-                if(row[key].runtimeType == String) row[key] = double.parse(row[key]);
-                col['vlrTotalDaColuna'] += row[key];
-              }
-            }
-          }
-        }
+        recalcularRodape(col: col);
 
       //calcular max caractares para definir largura de colunas
       for (var col in colunas)
@@ -601,12 +593,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       getTheSelectedFilteredRows();
 
     for (var col in colunas) {
-      col['vlrTotalDaColuna'] = 0;
-      for (var row in dados)
-        for (var key in row.keys)
-          if (key == col['key']) {
-            if (col['type'] != String) col['vlrTotalDaColuna'] += row['isFiltered'] ? row[key] : 0;
-          }
+      recalcularRodape(col: col);
 
       for (var value in colunasFiltradas)
         if (col["key"] == value)
@@ -644,12 +631,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     }
 
     for (var col in colunas) {
-      col['vlrTotalDaColuna'] = 0;
-      for (var row in dados)
-        for (var key in row.keys)
-          if (key == col['key']) {
-            if (col['type'] != String) col['vlrTotalDaColuna'] += row['isFiltered'] ? row[key] : 0;
-          }
+      recalcularRodape(col: col);
 
       if (colunasFiltradas.any((element) => element == col["key"]))
         col["isFiltered"] = true;
@@ -672,16 +654,11 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         value["isFiltered"] = false;
 
     for (var col in colunas) {
-      col['vlrTotalDaColuna'] = 0;
-      for (var row in dados)
-        for (var key in row.keys)
-          if (key == col['key']) {
-            if (col['type'] != String) col['vlrTotalDaColuna'] += row[key];
-          }
+      recalcularRodape(col: col);
     }
   }
 
-  getSelectedRowParaNavegarParaNovaPage() {
+  void getSelectedRowParaNavegarParaNovaPage() {
     if (configPagina['page'].isNotEmpty && configPagina['page'] != null) {
       bodySecundario.addAll(
         {
@@ -703,9 +680,44 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       }
     }
   }
+
+  void recalcularRodape ({required Map<String,dynamic> col}){
+    if(!col['key'].contains('__DONTSUM')){
+      col['vlrTotalDaColuna'] = 0;
+      col['mediaDaColuna'] = 0;
+      int contador = 0;
+
+      for (var row in dados){
+        for (var key in row.keys){
+          if (key == col['key'] && row[key].toString().isNotEmpty) {
+            if (col['type'] != String) {
+              if(row[key].runtimeType == String) row[key] = double.parse(row[key]);
+              col['vlrTotalDaColuna'] += row[key];
+              contador++;
+            }
+          }
+        }
+      }
+
+      if (contador > 0) {
+        col['mediaDaColuna'] = col['vlrTotalDaColuna'] / contador;
+      }
+    }
+  }
+
+  dynamic valoresRodape ({required Map<String, dynamic> element}){
+    if(colunas.indexOf(element) == 0)
+      return dadosFiltered().length;
+    else if (element['type'] == String || element['key'].toString().toUpperCase().contains('__DONTSUM'))
+      return '';
+    else if (element['key'].toString().toUpperCase().contains('__PERC') || element['key'].toString().toUpperCase().contains('%'))
+      return element['mediaDaColuna'];
+    else
+      return element['vlrTotalDaColuna'];
+  }
 }
 
-/*
+
 void printW(text) {
   if (kDebugMode) {
     print('\x1B[33m$text\x1B[0m');
@@ -729,4 +741,3 @@ void limparPrint() {
     print("\x1B[2J\x1B[0;0H");
   }
 }
-*/

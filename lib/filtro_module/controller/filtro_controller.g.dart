@@ -16,14 +16,6 @@ mixin _$FiltroController on FiltroControllerBase, Store {
           Computed<int>(() => super.getQtdeItensSelecionados,
               name: 'FiltroControllerBase.getQtdeItensSelecionados'))
       .value;
-  Computed<bool>? _$verificaSeTodosEstaoSelecionadosComputed;
-
-  @override
-  bool get verificaSeTodosEstaoSelecionados =>
-      (_$verificaSeTodosEstaoSelecionadosComputed ??= Computed<bool>(
-              () => super.verificaSeTodosEstaoSelecionados,
-              name: 'FiltroControllerBase.verificaSeTodosEstaoSelecionados'))
-          .value;
   Computed<List<FiltrosModel>>? _$getListFiltrosComputedComputed;
 
   @override
@@ -31,6 +23,14 @@ mixin _$FiltroController on FiltroControllerBase, Store {
       (_$getListFiltrosComputedComputed ??= Computed<List<FiltrosModel>>(
               () => super.getListFiltrosComputed,
               name: 'FiltroControllerBase.getListFiltrosComputed'))
+          .value;
+  Computed<bool>? _$verificaSeTodosEstaoSelecionadosComputed;
+
+  @override
+  bool get verificaSeTodosEstaoSelecionados =>
+      (_$verificaSeTodosEstaoSelecionadosComputed ??= Computed<bool>(
+              () => super.verificaSeTodosEstaoSelecionados,
+              name: 'FiltroControllerBase.verificaSeTodosEstaoSelecionados'))
           .value;
 
   late final _$listaFiltrosCarregadosAtom = Atom(
@@ -433,8 +433,8 @@ erroBuscarItensFiltro: ${erroBuscarItensFiltro},
 dataCampanhaInicial: ${dataCampanhaInicial},
 loadingMoreData: ${loadingMoreData},
 getQtdeItensSelecionados: ${getQtdeItensSelecionados},
-verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados},
-getListFiltrosComputed: ${getListFiltrosComputed}
+getListFiltrosComputed: ${getListFiltrosComputed},
+verificaSeTodosEstaoSelecionados: ${verificaSeTodosEstaoSelecionados}
     ''';
   }
 }

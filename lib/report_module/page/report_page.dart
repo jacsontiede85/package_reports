@@ -833,13 +833,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
               controller: controller,
               key: element['key'],
               type: element['key'].toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
-              value: controller.colunas.indexOf(element) == 0
-                  ? '${controller.dadosFiltered().length}'
-                  : element['type'] == String
-                      ? ''
-                      : element['key'].toString().toUpperCase().contains('__DONTSUM')
-                          ? ''
-                          : element['vlrTotalDaColuna'],
+              value: controller.valoresRodape(element: element),
               isSelected: element['isSelected'],
               isRodape: true,
               order: element['order'],
