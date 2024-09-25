@@ -710,20 +710,16 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   @action
   dynamic valoresRodape ({required Map<String, dynamic> element}){
 
-      if(colunas.indexOf(element) == 0)
-        return dadosFiltered().length;
-      else if (element['type'] == String || element['key'].toString().toUpperCase().contains('__DONTSUM'))
-        return '';
-      else if (element['key'].toString().toUpperCase().contains('__PERC') || element['key'].toString().toUpperCase().contains('%'))
-        return element['mediaDaColuna'];
-      if(element['type'] != String  && !element['key'].toString().toUpperCase().contains('__DONTSUM') && element['isMedia'])
-        return element['mediaDaColuna'];
-      else if (element['type'] != String  && !element['key'].toString().toUpperCase().contains('__DONTSUM') && !element['isMedia'])
-        return element['vlrTotalDaColuna'];
-      else 
-        return '';
-    
+    bool validate = (element['type'] != String  && !element['key'].toString().toUpperCase().contains('__DONTSUM'));
 
+    if(colunas.indexOf(element) == 0)
+      return dadosFiltered().length;
+    else if(validate && element['isMedia'])
+      return element['mediaDaColuna'];
+    else if (validate && !element['isMedia'])
+      return element['vlrTotalDaColuna'];
+    else 
+      return '';
   }
 
 }
