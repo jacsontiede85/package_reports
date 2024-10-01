@@ -77,7 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       // function: 'vendas/venda-por-cliente/index.php',
                       // function: 'comercial/evolucao-venda-anual-por-rca/index.php',
                       // function: 'compras/ruptura-estoque-fornecedor/index.php',
-                      function: 'teste/index.php',
+                      // function: 'teste/index.php',
+                      function: 'compras/assistente-compras/assistente_compras_report.php',
                     ),
                   ),
                 );
@@ -94,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) => ReportPage(
                       database: SettingsReports.bancoDeDados,
                       buscarDadosNaEntrada: false,
-                      function: 'vendas/venda-por-supervisor/index.php',
+                      function: 'vendas/venda-por-rca/index.php',
                     ),
                   ),
                 );

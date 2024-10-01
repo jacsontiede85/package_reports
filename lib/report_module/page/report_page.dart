@@ -104,7 +104,6 @@ class _ReportPageState extends State<ReportPage> with Rows {
   @override
   void dispose() {
     super.dispose();
-    controller.verticalScroll.dispose();
     controller.horizontalScroll.dispose();
     controller.dispose();
   }
@@ -495,7 +494,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           },
                         ),
                         child: AdaptiveScrollbar(
-                          controller: controller.verticalScroll,
+                          controller: ScrollController(),
                           width: 8,
                           underColor: Colors.white.withOpacity(0.1),
                           sliderSpacing: const EdgeInsets.only(
@@ -698,7 +697,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     return ListView.builder(
       itemCount: controller.dadosFiltered().length,
       physics: const BouncingScrollPhysics(),
-      controller: controller.verticalScroll,
+      controller: ScrollController(),
       itemBuilder: (BuildContext context, int index) {
         var val = controller.dadosFiltered()[index];
         controller.row = [];

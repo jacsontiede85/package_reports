@@ -83,7 +83,6 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   double widthTable = 1000.0;
 
   ScrollController horizontalScroll = ScrollController();
-  ScrollController verticalScroll = ScrollController();
 
   @observable
   double positionScroll = 0.0;
@@ -148,7 +147,6 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   void _removeListener() {
     try {
       horizontalScroll.removeListener(() {});
-      verticalScroll.removeListener(() {});
     } catch (e) {
       //printE("_startListener");
     }
