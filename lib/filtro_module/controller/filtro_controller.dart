@@ -40,6 +40,9 @@ abstract class FiltroControllerBase with Store {
   int indexFiltro = 0;
 
   @observable
+  ObservableMap<String, dynamic> mapaDatasNomeadas = ObservableMap.of({});
+
+  @observable
   String dtinicio = SettingsReports.getDataPTBR(), dtfim = SettingsReports.getDataPTBR();
 
   @observable
@@ -137,6 +140,16 @@ abstract class FiltroControllerBase with Store {
     mapaFiltrosWidget.forEach((key, value) {
       if(key == "cardPeriodoMensal"){
         key = "$key${value["mesInicial"]}";
+      }
+      if(value["tipo"] == "datapickernomeado"){
+        mapaDatasNomeadas.addAll(
+          {
+            key: {
+              "dtinicio": SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),
+              "dtfim": SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),
+            }
+          }
+        );
       }
       listaFiltrosParaConstruirTela.add(FiltrosPageAtual(qualPaginaFiltroPertence: indexPagina, filtrosWidgetModel: FiltrosWidgetModel.fromJson(value, key)));
     });
@@ -389,6 +402,15 @@ abstract class FiltroControllerBase with Store {
         {"dataMensal": dataCampanhaInicial}
       );
     }
+
+    mapaDatasNomeadas.forEach((key, value) {
+      if(controllerReports.bodyPrimario.containsKey(key)){
+        controllerReports.bodyPrimario.update(key, (value) => value,);
+      }
+      else{ 
+        controllerReports.bodyPrimario.addAll({key: value});
+      }
+    },);
     await controllerReports.getDados();
   }
 
@@ -457,7 +479,7 @@ abstract class FiltroControllerBase with Store {
 
   // FUNÇÃO PARA DEFINIR DATAS PARA O DROPDOWN DE PERIODOS
   @action
-  Map<String, dynamic> selecaoDeDataPorPeriodo({required String periodo}) {
+  Map<String, dynamic> selecaoDeDataPorPeriodo({required String periodo, required bool isDataPadrao}) {
     var today = DateTime.now().toLocal();
     int mes, ano;
 
@@ -532,8 +554,10 @@ abstract class FiltroControllerBase with Store {
       break;
     }
 
-    dtinicio = dtinicioFiltro;
-    dtfim = dtfimFiltro;
+    if(isDataPadrao){
+      dtinicio = dtinicioFiltro;
+      dtfim = dtfimFiltro;
+    }
 
     return {'dtinicioFiltro': dtinicioFiltro, 'dtfimFiltro': dtfimFiltro};
   }

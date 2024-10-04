@@ -166,7 +166,7 @@ class Widgets {
                         ).toList();
                       },
                       onSelected: (value) {
-                        controller.selecaoDeDataPorPeriodo(periodo: value.toString());
+                        controller.selecaoDeDataPorPeriodo(periodo: value.toString(), isDataPadrao: true);
                       },
                     )
                   ],
@@ -245,6 +245,105 @@ class Widgets {
           ],
         ),
       ),
+    );
+  }
+
+  Widget selecaoDePeriodoNomeado({
+    required FiltrosWidgetModel filtrosDados,
+    required FiltroController controller,
+    required BuildContext context,
+    required String tipo,
+  }) {
+    return Builder(
+      builder: (context) {
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                tituloCards(
+                  titulo: filtrosDados.titulo.toUpperCase(),
+                  context: context,
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  buttonPadding: const EdgeInsets.all(10),
+                  children: [
+                    TextButton.icon(
+                      icon: const Icon(Icons.calendar_today),
+                      label: Observer(
+                        builder: (_) => Text(
+                          controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["dtinicio"],
+                          style: const TextStyle(fontSize: 17),
+                        ),
+                      ),
+                      onPressed: () async {
+                        String data = await SettingsReports().selectDate(
+                          context: context,
+                        );
+                        controller.mapaDatasNomeadas.update(
+                          filtrosDados.tipoFiltro, (value) {
+                            return {
+                              "dtinicio": data,
+                              "dtfim": value["dtfim"]
+                            };
+                          },
+                        );
+                      },
+                    ),
+                    TextButton.icon(
+                      icon: const Icon(Icons.calendar_today),
+                      label: Observer(
+                        builder: (_) => Text(
+                          controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["dtfim"],
+                          style: const TextStyle(fontSize: 17),
+                        ),
+                      ),
+                      onPressed: () async {
+                        String data = await SettingsReports().selectDate(
+                          context: context,
+                        );
+                        controller.mapaDatasNomeadas.update(
+                          filtrosDados.tipoFiltro, (value) {
+                            return {
+                              "dtinicio": value["dtinicio"],
+                              "dtfim": data,
+                            };
+                          },
+                        );
+                      },
+                    ),
+                    PopupMenuButton(
+                      itemBuilder: (context) {
+                        return controller.listaDePeriodos.map(
+                          (valor) {
+                            return PopupMenuItem(
+                              value: valor.replaceAll(' ', ''),
+                              child: Text(valor),
+                            );
+                          },
+                        ).toList();
+                      },
+                      onSelected: (value) {
+                        Map res = controller.selecaoDeDataPorPeriodo(periodo: value.toString(), isDataPadrao: false);
+                        controller.mapaDatasNomeadas.update(filtrosDados.tipoFiltro, (value) {
+                          return {
+                            "dtinicio": "${res["dtinicioFiltro"]}",
+                            "dtfim": "${res["dtfimFiltro"]}"
+                          };
+                        },);
+                      },
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -581,6 +680,15 @@ class Widgets {
 
       case "datapicker" || "datapickerfaturamento":
         retornoFuncao = selecaoDePeriodo(
+          filtrosDados: filtrosDados,
+          context: context,
+          controller: controller,
+          tipo: filtrosDados.tipoWidget,
+        );
+      break;
+
+      case "datapickernomeado":
+        retornoFuncao = selecaoDePeriodoNomeado(
           filtrosDados: filtrosDados,
           context: context,
           controller: controller,

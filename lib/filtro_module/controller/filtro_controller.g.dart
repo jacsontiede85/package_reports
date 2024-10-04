@@ -100,6 +100,22 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$mapaDatasNomeadasAtom =
+      Atom(name: 'FiltroControllerBase.mapaDatasNomeadas', context: context);
+
+  @override
+  ObservableMap<String, dynamic> get mapaDatasNomeadas {
+    _$mapaDatasNomeadasAtom.reportRead();
+    return super.mapaDatasNomeadas;
+  }
+
+  @override
+  set mapaDatasNomeadas(ObservableMap<String, dynamic> value) {
+    _$mapaDatasNomeadasAtom.reportWrite(value, super.mapaDatasNomeadas, () {
+      super.mapaDatasNomeadas = value;
+    });
+  }
+
   late final _$dtinicioAtom =
       Atom(name: 'FiltroControllerBase.dtinicio', context: context);
 
@@ -388,11 +404,13 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   }
 
   @override
-  Map<String, dynamic> selecaoDeDataPorPeriodo({required String periodo}) {
+  Map<String, dynamic> selecaoDeDataPorPeriodo(
+      {required String periodo, required bool isDataPadrao}) {
     final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
         name: 'FiltroControllerBase.selecaoDeDataPorPeriodo');
     try {
-      return super.selecaoDeDataPorPeriodo(periodo: periodo);
+      return super.selecaoDeDataPorPeriodo(
+          periodo: periodo, isDataPadrao: isDataPadrao);
     } finally {
       _$FiltroControllerBaseActionController.endAction(_$actionInfo);
     }
@@ -418,6 +436,7 @@ listaFiltrosCarregados: ${listaFiltrosCarregados},
 listaFiltrosParaConstruirTela: ${listaFiltrosParaConstruirTela},
 loadingItensFiltros: ${loadingItensFiltros},
 indexFiltro: ${indexFiltro},
+mapaDatasNomeadas: ${mapaDatasNomeadas},
 dtinicio: ${dtinicio},
 dtfim: ${dtfim},
 filtrosSalvosParaAdicionarNoBody: ${filtrosSalvosParaAdicionarNoBody},

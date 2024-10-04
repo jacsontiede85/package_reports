@@ -205,6 +205,8 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   getDados() async {
     limparCamposVareaveis();
 
+    //print(bodyPrimario);
+
     if (bodySecundario.isEmpty) {
       dados = jsonDecode(
         await API().getDataReportApiJWT(
