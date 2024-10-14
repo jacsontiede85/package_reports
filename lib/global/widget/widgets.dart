@@ -267,6 +267,26 @@ class Widgets {
                   titulo: filtrosDados.titulo.toUpperCase(),
                   context: context,
                 ),
+                SizedBox(
+                  width: 250,
+                  child: Observer(
+                    builder: (_) => CheckboxListTile(
+                      value: controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["isEnable"],
+                      title: const Text('Desabilitar data'),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (c) {
+                        controller.mapaDatasNomeadas.update(
+                          filtrosDados.tipoFiltro, (value) {
+                            return {
+                              "dtinicio": value["dtinicio"],
+                              "dtfim": value["dtfim"],
+                              "isEnable": c
+                            };
+                          },);
+                      },
+                    ),
+                  ),
+                ),
                 ButtonBar(
                   alignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
@@ -288,7 +308,8 @@ class Widgets {
                           filtrosDados.tipoFiltro, (value) {
                             return {
                               "dtinicio": data,
-                              "dtfim": value["dtfim"]
+                              "dtfim": value["dtfim"],
+                              "isEnable": value["isEnable"]
                             };
                           },
                         );
@@ -311,6 +332,7 @@ class Widgets {
                             return {
                               "dtinicio": value["dtinicio"],
                               "dtfim": data,
+                              "isEnable": value["isEnable"]
                             };
                           },
                         );
@@ -332,7 +354,8 @@ class Widgets {
                         controller.mapaDatasNomeadas.update(filtrosDados.tipoFiltro, (value) {
                           return {
                             "dtinicio": "${res["dtinicioFiltro"]}",
-                            "dtfim": "${res["dtfimFiltro"]}"
+                            "dtfim": "${res["dtfimFiltro"]}",
+                            "isEnable": value["isEnable"]
                           };
                         },);
                       },

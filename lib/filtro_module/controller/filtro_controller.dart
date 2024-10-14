@@ -141,12 +141,13 @@ abstract class FiltroControllerBase with Store {
       if(key == "cardPeriodoMensal"){
         key = "$key${value["mesInicial"]}";
       }
-      if(value["tipo"] == "datapickernomeado"){
+      if(value["tipo"] == "datapickernomeado" && !mapaDatasNomeadas.containsKey(key)){
         mapaDatasNomeadas.addAll(
           {
             key: {
               "dtinicio": SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),
               "dtfim": SettingsReports.formatarDataPadraoBR(data: DateTime.now().toString()),
+              "isEnable": false
             }
           }
         );
@@ -405,12 +406,19 @@ abstract class FiltroControllerBase with Store {
 
     mapaDatasNomeadas.forEach((key, value) {
       if(controllerReports.bodyPrimario.containsKey(key)){
-        controllerReports.bodyPrimario.update(key, (value) => value,);
+        if(!value["isEnable"]){
+          controllerReports.bodyPrimario.update(key, (value2) => value2 = value,);
+        }else{
+          controllerReports.bodyPrimario.removeWhere((key2, value2) => key == key2,);
+        }
       }
-      else{ 
-        controllerReports.bodyPrimario.addAll({key: value});
+      else{
+        if(!value["isEnable"]){
+          controllerReports.bodyPrimario.addAll({key: value});
+        }
       }
     },);
+
     await controllerReports.getDados();
   }
 
