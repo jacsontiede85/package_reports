@@ -175,7 +175,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                       },
                       onChanged: (value) {
                         SettingsReports.isfiltrosSalvosApp = !SettingsReports.isfiltrosSalvosApp;
-                        SettingsReports.salvarFiltrosShared();
+                        SettingsReports.salvarFiltrosShared(listaFiltrosCarregadoss: controllerFiltro.listaFiltrosCarregados);
                         setState(() {
                           
                         });

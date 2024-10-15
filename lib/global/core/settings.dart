@@ -116,10 +116,9 @@ mixin class SettingsReports{
     }
   }
 
-  static void salvarFiltrosShared () async {
+  static void salvarFiltrosShared ({required ObservableList<FiltrosCarrregados> listaFiltrosCarregadoss}) async {
     List<String> valoresSalvosCarregados = [];
     List<String> valoresSalvosConstruirTela = [];
-
     if(!isfiltrosSalvosApp){
       final prefs = await SharedPreferences.getInstance();
       prefs.remove('filtrosSalvos.$bancoDeDados.$matricula');
@@ -127,14 +126,14 @@ mixin class SettingsReports{
       prefs.remove('isfiltrosSalvosApp.$bancoDeDados.$matricula');
       isfiltrosSalvosApp = false;
     }else{
-      if (listaFiltrosCarregadosSalvos.isNotEmpty) {
+      if (listaFiltrosCarregadoss.isNotEmpty) {
         final prefs = await SharedPreferences.getInstance();
-
+        
         prefs.remove('filtrosSalvos.$bancoDeDados.$matricula');
         prefs.remove('filtrosContruirTela.$bancoDeDados.$matricula');
         prefs.remove('isfiltrosSalvosApp.$bancoDeDados.$matricula');
 
-        for (FiltrosCarrregados itens in listaFiltrosCarregadosSalvos) {
+        for (FiltrosCarrregados itens in listaFiltrosCarregadoss) {
           Map<String, dynamic> itemMap = {
             'indexFiltros': itens.indexFiltros,
             'indexPagina': itens.indexPagina,
@@ -147,6 +146,7 @@ mixin class SettingsReports{
             }).toList(),
             'valorSelecionadoParaDropDown': itens.valorSelecionadoParaDropDown,
             'tipoFiltro': itens.tipoFiltro,
+            "tipoWidget" : itens.tipoWidget,
           };
 
           String jsonString = jsonEncode(itemMap);
@@ -179,7 +179,7 @@ mixin class SettingsReports{
         
         prefs.setStringList('filtrosSalvos.$bancoDeDados.$matricula', valoresSalvosCarregados);
         prefs.setStringList('filtrosContruirTela.$bancoDeDados.$matricula', valoresSalvosConstruirTela);
-        prefs.setBool('isfiltrosSalvosApp.$bancoDeDados.$matricula', isfiltrosSalvosApp);
+        prefs.setBool('isfiltrosSalvosApp.$bancoDeDados.$matricula', isfiltrosSalvosApp); 
       }      
     }
 
@@ -190,7 +190,6 @@ mixin class SettingsReports{
     List<String> dados = [];
     List<String> dados2 = [];
     bool salvo = false;
-
     try{
       dados = prefs.getStringList('filtrosSalvos.$bancoDeDados.$matricula')!;
       dados2 = prefs.getStringList('filtrosContruirTela.$bancoDeDados.$matricula')!;
@@ -199,7 +198,6 @@ mixin class SettingsReports{
       dados = [];
       dados2 = [];
     }
-
     
     List<FiltrosCarrregados> listaRecuperada = dados.map((jsonString) => FiltrosCarrregados.fromJson(jsonDecode(jsonString))).toList();
     List<FiltrosPageAtual> listaRecuperada2 = dados2.map((jsonString) => FiltrosPageAtual.fromJson(jsonDecode(jsonString))).toList();

@@ -114,7 +114,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     controller.sizeWidth = _width;
 
     return PopScope(
-      onPopInvoked: (value) => controller.willPopCallback,
+      onPopInvokedWithResult: (value,_) => controller.willPopCallback,
       child: Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
