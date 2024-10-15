@@ -90,72 +90,50 @@ class _ChartsReportState extends State<ChartsReport> {
               PointerDeviceKind.mouse,
             }),
             child: AdaptiveScrollbar(
-              controller: verticalScroll,
+              controller: horizontalScroll,
               width: 8,
+              position: ScrollbarPosition.bottom,
+              underSpacing: const EdgeInsets.only(bottom: 15), //largura do srcroll
               underColor: Colors.white.withOpacity(0.1),
               sliderSpacing: const EdgeInsets.only(
                 right: 0,
               ),
               sliderDecoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
-                color: Colors.black.withOpacity(0.6),
+                color: Colors.black.withOpacity(0.5),
               ),
               sliderActiveDecoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
                 color: Colors.black.withOpacity(0.5),
               ),
-              child: AdaptiveScrollbar(
-                controller: horizontalScroll,
-                width: 8,
-                position: ScrollbarPosition.bottom,
-                underSpacing: const EdgeInsets.only(bottom: 15), //largura do srcroll
-                underColor: Colors.white.withOpacity(0.1),
-                sliderSpacing: const EdgeInsets.only(
-                  right: 0,
-                ),
-                sliderDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  color: Colors.black.withOpacity(0.5),
-                ),
-                sliderActiveDecoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  color: Colors.black.withOpacity(0.5),
-                ),
-                child: SingleChildScrollView(
-                  controller: horizontalScroll,
-                  scrollDirection: Axis.horizontal,
-                  child: Observer(
-                    builder: (_) => SizedBox(
-                      width: MediaQuery.sizeOf(context).width,
-                      height: 4000,
-                      child: Visibility(
-                        visible: !widget.controller.loading,
-                        replacement: Center(
-                          child: LoadingAnimationWidget.halfTriangleDot(
-                            color: const Color.fromARGB(255, 102, 78, 238),
-                            size: 40,
-                          ),
-                        ),
-                        child: ListView(
-                          controller: verticalScroll,
-                          children: [
-                            SizedBox(
+              child: Observer(
+                builder: (_) => Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                  child: Visibility(
+                    visible: !widget.controller.loading,
+                    replacement: Center(
+                      child: LoadingAnimationWidget.halfTriangleDot(
+                        color: const Color.fromARGB(255, 102, 78, 238),
+                        size: 40,
+                      ),
+                    ),
+                    child: Visibility(
+                      visible: !(widget.controller.chartNameSelected == 'sfLineCartesianChart' || widget.controller.chartNameSelected == 'sfAreaCartesianChart'),
+                      replacement: widget.controller.chartSelected,
+                      child: ListView(
+                        controller: verticalScroll,
+                        children: [
+                          Observer(
+                            builder: (_) {
+                              return SizedBox(
                               width: MediaQuery.sizeOf(context).width,
-                              height: MediaQuery.sizeOf(context).height * 0.06,
-                            ),
-                            Observer(
-                              builder: (_) => Visibility(
-                                visible: !(widget.controller.chartNameSelected == 'sfLineCartesianChartArea' || widget.controller.chartNameSelected == 'sfAreaCartesianChart'),
-                                replacement: widget.controller.chartSelected,
-                                child: SizedBox(
-                                  width: MediaQuery.sizeOf(context).width,
-                                  height: (widget.controller.reportFromJSONController.dados.length * 30) > (MediaQuery.sizeOf(context).height * 0.83) ? widget.controller.reportFromJSONController.dados.length * 30 : MediaQuery.sizeOf(context).height * 0.83,
-                                  child: widget.controller.chartSelected,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                              height: (widget.controller.reportFromJSONController.dados.length * 30) > (MediaQuery.sizeOf(context).height * 0.83) ? widget.controller.reportFromJSONController.dados.length * 30 : MediaQuery.sizeOf(context).height * 0.83,
+                              child: widget.controller.chartSelected,
+                            );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),

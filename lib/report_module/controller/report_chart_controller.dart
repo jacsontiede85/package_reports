@@ -1,6 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:package_reports/global/core/features.dart';
 import 'package:package_reports/report_module/charts/chart_data.dart';
 import 'package:package_reports/report_module/charts/charts.dart';
 import 'report_from_json_controller.dart';
@@ -62,12 +63,7 @@ abstract class ReportChartControllerBase with Store, Charts {
     this.chartNameSelected = chartNameSelected;
     await Future.delayed(const Duration(seconds: 1));
 
-    // ? Analise de dados de linhas
-    if (chartNameSelected == 'sfLineCartesianChart')
-      chartSelected = sfLineCartesianChart(dados: _getListChartData());
-
-    // ? Analise de dados de colunas (horizontal)
-    else if (chartNameSelected == 'barChartHorizontal')
+    if (chartNameSelected == 'barChartHorizontal')
       chartSelected = barChartHorizontal(dados: _getListChartData());
 
     // ? Analise de dados de pizza
@@ -75,11 +71,11 @@ abstract class ReportChartControllerBase with Store, Charts {
       chartSelected = sfCircularChart(
         dados: _getListChartData(),
       );
-    else if (chartNameSelected == 'sfLineCartesianChartArea') {
+    else if (chartNameSelected == 'sfLineCartesianChart') {
       // ? Analise de dados na horizontal (ex.: mes 1, mes2, ... total)
       List<Widget> charts = [];
       for (var listChartdata in _getListChartData()) charts.add(sfLineCartesianChart(dados: listChartdata));
-      chartSelected = Column(
+      chartSelected = ListView(
         children: charts,
       );
     } else if (chartNameSelected == 'sfAreaCartesianChart') {
@@ -111,7 +107,8 @@ abstract class ReportChartControllerBase with Store, Charts {
       for (Map<String, dynamic> col in reportFromJSONController.colunas) {
         String nome = '';
 
-        if ((col['type'] == String || col['key'].toString().toUpperCase().contains('__NO_METRICS')) && col['key'] != 'isFiltered') nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}...' : '${col['key']}';
+        if ((col['type'] == String || col['key'].toString().toUpperCase().contains('__NO_METRICS')) && col['key'] != 'isFiltered') 
+          nome += '${col['key']}'.length > 20 ? '${'${col['key']}'.substring(0, 20)}...' : '${col['key']}';
 
         if (col['type'] != String && !col['key'].toString().toUpperCase().contains('__NO_METRICS') && !col['key'].toString().toUpperCase().contains('__NOCHARTAREA'))
           temp.add(
@@ -126,14 +123,17 @@ abstract class ReportChartControllerBase with Store, Charts {
           );
       }
       return temp;
-    } else if (chartNameSelected == 'sfLineCartesianChartArea' || chartNameSelected == 'sfAreaCartesianChart') {
+    } else if (chartNameSelected == 'sfLineCartesianChart' || chartNameSelected == 'sfAreaCartesianChart') {
+      
       List<List<ChartData>> list = [];
 
       for (Map<String, dynamic> value in reportFromJSONController.dados) {
         List<ChartData> temp = [];
         String nome = '';
 
-        for (String key in value.keys) if ((value[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && key != 'isFiltered') nome += '${value[key]}';
+        for (String key in value.keys) 
+          if ((value[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && key != 'isFiltered') 
+            nome += Features.formatarTextoPrimeirasLetrasMaiusculas('${value[key]}').padRight(value[key].toString().length + 1,' - ');
 
         for (var col in getColumnMetricsChart) {
           if (value['type'] != String && !col['key'].toString().toUpperCase().contains('__NOCHARTAREA')) {
