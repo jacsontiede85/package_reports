@@ -479,8 +479,12 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
 
   //retornar Map com dados de coluna
-  Map getMapColuna({required key}) {
-    for (var col in colunas) if (col['key'] == key) return col;
+  Map<String,dynamic> getMapColuna({required key}) {
+    for (Map<String, dynamic> col in colunas) 
+      if (col['key'] == key && col['selecionado']){
+        return col;
+      }
+      
     return {};
   }
 
@@ -489,7 +493,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     required key,
   }) {
     var coluna = getMapColuna(key: key);
-    return coluna['widthCol'];
+    return coluna['widthCol'] ?? 0;
   }
 
   //obter largura total da table
@@ -568,7 +572,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
                 break;
               }
             }
-            if (count > 0)
+            if (count > 0) 
               key["isFiltered"] = true;
             else
               key["isFiltered"] = false;

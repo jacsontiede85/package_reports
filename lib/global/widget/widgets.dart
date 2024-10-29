@@ -121,10 +121,9 @@ class Widgets {
                     ),
                   ),
                 ),
-                ButtonBar(
-                  alignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  buttonPadding: const EdgeInsets.all(10),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 10,
                   children: [
                     TextButton.icon(
                       icon: const Icon(Icons.calendar_today),
@@ -287,10 +286,9 @@ class Widgets {
                     ),
                   ),
                 ),
-                ButtonBar(
-                  alignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  buttonPadding: const EdgeInsets.all(10),
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  spacing: 10,
                   children: [
                     TextButton.icon(
                       icon: const Icon(Icons.calendar_today),

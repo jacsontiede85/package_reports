@@ -473,156 +473,153 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 ),
               ),
             ),
-            child: Container(
-              color: Colors.white,
-              child: Observer(
-                builder: (_) => Stack(
-                  children: [
-                    Visibility(
-                      visible: !controller.loading || controller.dadosFiltered().isNotEmpty,
-                      replacement: Center(
-                        child: LoadingAnimationWidget.halfTriangleDot(
-                          color: const Color.fromARGB(255, 102, 78, 238),
-                          size: 40,
-                        ),
+            child: Observer(
+              builder: (_) => Stack(
+                children: [
+                  Visibility(
+                    visible: !controller.loading || controller.dadosFiltered().isNotEmpty,
+                    replacement: Center(
+                      child: LoadingAnimationWidget.halfTriangleDot(
+                        color: const Color.fromARGB(255, 102, 78, 238),
+                        size: 40,
                       ),
-                      child: ScrollConfiguration(
-                        behavior: ScrollConfiguration.of(context).copyWith(
-                          dragDevices: {
-                            PointerDeviceKind.touch,
-                            PointerDeviceKind.mouse,
-                          },
+                    ),
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(
+                        dragDevices: {
+                          PointerDeviceKind.touch,
+                          PointerDeviceKind.mouse,
+                        },
+                      ),
+                      child: AdaptiveScrollbar(
+                        controller: ScrollController(),
+                        width: 8,
+                        underColor: Colors.white.withOpacity(0.1),
+                        sliderSpacing: const EdgeInsets.only(
+                          right: 0,
+                        ),
+                        sliderDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                          color: Colors.black.withOpacity(0.6),
+                        ),
+                        sliderActiveDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                          color: Colors.black.withOpacity(0.5),
                         ),
                         child: AdaptiveScrollbar(
-                          controller: ScrollController(),
-                          width: 8,
+                          controller: controller.horizontalScroll,
+                          width: _width < 600 ? 10 : 8,
+                          position: ScrollbarPosition.bottom,
+                          underSpacing: const EdgeInsets.only(bottom: 15),
                           underColor: Colors.white.withOpacity(0.1),
                           sliderSpacing: const EdgeInsets.only(
                             right: 0,
                           ),
                           sliderDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.0),
-                            color: Colors.black.withOpacity(0.6),
+                            color: Colors.black.withOpacity(0.5),
                           ),
                           sliderActiveDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.0),
                             color: Colors.black.withOpacity(0.5),
                           ),
-                          child: AdaptiveScrollbar(
+                          child: SingleChildScrollView(
                             controller: controller.horizontalScroll,
-                            width: _width < 600 ? 10 : 8,
-                            position: ScrollbarPosition.bottom,
-                            underSpacing: const EdgeInsets.only(bottom: 15),
-                            underColor: Colors.white.withOpacity(0.1),
-                            sliderSpacing: const EdgeInsets.only(
-                              right: 0,
-                            ),
-                            sliderDecoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                              color: Colors.black.withOpacity(0.5),
-                            ),
-                            sliderActiveDecoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                              color: Colors.black.withOpacity(0.5),
-                            ),
-                            child: SingleChildScrollView(
-                              controller: controller.horizontalScroll,
-                              scrollDirection: Axis.horizontal,
-                              child: Container(
-                                width: _width > controller.widthTable ? _width : controller.widthTable + 10,
-                                alignment: _width > controller.widthTable ? Alignment.center : Alignment.topLeft,
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      width: controller.widthTable,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: controller.loading ? Colors.transparent : Colors.purple.withOpacity(0.3),
-                                          width: 0.1,
-                                        ),
-                                      ),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          // TITULO DE COLUNAS
-                                          Container(
-                                            height: controller.getHeightColunasCabecalho,
-                                            color: Colors.grey[50],
-                                            child: Stack(
-                                              children: [
-                                                colunasWidget(),
-                                                Observer(
-                                                  builder: (_) => Visibility(
-                                                    visible: controller.positionScroll > 200 && controller.visibleColElevated,
-                                                    child: Positioned(
-                                                      top: 0,
-                                                      left: controller.positionScroll,
-                                                      child: colunasElevated(),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-
-                                          if (controller.dadosFiltered().isEmpty)
-                                            Text(
-                                              'Não há dados para os filtros selecionados...',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: layout.desktop ? 16 : 12,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-
-                                          // ROWS [DADOS]
-                                          if (controller.dadosFiltered().isNotEmpty) Flexible(flex: 2, child: rowsBuilder()),
-
-                                          if (controller.dadosFiltered().isEmpty) const Expanded(child: SizedBox()),
-
-                                          //deixar espaço para rodape
-                                          if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
-                                            const SizedBox(
-                                              height: 39,
-                                            ),
-                                        ],
+                            scrollDirection: Axis.horizontal,
+                            child: Container(
+                              width: _width > controller.widthTable ? _width + 15: controller.widthTable + 25,
+                              alignment: _width > controller.widthTable ? Alignment.center : Alignment.topLeft,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: controller.widthTable + 15,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: controller.loading ? Colors.transparent : Colors.purple.withOpacity(0.3),
+                                        width: 0.1,
                                       ),
                                     ),
-                                    Observer(
-                                      builder: (_) => Visibility(
-                                        visible: controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty,
-                                        child: Positioned(
-                                          bottom: 0,
-                                          right: 0,
-                                          left: 0,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // TITULO DE COLUNAS
+                                        Container(
+                                          height: controller.getHeightColunasCabecalho,
+                                          color: Colors.grey[50],
                                           child: Stack(
                                             children: [
-                                              rodape(),
+                                              colunasWidget(),
                                               Observer(
                                                 builder: (_) => Visibility(
                                                   visible: controller.positionScroll > 200 && controller.visibleColElevated,
                                                   child: Positioned(
                                                     top: 0,
                                                     left: controller.positionScroll,
-                                                    child: rodapeElevated(),
+                                                    child: colunasElevated(),
                                                   ),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
+            
+                                        if (controller.dadosFiltered().isEmpty)
+                                          Text(
+                                            'Não há dados para os filtros selecionados...',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: layout.desktop ? 16 : 12,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+            
+                                        // ROWS [DADOS]
+                                        if (controller.dadosFiltered().isNotEmpty) Flexible(flex: 2, child: rowsBuilder()),
+            
+                                        if (controller.dadosFiltered().isEmpty) const Expanded(child: SizedBox()),
+            
+                                        //deixar espaço para rodape
+                                        if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
+                                          const SizedBox(
+                                            height: 39,
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  Observer(
+                                    builder: (_) => Visibility(
+                                      visible: controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty,
+                                      child: Positioned(
+                                        bottom: 0,
+                                        right: 0,
+                                        left: 0,
+                                        child: Stack(
+                                          children: [
+                                            rodape(),
+                                            Observer(
+                                              builder: (_) => Visibility(
+                                                visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                                                child: Positioned(
+                                                  top: 0,
+                                                  left: controller.positionScroll,
+                                                  child: rodapeElevated(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -635,158 +632,202 @@ class _ReportPageState extends State<ReportPage> with Rows {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: [
+        InkWell(
+          child: const Icon(
+            Icons.more_vert,
+            size: 15,
+          ),
+          onTap: (){
+            showMenu(
+              context: context,
+              position: const RelativeRect.fromLTRB(0, 80, 0, 0), 
+              items: controller.colunas.map((e) {
+                return PopupMenuItem(
+                  child: Observer(
+                    builder: (_) => CheckboxListTile(
+                      value: e['selecionado'], 
+                      onChanged: (value) {
+                        e['selecionado'] = !e['selecionado'];
+                      },
+                      title: Text(e['nomeFormatado']),
+                    ),
+                  ),
+                );           
+              },).toList(),
+            );
+          },
+        ),
+        // PopupMenuButton(
+        //   padding: EdgeInsets.zero,
+        //   icon: const Icon(Icons.more_horiz, size: 18,),
+
+        //   itemBuilder: (context) {
+        //     return 
+        //   },
+        // ),
         if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
           ...controller.colunas.map(
-            (element) => InkWell(
-              onTap: () => controller.setOrderBy(key: element['key'], order: element['order']),
-              child: rowTextFormatted(
-                context: context,
-                width: controller.getWidthCol(
-                  key: element['key'],
-                ),
-                height: controller.getHeightColunasCabecalho,
-                controller: controller,
-                key: element['key'],
-                type: element['type'],
-                value: Features.formatarTextoPrimeirasLetrasMaiusculas(
-                  element['nomeFormatado'].trim(),
-                ),
-                isTitle: true,
-                isSelected: element['isSelected'],
-                order: element['order'],
-                setStateRows: setStatee,
-                isFiltered: element['isFiltered'],
-              ),
-            ),
+            (element) {
+              if(element['selecionado'] == true)
+                return InkWell(
+                  onTap: () => controller.setOrderBy(key: element['key'], order: element['order']),
+                  child: rowTextFormatted(
+                    context: context,
+                    width: controller.getWidthCol(
+                      key: element['key'],
+                    ),
+                    height: controller.getHeightColunasCabecalho,
+                    controller: controller,
+                    key: element['key'],
+                    type: element['type'],
+                    value: Features.formatarTextoPrimeirasLetrasMaiusculas(
+                      element['nomeFormatado'].trim(),
+                    ),
+                    isTitle: true,
+                    isSelected: element['isSelected'],
+                    order: element['order'],
+                    setStateRows: setStatee,
+                    isFiltered: element['isFiltered'],
+                  ),
+                );
+              else
+                return const SizedBox();
+            },
           ),
       ],
     );
   }
 
   Widget colunasElevated() {
-    var element = controller.getMapColuna(key: controller.keyFreeze);
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        InkWell(
-          onTap: () => controller.setOrderBy(key: controller.keyFreeze, order: element['order']),
-          child: rowTextFormatted(
-            context: context,
-            width: controller.getWidthCol(
+    Map<String,dynamic> element = controller.getMapColuna(key: controller.keyFreeze);
+    if(element['selecionado'] == true)
+      return Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          InkWell(
+            onTap: () => controller.setOrderBy(key: controller.keyFreeze, order: element['order']),
+            child: rowTextFormatted(
+              context: context,
+              width: controller.getWidthCol(
+                key: controller.keyFreeze,
+              ),
+              cor: Colors.white,
+              height: controller.getHeightColunasCabecalho,
+              controller: controller,
               key: controller.keyFreeze,
+              type: element['type'],
+              value: Features.formatarTextoPrimeirasLetrasMaiusculas(
+                element['nomeFormatado'].trim(),
+              ),
+              isTitle: true,
+              isSelected: element['isSelected'],
+              order: element['order'],
+              setStateRows: setStatee,
             ),
-            cor: Colors.white,
-            height: controller.getHeightColunasCabecalho,
-            controller: controller,
-            key: controller.keyFreeze,
-            type: element['type'],
-            value: Features.formatarTextoPrimeirasLetrasMaiusculas(
-              element['nomeFormatado'].trim(),
-            ),
-            isTitle: true,
-            isSelected: element['isSelected'],
-            order: element['order'],
-            setStateRows: setStatee,
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    else
+      return const SizedBox();
   }
 
   Widget rowsBuilder() {
-    return ListView.builder(
-      itemCount: controller.dadosFiltered().length,
-      physics: const BouncingScrollPhysics(),
-      controller: ScrollController(),
-      itemBuilder: (BuildContext context, int index) {
-        var val = controller.dadosFiltered()[index];
-        controller.row = [];
-        val.forEach((key, value) {
-          Type type = value.runtimeType;
-          if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
-            controller.row.add(
-              rowTextFormatted(
-                context: context,
-                width: controller.getWidthCol(
+    return Padding(
+      padding: const EdgeInsets.only(left: 15),
+      child: ListView.builder(
+        itemCount: controller.dadosFiltered().length,
+        physics: const BouncingScrollPhysics(),
+        controller: ScrollController(),
+        itemBuilder: (BuildContext context, int index) {
+          Map<String,dynamic> val = controller.dadosFiltered()[index];
+          controller.row = [];
+          val.forEach((key, value) {
+            Type type = value.runtimeType;
+            if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
+              controller.row.add(
+                rowTextFormatted(
+                  context: context,
+                  width: controller.getWidthCol(
+                    key: key,
+                  ),
+                  height: 35,
+                  controller: controller,
                   key: key,
+                  type: type,
+                  value: value,
+                  cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
+                  setStateRows: setStatee,
                 ),
-                height: 35,
-                controller: controller,
-                key: key,
-                type: type,
-                value: value,
-                cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
-                setStateRows: setStatee,
-              ),
-            );
-        });
-        return Stack(
-          children: [
-            InkWell(
-              onDoubleTap: controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty
-                  ? () {
-                      if (controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) {
-                              if(controller.bodySecundario.isEmpty){
-                                return ReportPage(
-                                  database: widget.database,
-                                  buscarDadosNaEntrada: true,
-                                  function: controller.configPagina['urlapi'],
-                                )..setMapSelectedRowPage(
-                                  mapSelectedRow: val,
-                                  bodyConfigBuscaRecursiva: controller.configPagina,
-                                  getbodyPrimario: controller.bodyPrimario,
-                                );                                
-                              }else{
-                                return ReportPage(
-                                  database: widget.database,
-                                  buscarDadosNaEntrada: true,
-                                  function: controller.configPagina['urlapi'],
-                                )..setMapSelectedRowPage(
-                                  mapSelectedRow: val,
-                                  bodyConfigBuscaRecursiva: controller.configPagina,
-                                  getbodyPrimario: controller.bodySecundario,
-                                );
-                              }
-
-                            },
-                          ),
-                        );
+              );
+          });
+          return Stack(
+            children: [
+              InkWell(
+                onDoubleTap: controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty
+                    ? () {
+                        if (controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                if(controller.bodySecundario.isEmpty){
+                                  return ReportPage(
+                                    database: widget.database,
+                                    buscarDadosNaEntrada: true,
+                                    function: controller.configPagina['urlapi'],
+                                  )..setMapSelectedRowPage(
+                                    mapSelectedRow: val,
+                                    bodyConfigBuscaRecursiva: controller.configPagina,
+                                    getbodyPrimario: controller.bodyPrimario,
+                                  );                                
+                                }else{
+                                  return ReportPage(
+                                    database: widget.database,
+                                    buscarDadosNaEntrada: true,
+                                    function: controller.configPagina['urlapi'],
+                                  )..setMapSelectedRowPage(
+                                    mapSelectedRow: val,
+                                    bodyConfigBuscaRecursiva: controller.configPagina,
+                                    getbodyPrimario: controller.bodySecundario,
+                                  );
+                                }
+      
+                              },
+                            ),
+                          );
+                        }
                       }
-                    }
-                  : null,
-              child: Row(
-                children: controller.row,
+                    : null,
+                child: Row(
+                  children: controller.row,
+                ),
               ),
-            ),
-            Observer(
-              builder: (_) => Visibility(
-                visible: controller.positionScroll > 200 && controller.visibleColElevated,
-                child: Positioned(
-                  top: 0,
-                  left: controller.positionScroll,
-                  child: rowTextFormatted(
-                    context: context,
-                    width: controller.getWidthCol(
+              Observer(
+                builder: (_) => Visibility(
+                  visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                  child: Positioned(
+                    top: 0,
+                    left: controller.positionScroll,
+                    child: rowTextFormatted(
+                      context: context,
+                      width: controller.getWidthCol(
+                        key: controller.keyFreeze,
+                      ),
+                      height: 35,
+                      controller: controller,
                       key: controller.keyFreeze,
+                      type: String,
+                      value: val[controller.keyFreeze],
+                      cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
+                      setStateRows: setStatee,
                     ),
-                    height: 35,
-                    controller: controller,
-                    key: controller.keyFreeze,
-                    type: String,
-                    value: val[controller.keyFreeze],
-                    cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
-                    setStateRows: setStatee,
                   ),
                 ),
               ),
-            ),
-          ],
-        );
-      },
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -825,33 +866,39 @@ class _ReportPageState extends State<ReportPage> with Rows {
 
   Widget rodape() {
     return Container(
+      padding: const EdgeInsets.only(left: 15),
       decoration: const BoxDecoration(color: Colors.black38, border: Border(top: BorderSide(color: Colors.blue, width: 1))),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center, 
+        mainAxisAlignment: MainAxisAlignment.start, 
         children: [
           if (controller.colunas.isNotEmpty && controller.colunasRodapePerson.isEmpty)
             ...controller.colunas.map(
-              (element) => rowTextFormatted(
-                context: context,
-                width: controller.getWidthCol(
-                  key: element['key'],
-                ),
-                height: 40,
-                controller: controller,
-                key: element['key'],
-                type: element['key'].toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
-                value: controller.valoresRodape(element: element),
-                element: element,
-                isSelected: element['isSelected'],
-                isRodape: true,
-                order: element['order'],
-                setStateRows: setStatee,
-              ),
+              (element) {
+                if(element['selecionado'] == true)
+                  return rowTextFormatted(
+                    context: context,
+                    width: controller.getWidthCol(
+                      key: element['key'],
+                    ),
+                    height: 40,
+                    controller: controller,
+                    key: element['key'],
+                    type: element['key'].toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
+                    value: controller.valoresRodape(element: element),
+                    element: element,
+                    isSelected: element['isSelected'],
+                    isRodape: true,
+                    order: element['order'],
+                    setStateRows: setStatee,
+                  );
+                else
+                  return const SizedBox();
+              },
             )
           else
             ...controller.colunasRodapePerson.map((element) {
               for (var value in controller.dadosFiltered()) {
-                if (element['key'].toString().toUpperCase().contains('__ISRODAPE')) {
+                if (element['key'].toString().toUpperCase().contains('__ISRODAPE') && element['selecionado'] == true) {
                   return rowTextComLable(
                     width: controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().toUpperCase().contains('__ISRODAPE')).length,
                     height: 40,
@@ -871,27 +918,25 @@ class _ReportPageState extends State<ReportPage> with Rows {
 
   Widget rodapeElevated() {
     var element = controller.getMapColuna(key: controller.keyFreeze);
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        rowTextFormatted(
-          context: context,
-          width: controller.getWidthCol(
-            key: controller.keyFreeze,
-          ),
-          height: 40,
-          cor: const Color.fromARGB(255, 65, 63, 63),
-          controller: controller,
+    if(element['selecionado'] == true)
+      return rowTextFormatted(
+        context: context,
+        width: controller.getWidthCol(
           key: controller.keyFreeze,
-          type: controller.keyFreeze.toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
-          value: '${controller.dadosFiltered().length}',
-          isSelected: element['isSelected'],
-          isRodape: true,
-          order: element['order'],
-          setStateRows: setStatee,
         ),
-      ],
-    );
+        height: 40,
+        cor: const Color.fromARGB(255, 65, 63, 63),
+        controller: controller,
+        key: controller.keyFreeze,
+        type: controller.keyFreeze.toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
+        value: '${controller.dadosFiltered().length}',
+        isSelected: element['isSelected'],
+        isRodape: true,
+        order: element['order'],
+        setStateRows: setStatee,
+      );
+    else
+      return const SizedBox();
   }
 
   Widget exibirSelecaoDeColunasParaExporta({required void Function()? onPressedFiltrado, required void Function()? onPressedTudo, required String titulo}) {
