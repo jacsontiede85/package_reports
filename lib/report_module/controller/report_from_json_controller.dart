@@ -309,6 +309,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
                 'vlrTotalDaColuna': 0.0,
                 'mediaDaColuna': 0.0,
                 'widthCol': 0.0,
+                'colunasFiltradas' : true,
                 'selecionado': colunaSelecionadaParaExportacao,
               },
             ),
@@ -326,6 +327,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
                 'vlrTotalDaColuna': 0.0,
                 'mediaDaColuna': 0.0,
                 'widthCol': 0.0,
+                'colunasFiltradas' : true,
                 'selecionado': colunaSelecionadaParaExportacao,
                 'isFiltered': false,
               },
@@ -481,7 +483,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   //retornar Map com dados de coluna
   Map<String,dynamic> getMapColuna({required key}) {
     for (Map<String, dynamic> col in colunas) 
-      if (col['key'] == key && col['selecionado']){
+      if (col['key'] == key && col['colunasFiltradas']){
         return col;
       }
       

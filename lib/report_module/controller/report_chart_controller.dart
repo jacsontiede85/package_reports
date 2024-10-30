@@ -155,11 +155,17 @@ abstract class ReportChartControllerBase with Store, Charts {
       List<ChartData> temp = [];
       for (Map<String, dynamic> value in reportFromJSONController.dados) {
         String nome = '';
-        double vlrTotalDaColuna = 0.0;
+        dynamic vlrTotalDaColuna = 0;
 
-        for (String key in value.keys) if ((value[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && key != 'isFiltered') nome += '${value[key]}';
+        for (String key in value.keys) 
+          if ((value[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && key != 'isFiltered') 
+            nome += '${value[key]}';
 
-        for (Map<String, dynamic> col in reportFromJSONController.colunas) if (col['key'] == keySelected) vlrTotalDaColuna = col['vlrTotalDaColuna'];
+        for (Map<String, dynamic> col in reportFromJSONController.colunas) {
+          if (col['key'] == keySelected){
+            vlrTotalDaColuna = col['vlrTotalDaColuna'];
+          } 
+        }
 
         temp.add(
           ChartData(

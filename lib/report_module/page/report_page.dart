@@ -640,16 +640,20 @@ class _ReportPageState extends State<ReportPage> with Rows {
           onTap: (){
             showMenu(
               context: context,
+              constraints: const BoxConstraints(
+                maxHeight: 350,
+                maxWidth: 200,
+              ),
               position: const RelativeRect.fromLTRB(0, 80, 0, 0), 
               items: controller.colunas.map((e) {
                 return PopupMenuItem(
                   child: Observer(
                     builder: (_) => CheckboxListTile(
-                      value: e['selecionado'], 
+                      value: e['colunasFiltradas'], 
                       onChanged: (value) {
-                        e['selecionado'] = !e['selecionado'];
+                        e['colunasFiltradas'] = !e['colunasFiltradas'];
                       },
-                      title: Text(e['nomeFormatado']),
+                      title: Text(Features.formatarTextoPrimeirasLetrasMaiusculas(e['nomeFormatado'])),
                     ),
                   ),
                 );           
@@ -657,18 +661,10 @@ class _ReportPageState extends State<ReportPage> with Rows {
             );
           },
         ),
-        // PopupMenuButton(
-        //   padding: EdgeInsets.zero,
-        //   icon: const Icon(Icons.more_horiz, size: 18,),
-
-        //   itemBuilder: (context) {
-        //     return 
-        //   },
-        // ),
         if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
           ...controller.colunas.map(
             (element) {
-              if(element['selecionado'] == true)
+              if(element['colunasFiltradas'] == true)
                 return InkWell(
                   onTap: () => controller.setOrderBy(key: element['key'], order: element['order']),
                   child: rowTextFormatted(
@@ -700,7 +696,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
 
   Widget colunasElevated() {
     Map<String,dynamic> element = controller.getMapColuna(key: controller.keyFreeze);
-    if(element['selecionado'] == true)
+    if(element['colunasFiltradas'] == true)
       return Row(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -874,7 +870,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           if (controller.colunas.isNotEmpty && controller.colunasRodapePerson.isEmpty)
             ...controller.colunas.map(
               (element) {
-                if(element['selecionado'] == true)
+                if(element['colunasFiltradas'] == true)
                   return rowTextFormatted(
                     context: context,
                     width: controller.getWidthCol(
@@ -898,7 +894,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
           else
             ...controller.colunasRodapePerson.map((element) {
               for (var value in controller.dadosFiltered()) {
-                if (element['key'].toString().toUpperCase().contains('__ISRODAPE') && element['selecionado'] == true) {
+                if (element['key'].toString().toUpperCase().contains('__ISRODAPE') && element['colunasFiltradas'] == true) {
                   return rowTextComLable(
                     width: controller.widthTable / controller.colunasRodapePerson.where((element) => element['key'].toString().toUpperCase().contains('__ISRODAPE')).length,
                     height: 40,
@@ -918,7 +914,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
 
   Widget rodapeElevated() {
     var element = controller.getMapColuna(key: controller.keyFreeze);
-    if(element['selecionado'] == true)
+    if(element['colunasFiltradas'] == true)
       return rowTextFormatted(
         context: context,
         width: controller.getWidthCol(
