@@ -23,7 +23,6 @@ class Widgets {
   navigator({
     required dynamic pagina,
     required BuildContext context,
-    bool isToShowFiltroNoMeio = false,
     required LayoutControllerPackage layout,
   }) async {
     if (layout.mobile || layout.tablet) {
@@ -421,6 +420,8 @@ class Widgets {
                         value: controller.isRCAativo,
                         onChanged: (s) {
                           controller.isRCAativo = !controller.isRCAativo;
+                          filtrosDados.itensSelecionados!.clear();
+                          controller.listaFiltrosCarregados.removeWhere((element) => element.tipoFiltro == filtrosDados.tipoFiltro && element.tipoWidget == filtrosDados.tipoWidget,);
                           controller.validarCondicaoDebuscaRCA();
                         },
                       ),
@@ -437,7 +438,8 @@ class Widgets {
                 child: Text(
                   filtrosDados.subtitulo,
                   style: const TextStyle(
-                    fontSize: 11.0,
+                    fontSize: 10.0,
+                    fontWeight: FontWeight.bold
                   ),
                 ),
               ),

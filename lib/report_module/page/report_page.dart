@@ -124,6 +124,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             builder: (_) => ListTile(
               isThreeLine: true,
               dense: true,
+              contentPadding: EdgeInsets.zero,
               title: SelectableText(
                 controller.configPagina['name'] ?? "",
                 style: const TextStyle(
@@ -136,7 +137,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 child: SelectableText(
                   "Relatório com linhas interativas. Clique duas vezes na linha para mais detalhes.Prox rel. ${controller.configPagina['page']?['name']}",
                   style: const TextStyle(
-                    color: Colors.green,
+                    color: Colors.lime,
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.w500,
                     fontSize: 10
@@ -145,9 +146,13 @@ class _ReportPageState extends State<ReportPage> with Rows {
               ),
             ),
           ),
+          leadingWidth: 20,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            color: const Color.fromRGBO(255, 255, 255, 1),
+            tooltip: 'Voltar',
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+            ),color: Colors.white,
             onPressed: () {
               Navigator.of(context).pop(true);
             },
@@ -652,6 +657,12 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       value: e['colunasFiltradas'], 
                       onChanged: (value) {
                         e['colunasFiltradas'] = !e['colunasFiltradas'];
+                        
+                        if(!e['colunasFiltradas']){
+                          controller.widthTable = controller.widthTable - e['widthCol'];
+                        }else{
+                          controller.widthTable = controller.widthTable + e['widthCol'];
+                        }
                       },
                       title: Text(Features.formatarTextoPrimeirasLetrasMaiusculas(e['nomeFormatado'])),
                     ),

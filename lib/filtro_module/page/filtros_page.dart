@@ -142,6 +142,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
           body: Center(
             child: Observer(builder: (context) {
               return ListView.builder(
+                scrollDirection: Axis.vertical,
                 itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
                 itemBuilder: (context, index) {
                   if (controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == controllerFiltro.indexPagina) {
@@ -169,7 +170,6 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                             filtroPaginaAtual: controllerFiltro.listaFiltrosParaConstruirTela[index],
                             indexDofiltro: index,
                           ),
-                          isToShowFiltroNoMeio: true,
                           layout: layout,
                         );
                       },

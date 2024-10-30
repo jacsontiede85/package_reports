@@ -495,15 +495,15 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     required key,
   }) {
     var coluna = getMapColuna(key: key);
-    return coluna['widthCol'] ?? 0;
+    return coluna['widthCol'] ?? 0.0;
   }
 
   //obter largura total da table
-  getWidthTable() {
+  getWidthTable({String? key}) {
     double w = 0.0;
     bool isMobile = sizeWidth < 600;
-    for (var coluna in colunas) {
-      double widthCelula = 0.0;
+    for (Map<String, dynamic> coluna in colunas) {
+      double widthCelula = 0.0;     
       if (coluna['type'] == String) if (coluna['widthCol'] < 15)
         widthCelula = isMobile ? 100 : 110.0;
       else
@@ -514,7 +514,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
         widthCelula = coluna['widthCol'] * 10.0;
 
       coluna['widthCol'] = widthCelula;
-      w += widthCelula;
+        w += widthCelula; 
     }
     widthTable = (w + 1) * 1.1; // +1 é referente a largura de cada linha de celula (1 pixel)
   }
