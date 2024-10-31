@@ -77,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       // function: 'vendas/venda-por-cliente/index.php',
                       // function: 'comercial/evolucao-venda-anual-por-rca/index.php',
                       // function: 'compras/ruptura-estoque-fornecedor/index.php',
-                      function: 'financeiro/inadimplencia-por-cliente/index.php',
+                      function: 'financeiro/analise_de_pedidos//index.php',
                       //function: 'compras/assistente-compras/assistente_compras_report.php',
                     ),
                   ),

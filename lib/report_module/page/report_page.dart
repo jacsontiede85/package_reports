@@ -532,12 +532,12 @@ class _ReportPageState extends State<ReportPage> with Rows {
                             controller: controller.horizontalScroll,
                             scrollDirection: Axis.horizontal,
                             child: Container(
-                              width: _width > controller.widthTable ? _width + 15: controller.widthTable + 25,
+                              width: _width > controller.widthTable ? _width : controller.widthTable + 10,
                               alignment: _width > controller.widthTable ? Alignment.center : Alignment.topLeft,
                               child: Stack(
                                 children: [
                                   Container(
-                                    width: controller.widthTable + 15,
+                                    width: controller.widthTable,
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: controller.loading ? Colors.transparent : Colors.purple.withOpacity(0.3),
@@ -634,73 +634,81 @@ class _ReportPageState extends State<ReportPage> with Rows {
   }
 
   Widget colunasWidget() {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
+    return Stack(
       children: [
-        InkWell(
-          child: const Icon(
-            Icons.more_vert,
-            size: 15,
-          ),
-          onTap: (){
-            showMenu(
-              context: context,
-              constraints: const BoxConstraints(
-                maxHeight: 350,
-                maxWidth: 200,
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
+              ...controller.colunas.map(
+                (element) {
+                  if(element['colunasFiltradas'] == true)
+                    return InkWell(
+                      onTap: () => controller.setOrderBy(key: element['key'], order: element['order']),
+                      child: rowTextFormatted(
+                        context: context,
+                        width: controller.getWidthCol(
+                          key: element['key'],
+                        ),
+                        height: controller.getHeightColunasCabecalho,
+                        controller: controller,
+                        key: element['key'],
+                        type: element['type'],
+                        value: Features.formatarTextoPrimeirasLetrasMaiusculas(
+                          element['nomeFormatado'].trim(),
+                        ),
+                        isTitle: true,
+                        isSelected: element['isSelected'],
+                        order: element['order'],
+                        setStateRows: setStatee,
+                        isFiltered: element['isFiltered'],
+                      ),
+                    );
+                  else
+                    return const SizedBox();
+                },
               ),
-              position: const RelativeRect.fromLTRB(0, 80, 0, 0), 
-              items: controller.colunas.map((e) {
-                return PopupMenuItem(
-                  child: Observer(
-                    builder: (_) => CheckboxListTile(
-                      value: e['colunasFiltradas'], 
-                      onChanged: (value) {
-                        e['colunasFiltradas'] = !e['colunasFiltradas'];
-                        
-                        if(!e['colunasFiltradas']){
-                          controller.widthTable = controller.widthTable - e['widthCol'];
-                        }else{
-                          controller.widthTable = controller.widthTable + e['widthCol'];
-                        }
-                      },
-                      title: Text(Features.formatarTextoPrimeirasLetrasMaiusculas(e['nomeFormatado'])),
-                    ),
-                  ),
-                );           
-              },).toList(),
-            );
-          },
+          ],
         ),
-        if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
-          ...controller.colunas.map(
-            (element) {
-              if(element['colunasFiltradas'] == true)
-                return InkWell(
-                  onTap: () => controller.setOrderBy(key: element['key'], order: element['order']),
-                  child: rowTextFormatted(
-                    context: context,
-                    width: controller.getWidthCol(
-                      key: element['key'],
+      
+        Tooltip(
+          message: 'Clique para exibir/ocultar colunas',
+          child: InkWell(
+            child: const Icon(
+              Icons.more_horiz,
+              size: 20,
+            ),
+            onTap: (){
+              showMenu(
+                context: context,
+                constraints: const BoxConstraints(
+                  maxHeight: 350,
+                  maxWidth: 200,
+                ),
+                position: const RelativeRect.fromLTRB(0, 80, 0, 0), 
+                items: controller.colunas.map((e) {
+                  return PopupMenuItem(
+                    child: Observer(
+                      builder: (_) => CheckboxListTile(
+                        value: e['colunasFiltradas'], 
+                        onChanged: (value) {
+                          e['colunasFiltradas'] = !e['colunasFiltradas'];
+                          
+                          if(!e['colunasFiltradas']){
+                            controller.widthTable = controller.widthTable - e['widthCol'];
+                          }else{
+                            controller.widthTable = controller.widthTable + e['widthCol'];
+                          }
+                        },
+                        title: Text(Features.formatarTextoPrimeirasLetrasMaiusculas(e['nomeFormatado'])),
+                      ),
                     ),
-                    height: controller.getHeightColunasCabecalho,
-                    controller: controller,
-                    key: element['key'],
-                    type: element['type'],
-                    value: Features.formatarTextoPrimeirasLetrasMaiusculas(
-                      element['nomeFormatado'].trim(),
-                    ),
-                    isTitle: true,
-                    isSelected: element['isSelected'],
-                    order: element['order'],
-                    setStateRows: setStatee,
-                    isFiltered: element['isFiltered'],
-                  ),
-                );
-              else
-                return const SizedBox();
+                  );           
+                },).toList(),
+              );
             },
           ),
+        ),
       ],
     );
   }
@@ -739,141 +747,104 @@ class _ReportPageState extends State<ReportPage> with Rows {
   }
 
   Widget rowsBuilder() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 15),
-      child: ListView.builder(
-        itemCount: controller.dadosFiltered().length,
-        physics: const BouncingScrollPhysics(),
-        controller: ScrollController(),
-        itemBuilder: (BuildContext context, int index) {
-          Map<String,dynamic> val = controller.dadosFiltered()[index];
-          controller.row = [];
-          val.forEach((key, value) {
-            Type type = value.runtimeType;
-            if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
-              controller.row.add(
-                rowTextFormatted(
-                  context: context,
-                  width: controller.getWidthCol(
-                    key: key,
-                  ),
-                  height: 35,
-                  controller: controller,
+    return ListView.builder(
+      itemCount: controller.dadosFiltered().length,
+      physics: const BouncingScrollPhysics(),
+      controller: ScrollController(),
+      itemBuilder: (BuildContext context, int index) {
+        Map<String,dynamic> val = controller.dadosFiltered()[index];
+        controller.row = [];
+        val.forEach((key, value) {
+          Type type = value.runtimeType;
+          if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
+            controller.row.add(
+              rowTextFormatted(
+                context: context,
+                width: controller.getWidthCol(
                   key: key,
-                  type: type,
-                  value: value,
-                  cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
-                  setStateRows: setStatee,
                 ),
-              );
-          });
-          return Stack(
-            children: [
-              InkWell(
-                onDoubleTap: controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty
-                    ? () {
-                        if (controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                if(controller.bodySecundario.isEmpty){
-                                  return ReportPage(
-                                    database: widget.database,
-                                    buscarDadosNaEntrada: true,
-                                    function: controller.configPagina['urlapi'],
-                                  )..setMapSelectedRowPage(
-                                    mapSelectedRow: val,
-                                    bodyConfigBuscaRecursiva: controller.configPagina,
-                                    getbodyPrimario: controller.bodyPrimario,
-                                  );                                
-                                }else{
-                                  return ReportPage(
-                                    database: widget.database,
-                                    buscarDadosNaEntrada: true,
-                                    function: controller.configPagina['urlapi'],
-                                  )..setMapSelectedRowPage(
-                                    mapSelectedRow: val,
-                                    bodyConfigBuscaRecursiva: controller.configPagina,
-                                    getbodyPrimario: controller.bodySecundario,
-                                  );
-                                }
-      
-                              },
-                            ),
-                          );
-                        }
-                      }
-                    : null,
-                child: Row(
-                  children: controller.row,
-                ),
+                height: 35,
+                controller: controller,
+                key: key,
+                type: type,
+                value: value,
+                cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
+                setStateRows: setStatee,
               ),
-              Observer(
-                builder: (_) => Visibility(
-                  visible: controller.positionScroll > 200 && controller.visibleColElevated,
-                  child: Positioned(
-                    top: 0,
-                    left: controller.positionScroll,
-                    child: rowTextFormatted(
-                      context: context,
-                      width: controller.getWidthCol(
-                        key: controller.keyFreeze,
-                      ),
-                      height: 35,
-                      controller: controller,
+            );
+        });
+        return Stack(
+          children: [
+            InkWell(
+              onDoubleTap: controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty
+                  ? () {
+                      if (controller.configPagina['page'] != null && controller.configPagina['page'].isNotEmpty) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              if(controller.bodySecundario.isEmpty){
+                                return ReportPage(
+                                  database: widget.database,
+                                  buscarDadosNaEntrada: true,
+                                  function: controller.configPagina['urlapi'],
+                                )..setMapSelectedRowPage(
+                                  mapSelectedRow: val,
+                                  bodyConfigBuscaRecursiva: controller.configPagina,
+                                  getbodyPrimario: controller.bodyPrimario,
+                                );                                
+                              }else{
+                                return ReportPage(
+                                  database: widget.database,
+                                  buscarDadosNaEntrada: true,
+                                  function: controller.configPagina['urlapi'],
+                                )..setMapSelectedRowPage(
+                                  mapSelectedRow: val,
+                                  bodyConfigBuscaRecursiva: controller.configPagina,
+                                  getbodyPrimario: controller.bodySecundario,
+                                );
+                              }
+    
+                            },
+                          ),
+                        );
+                      }
+                    }
+                  : null,
+              child: Row(
+                children: controller.row,
+              ),
+            ),
+            Observer(
+              builder: (_) => Visibility(
+                visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                child: Positioned(
+                  top: 0,
+                  left: controller.positionScroll,
+                  child: rowTextFormatted(
+                    context: context,
+                    width: controller.getWidthCol(
                       key: controller.keyFreeze,
-                      type: String,
-                      value: val[controller.keyFreeze],
-                      cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
-                      setStateRows: setStatee,
                     ),
+                    height: 35,
+                    controller: controller,
+                    key: controller.keyFreeze,
+                    type: String,
+                    value: val[controller.keyFreeze],
+                    cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
+                    setStateRows: setStatee,
                   ),
                 ),
               ),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      },
     );
-  }
-
-  Widget rowsElevated() {
-    return controller.dadosFiltered().isEmpty
-        ? const SizedBox()
-        : Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              if (controller.keyFreeze.isNotEmpty)
-                ...controller.dadosFiltered().map((map) {
-                  int index = controller.dadosFiltered().indexOf(map);
-                  controller.row = [];
-                  controller.row.add(
-                    rowTextFormatted(
-                      context: context,                      
-                      width: controller.getWidthCol(
-                        key: controller.keyFreeze,
-                      ),
-                      height: 35,
-                      controller: controller,
-                      key: controller.keyFreeze,
-                      type: String,
-                      value: map[controller.keyFreeze],
-                      cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
-                      setStateRows: setStatee,
-                    ),
-                  );
-                  return Row(
-                    children: controller.row,
-                  );
-                }),
-            ],
-          );
   }
 
   Widget rodape() {
     return Container(
-      padding: const EdgeInsets.only(left: 15),
       decoration: const BoxDecoration(color: Colors.black38, border: Border(top: BorderSide(color: Colors.blue, width: 1))),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start, 
