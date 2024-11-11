@@ -314,6 +314,35 @@ abstract class FiltroControllerBase with Store {
     listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
   }
 
+  @action
+  void adicionarItemUnicoSelecionado({required FiltrosModel item}) {
+
+    for (FiltrosModel demaisItens in getListFiltrosComputed){
+      if(demaisItens != item){
+        demaisItens.selecionado = false;
+      }
+    }
+
+    if (item.selecionado) {
+      for (FiltrosPageAtual filtro in listaFiltrosParaConstruirTela) {
+        if (filtro.qualPaginaFiltroPertence == indexPagina) {
+          filtro.filtrosWidgetModel.itensSelecionados!.clear();
+        }
+      }
+      listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.add(item);
+    } else {
+
+      removerItensSelecionadosBody(
+        itens: item,
+        index: listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.toList().indexWhere((element) => element == item),
+      );
+      listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.remove(item);
+    }
+
+    listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
+  }
+
+
   void removerItensSelecionadosBody ({required FiltrosModel itens, required int index}){
     Map<String, dynamic> bodyAtual = {};
 

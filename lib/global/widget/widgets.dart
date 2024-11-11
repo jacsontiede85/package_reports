@@ -691,7 +691,7 @@ class Widgets {
     Widget retornoFuncao = const SizedBox();
 
     switch (filtrosDados.tipoWidget) {
-      case "checkbox" || "checkboxrca":
+      case "checkbox" || "checkboxrca" || "singleCheckbox":
         retornoFuncao = cardFiltroGeral(
           context: context,
           filtrosDados: filtrosDados,

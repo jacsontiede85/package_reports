@@ -283,7 +283,11 @@ class _ItensFiltroState extends State<ItensFiltro> {
                                   value: filtro.selecionado,
                                   onChanged: (valor) {
                                     filtro.selecionado = !filtro.selecionado;
-                                    widget.controller.adicionarItensSelecionado(itens: filtro);
+                                    if ( widget.filtroPaginaAtual.filtrosWidgetModel.tipoWidget == "singleCheckbox"){
+                                      widget.controller.adicionarItemUnicoSelecionado(item: filtro);
+                                    }else{
+                                      widget.controller.adicionarItensSelecionado(itens: filtro);
+                                    }
                                   },
                                   title: Text(
                                     "${filtro.codigo} - ${filtro.titulo}".toUpperCase(),

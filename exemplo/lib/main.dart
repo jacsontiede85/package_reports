@@ -6,7 +6,7 @@ import 'package:package_reports/report_module/page/report_page.dart';
 void main() {
   SettingsReports().setEnderecoApi(enderecoUrl: 'https://analytics.agnconsultoria.com.br/api/');
   // SettingsReports().setEnderecoApi(enderecoUrl: 'https://api.agnconsultoria.com.br/');
-  SettingsReports().setMatricula(matriculaUsu: 3374);
+  SettingsReports().setMatricula(matriculaUsu: 3312);
   SettingsReports().setBancoDeDados(banco: 'atacado');
   SettingsReports.getFiltrosSalvos();
   runApp(const MyApp());
@@ -77,8 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       // function: 'vendas/venda-por-cliente/index.php',
                       // function: 'comercial/evolucao-venda-anual-por-rca/index.php',
                       // function: 'compras/ruptura-estoque-fornecedor/index.php',
-                      function: 'financeiro/analise_de_pedidos//index.php',
-                      //function: 'compras/assistente-compras/assistente_compras_report.php',
+                      // function: 'financeiro/analise_de_pedidos//index.php',
+                      function: 'compras/assistente-compras/assistente_compras_report.php',
                     ),
                   ),
                 );
