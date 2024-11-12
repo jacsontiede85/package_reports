@@ -324,19 +324,18 @@ abstract class FiltroControllerBase with Store {
     }
 
     if (item.selecionado) {
-      for (FiltrosPageAtual filtro in listaFiltrosParaConstruirTela) {
-        if (filtro.qualPaginaFiltroPertence == indexPagina) {
-          filtro.filtrosWidgetModel.itensSelecionados!.clear();
-        }
+      if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.clear();
       }
       listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.add(item);
     } else {
-
-      removerItensSelecionadosBody(
-        itens: item,
-        index: listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.toList().indexWhere((element) => element == item),
-      );
-      listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.remove(item);
+      if (listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina) {
+        removerItensSelecionadosBody(
+          itens: item,
+          index: listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.toList().indexWhere((element) => element == item),
+        );
+        listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.remove(item);        
+      }
     }
 
     listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
@@ -345,7 +344,6 @@ abstract class FiltroControllerBase with Store {
 
   void removerItensSelecionadosBody ({required FiltrosModel itens, required int index}){
     Map<String, dynamic> bodyAtual = {};
-
     if(controllerReports.bodySecundario.isEmpty){
       bodyAtual = controllerReports.bodyPrimario;
     }else{
@@ -447,7 +445,7 @@ abstract class FiltroControllerBase with Store {
         }
       }
     },);
-
+    
     await controllerReports.getDados();
   }
 
