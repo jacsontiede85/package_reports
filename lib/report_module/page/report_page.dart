@@ -677,38 +677,60 @@ class _ReportPageState extends State<ReportPage> with Rows {
             child: const Icon(
               Icons.more_horiz,
               size: 20,
+              color: Colors.black,
             ),
             onTap: (){
               showMenu(
                 context: context,
                 constraints: const BoxConstraints(
-                  maxHeight: 350,
-                  maxWidth: 200,
+                  maxHeight: 500,
+                  minWidth: 1000,
                 ),
                 position: const RelativeRect.fromLTRB(0, 80, 0, 0), 
-                items: controller.colunas.map((e) {
-                  return PopupMenuItem(
-                    child: Observer(
-                      builder: (_) => CheckboxListTile(
-                        value: e['colunasFiltradas'], 
-                        onChanged: (value) {
-                          e['colunasFiltradas'] = !e['colunasFiltradas'];
-                          
-                          if(!e['colunasFiltradas']){
-                            controller.widthTable = controller.widthTable - e['widthCol'];
-                          }else{
-                            controller.widthTable = controller.widthTable + e['widthCol'];
-                          }
-                        },
-                        title: Text(Features.formatarTextoPrimeirasLetrasMaiusculas(e['nomeFormatado'])),
-                      ),
+                elevation: 10,
+                menuPadding: EdgeInsets.zero,
+                items: [
+                  PopupMenuItem(
+                    padding: EdgeInsets.zero,
+                    child: Wrap(
+                      children:  controller.colunas.map((e) {
+                        return Observer(
+                          builder: (_) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: 200,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 0.25
+                                )
+                              ),
+                              child: CheckboxListTile(
+                                value: e['colunasFiltradas'], 
+                                onChanged: (value) {
+                                  e['colunasFiltradas'] = !e['colunasFiltradas'];
+                                  
+                                  if(!e['colunasFiltradas']){
+                                    controller.widthTable = controller.widthTable - e['widthCol'];
+                                  }else{
+                                    controller.widthTable = controller.widthTable + e['widthCol'];
+                                  }
+                                },
+                                title: Center(
+                                  child: Text(Features.formatarTextoPrimeirasLetrasMaiusculas(e['nomeFormatado'])),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );           
+                      },).toList(),
                     ),
-                  );           
-                },).toList(),
+                  ),
+                ],
               );
             },
           ),
-        ),
+        ),      
       ],
     );
   }
