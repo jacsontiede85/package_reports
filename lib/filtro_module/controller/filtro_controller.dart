@@ -355,7 +355,9 @@ abstract class FiltroControllerBase with Store {
     try{
       if(listaFiltrosParaConstruirTela[indexFiltro].qualPaginaFiltroPertence == indexPagina){
         if(bodyAtual.containsKey(tipoFiltro)){
-          bodyAtual[tipoFiltro].removeAt(indexItenMarcado);      
+          
+          if(bodyAtual[tipoFiltro].length > indexItenMarcado) bodyAtual[tipoFiltro].removeAt(indexItenMarcado);      
+          
           if(bodyAtual[tipoFiltro].length == 0){
             bodyAtual.removeWhere((key, value) => key == tipoFiltro);
             filtrosSalvosParaAdicionarNoBody.remove(tipoFiltro);
