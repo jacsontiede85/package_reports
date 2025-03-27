@@ -448,6 +448,7 @@ abstract class FiltroControllerBase with Store {
       }
     },);
     
+    sincronizarFiltrosSalvos();
     await controllerReports.getDados();
   }
 
@@ -679,47 +680,66 @@ abstract class FiltroControllerBase with Store {
     );
   }
 
-  void getItensSelecionadosSalvos(){
+  void getItensSelecionadosSalvos() {
     // * CRIAÇÃO DE UMA LISTA TEMPORARIA, PARA GUARDAR TODOS OS FILTROS SELECIONADOS
-    if(SettingsReports.listaFiltrosCarregadosSalvos.isEmpty) SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
-    
-    if(SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty){
+    if (SettingsReports.listaFiltrosCarregadosSalvos.isEmpty) {
+      SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
+    }
+  
+    if (SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty) {
       listaFiltrosCarregados = SettingsReports.listaFiltrosCarregadosSalvos;
-      for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
-        for(FiltrosPageAtual item in SettingsReports.listaFiltrosParaConstruirTelaTemp){
-          if(item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro && item.filtrosWidgetModel.tipoWidget == value.filtrosWidgetModel.tipoWidget){
+      for (FiltrosPageAtual value in listaFiltrosParaConstruirTela) {
+        for (FiltrosPageAtual item in SettingsReports.listaFiltrosParaConstruirTelaTemp) {
+          if (item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro &&
+              item.filtrosWidgetModel.tipoWidget == value.filtrosWidgetModel.tipoWidget) {
             value.filtrosWidgetModel.itensSelecionados = item.filtrosWidgetModel.itensSelecionados;
           }
         }
       }
-    }
-    else {
+    } else {
       SettingsReports.listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([...listaFiltrosParaConstruirTela]);
     }
-    
-    
+  
     listaFiltrosParaConstruirTela.clear();
     getDadosCriarFiltros();
-
-    // * LOOP PARA VEREFICAR QUAIS FILTROS ESTÃO JA SELECIONADOS
-    for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
-      for(FiltrosPageAtual item in listaFiltrosParaConstruirTela){
-        if(value.filtrosWidgetModel.tipoFiltro == item.filtrosWidgetModel.tipoFiltro && value.filtrosWidgetModel.tipoWidget == item.filtrosWidgetModel.tipoWidget) {
-          item.filtrosWidgetModel.itensSelecionados = value.filtrosWidgetModel.itensSelecionados;
-          if(item.filtrosWidgetModel.itensSelecionados!.isEmpty && value.filtrosWidgetModel.tipoFiltro.contains("cardPeriodoMensal")){
-            dataCampanhaInicial = ("${DateTime.now().month}/${DateFormat.y().format(DateTime.now())}").padLeft(7, "0");
-          }
+  
+    // Sincronizar os itens selecionados salvos com os filtros atuais
+    for (FiltrosPageAtual filtroSalvo in SettingsReports.listaFiltrosParaConstruirTelaTemp) {
+      for (FiltrosPageAtual filtroAtual in listaFiltrosParaConstruirTela) {
+        if (filtroSalvo.filtrosWidgetModel.tipoFiltro == filtroAtual.filtrosWidgetModel.tipoFiltro &&
+            filtroSalvo.filtrosWidgetModel.tipoWidget == filtroAtual.filtrosWidgetModel.tipoWidget) {
+          filtroAtual.filtrosWidgetModel.itensSelecionados = filtroSalvo.filtrosWidgetModel.itensSelecionados;
         }
       }
     }
-      
+  
+    // Atualizar a lista observável para refletir as mudanças
+    listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
+  
     // * LOOP PARA VERIFICAR QUAIS ITENS DOS FILTROS ESTÃO SELECIONADOS QUANDO MUDAR DE TAB
-    for(FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp){
-      for(FiltrosCarrregados item in listaFiltrosCarregados){
-        if(value.filtrosWidgetModel.tipoFiltro == item.tipoFiltro && value.filtrosWidgetModel.tipoWidget == item.tipoWidget){
-          item.indexFiltros = listaFiltrosParaConstruirTela.indexWhere((element) => element.filtrosWidgetModel.tipoWidget == value.filtrosWidgetModel.tipoWidget && element.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro); 
+    for (FiltrosPageAtual value in SettingsReports.listaFiltrosParaConstruirTelaTemp) {
+      for (FiltrosCarrregados item in listaFiltrosCarregados) {
+        if (value.filtrosWidgetModel.tipoFiltro == item.tipoFiltro &&
+            value.filtrosWidgetModel.tipoWidget == item.tipoWidget) {
+          item.indexFiltros = listaFiltrosParaConstruirTela.indexWhere(
+            (element) =>
+                element.filtrosWidgetModel.tipoWidget == value.filtrosWidgetModel.tipoWidget &&
+                element.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro,
+          );
         }
       }
     }
+  }
+
+  void sincronizarFiltrosSalvos() {
+    for (FiltrosPageAtual filtroAtual in listaFiltrosParaConstruirTela) {
+      for (FiltrosPageAtual filtroSalvo in SettingsReports.listaFiltrosParaConstruirTelaTemp) {
+        if (filtroAtual.filtrosWidgetModel.tipoFiltro == filtroSalvo.filtrosWidgetModel.tipoFiltro &&
+            filtroAtual.filtrosWidgetModel.tipoWidget == filtroSalvo.filtrosWidgetModel.tipoWidget) {
+          filtroAtual.filtrosWidgetModel.itensSelecionados = filtroSalvo.filtrosWidgetModel.itensSelecionados;
+        }
+      }
+    }
+    listaFiltrosParaConstruirTela = ObservableList.of([...listaFiltrosParaConstruirTela]);
   }
 }

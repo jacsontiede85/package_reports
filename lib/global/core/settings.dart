@@ -118,13 +118,13 @@ mixin class SettingsReports{
   static void salvarFiltrosShared ({required ObservableList<FiltrosCarrregados> listaFiltrosCarregadoss}) async {
     List<String> valoresSalvosCarregados = [];
     List<String> valoresSalvosConstruirTela = [];
+    final prefs = await SharedPreferences.getInstance();
     if(!isfiltrosSalvosApp){
-      final prefs = await SharedPreferences.getInstance();
       prefs.remove('filtrosSalvos.$bancoDeDados.$matricula');
       prefs.remove('filtrosContruirTela.$bancoDeDados.$matricula');
       prefs.remove('isfiltrosSalvosApp.$bancoDeDados.$matricula');
-      isfiltrosSalvosApp = false;
     }else{
+      isfiltrosSalvosApp = true;
       if (listaFiltrosCarregadoss.isNotEmpty) {
         final prefs = await SharedPreferences.getInstance();
         
@@ -209,5 +209,11 @@ mixin class SettingsReports{
   
   }
 
+  static void carregarFiltrosSalvosAoIniciar() {
+    getFiltrosSalvos();
+    if (isfiltrosSalvosApp) {
+      listaFiltrosParaConstruirTelaTemp = ObservableList.of([...listaFiltrosParaConstruirTelaTemp]);
+    }
+  }
 
 }
