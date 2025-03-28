@@ -206,21 +206,25 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     limparCamposVareaveis();
 
     //print(bodyPrimario);
-
-    if (bodySecundario.isEmpty) {
-      dados = jsonDecode(
-        await API().getDataReportApiJWT(
-          url: nomeFunction,
-          dados: bodyPrimario,
-        ),
-      );
-    } else {
-      dados = jsonDecode(
-        await API().getDataReportApiJWT(
-          url: nomeFunction,
-          dados: bodySecundario,
-        ),
-      );
+    try{
+      if (bodySecundario.isEmpty) {
+        dados = jsonDecode(
+          await API().getDataReportApiJWT(
+            url: nomeFunction,
+            dados: bodyPrimario,
+          ),
+        );
+      } else {
+        dados = jsonDecode(
+          await API().getDataReportApiJWT(
+            url: nomeFunction,
+            dados: bodySecundario,
+          ),
+        );
+      }      
+    }
+    catch(e){
+      dados = [];
     }
 
     List keys = [];

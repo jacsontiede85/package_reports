@@ -407,6 +407,7 @@ abstract class FiltroControllerBase with Store {
           {"dataMensal": dataCampanhaInicial}
         );
       }
+      print(controllerReports.bodyPrimario);
     } else {
       controllerReports.bodySecundario.update(
         'dtinicio',

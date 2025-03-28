@@ -63,7 +63,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
   );
 
   late FiltroController controllerFiltro = FiltroController(
-    mapaFiltrosWidget: controller.configPagina['filtros'],
+    mapaFiltrosWidget: controller.configPagina['filtros'] == null || controller.configPagina['filtros'].isEmpty ? {} : controller.configPagina['filtros'],
     indexPagina: controller.configPagina['indexPage'],
     controllerReports: controller,
   );
@@ -82,6 +82,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
         () {
           bool buscarDados = controller.configPagina['buscarDadosEntrada'] ?? false;
           if(buscarDados){
+            controllerFiltro.criarNovoBody();
             controller.getDados();
           }else{
             if (!widget.buscarDadosNaEntrada && controller.configPagina.isNotEmpty && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty) {
@@ -366,9 +367,9 @@ class _ReportPageState extends State<ReportPage> with Rows {
               padding: const EdgeInsets.only(right: 5),
               child: Observer(
                 builder: (_) => Visibility(
-                  visible: (controller.configPagina.isNotEmpty && !controller.loading && controller.configPagina['filtros'] != null && controller.configPagina['filtros'].isNotEmpty),
+                  visible: (controller.configPagina.isNotEmpty && !controller.loading && (controller.configPagina['filtros'] != null || controller.configPagina['filtros'].isNotEmpty)),
                   replacement: Visibility(
-                    visible: controller.configPagina['indexPage'] == 0 && !controller.loadingConfigFiltros && controller.configPagina['filtros'] == null,
+                    visible: controller.configPagina['indexPage'] == 0 && !controller.loadingConfigFiltros && (controller.configPagina['filtros'] == null || controller.configPagina['filtros'].isEmpty),
                     child: TextButton(
                       style: const ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(Colors.green),
