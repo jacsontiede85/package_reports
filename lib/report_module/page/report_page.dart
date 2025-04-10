@@ -681,53 +681,41 @@ class _ReportPageState extends State<ReportPage> with Rows {
               color: Colors.black,
             ),
             onTap: (){
-              showMenu(
+              showDialog(
                 context: context,
-                constraints: const BoxConstraints(
-                  maxHeight: 500,
-                  minWidth: 1000,
-                ),
-                position: const RelativeRect.fromLTRB(0, 80, 0, 0), 
-                elevation: 10,
-                menuPadding: EdgeInsets.zero,
-                items: [
-                  PopupMenuItem(
-                    padding: EdgeInsets.zero,
-                    child: Wrap(
-                      children:  controller.colunas.map((e) {
-                        return Observer(
-                          builder: (_) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: 200,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 0.25
-                                )
-                              ),
-                              child: CheckboxListTile(
-                                value: e['colunasFiltradas'], 
-                                onChanged: (value) {
-                                  e['colunasFiltradas'] = !e['colunasFiltradas'];
-                                  
-                                  if(!e['colunasFiltradas']){
-                                    controller.widthTable = controller.widthTable - e['widthCol'];
-                                  }else{
-                                    controller.widthTable = controller.widthTable + e['widthCol'];
-                                  }
-                                },
-                                title: Center(
-                                  child: Text(Features.formatarTextoPrimeirasLetrasMaiusculas(e['nomeFormatado'])),
-                                ),
-                              ),
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Selecione as colunas para exibir/ocultar'),
+                    content: SingleChildScrollView(
+                      child: Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: controller.colunas.map((e) {
+                          return Observer(
+                            builder: (_) => FilterChip(
+                              label: Text(Features.formatarTextoPrimeirasLetrasMaiusculas(e['nomeFormatado'])),
+                              selected: e['colunasFiltradas'],
+                              onSelected: (bool selected) {
+                                e['colunasFiltradas'] = !e['colunasFiltradas'];
+                                if(!e['colunasFiltradas']){
+                                  controller.widthTable = controller.widthTable - e['widthCol'];
+                                }else{
+                                  controller.widthTable = controller.widthTable + e['widthCol'];
+                                }
+                              },
                             ),
-                          ),
-                        );           
-                      },).toList(),
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                ],
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Fechar'),
+                      ),
+                    ],
+                  );
+                },
               );
             },
           ),
@@ -944,31 +932,30 @@ class _ReportPageState extends State<ReportPage> with Rows {
   Widget exibirSelecaoDeColunasParaExporta({required void Function()? onPressedFiltrado, required void Function()? onPressedTudo, required String titulo}) {
     return AlertDialog(
       elevation: 0,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      title: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        alignment: WrapAlignment.spaceBetween,
         children: [
           Text(
             titulo,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Observer(
-              builder: (_) => TextButton(
-                onPressed: (){
-                  if(controller.colunas.every((element) => element['selecionado'] == true,)){
-                    for(Map<String,dynamic> valor in controller.colunas){
-                      valor['selecionado'] = false;
-                    }
+          Observer(
+            builder: (_) => FilterChip.elevated(
+              onSelected: (d){
+                if(controller.colunas.every((element) => element['selecionado'] == true,)){
+                  for(Map<String,dynamic> valor in controller.colunas){
+                    valor['selecionado'] = false;
                   }
-                  else{
-                    for(Map<String,dynamic> valor in controller.colunas){
-                      valor['selecionado'] = true;
-                    }
+                }
+                else{
+                  for(Map<String,dynamic> valor in controller.colunas){
+                    valor['selecionado'] = true;
                   }
-                }, 
-                child: Text(controller.colunas.every((element) => element['selecionado'] == true,) ? 'Desmarcar todas' : 'Marcar todos'),
-              ),
+                }
+              },
+              selected: controller.colunas.every((element) => element['selecionado'] == true,),
+              label: Text(controller.colunas.every((element) => element['selecionado'] == true,) ? 'Desmarcar todas' : 'Marcar todos'),
             ),
           ),
         ],
@@ -1036,15 +1023,21 @@ class _ReportPageState extends State<ReportPage> with Rows {
         ),
       ],
       content: SizedBox(
-        width: 300,
-        height: 500,
+        width: 500,
+        height: 300,
         child: ListView.builder(
           itemCount: controller.colunas.length,
           itemBuilder: (context, index) {
             return Observer(
               builder: (_) => Card(
                 child: CheckboxListTile(
+                  dense: true,
                   value: controller.colunas[index]['selecionado'],
+                  selected: !controller.colunas[index]['selecionado'],
+                  selectedTileColor: Colors.grey.withValues(alpha: 0.5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   onChanged: (value) {
                     setState(() {
                       controller.colunas[index]['selecionado'] = !controller.colunas[index]['selecionado'];
