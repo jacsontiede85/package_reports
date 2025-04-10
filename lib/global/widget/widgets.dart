@@ -61,7 +61,7 @@ class Widgets {
             ],
           );
           await showDialog<void>(
-            barrierColor: Colors.black54.withOpacity(0.4),
+            barrierColor: Colors.black54.withValues(alpha: 0.4),
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) => widgetContrucao,

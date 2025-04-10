@@ -95,8 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     builder: (context) => ReportPage(
                       database: SettingsReports.bancoDeDados,
                       buscarDadosNaEntrada: false,
-                      function: 'campanha/campanha-extra-muriel/index.php',
-                      // function: 'vendas/venda-por-rca/index.php',
+                      function: 'vendas/venda-por-rca/index.php',
                     ),
                   ),
                 );

@@ -94,17 +94,17 @@ class _ChartsReportState extends State<ChartsReport> {
               width: 8,
               position: ScrollbarPosition.bottom,
               underSpacing: const EdgeInsets.only(bottom: 15), //largura do srcroll
-              underColor: Colors.white.withOpacity(0.1),
+              underColor: Colors.white.withValues(alpha: 0.1),
               sliderSpacing: const EdgeInsets.only(
                 right: 0,
               ),
               sliderDecoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
               ),
               sliderActiveDecoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
               ),
               child: Observer(
                 builder: (_) => Container(

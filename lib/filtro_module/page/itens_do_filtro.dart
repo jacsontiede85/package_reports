@@ -169,7 +169,7 @@ class _ItensFiltroState extends State<ItensFiltro> {
                           ),
                           textStyle: const WidgetStatePropertyAll(TextStyle(color: Colors.white)),
                           hintStyle: WidgetStatePropertyAll(
-                            TextStyle(color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.normal),
+                            TextStyle(color: Colors.white.withValues(alpha: 0.7), fontWeight: FontWeight.normal),
                           ),
                           onSubmitted: (value) {
                             widget.controller.pesquisaItensDoFiltro = value;

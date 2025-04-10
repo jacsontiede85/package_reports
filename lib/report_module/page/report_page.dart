@@ -500,40 +500,40 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       child: AdaptiveScrollbar(
                         controller: ScrollController(),
                         width: 8,
-                        underColor: Colors.white.withOpacity(0.1),
+                        underColor: Colors.white.withValues(alpha: 0.1),
                         sliderSpacing: const EdgeInsets.only(
                           right: 0,
                         ),
                         sliderDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),
-                          color: Colors.black.withOpacity(0.6),
+                          color: Colors.black.withValues(alpha: 0.6),
                         ),
                         sliderActiveDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                         ),
                         child: AdaptiveScrollbar(
                           controller: controller.horizontalScroll,
                           width: _width < 600 ? 10 : 8,
                           position: ScrollbarPosition.bottom,
                           underSpacing: const EdgeInsets.only(bottom: 15),
-                          underColor: Colors.white.withOpacity(0.1),
+                          underColor: Colors.white.withValues(alpha: 0.1),
                           sliderSpacing: const EdgeInsets.only(
                             right: 0,
                           ),
                           sliderDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.0),
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                           ),
                           sliderActiveDecoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.0),
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                           ),
                           child: SingleChildScrollView(
                             controller: controller.horizontalScroll,
                             scrollDirection: Axis.horizontal,
                             child: Container(
-                              width: _width > controller.widthTable ? _width : controller.widthTable + 10,
+                              width: _width > controller.widthTable ? _width : controller.widthTable,
                               alignment: _width > controller.widthTable ? Alignment.center : Alignment.topLeft,
                               child: Stack(
                                 children: [
@@ -541,7 +541,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                     width: controller.widthTable,
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: controller.loading ? Colors.transparent : Colors.purple.withOpacity(0.3),
+                                        color: controller.loading ? Colors.transparent : Colors.purple.withValues(alpha: 0.3),
                                         width: 0.1,
                                       ),
                                     ),
@@ -638,7 +638,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     return Stack(
       children: [
         Row(
-          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (controller.colunas.where((element) => element['type'] != String).toList().isNotEmpty)
               ...controller.colunas.map(
@@ -835,6 +835,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                     }
                   : null,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: controller.row,
               ),
             ),
@@ -870,7 +871,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     return Container(
       decoration: const BoxDecoration(color: Colors.black38, border: Border(top: BorderSide(color: Colors.blue, width: 1))),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start, 
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (controller.colunas.isNotEmpty && controller.colunasRodapePerson.isEmpty)
             ...controller.colunas.map(
@@ -1101,7 +1102,7 @@ mixin Rows {
         child: Stack(
           children: [
             Container(
-              width: width * 1.10,
+              width: width,
               height: height,
               decoration: BoxDecoration(
                 color: cor ??
@@ -1111,7 +1112,7 @@ mixin Rows {
                             ? Colors.black54
                             : Colors.grey[300]),
                 border: Border.all(
-                  color: Colors.purple.withOpacity(0.3),
+                  color: Colors.purple.withValues(alpha: 0.35),
                   width: 0.25,
                 ),
               ),
@@ -1258,7 +1259,7 @@ mixin Rows {
           decoration: BoxDecoration(
             color: Colors.grey,
             border: Border.all(
-              color: Colors.purple.withOpacity(0.5),
+              color: Colors.purple.withValues(alpha: 0.5),
               width: 0.25,
             ),
           ),
