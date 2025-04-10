@@ -702,6 +702,11 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                 }else{
                                   controller.widthTable = controller.widthTable + e['widthCol'];
                                 }
+                                // Ajustar largura da tabela para evitar overflow
+                                if (controller.colunas.every((col) => !col['colunasFiltradas'])) {
+                                  controller.widthTable = 0.0;
+                                }
+                                setState(() {});
                               },
                             ),
                           );
