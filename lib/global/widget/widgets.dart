@@ -120,54 +120,65 @@ class Widgets {
                     ),
                   ),
                 ),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 10,
-                  children: [
-                    TextButton.icon(
-                      icon: const Icon(Icons.calendar_today),
-                      label: Observer(
-                        builder: (_) => Text(
-                          controller.dtinicio,
-                          style: const TextStyle(fontSize: 17),
+
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Row(
+                    children: [
+                      Observer(
+                        builder: (_) => Expanded(
+                          child: SegmentedButton(
+                            selectedIcon: const Icon(Icons.calendar_today),
+                            style: ButtonStyle(
+                              shape: WidgetStatePropertyAll<OutlinedBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                            ),
+                            segments: [
+                              ButtonSegment(
+                                value: 0,
+                                label: Text(controller.dtinicio),
+                              ),
+                              ButtonSegment(
+                                value: 1,
+                                label: Text(controller.dtfim),
+                              ),
+                            ],
+                            multiSelectionEnabled: true,
+                            selected: const {0,1},
+                            onSelectionChanged: (Set<int> newSelection) async {
+                              if (newSelection.first == 1) {
+                                controller.dtinicio = await SettingsReports().selectDate(
+                                  context: context,
+                                );
+                              } else {
+                                controller.dtfim = await SettingsReports().selectDate(
+                                  context: context,
+                                );
+                              }
+                            },
+                          ),
                         ),
                       ),
-                      onPressed: () async {
-                        controller.dtinicio = await SettingsReports().selectDate(
-                          context: context,
-                        );
-                      },
-                    ),
-                    TextButton.icon(
-                      icon: const Icon(Icons.calendar_today),
-                      label: Observer(
-                        builder: (_) => Text(
-                          controller.dtfim,
-                          style: const TextStyle(fontSize: 17),
-                        ),
-                      ),
-                      onPressed: () async {
-                        controller.dtfim = await SettingsReports().selectDate(
-                          context: context,
-                        );
-                      },
-                    ),
-                    PopupMenuButton(
-                      itemBuilder: (context) {
-                        return controller.listaDePeriodos.map(
-                          (valor) {
-                            return PopupMenuItem(
-                              value: valor.replaceAll(' ', ''),
-                              child: Text(valor),
-                            );
-                          },
-                        ).toList();
-                      },
-                      onSelected: (value) {
-                        controller.selecaoDeDataPorPeriodo(periodo: value.toString(), isDataPadrao: true);
-                      },
-                    )
-                  ],
+                      PopupMenuButton(
+                        itemBuilder: (context) {
+                          return controller.listaDePeriodos.map(
+                            (valor) {
+                              return PopupMenuItem(
+                                value: valor.replaceAll(' ', ''),
+                                child: Text(valor),
+                              );
+                            },
+                          ).toList();
+                        },
+                        onSelected: (value) {
+                          controller.selecaoDeDataPorPeriodo(periodo: value.toString(), isDataPadrao: true);
+                        },
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),
