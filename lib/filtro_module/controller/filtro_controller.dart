@@ -449,6 +449,7 @@ abstract class FiltroControllerBase with Store {
     },);
     
     sincronizarFiltrosSalvos();
+    //printO(controllerReports.bodyPrimario);
     await controllerReports.getDados();
   }
 
@@ -685,7 +686,10 @@ abstract class FiltroControllerBase with Store {
     if(SettingsReports.listaFiltrosCarregadosSalvos.isEmpty) SettingsReports.listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([...listaFiltrosCarregados]);
     
     if(SettingsReports.listaFiltrosParaConstruirTelaTemp.isNotEmpty){
-      listaFiltrosCarregados = SettingsReports.listaFiltrosCarregadosSalvos;
+      for(var value in SettingsReports.listaFiltrosCarregadosSalvos){
+        listaFiltrosCarregados.add(value);
+      }
+      //listaFiltrosCarregados = SettingsReports.listaFiltrosCarregadosSalvos;
       for(FiltrosPageAtual value in listaFiltrosParaConstruirTela){
         for(FiltrosPageAtual item in SettingsReports.listaFiltrosParaConstruirTelaTemp){
           if(item.filtrosWidgetModel.tipoFiltro == value.filtrosWidgetModel.tipoFiltro && item.filtrosWidgetModel.tipoWidget == value.filtrosWidgetModel.tipoWidget){
