@@ -8,6 +8,7 @@ import 'package:mobx/mobx.dart';
 import 'package:package_reports/global/core/api_consumer.dart';
 import 'package:package_reports/global/core/settings.dart';
 import 'package:package_reports/report_module/model/filtrar_colunas_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 part 'report_from_json_controller.g.dart';
 
 class ReportFromJSONController = ReportFromJSONControllerBase with _$ReportFromJSONController;
@@ -46,6 +47,12 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
   @observable
   List dados = [];
+  
+  @observable
+  String dadosGraficos = '';
+
+  @observable
+  bool isLoadingGraficos = false;
 
   TextEditingController searchString = TextEditingController();
 
@@ -189,6 +196,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     }
 
     dados = [];
+    dadosGraficos = '';
     listaFiltrarLinhas = [];
     filtrosSelected = [];
     colunasFiltradas = {};
@@ -207,23 +215,22 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
     try{
       if (bodySecundario.isEmpty) {
-        dados = jsonDecode(
-          await API().getDataReportApiJWT(
-            url: nomeFunction,
-            dados: bodyPrimario,
-          ),
+        dadosGraficos = await API().getDataReportApiJWT(
+          url: nomeFunction,
+          dados: bodyPrimario,
         );
+        dados = jsonDecode(dadosGraficos);
       } else {
-        dados = jsonDecode(
-          await API().getDataReportApiJWT(
-            url: nomeFunction,
-            dados: bodySecundario,
-          ),
+        dadosGraficos = await API().getDataReportApiJWT(
+          url: nomeFunction,
+          dados: bodySecundario,
         );
-      }      
+        dados = jsonDecode(dadosGraficos);
+      }   
     }
     catch(e){
       dados = [];
+      dadosGraficos = '';
     }
 
     List keys = [];
@@ -729,6 +736,40 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       return element['vlrTotalDaColuna'];
     else 
       return '';
+  }
+
+  @observable
+  String errorGraficosMessage = '';
+
+  @action
+  Future emiterGraficos () async {
+    try{
+      isLoadingGraficos = true;
+      final linkParcial = await API().gerarGraficoNoServidor(
+        jsonData: dadosGraficos,
+        nomeRelatorio: configPagina['name'] ?? 'Relatório',
+      ).timeout(const Duration(seconds: 40), onTimeout: () {
+        throw Exception('Tempo limite excedido ao gerar gráficos.');
+      });
+
+      if(linkParcial!.isEmpty)
+        throw Exception('Link vazio, verifique os dados enviados.');
+
+      final linkCompleto = "http://127.0.0.1:8000$linkParcial";
+
+      await launchUrl(
+        Uri.parse(linkCompleto),
+      );
+      return;
+    }catch(e){
+      errorGraficosMessage = 'Erro ao gerar gráficos. Tente novamente.';
+      Future.delayed(const Duration(seconds: 3), () {
+        errorGraficosMessage = '';
+      });
+    }finally{
+      isLoadingGraficos = false;
+    }
+
   }
 
 }

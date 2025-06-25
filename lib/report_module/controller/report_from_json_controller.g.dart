@@ -25,6 +25,38 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$dadosGraficosAtom = Atom(
+      name: 'ReportFromJSONControllerBase.dadosGraficos', context: context);
+
+  @override
+  String get dadosGraficos {
+    _$dadosGraficosAtom.reportRead();
+    return super.dadosGraficos;
+  }
+
+  @override
+  set dadosGraficos(String value) {
+    _$dadosGraficosAtom.reportWrite(value, super.dadosGraficos, () {
+      super.dadosGraficos = value;
+    });
+  }
+
+  late final _$isLoadingGraficosAtom = Atom(
+      name: 'ReportFromJSONControllerBase.isLoadingGraficos', context: context);
+
+  @override
+  bool get isLoadingGraficos {
+    _$isLoadingGraficosAtom.reportRead();
+    return super.isLoadingGraficos;
+  }
+
+  @override
+  set isLoadingGraficos(bool value) {
+    _$isLoadingGraficosAtom.reportWrite(value, super.isLoadingGraficos, () {
+      super.isLoadingGraficos = value;
+    });
+  }
+
   late final _$colunasFiltradasAtom = Atom(
       name: 'ReportFromJSONControllerBase.colunasFiltradas', context: context);
 
@@ -208,6 +240,33 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$errorGraficosMessageAtom = Atom(
+      name: 'ReportFromJSONControllerBase.errorGraficosMessage',
+      context: context);
+
+  @override
+  String get errorGraficosMessage {
+    _$errorGraficosMessageAtom.reportRead();
+    return super.errorGraficosMessage;
+  }
+
+  @override
+  set errorGraficosMessage(String value) {
+    _$errorGraficosMessageAtom.reportWrite(value, super.errorGraficosMessage,
+        () {
+      super.errorGraficosMessage = value;
+    });
+  }
+
+  late final _$emiterGraficosAsyncAction = AsyncAction(
+      'ReportFromJSONControllerBase.emiterGraficos',
+      context: context);
+
+  @override
+  Future<dynamic> emiterGraficos() {
+    return _$emiterGraficosAsyncAction.run(() => super.emiterGraficos());
+  }
+
   late final _$ReportFromJSONControllerBaseActionController =
       ActionController(name: 'ReportFromJSONControllerBase', context: context);
 
@@ -237,6 +296,8 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
   String toString() {
     return '''
 dados: ${dados},
+dadosGraficos: ${dadosGraficos},
+isLoadingGraficos: ${isLoadingGraficos},
 colunasFiltradas: ${colunasFiltradas},
 configPagina: ${configPagina},
 colunas: ${colunas},
@@ -247,7 +308,8 @@ colunaSelecionadaParaExportacao: ${colunaSelecionadaParaExportacao},
 colunasRodapePerson: ${colunasRodapePerson},
 widthTable: ${widthTable},
 positionScroll: ${positionScroll},
-visibleColElevated: ${visibleColElevated}
+visibleColElevated: ${visibleColElevated},
+errorGraficosMessage: ${errorGraficosMessage}
     ''';
   }
 }

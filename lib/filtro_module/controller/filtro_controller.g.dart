@@ -371,6 +371,17 @@ mixin _$FiltroController on FiltroControllerBase, Store {
   }
 
   @override
+  void adicionarItemUnicoSelecionado({required FiltrosModel item}) {
+    final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
+        name: 'FiltroControllerBase.adicionarItemUnicoSelecionado');
+    try {
+      return super.adicionarItemUnicoSelecionado(item: item);
+    } finally {
+      _$FiltroControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void limparSelecao() {
     final _$actionInfo = _$FiltroControllerBaseActionController.startAction(
         name: 'FiltroControllerBase.limparSelecao');

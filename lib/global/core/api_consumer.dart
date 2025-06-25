@@ -64,4 +64,31 @@ class API with SettingsReports {
       };
     }
   }
+
+  Future<String?> gerarGraficoNoServidor({required String jsonData, required String nomeRelatorio}) async {
+    try{
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/graficos'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "matricula": SettingsReports.matricula.toString(),
+          "banco": SettingsReports.bancoDeDados,
+          "titulo": nomeRelatorio,
+          "dados": jsonData
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final link = response.body;
+        final urlParcial = jsonDecode(link)['url'];
+        return urlParcial;
+      } else {
+        throw Exception('Falha ao gerar gráfico');
+      }
+    } catch (e) {
+      return null;      
+    }
+
+  }
+
 }

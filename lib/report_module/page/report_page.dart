@@ -12,7 +12,6 @@ import 'package:package_reports/report_module/controller/report_from_json_contro
 import 'package:package_reports/report_module/controller/report_to_pdf.dart';
 import 'package:package_reports/report_module/controller/report_to_xlsx_controller.dart';
 import 'package:package_reports/global/core/features.dart';
-import 'package:package_reports/report_module/page/report_chart_page.dart';
 import 'package:package_reports/global/widget/widgets.dart';
 
 class ReportPage extends StatefulWidget {
@@ -261,15 +260,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           ],
                         ),
                         onTap: () async {
-                          await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ChartsReport(
-                                reportFromJSONController: controller,
-                                title: controller.configPagina['name'],
-                              ),
-                            ),
-                          );
+                          await controller.emiterGraficos().onError( (error, stackTrace) {});
                         },
                       ),
 
@@ -625,6 +616,10 @@ class _ReportPageState extends State<ReportPage> with Rows {
                       ),
                     ),
                   ),
+                  if (controller.isLoadingGraficos || controller.errorGraficosMessage.isNotEmpty)
+                    Positioned.fill(
+                      child: buildGraficosDialogs(),
+                    ),
                 ],
               ),
             ),
@@ -1062,6 +1057,46 @@ class _ReportPageState extends State<ReportPage> with Rows {
               ),
             );
           },
+        ),
+      ),
+    );
+  }
+
+  Widget buildGraficosDialogs() {
+    return Container(
+      color: Colors.black.withValues(alpha:0.6),
+      child: AlertDialog(
+        alignment: Alignment.center,
+        title: Visibility(
+          visible: controller.isLoadingGraficos && controller.errorGraficosMessage.isEmpty,
+          replacement: Column(
+            children: [
+              const Icon(Icons.error, color: Colors.red, size: 40),
+              const SizedBox(height: 16),
+              Text(
+                controller.errorGraficosMessage,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,                
+              ),
+            ],
+          ),
+          child: const Column(
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text(
+                'Gerando gráficos...',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,                
+              ),
+            ],
+          ),
         ),
       ),
     );
