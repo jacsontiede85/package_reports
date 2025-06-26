@@ -772,6 +772,24 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
   }
 
+  @observable
+  ObservableList<ObservableMap> opcaoGraficos = ObservableList.of([]);
+
+  void metricasAgrupamentoGraficos (){
+    List<String> dimensao = [];
+    List<String> metricas = [];
+
+    for (Map agrupamentos in colunas)
+      if(agrupamentos['key'].toLowerCase().contains('__no_metrics') || agrupamentos['key'].toLowerCase().contains('cod'))
+        dimensao.add(agrupamentos['key']);
+      else
+        metricas.add(agrupamentos['key']);
+
+    for ( String dim in dimensao)
+      for (String met in metricas)
+        opcaoGraficos.add(ObservableMap.of({"nome" : "$dim x $met", "selecionado" : false}));
+  }
+
 }
 
 
