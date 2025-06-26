@@ -458,7 +458,7 @@ class WidgetsReports {
     );
   }
 
-  Widget buildGraficosDialogs() {
+  Widget messagemGraficosDialogs() {
     return Container(
       color: Colors.black.withValues(alpha:0.6),
       child: AlertDialog(
@@ -498,5 +498,63 @@ class WidgetsReports {
     );
   }
 
+  Future<void> pageSelecaoGraficos () async {
+    await showDialog(
+      context: context, 
+      builder: (context){
+        return AlertDialog(
+          title: const Text("Selecione quais agrupamentos você deseja"),
+          content: Observer(
+            builder: (_) => Visibility(
+              visible: controller.opcaoGraficos.isNotEmpty,
+              replacement: const Center(
+                child: Text('Não há nenhum tipo de graficos para esse relatorio'),
+              ),
+              child: SizedBox(
+                height: 500,
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: controller.opcaoGraficos.length,
+                  itemBuilder: (context, index){
+                    return Observer(
+                      builder: (_) => CheckboxListTile(
+                        value: controller.opcaoGraficos[index]['selecionado'],
+                        title: Text(controller.getNomeColunaFormatado(text: controller.opcaoGraficos[index]['nome'])),
+                        onChanged: (v){
+                          controller.opcaoGraficos[index]['selecionado'] = v;
+                        }
+                      ),
+                    );
+                  }
+                ),
+              ),
+            ),
+          ),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            ElevatedButton(
+              onPressed: (){
+                Navigator.pop(context);
+              }, 
+              child: const Text("Cancelar")
+            ),
+            ElevatedButton(
+              style: const ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(Colors.green)
+              ),
+              onPressed: (){
+                controller.emiterGraficos();
+              }, 
+              child: const Text(
+                "Gerar gráficos",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      }
+    );
+  }
 
 }

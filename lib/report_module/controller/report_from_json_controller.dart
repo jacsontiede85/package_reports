@@ -378,6 +378,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       getWidthTable();
       setOrderBy(key: colunas[0]['key'], order: 'asc');
       getColunaElevada();
+      metricasAgrupamentoGraficos();
     } catch (e) {
       if (kDebugMode) {
         print("Erro $e");

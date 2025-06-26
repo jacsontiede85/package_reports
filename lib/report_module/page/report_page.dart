@@ -268,7 +268,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           ],
                         ),
                         onTap: () async {
-                          controller.metricasAgrupamentoGraficos();
+                          wdreports.pageSelecaoGraficos();
                           // await controller.emiterGraficos().onError( (error, stackTrace) {});
                         },
                       ),
@@ -627,7 +627,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                   ),
                   if (controller.isLoadingGraficos || controller.errorGraficosMessage.isNotEmpty)
                     Positioned.fill(
-                      child: wdreports.buildGraficosDialogs(),
+                      child: wdreports.messagemGraficosDialogs(),
                     ),
                 ],
               ),
