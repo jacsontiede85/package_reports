@@ -67,15 +67,29 @@ class API with SettingsReports {
 
   Future<String?> gerarGraficoNoServidor({required String jsonData, required String nomeRelatorio}) async {
     try{
+      String chave = "grafic_criation@2025";
+      String dados = jsonEncode({
+        "matricula": SettingsReports.matricula.toString(),
+        "banco": SettingsReports.bancoDeDados,
+        "titulo": nomeRelatorio,
+        "dados": jsonData
+      });
+
+      final List<int> bodyBytes = utf8.encode(dados);
+
+      final hmacSha256 = Hmac(sha256, utf8.encode(chave));
+      final assinatura = hmacSha256.convert(bodyBytes);
+
+      // ✅ Aqui está a assinatura em Base64
+      final assinaturaBase64 = base64.encode(assinatura.bytes);
+
       final response = await http.post(
         Uri.parse('http://127.0.0.1:8000/graficos'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          "matricula": SettingsReports.matricula.toString(),
-          "banco": SettingsReports.bancoDeDados,
-          "titulo": nomeRelatorio,
-          "dados": jsonData
-        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-HMAC-SIGNATURE': assinaturaBase64
+        },
+        body: dados,
       );
 
       if (response.statusCode == 200) {
