@@ -104,6 +104,17 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
   bool loadingConfigFiltros = false;
 
+  List<String> tiposGraficos = [
+    'Barra',
+    'Linha',
+    'Area',
+    'Funil',
+    'Scatter'
+  ];
+
+  @observable
+  String? tipoGraficoSelecionado;
+
   // ? VAREAVEIS E FUNÇÕES PARA PERMITIR A NAVEGAÇÃO ENTRE VARIOS RELATORIOS
   Map<String, dynamic> mapSelectedRow = {};
   Map<String, dynamic> configPageBuscaRecursiva = {};

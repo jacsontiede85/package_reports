@@ -240,6 +240,24 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
     });
   }
 
+  late final _$tipoGraficoSelecionadoAtom = Atom(
+      name: 'ReportFromJSONControllerBase.tipoGraficoSelecionado',
+      context: context);
+
+  @override
+  String? get tipoGraficoSelecionado {
+    _$tipoGraficoSelecionadoAtom.reportRead();
+    return super.tipoGraficoSelecionado;
+  }
+
+  @override
+  set tipoGraficoSelecionado(String? value) {
+    _$tipoGraficoSelecionadoAtom
+        .reportWrite(value, super.tipoGraficoSelecionado, () {
+      super.tipoGraficoSelecionado = value;
+    });
+  }
+
   late final _$errorGraficosMessageAtom = Atom(
       name: 'ReportFromJSONControllerBase.errorGraficosMessage',
       context: context);
@@ -343,6 +361,7 @@ colunasRodapePerson: ${colunasRodapePerson},
 widthTable: ${widthTable},
 positionScroll: ${positionScroll},
 visibleColElevated: ${visibleColElevated},
+tipoGraficoSelecionado: ${tipoGraficoSelecionado},
 errorGraficosMessage: ${errorGraficosMessage},
 opcaoGraficos: ${opcaoGraficos},
 agrupamentosDesejados: ${agrupamentosDesejados}

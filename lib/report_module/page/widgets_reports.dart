@@ -498,64 +498,130 @@ class WidgetsReports {
     );
   }
 
-  Future<void> pageSelecaoGraficos () async {
+  Future<void> pageSelecaoGraficos() async {
     await showDialog(
-      context: context, 
-      builder: (context){
-        return AlertDialog(
-          title: const Text("Selecione quais agrupamentos você deseja"),
-          content: Observer(
-            builder: (_) => Visibility(
-              visible: controller.opcaoGraficos.isNotEmpty,
-              replacement: const Center(
-                child: Text('Não há nenhum tipo de graficos para esse relatorio'),
-              ),
-              child: SizedBox(
-                height: 500,
-                width: double.maxFinite,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.opcaoGraficos.length,
-                  itemBuilder: (context, index){
-                    return Observer(
-                      builder: (_) => CheckboxListTile(
-                        value: controller.opcaoGraficos[index]['selecionado'],
-                        title: Text(controller.getNomeColunaFormatado(text: controller.opcaoGraficos[index]['nome'])),
-                        onChanged: (v){
-                          controller.opcaoGraficos[index]['selecionado'] = v;
-                        }
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setStateDialog) {
+            return AlertDialog(
+              title: const Text("Selecione quais agrupamentos você deseja"),
+              content: Observer(
+                builder: (_) => Visibility(
+                  visible: controller.opcaoGraficos.isNotEmpty,
+                  replacement: const Center(
+                    child: Text('Não há nenhum tipo de gráficos para esse relatório'),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Observer(
+                        builder: (_) => DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(
+                            filled: true,
+                            label: Text("Selecione um tipo de gráfico"),
+                          ),
+                          value: controller.tipoGraficoSelecionado,
+                          items: controller.tiposGraficos.map((String tipo) {
+                            return DropdownMenuItem<String>(
+                              value: tipo,
+                              child: Text(tipo),
+                            );
+                          }).toList(),
+                          onChanged: (String ?value) {
+                            controller.tipoGraficoSelecionado = value;
+                          },
+                        ),
                       ),
-                    );
-                  }
+                      // Botões de ação rápida
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                            icon: const Icon(Icons.clear_all),
+                            label: const Text("Limpar seleção"),
+                            onPressed: () {
+                              setStateDialog(() {
+                                for (var item in controller.opcaoGraficos) {
+                                  item['selecionado'] = false;
+                                }
+                              });
+                            },
+                          ),
+                          TextButton.icon(
+                            icon: const Icon(Icons.swap_vert),
+                            label: const Text("Inverter seleção"),
+                            onPressed: () {
+                              setStateDialog(() {
+                                for (var item in controller.opcaoGraficos) {
+                                  item['selecionado'] = !(item['selecionado'] ?? false);
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      // Lista de opções de agrupamento
+                      SizedBox(
+                        height: 350,
+                        width: double.maxFinite,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: controller.opcaoGraficos.length,
+                          itemBuilder: (context, index) {
+                            return Observer(
+                              builder: (_) => CheckboxListTile(
+                                value: controller.opcaoGraficos[index]['selecionado'],
+                                title: Text(
+                                  controller.getNomeColunaFormatado(
+                                    text: controller.opcaoGraficos[index]['nome'],
+                                  ),
+                                ),
+                                onChanged: (v) {
+                                  setStateDialog(() {
+                                    controller.opcaoGraficos[index]['selecionado'] = v;
+                                  });
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          actionsAlignment: MainAxisAlignment.center,
-          actions: [
-            ElevatedButton(
-              onPressed: (){
-                Navigator.pop(context);
-              }, 
-              child: const Text("Cancelar")
-            ),
-            ElevatedButton(
-              style: const ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(Colors.green)
-              ),
-              onPressed: () async {
-                controller.adicionarGraficosParaCriacao();
-                Navigator.pop(context);
-                await controller.emiterGraficos();
-              }, 
-              child: const Text(
-                "Gerar gráficos",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
+              actionsAlignment: MainAxisAlignment.center,
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Cancelar"),
+                ),
+                ElevatedButton(
+                  style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.green),
+                  ),
+                  onPressed: controller.tipoGraficoSelecionado == null
+                      ? null
+                      : () async {
+                          controller.tipoGraficoSelecionado = controller.tipoGraficoSelecionado;
+                          controller.adicionarGraficosParaCriacao();
+                          Navigator.pop(context);
+                          await controller.emiterGraficos();
+                        },
+                  child: const Text(
+                    "Gerar gráficos",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          },
         );
-      }
+      },
     );
   }
 

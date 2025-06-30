@@ -4,8 +4,6 @@ import 'package:http/http.dart';
 import 'package:package_reports/global/core/settings.dart';
 import 'dart:convert';
 
-import 'package:package_reports/report_module/controller/report_from_json_controller.dart';
-
 class API with SettingsReports {
   Future<String> getDataReportApiJWT({String? banco, Map? dados, String? url}) async {
     //header
@@ -77,7 +75,7 @@ class API with SettingsReports {
         "dados": jsonData,
         "agrupamentos" : agrupamentos
       });
-      printO(dados);
+
       final List<int> bodyBytes = utf8.encode(dados);
 
       final hmacSha256 = Hmac(sha256, utf8.encode(chave));
@@ -85,7 +83,7 @@ class API with SettingsReports {
 
       // ✅ Aqui está a assinatura em Base64
       final assinaturaBase64 = base64.encode(assinatura.bytes);
-      printW(assinaturaBase64);
+
       final response = await http.post(
         Uri.parse('http://127.0.0.1:8000/graficos'),
         headers: {
