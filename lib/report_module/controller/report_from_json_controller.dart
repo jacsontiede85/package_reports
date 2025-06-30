@@ -749,6 +749,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       final linkParcial = await API().gerarGraficoNoServidor(
         jsonData: dadosGraficos,
         nomeRelatorio: configPagina['name'] ?? 'Relatório',
+        agrupamentos: agrupamentosDesejados
       ).timeout(const Duration(seconds: 40), onTimeout: () {
         throw Exception('Tempo limite excedido ao gerar gráficos.');
       });
@@ -774,7 +775,10 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
 
   @observable
-  ObservableList<ObservableMap> opcaoGraficos = ObservableList.of([]);
+  ObservableList<ObservableMap<String,dynamic>> opcaoGraficos = ObservableList.of([]);
+
+  @observable
+  List<Map<String,dynamic>> agrupamentosDesejados = [];
 
   void metricasAgrupamentoGraficos (){
     List<String> dimensao = [];
@@ -788,7 +792,24 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
     for ( String dim in dimensao)
       for (String met in metricas)
-        opcaoGraficos.add(ObservableMap.of({"nome" : "$dim x $met", "selecionado" : false}));
+        opcaoGraficos.add(ObservableMap.of(
+          {
+            "nome" : "$dim x $met",
+            "selecionado" : false, 
+            "agrupamento" : dim,
+            "metrica" : met
+          }
+        ));
+  }
+
+  void adicionarGraficosParaCriacao (){
+    agrupamentosDesejados.clear();
+    for(Map<String,dynamic> agrupamentos in opcaoGraficos){
+      if(agrupamentos['selecionado'] == true){
+        printW(agrupamentos);
+        agrupamentosDesejados.add(agrupamentos);
+      }
+    }
   }
 
 }

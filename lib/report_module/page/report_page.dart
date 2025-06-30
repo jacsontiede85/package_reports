@@ -269,7 +269,6 @@ class _ReportPageState extends State<ReportPage> with Rows {
                         ),
                         onTap: () async {
                           wdreports.pageSelecaoGraficos();
-                          // await controller.emiterGraficos().onError( (error, stackTrace) {});
                         },
                       ),
 

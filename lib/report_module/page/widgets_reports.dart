@@ -543,8 +543,10 @@ class WidgetsReports {
               style: const ButtonStyle(
                 backgroundColor: WidgetStatePropertyAll(Colors.green)
               ),
-              onPressed: (){
-                controller.emiterGraficos();
+              onPressed: () async {
+                controller.adicionarGraficosParaCriacao();
+                Navigator.pop(context);
+                await controller.emiterGraficos();
               }, 
               child: const Text(
                 "Gerar gráficos",

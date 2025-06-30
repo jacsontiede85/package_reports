@@ -262,15 +262,33 @@ mixin _$ReportFromJSONController on ReportFromJSONControllerBase, Store {
       name: 'ReportFromJSONControllerBase.opcaoGraficos', context: context);
 
   @override
-  ObservableList<ObservableMap<dynamic, dynamic>> get opcaoGraficos {
+  ObservableList<ObservableMap<String, dynamic>> get opcaoGraficos {
     _$opcaoGraficosAtom.reportRead();
     return super.opcaoGraficos;
   }
 
   @override
-  set opcaoGraficos(ObservableList<ObservableMap<dynamic, dynamic>> value) {
+  set opcaoGraficos(ObservableList<ObservableMap<String, dynamic>> value) {
     _$opcaoGraficosAtom.reportWrite(value, super.opcaoGraficos, () {
       super.opcaoGraficos = value;
+    });
+  }
+
+  late final _$agrupamentosDesejadosAtom = Atom(
+      name: 'ReportFromJSONControllerBase.agrupamentosDesejados',
+      context: context);
+
+  @override
+  List<Map<String, dynamic>> get agrupamentosDesejados {
+    _$agrupamentosDesejadosAtom.reportRead();
+    return super.agrupamentosDesejados;
+  }
+
+  @override
+  set agrupamentosDesejados(List<Map<String, dynamic>> value) {
+    _$agrupamentosDesejadosAtom.reportWrite(value, super.agrupamentosDesejados,
+        () {
+      super.agrupamentosDesejados = value;
     });
   }
 
@@ -326,7 +344,8 @@ widthTable: ${widthTable},
 positionScroll: ${positionScroll},
 visibleColElevated: ${visibleColElevated},
 errorGraficosMessage: ${errorGraficosMessage},
-opcaoGraficos: ${opcaoGraficos}
+opcaoGraficos: ${opcaoGraficos},
+agrupamentosDesejados: ${agrupamentosDesejados}
     ''';
   }
 }
