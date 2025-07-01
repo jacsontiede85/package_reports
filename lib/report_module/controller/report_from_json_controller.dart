@@ -792,12 +792,21 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   @observable
   List<Map<String,dynamic>> agrupamentosDesejados = [];
 
+  bool validarTipoDeColuna ({required String chave}){
+    String key = chave.toString().toLowerCase();
+    return key.contains('__no_metrics') ||
+        key.contains('cod') ||
+        key.contains('nome') ||
+        key.contains('__string') ||
+        key.contains('__nochartarea');
+  }
+
   void metricasAgrupamentoGraficos (){
     List<String> dimensao = [];
     List<String> metricas = [];
 
     for (Map agrupamentos in colunas)
-      if(agrupamentos['key'].toLowerCase().contains('__no_metrics') || agrupamentos['key'].toLowerCase().contains('cod'))
+      if(validarTipoDeColuna(chave: agrupamentos['key']))
         dimensao.add(agrupamentos['key']);
       else
         metricas.add(agrupamentos['key']);
