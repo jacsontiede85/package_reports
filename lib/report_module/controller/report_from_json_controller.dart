@@ -415,7 +415,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
 
   //retornar nome de coluna formatado
-  getNomeColunaFormatado({required String text}) {
+  String getNomeColunaFormatado({required String text}) {
     text = text.toString().toUpperCase().replaceAll('__PERC', '_%');
     text = text.toString().toUpperCase().replaceAll('__INT_STRING', '');
     text = text.toString().toUpperCase().replaceAll('__STRING', '');

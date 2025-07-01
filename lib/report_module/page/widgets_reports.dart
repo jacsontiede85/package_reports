@@ -519,132 +519,198 @@ class WidgetsReports {
                 ],
               ),
               content: Observer(
-                builder: (_) => Visibility(
-                  visible: controller.opcaoGraficos.isNotEmpty,
-                  replacement: const SizedBox(
-                    height: 80,
-                    child: Center(
-                      child: Text(
-                        'Não há nenhum tipo de gráfico para esse relatório',
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Observer(
-                        builder: (_) => DropdownButtonFormField<String>(
-                          decoration: InputDecoration(
-                            filled: true,
-                            label: const Text("Tipo de gráfico"),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          ),
-                          value: controller.tipoGraficoSelecionado,
-                          items: controller.tiposGraficos.map((String tipo) {
-                            return DropdownMenuItem<String>(
-                              value: tipo,
-                              child: Text(tipo),
-                            );
-                          }).toList(),
-                          onChanged: (String ?value) {
-                            controller.tipoGraficoSelecionado = value;
-                          },
+                builder: (_) {
+                  final agrupamentos = controller.opcaoGraficos.map((e) => e['agrupamento']?.toString() ?? 'Outros').toSet().toList();
+                  agrupamentos.sort();
+                  return Visibility(
+                    visible: controller.opcaoGraficos.isNotEmpty,
+                    replacement: const SizedBox(
+                      height: 80,
+                      child: Center(
+                        child: Text(
+                          'Não há nenhum tipo de gráfico para esse relatório',
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    ),
+                    child: DefaultTabController(
+                      length: agrupamentos.length,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          TextButton.icon(
-                            icon: const Icon(Icons.clear_all, size: 20),
-                            label: const Text("Limpar seleção"),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.red[400],
-                              textStyle: const TextStyle(fontWeight: FontWeight.w500),
+                          // Dropdown de seleção de tipo de gráfico
+                          Observer(
+                            builder: (_) => DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                filled: true,
+                                label: const Text("Tipo de gráfico"),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              ),
+                              value: controller.tipoGraficoSelecionado,
+                              items: controller.tiposGraficos.map((String tipo) {
+                                return DropdownMenuItem<String>(
+                                  value: tipo,
+                                  child: Text(tipo),
+                                );
+                              }).toList(),
+                              onChanged: (String? value) {
+                                controller.tipoGraficoSelecionado = value;
+                              },
                             ),
-                            onPressed: () {
-                              setStateDialog(() {
-                                for (var item in controller.opcaoGraficos) {
-                                  item['selecionado'] = false;
-                                }
-                              });
-                            },
                           ),
-                          TextButton.icon(
-                            icon: const Icon(Icons.swap_vert, size: 20),
-                            label: const Text("Inverter seleção"),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.blue[700],
-                              textStyle: const TextStyle(fontWeight: FontWeight.w500),
+                          const SizedBox(height: 12),
+                          TabBar(
+                            isScrollable: true,
+                            labelColor: Colors.blueAccent,
+                            unselectedLabelColor: Colors.grey[600],
+                            indicatorColor: Colors.blueAccent,
+                            tabAlignment: TabAlignment.center,
+                            tabs: [
+                              for (final agrup in agrupamentos)
+                                Tab(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(controller.getNomeColunaFormatado(text: agrup)),
+                                      const SizedBox(width: 6),
+                                      Observer(
+                                        builder: (_) {
+                                          final count = controller.opcaoGraficos.where((e) => (e['agrupamento']?.toString() ?? 'Outros') == agrup && e['selecionado'] == true).length;
+                                          return AnimatedSwitcher(
+                                            duration: const Duration(milliseconds: 200),
+                                            child: count > 0 ? 
+                                            Container(
+                                              key: ValueKey(count),
+                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: Colors.blueAccent.withValues(alpha: 0.15),
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: Text(
+                                                '$count',
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.blueAccent,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            )
+                                            : const SizedBox.shrink(),
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            height: 300,
+                            width: 400,
+                            child: Column(
+                              children: [
+                                Builder(
+                                  builder: (context) {
+                                    final currentTab = DefaultTabController.of(context).index;
+                                    final agrup = agrupamentos[currentTab];
+                                    return Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        TextButton.icon(
+                                          icon: const Icon(Icons.clear_all, size: 20),
+                                          label: const Text("Limpar seleção"),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Colors.red[400],
+                                            textStyle: const TextStyle(fontWeight: FontWeight.w500),
+                                          ),
+                                          onPressed: () {
+                                            setStateDialog(() {
+                                              for (var item in controller.opcaoGraficos.where((e) => (e['agrupamento']?.toString() ?? 'Outros') == agrup)) {
+                                                item['selecionado'] = false;
+                                              }
+                                            });
+                                          },
+                                        ),
+                                        TextButton.icon(
+                                          icon: const Icon(Icons.swap_vert, size: 20),
+                                          label: const Text("Inverter seleção"),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Colors.blue[700],
+                                            textStyle: const TextStyle(fontWeight: FontWeight.w500),
+                                          ),
+                                          onPressed: () {
+                                            setStateDialog(() {
+                                              for (var item in controller.opcaoGraficos.where((e) => (e['agrupamento']?.toString() ?? 'Outros') == agrup)) {
+                                                item['selecionado'] = !(item['selecionado'] ?? false);
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                                Expanded(
+                                  child: TabBarView(
+                                    children: [
+                                      for (final agrup in agrupamentos)
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                            border: Border.all(color: Colors.grey[300]!),
+                                          ),
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: controller.opcaoGraficos.where((e) => (e['agrupamento']?.toString() ?? 'Outros') == agrup).length,
+                                            itemBuilder: (context, index) {
+                                              final items = controller.opcaoGraficos.where((e) => (e['agrupamento']?.toString() ?? 'Outros') == agrup).toList();
+                                              return CheckboxListTile(
+                                                dense: true,
+                                                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                                                value: items[index]['selecionado'],
+                                                title: Text(
+                                                  controller.getNomeColunaFormatado(
+                                                    text: items[index]['nome'],
+                                                  ),
+                                                  style: const TextStyle(fontSize: 15),
+                                                ),
+                                                controlAffinity: ListTileControlAffinity.leading,
+                                                activeColor: Colors.blueAccent,
+                                                onChanged: (v) {
+                                                  setStateDialog(() {
+                                                    items[index]['selecionado'] = v;
+                                                  });
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                            onPressed: () {
-                              setStateDialog(() {
-                                for (var item in controller.opcaoGraficos) {
-                                  item['selecionado'] = !(item['selecionado'] ?? false);
-                                }
-                              });
+                          ),
+                          Builder(
+                            builder: (context) {
+                              final total = controller.opcaoGraficos.where((e) => e['selecionado'] == true).length;
+                              return Text(
+                                "Total de itens selecionados: $total",
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              );
                             },
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        height: 300,  
-                        width: 400,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          // boxShadow: const [
-                          //   BoxShadow(
-                          //     blurRadius: 8,
-                          //     // offset: Offset(0, 2),
-                          //   ),
-                          // ],
-                          border: Border.all(color: Colors.grey[300]!),
-                        ),
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: controller.opcaoGraficos.length,
-                          itemBuilder: (context, index) {
-                            return Observer(
-                              builder: (_) => CheckboxListTile(
-                                dense: true,
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                                value: controller.opcaoGraficos[index]['selecionado'],
-                                title: Text(
-                                  controller.getNomeColunaFormatado(
-                                    text: controller.opcaoGraficos[index]['nome'],
-                                  ),
-                                  style: const TextStyle(fontSize: 15),
-                                ),
-                                controlAffinity: ListTileControlAffinity.leading,
-                                activeColor: Colors.blueAccent,
-                                onChanged: (v) {
-                                  setStateDialog(() {
-                                    controller.opcaoGraficos[index]['selecionado'] = v;
-                                  });
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      Observer(
-                        builder: (_) => Text(
-                          "Qtd. de itens selecionados: ${controller.opcaoGraficos.where((e) => e['selecionado'] == true).toList().length.toString()}",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold
-                          ),
-                        )
-                      ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
               actionsAlignment: MainAxisAlignment.center,
               actions: [
