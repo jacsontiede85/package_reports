@@ -506,10 +506,6 @@ class WidgetsReports {
           builder: (context, setStateDialog) {
             return AlertDialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-              insetPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-              titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-              contentPadding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
-              actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               title: const Row(
                 children: [
                   Icon(Icons.bar_chart, color: Colors.blueAccent, size: 26),
@@ -543,7 +539,6 @@ class WidgetsReports {
                         builder: (_) => DropdownButtonFormField<String>(
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Colors.grey[100],
                             label: const Text("Tipo de gráfico"),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -603,15 +598,13 @@ class WidgetsReports {
                         height: 300,  
                         width: 400,
                         decoration: BoxDecoration(
-                          color: Colors.grey[50],
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withValues(alpha: 0.08),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
+                          borderRadius: BorderRadius.circular(5),
+                          // boxShadow: const [
+                          //   BoxShadow(
+                          //     blurRadius: 8,
+                          //     // offset: Offset(0, 2),
+                          //   ),
+                          // ],
                           border: Border.all(color: Colors.grey[300]!),
                         ),
                         child: ListView.builder(
@@ -641,11 +634,19 @@ class WidgetsReports {
                           },
                         ),
                       ),
+                      Observer(
+                        builder: (_) => Text(
+                          "Qtd. de itens selecionados: ${controller.opcaoGraficos.where((e) => e['selecionado'] == true).toList().length.toString()}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold
+                          ),
+                        )
+                      ),
                     ],
                   ),
                 ),
               ),
-              actionsAlignment: MainAxisAlignment.end,
+              actionsAlignment: MainAxisAlignment.center,
               actions: [
                 TextButton(
                   onPressed: () {
