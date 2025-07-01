@@ -505,21 +505,50 @@ class WidgetsReports {
         return StatefulBuilder(
           builder: (context, setStateDialog) {
             return AlertDialog(
-              title: const Text("Selecione quais agrupamentos você deseja"),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              insetPadding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+              titlePadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+              contentPadding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+              actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              title: const Row(
+                children: [
+                  Icon(Icons.bar_chart, color: Colors.blueAccent, size: 26),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      "Selecione agrupamentos",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
               content: Observer(
                 builder: (_) => Visibility(
                   visible: controller.opcaoGraficos.isNotEmpty,
-                  replacement: const Center(
-                    child: Text('Não há nenhum tipo de gráficos para esse relatório'),
+                  replacement: const SizedBox(
+                    height: 80,
+                    child: Center(
+                      child: Text(
+                        'Não há nenhum tipo de gráfico para esse relatório',
+                        style: TextStyle(fontSize: 16),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Observer(
                         builder: (_) => DropdownButtonFormField<String>(
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             filled: true,
-                            label: Text("Selecione um tipo de gráfico"),
+                            fillColor: Colors.grey[100],
+                            label: const Text("Tipo de gráfico"),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           ),
                           value: controller.tipoGraficoSelecionado,
                           items: controller.tiposGraficos.map((String tipo) {
@@ -533,13 +562,17 @@ class WidgetsReports {
                           },
                         ),
                       ),
-                      // Botões de ação rápida
+                      const SizedBox(height: 12),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton.icon(
-                            icon: const Icon(Icons.clear_all),
+                            icon: const Icon(Icons.clear_all, size: 20),
                             label: const Text("Limpar seleção"),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.red[400],
+                              textStyle: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
                             onPressed: () {
                               setStateDialog(() {
                                 for (var item in controller.opcaoGraficos) {
@@ -549,8 +582,12 @@ class WidgetsReports {
                             },
                           ),
                           TextButton.icon(
-                            icon: const Icon(Icons.swap_vert),
+                            icon: const Icon(Icons.swap_vert, size: 20),
                             label: const Text("Inverter seleção"),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.blue[700],
+                              textStyle: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
                             onPressed: () {
                               setStateDialog(() {
                                 for (var item in controller.opcaoGraficos) {
@@ -561,23 +598,39 @@ class WidgetsReports {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
-                      // Lista de opções de agrupamento
-                      SizedBox(
-                        height: 350,
-                        width: double.maxFinite,
+                      const SizedBox(height: 10),
+                      Container(
+                        height: 300,  
+                        width: 400,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withValues(alpha: 0.08),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                          border: Border.all(color: Colors.grey[300]!),
+                        ),
                         child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: controller.opcaoGraficos.length,
                           itemBuilder: (context, index) {
                             return Observer(
                               builder: (_) => CheckboxListTile(
+                                dense: true,
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                                 value: controller.opcaoGraficos[index]['selecionado'],
                                 title: Text(
                                   controller.getNomeColunaFormatado(
                                     text: controller.opcaoGraficos[index]['nome'],
                                   ),
+                                  style: const TextStyle(fontSize: 15),
                                 ),
+                                controlAffinity: ListTileControlAffinity.leading,
+                                activeColor: Colors.blueAccent,
                                 onChanged: (v) {
                                   setStateDialog(() {
                                     controller.opcaoGraficos[index]['selecionado'] = v;
@@ -592,29 +645,39 @@ class WidgetsReports {
                   ),
                 ),
               ),
-              actionsAlignment: MainAxisAlignment.center,
+              actionsAlignment: MainAxisAlignment.end,
               actions: [
-                ElevatedButton(
+                TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.grey[700],
+                    textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   child: const Text("Cancelar"),
                 ),
-                ElevatedButton(
-                  style: const ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(Colors.green),
-                  ),
-                  onPressed: controller.tipoGraficoSelecionado == null
-                      ? null
-                      : () async {
-                          controller.tipoGraficoSelecionado = controller.tipoGraficoSelecionado;
-                          controller.adicionarGraficosParaCriacao();
-                          Navigator.pop(context);
-                          await controller.emiterGraficos();
-                        },
-                  child: const Text(
-                    "Gerar gráficos",
-                    style: TextStyle(color: Colors.white),
+                Observer(
+                  builder: (_) => ElevatedButton.icon(
+                    icon: const Icon(Icons.bar_chart, color: Colors.white, size: 20),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green[600],
+                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: controller.tipoGraficoSelecionado == null
+                        ? null
+                        : () async {
+                            controller.tipoGraficoSelecionado = controller.tipoGraficoSelecionado;
+                            controller.adicionarGraficosParaCriacao();
+                            Navigator.pop(context);
+                            await controller.emiterGraficos();
+                          },
+                    label: const Text(
+                      "Gerar gráficos",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],

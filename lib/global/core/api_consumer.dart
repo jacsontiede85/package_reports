@@ -65,7 +65,7 @@ class API with SettingsReports {
     }
   }
 
-  Future<String?> gerarGraficoNoServidor({required String jsonData, required String nomeRelatorio, required List<Map<String,dynamic>> agrupamentos}) async {
+  Future<String?> gerarGraficoNoServidor({required String jsonData, required String nomeRelatorio, required List<Map<String,dynamic>> agrupamentos, required String grafico}) async {
     try{
       String chave = "grafic_criation@2025";
       String dados = jsonEncode({
@@ -73,7 +73,8 @@ class API with SettingsReports {
         "banco": SettingsReports.bancoDeDados,
         "titulo": nomeRelatorio,
         "dados": jsonData,
-        "agrupamentos" : agrupamentos
+        "agrupamentos" : agrupamentos,
+        "grafico" : grafico
       });
 
       final List<int> bodyBytes = utf8.encode(dados);

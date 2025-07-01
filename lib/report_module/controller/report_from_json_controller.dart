@@ -760,7 +760,8 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       final linkParcial = await API().gerarGraficoNoServidor(
         jsonData: dadosGraficos,
         nomeRelatorio: configPagina['name'] ?? 'Relatório',
-        agrupamentos: agrupamentosDesejados
+        agrupamentos: agrupamentosDesejados,
+        grafico: tipoGraficoSelecionado??'Barra'
       ).timeout(const Duration(seconds: 40), onTimeout: () {
         throw Exception('Tempo limite excedido ao gerar gráficos.');
       });
@@ -817,7 +818,6 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     agrupamentosDesejados.clear();
     for(Map<String,dynamic> agrupamentos in opcaoGraficos){
       if(agrupamentos['selecionado'] == true){
-        printW(agrupamentos);
         agrupamentosDesejados.add(agrupamentos);
       }
     }
