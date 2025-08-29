@@ -24,6 +24,7 @@ class ReportPage extends StatefulWidget {
   Map<String, dynamic>? conteudoParaModificarBodyInicial;
   final String function;
   final Function(Map<String, dynamic>, ReportFromJSONController)? onPressedButton;
+  final bool leadingButton;
 
   ReportPage({
     super.key,
@@ -31,6 +32,7 @@ class ReportPage extends StatefulWidget {
     required this.buscarDadosNaEntrada,
     required this.database,
     this.onPressedButton,
+    this.leadingButton = true,
     this.conteudoParaModificarBodyInicial,
   });
 
@@ -150,7 +152,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             ),
           ),
           leadingWidth: 20,
-          leading: IconButton(
+          leading: widget.leadingButton ? IconButton(
             tooltip: 'Voltar',
             icon: const Icon(
               Icons.arrow_back_ios,
@@ -159,7 +161,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             onPressed: () {
               Navigator.of(context).pop(true);
             },
-          ),
+          ) : null,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(controller.mostrarBarraPesquisar && controller.configPagina.isNotEmpty && !controller.loading && controller.dados.isNotEmpty ? kToolbarHeight : 0),
             child: Observer(
