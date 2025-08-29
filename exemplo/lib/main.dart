@@ -62,6 +62,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(
                     builder: (context) => ReportPage(
                       database: SettingsReports.bancoDeDados,
+                      onPressedButton: (linhasSelecionadas, controller) {
+                        print("OLA");
+                        print(linhasSelecionadas["pedido__int__dontsum"]);
+                        //controller.getDados();
+                        showDialog(context: context, builder: (context) {
+                          return Dialog(child: Text("TESTE"),);
+                        },);
+                      },
                       buscarDadosNaEntrada: false,
                       // function: 'vendas/venda-por-rca/index.php',
                       // function: 'compras/pedido-de-compra-saldo/index.php',
@@ -78,8 +86,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       // function: 'comercial/evolucao-venda-anual-por-rca/index.php',
                       // function: 'compras/ruptura-estoque-fornecedor/index.php',
                       // function: 'financeiro/analise_de_pedidos//index.php',
-                      // function: 'compras/assistente-compras/assistente_compras_report.php',
-                      function: 'campanha/campanha-extra-the-pro/index_rca_maio.php',
+                      function: 'rotina_9826/index.php',
+                      // function: 'campanha/campanha-extra-the-pro/index_rca_maio.php',
                     ),
                   ),
                 );

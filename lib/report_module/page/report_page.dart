@@ -23,16 +23,18 @@ class ReportPage extends StatefulWidget {
   late String database;
   Map<String, dynamic>? conteudoParaModificarBodyInicial;
   final String function;
+  final Function(Map<String, dynamic>, ReportFromJSONController)? onPressedButton;
 
   ReportPage({
     super.key,
     required this.function,
     required this.buscarDadosNaEntrada,
     required this.database,
+    this.onPressedButton,
     this.conteudoParaModificarBodyInicial,
   });
 
-  setMapSelectedRowPage({
+  void setMapSelectedRowPage({
     required Map<String, dynamic> mapSelectedRow,
     required Map<String, dynamic> bodyConfigBuscaRecursiva,
     required Map<String, dynamic> getbodyPrimario,
@@ -644,25 +646,28 @@ class _ReportPageState extends State<ReportPage> with Rows {
               ...controller.colunas.map(
                 (element) {
                   if(element['colunasFiltradas'] == true)
-                    return InkWell(
-                      onTap: () => controller.setOrderBy(key: element['key'], order: element['order']),
-                      child: rowTextFormatted(
-                        context: context,
-                        width: controller.getWidthCol(
+                    return Visibility(
+                      visible: !element['key'].contains('__BUTTON9826'),
+                      child: InkWell(
+                        onTap: () => controller.setOrderBy(key: element['key'], order: element['order']),
+                        child: rowTextFormatted(
+                          context: context,
+                          width: controller.getWidthCol(
+                            key: element['key'],
+                          ),
+                          height: controller.getHeightColunasCabecalho,
+                          controller: controller,
                           key: element['key'],
+                          type: element['type'],
+                          value: Features.formatarTextoPrimeirasLetrasMaiusculas(
+                            element['nomeFormatado'].trim(),
+                          ),
+                          isTitle: true,
+                          isSelected: element['isSelected'],
+                          order: element['order'],
+                          setStateRows: setStatee,
+                          isFiltered: element['isFiltered'],
                         ),
-                        height: controller.getHeightColunasCabecalho,
-                        controller: controller,
-                        key: element['key'],
-                        type: element['type'],
-                        value: Features.formatarTextoPrimeirasLetrasMaiusculas(
-                          element['nomeFormatado'].trim(),
-                        ),
-                        isTitle: true,
-                        isSelected: element['isSelected'],
-                        order: element['order'],
-                        setStateRows: setStatee,
-                        isFiltered: element['isFiltered'],
                       ),
                     );
                   else
@@ -772,7 +777,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
         controller.row = [];
         val.forEach((key, value) {
           Type type = value.runtimeType;
-          if (!key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
+          if (!key.toString().toUpperCase().contains('__BUTTON9826') && !key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().toUpperCase().contains('__ISRODAPE') && !key.toString().contains('isFiltered'))
             controller.row.add(
               rowTextFormatted(
                 context: context,
@@ -788,7 +793,31 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 setStateRows: setStatee,
               ),
             );
+
+
+            // FEITO PARA UTILIZAR NA ROTINA 9826
+            if (key.toString().toUpperCase().contains('__BUTTON9826')) {
+              controller.row.addAll([
+                rowButtonFormatted9826(
+                  context: context,
+                  width: controller.getWidthCol(
+                    key: key,
+                  ),
+                  height: 35,
+                  controller: controller,
+                  cor: controller.dadosFiltered().indexOf(val) % 2 == 0 ? Colors.grey[20] : Colors.white,
+                  corBotao: val[key] == "sim" ? Colors.blue : null,
+                  key: val[key] == "sim" ? key : "indisponivel",
+                  value: value,
+                  linhaSelecionada: val,
+                  onPressedButton: val[key] == "sim" ? (linhaSelecionada) {
+                    widget.onPressedButton!(linhaSelecionada, controller);
+                  } : null
+                ),
+              ]);
+            }
         });
+        
         return Stack(
           children: [
             InkWell(
@@ -1064,6 +1093,57 @@ class _ReportPageState extends State<ReportPage> with Rows {
           },
         ),
       ),
+    );
+  }
+
+  // FEITO PARA UTILIZAR NA ROTINA 9826
+  Widget rowButtonFormatted9826({
+    required ReportFromJSONController controller,
+    required double width,
+    required String key,
+    required dynamic value,
+    required BuildContext context,
+    Function(Map<String, dynamic>)? onPressedButton,
+    double? height,
+    Color? cor,
+    Color? corBotao,
+    Map<String, dynamic>? linhaSelecionada,
+  }) {
+    double fontSize = 10;
+    return Stack(
+      children: [
+        Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            color: cor,
+            border: Border.all(color: Colors.purple.withValues(alpha: 0.3), width: 0.25),
+          ),
+          padding: EdgeInsets.all(2),
+          alignment: Alignment.center,
+          child: SizedBox(
+            width: width,
+            child: TextButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  corBotao ??Colors.blueGrey[200],
+                ),
+              ),
+              onPressed: linhaSelecionada != null && onPressedButton != null
+              ? () => onPressedButton(linhaSelecionada)
+              : null,
+              child: Text(
+                Features.formatarTextoPrimeirasLetrasMaiusculas(key.toString().replaceAll('_', ' ')),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: fontSize,
+                  color: corBotao != null ? Colors.grey[200] :Colors.black,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

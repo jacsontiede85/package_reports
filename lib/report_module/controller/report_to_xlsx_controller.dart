@@ -45,7 +45,7 @@ class ReportToXLSXController extends WidgetReportXLSX {
       linha: linha, 
       coluna: coluna, 
       cabecalhoStyle: cabecalhoStyle, 
-      totalColunas: reportFromJSONController.colunas.where((element) => element['selecionado'] == true).length,
+      totalColunas: reportFromJSONController.colunas.where((element) => element['selecionado'] == true && !element['key'].toString().contains('__BUTTON9826')).length,
     );
 
     ///////////////////////////////////////////////////  COLUNAS
@@ -57,7 +57,7 @@ class ReportToXLSXController extends WidgetReportXLSX {
       linha: linha, 
       coluna: coluna, 
       colunasStyle: colunasStyle, 
-      colunasList: reportFromJSONController.colunas.where((element) => element['selecionado'] == true), 
+      colunasList: reportFromJSONController.colunas.where((element) => element['selecionado'] == true && !element['key'].toString().contains('__BUTTON9826')),
       rowHeight: reportFromJSONController.getHeightColunasCabecalho * 0.5,
     );
 
