@@ -57,8 +57,6 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   @observable
   Map<String, dynamic> configPagina = {};
 
-  String keyFreeze = ''; // chave da coluna que será congelada (elevated)
-
   @observable
   List<Map<String, dynamic>> colunas = [];
 
@@ -101,6 +99,38 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   Map<String, dynamic> mapSelectedRow = {};
   Map<String, dynamic> configPageBuscaRecursiva = {};
   Map<String, dynamic> bodySecundario = {};
+
+  // Lista de colunas congeladas (elevadas) - substitui keyFreeze
+  List<String> colunasCongeladas = [];
+
+  // Propriedade para manter compatibilidade com código existente
+  String get keyFreeze => colunasCongeladas.isNotEmpty ? colunasCongeladas.first : '';
+
+  // Largura total das colunas congeladas para posicionamento
+  double get larguraColunasCongeladas {
+    double largura = 0.0;
+    for (String coluna in colunasCongeladas) {
+      var element = getMapColuna(key: coluna);
+      if (element.isNotEmpty && element['colunasFiltradas'] == true) {
+        largura += getWidthCol(key: coluna);
+      }
+    }
+    return largura;
+  }
+
+  // Calcular posição de início das colunas congeladas
+  double get posicaoInicioColunasCongeladas {
+    double posicao = 0.0;
+    for (Map<String, dynamic> coluna in colunas) {
+      if (colunasCongeladas.contains(coluna['key'])) {
+        break;
+      }
+      if (coluna['colunasFiltradas'] == true) {
+        posicao += coluna['widthCol'];
+      }
+    }
+    return posicao;
+  }
 
   setMapSelectedRowController({required Map<String, dynamic> mapSelectedRow, required Map<String, dynamic> configPageBuscaRecursiva, required Map<String, dynamic> bodySecundario}) {
     this.mapSelectedRow = mapSelectedRow;
@@ -195,7 +225,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
     loading = true;
     primeiraBusca = false;
-    keyFreeze = "";
+    colunasCongeladas = [];
 
     if (_listenerStarted) _removeListener();
 
@@ -252,12 +282,16 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       __INVISIBLE     => não exibir campo no relatório
       __DONTSUM       => não somar na barra de totalizador
       __PERC          => colocar % (percentagem) junto ao texto da coluna
-      __FREEZE        => congelar coluna ao deslizar barra de scroll horizontal
+      __FREEZE        => congelar coluna ao deslizar barra de scroll horizontal (suporta múltiplas colunas)
       __SIZEW         => passar largura fixa de coluna. Exemplo: __SIZEW300
       __LOCK          => Validar se o usuario tem acesso ao campo
       __ISRODAPE      => Usar para fazer um rodapé personalizado
 
       IMPORTANTE: coso o tipo de dado não seja informado, o tipo de formatação será identificado a partir dos dados recebidos
+      
+      EXEMPLO DE MÚLTIPLAS COLUNAS CONGELADAS:
+      - nome__FREEZE, data__FREEZE, valor__FREEZE => congela as três colunas
+      - As colunas congeladas ficam visíveis durante o scroll horizontal
     */
 
     for (var value in dados) {
@@ -453,25 +487,39 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
 
   getColunaElevada() {
+    colunasCongeladas.clear();
+    
+    // Primeiro, procurar por todas as colunas com __FREEZE
     for (var val in dados) {
       for (var key in val.keys) {
-        if (key.toString().toUpperCase().contains('__FREEZE')) {
-          keyFreeze = key;
-          break;
+        if (key.toString().toUpperCase().contains('__FREEZE') && !colunasCongeladas.contains(key)) {
+          colunasCongeladas.add(key);
         }
       }
-      if (keyFreeze.isEmpty)
+    }
+    
+    // Se não encontrou colunas congeladas, usar a lógica anterior para uma coluna padrão
+    if (colunasCongeladas.isEmpty) {
+      for (var val in dados) {
         for (var key in val.keys) {
           if ((val[key].runtimeType == String || key.toString().toUpperCase().contains('__NO_METRICS')) && '${val[key]}'.length > 5 && !key.toString().toUpperCase().contains('__INVISIBLE') && !key.toString().contains('isFiltered')) {
-            keyFreeze = key;
+            colunasCongeladas.add(key);
             break;
           }
         }
-      if (keyFreeze.isEmpty)
-        for (var key in val.keys) {
-          keyFreeze = key;
-          break;
+        if (colunasCongeladas.isNotEmpty) break;
+      }
+      
+      // Se ainda não encontrou, usar a primeira coluna disponível
+      if (colunasCongeladas.isEmpty) {
+        for (var val in dados) {
+          for (var key in val.keys) {
+            colunasCongeladas.add(key);
+            break;
+          }
+          if (colunasCongeladas.isNotEmpty) break;
         }
+      }
     }
   }
 
@@ -565,7 +613,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     }
   }
 
-  filterListFromSearch() {
+  void filterListFromSearch() {
     if (searchString.text.isNotEmpty) if (filtrosSelected.isNotEmpty) {
       if (dados.any((element) => element['isFiltered']))
         for (var key in dados) {
@@ -614,7 +662,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     }
   }
 
-  getTheSelectedFilteredRows() {
+  void getTheSelectedFilteredRows() {
     Set temp = {};
     for (var element in filtrosSelected) {
       temp.add(
@@ -651,7 +699,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     }
   }
 
-  clearFiltros() {
+  void clearFiltros() {
     searchString.clear();
     filtrosSelected = [];
     colunasFiltradas = {};

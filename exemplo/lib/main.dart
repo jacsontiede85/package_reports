@@ -62,15 +62,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(
                     builder: (context) => ReportPage(
                       database: SettingsReports.bancoDeDados,
-                      onPressedButton: (linhasSelecionadas, controller) {
-                        print("OLA");
-                        print(linhasSelecionadas["pedido__int__dontsum"]);
-                        //controller.getDados();
-                        showDialog(context: context, builder: (context) {
-                          return Dialog(child: Text("TESTE"),);
-                        },);
-                      },
-                      buscarDadosNaEntrada: false,
+                      // onPressedButton: (linhasSelecionadas, controller) {
+                      //   print("OLA");
+                      //   print(linhasSelecionadas["pedido__int__dontsum"]);
+                      //   //controller.getDados();
+                      //   showDialog(context: context, builder: (context) {
+                      //     return Dialog(child: Text("TESTE"),);
+                      //   },);
+                      // },
+                      buscarDadosNaEntrada: true,
                       // function: 'vendas/venda-por-rca/index.php',
                       // function: 'compras/pedido-de-compra-saldo/index.php',
                       // function: 'comercial/ultima-data-pedido-rca/index.php',

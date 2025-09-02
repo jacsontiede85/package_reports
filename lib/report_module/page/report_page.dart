@@ -561,7 +561,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                               colunasWidget(),
                                               Observer(
                                                 builder: (_) => Visibility(
-                                                  visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                                                  visible: controller.positionScroll > controller.posicaoInicioColunasCongeladas && controller.visibleColElevated,
                                                   child: Positioned(
                                                     top: 0,
                                                     left: controller.positionScroll,
@@ -608,7 +608,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                             rodape(),
                                             Observer(
                                               builder: (_) => Visibility(
-                                                visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                                                visible: controller.positionScroll > controller.posicaoInicioColunasCongeladas && controller.visibleColElevated,
                                                 child: Positioned(
                                                   top: 0,
                                                   left: controller.positionScroll,
@@ -737,22 +737,23 @@ class _ReportPageState extends State<ReportPage> with Rows {
   }
 
   Widget colunasElevated() {
-    Map<String,dynamic> element = controller.getMapColuna(key: controller.keyFreeze);
-    if(element['colunasFiltradas'] == true)
-      return Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
+    List<Widget> colunasElevadas = [];
+    
+    for (String colunaKey in controller.colunasCongeladas) {
+      Map<String,dynamic> element = controller.getMapColuna(key: colunaKey);
+      if(element.isNotEmpty && element['colunasFiltradas'] == true) {
+        colunasElevadas.add(
           InkWell(
-            onTap: () => controller.setOrderBy(key: controller.keyFreeze, order: element['order']),
+            onTap: () => controller.setOrderBy(key: colunaKey, order: element['order']),
             child: rowTextFormatted(
               context: context,
               width: controller.getWidthCol(
-                key: controller.keyFreeze,
+                key: colunaKey,
               ),
               cor: Colors.white,
               height: controller.getHeightColunasCabecalho,
               controller: controller,
-              key: controller.keyFreeze,
+              key: colunaKey,
               type: element['type'],
               value: Features.formatarTextoPrimeirasLetrasMaiusculas(
                 element['nomeFormatado'].trim(),
@@ -763,10 +764,18 @@ class _ReportPageState extends State<ReportPage> with Rows {
               setStateRows: setStatee,
             ),
           ),
-        ],
+        );
+      }
+    }
+    
+    if (colunasElevadas.isNotEmpty) {
+      return Row(
+        mainAxisSize: MainAxisSize.max,
+        children: colunasElevadas,
       );
-    else
+    } else {
       return const SizedBox();
+    }
   }
 
   Widget rowsBuilder() {
@@ -865,22 +874,26 @@ class _ReportPageState extends State<ReportPage> with Rows {
             ),
             Observer(
               builder: (_) => Visibility(
-                visible: controller.positionScroll > 200 && controller.visibleColElevated,
+                visible: controller.positionScroll > controller.posicaoInicioColunasCongeladas && controller.visibleColElevated,
                 child: Positioned(
                   top: 0,
                   left: controller.positionScroll,
-                  child: rowTextFormatted(
-                    context: context,
-                    width: controller.getWidthCol(
-                      key: controller.keyFreeze,
-                    ),
-                    height: 35,
-                    controller: controller,
-                    key: controller.keyFreeze,
-                    type: String,
-                    value: val[controller.keyFreeze],
-                    cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
-                    setStateRows: setStatee,
+                  child: Row(
+                    children: controller.colunasCongeladas.map<Widget>((colunaKey) {
+                      return rowTextFormatted(
+                        context: context,
+                        width: controller.getWidthCol(
+                          key: colunaKey,
+                        ),
+                        height: 35,
+                        controller: controller,
+                        key: colunaKey,
+                        type: String,
+                        value: val[colunaKey],
+                        cor: index % 2 == 0 ? Colors.grey[20] : Colors.white,
+                        setStateRows: setStatee,
+                      );
+                    }).toList(),
                   ),
                 ),
               ),
@@ -943,26 +956,39 @@ class _ReportPageState extends State<ReportPage> with Rows {
   }
 
   Widget rodapeElevated() {
-    var element = controller.getMapColuna(key: controller.keyFreeze);
-    if(element['colunasFiltradas'] == true)
-      return rowTextFormatted(
-        context: context,
-        width: controller.getWidthCol(
-          key: controller.keyFreeze,
-        ),
-        height: 40,
-        cor: const Color.fromARGB(255, 65, 63, 63),
-        controller: controller,
-        key: controller.keyFreeze,
-        type: controller.keyFreeze.toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
-        value: '${controller.dadosFiltered().length}',
-        isSelected: element['isSelected'],
-        isRodape: true,
-        order: element['order'],
-        setStateRows: setStatee,
+    List<Widget> rodapesElevados = [];
+    
+    for (String colunaKey in controller.colunasCongeladas) {
+      var element = controller.getMapColuna(key: colunaKey);
+      if(element.isNotEmpty && element['colunasFiltradas'] == true) {
+        rodapesElevados.add(
+          rowTextFormatted(
+            context: context,
+            width: controller.getWidthCol(
+              key: colunaKey,
+            ),
+            height: 40,
+            cor: const Color.fromARGB(255, 65, 63, 63),
+            controller: controller,
+            key: colunaKey,
+            type: colunaKey.toString().toUpperCase().contains('__DONTSUM') ? String : element['type'],
+            value: colunaKey == controller.colunasCongeladas.first ? '${controller.dadosFiltered().length}' : controller.valoresRodape(element: element),
+            isSelected: element['isSelected'],
+            isRodape: true,
+            order: element['order'],
+            setStateRows: setStatee,
+          ),
+        );
+      }
+    }
+    
+    if (rodapesElevados.isNotEmpty) {
+      return Row(
+        children: rodapesElevados,
       );
-    else
+    } else {
       return const SizedBox();
+    }
   }
 
   Widget exibirSelecaoDeColunasParaExporta({required void Function()? onPressedFiltrado, required void Function()? onPressedTudo, required String titulo}) {
