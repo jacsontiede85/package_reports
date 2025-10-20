@@ -10,6 +10,7 @@ mixin class SettingsReports{
   static String enderecoRepositorio = '';
   static int matricula = 0;
   static String bancoDeDados = '';
+  static bool permissaoCampoBloqueado = false;
 
   static ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTelaTemp = ObservableList<FiltrosPageAtual>.of([]);
   static ObservableList<FiltrosCarrregados> listaFiltrosCarregadosSalvos = ObservableList<FiltrosCarrregados>.of([]);
@@ -19,6 +20,7 @@ mixin class SettingsReports{
   setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
   setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;
   setBancoDeDados({required String banco}) => bancoDeDados = banco;
+  setDisponibilizarCamposBloqueados({required bool permissao}) => permissaoCampoBloqueado = permissao;
 
   static getDataPTBR() {
     final DateTime now = DateTime.now();

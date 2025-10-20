@@ -1147,7 +1147,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
             color: cor,
             border: Border.all(color: Colors.purple.withValues(alpha: 0.3), width: 0.25),
           ),
-          padding: EdgeInsets.all(2),
+          padding: const EdgeInsets.all(2),
           alignment: Alignment.center,
           child: SizedBox(
             width: width,
