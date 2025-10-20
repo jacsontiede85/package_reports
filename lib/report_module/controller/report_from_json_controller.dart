@@ -244,17 +244,17 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
       dadosGraficos = '';
     }
 
-    List keys = [];
+    List keysBloqueado = [];
     for (var value in dados) {
       value['isFiltered'] = false;
       for (var key in value.keys) {
-        if (key.toString().toUpperCase().contains('__LOCK')) {
-          keys.add(key);
+        if (key.toString().toUpperCase().contains('__LOCK') && !SettingsReports.permissaoCampoBloqueado) {
+          keysBloqueado.add(key);
         }
       }
     }
 
-    for (var value in keys) for (int i = 0; i < dados.length; i++) dados[i].remove(value);
+    for (var value in keysBloqueado) for (int i = 0; i < dados.length; i++) dados[i].remove(value);
 
     /////////////////////////////// TRATAR TIPOS DE DADOS [ ROWS ]
     /*
@@ -424,6 +424,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     text = text.toString().toUpperCase().replaceAll('__NO_METRICS', '');
     text = text.toString().toUpperCase().replaceAll('__NOCHARTAREA', '');
     text = text.toString().toUpperCase().replaceAll('__INVISIBLE', '');
+    text = text.toString().toUpperCase().replaceAll('__LOCK', '');
     text = text.toString().toUpperCase().replaceAll('__DONTSUM', '');
     text = text.toString().toUpperCase().replaceAll('__FREEZE', '');
     var temp = text.split('__');
