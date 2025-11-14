@@ -1253,7 +1253,7 @@ mixin Rows {
                 bottom: -10,
                 child: IconButton(
                   icon: Icon(
-                    order == 'asc' ? Icons.arrow_upward : Icons.arrow_downward,
+                    order == 'asc' ? Icons.arrow_downward : Icons.arrow_upward,
                     size: 17,
                     color: Colors.blueAccent,
                   ),
