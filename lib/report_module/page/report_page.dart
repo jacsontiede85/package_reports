@@ -72,7 +72,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
     controllerReports: controller,
   );
 
-  setStatee(Function fn) {
+  void setStatee(Function fn) {
     setState(() {
       fn();
     });
@@ -1177,7 +1177,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
 }
 
 mixin Rows {
-  rowTextFormatted({
+  Widget rowTextFormatted({
     required ReportFromJSONController controller,
     required double width,
     required String key,
@@ -1237,7 +1237,7 @@ mixin Rows {
                             ? Features.toFormatNumber(value.toString().replaceAll('_', ' '))
                             : type == int
                                 ? Features.toFormatInteger(
-                                    value.toString().replaceAll('_', ' '),
+                                    valor: value.toString().replaceAll('_', ' '),
                                   )
                                 : value.toString(),
                 style: TextStyle(
@@ -1392,7 +1392,7 @@ mixin Rows {
                               ? Features.toFormatNumber(value.toString().replaceAll('_', ' '))
                               : type == int
                                   ? Features.toFormatInteger(
-                                      value.toString().replaceAll('_', ' '),
+                                      valor: value.toString().replaceAll('_', ' '),
                                     )
                                   : value.toString(),
                   style: const TextStyle(

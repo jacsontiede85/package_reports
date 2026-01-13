@@ -79,7 +79,7 @@ mixin Charts {
               dataSource: dados,
               xValueMapper: (ChartData data, _) => data.nome,
               yValueMapper: (ChartData data, _) => data.valor,
-              dataLabelMapper: (ChartData data, _) => data.type == int ? '${Features.toFormatNumber(data.valor.toString(), qtCasasDecimais: 0)}' : 'R\$ ${Features.toFormatNumber(data.valor.toString())}',
+              dataLabelMapper: (ChartData data, _) => data.type == int ? Features.toFormatNumber(data.valor.toString(), qtCasasDecimais: 0) : 'R\$ ${Features.toFormatNumber(data.valor.toString())}',
               pointColorMapper: (ChartData data, _) => data.color,
               width: 3,
               markerSettings: const MarkerSettings(
@@ -107,7 +107,7 @@ mixin Charts {
                 dataSource: value,
                 xValueMapper: (ChartData data, _) => data.nome,
                 yValueMapper: (ChartData data, _) => data.valor * 100,
-                dataLabelMapper: (ChartData data, _) => '${Features.toFormatNumber((data.valor).toString().replaceAll('_', ' '), qtCasasDecimais: 1)}',
+                dataLabelMapper: (ChartData data, _) => Features.toFormatNumber((data.valor).toString().replaceAll('_', ' '), qtCasasDecimais: 1),
                 pointColorMapper: (ChartData data, _) => data.color,
                 enableTooltip: true,
                 width: 3,
@@ -163,7 +163,7 @@ mixin Charts {
                       yValueMapper: (ChartData data, _) => data.valor,
                       dataLabelMapper: (ChartData data, _) {
                         if (data.type == int) {
-                          return '${Features.toFormatNumber(data.valor.toString(), qtCasasDecimais: 0)}';
+                          return Features.toFormatNumber(data.valor.toString(), qtCasasDecimais: 0);
                         } else {
                           return 'R\$ ${Features.toFormatNumber(data.valor.toString())}';
                         }
@@ -198,7 +198,7 @@ mixin Charts {
                         yValueMapper: (ChartData data, _) => data.valor,
                         dataLabelMapper: (ChartData data, _) {
                           if (data.type == int) {
-                            return '${Features.toFormatNumber(data.valor.toString(), qtCasasDecimais: 0)}';
+                            return Features.toFormatNumber(data.valor.toString(), qtCasasDecimais: 0);
                           } else {
                             return 'R\$ ${Features.toFormatNumber(data.valor.toString())}';
                           }

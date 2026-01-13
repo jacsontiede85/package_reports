@@ -58,7 +58,7 @@ abstract class ReportChartControllerBase with Store, Charts {
   bool get isVisibleChartsArea => getColumnMetricsChart.where((value) => value['type'] != String && !value['key'].toString().toUpperCase().contains('__NOCHARTAREA')).toList().length > 1;
 
   @action
-  getChart({required String chartNameSelected}) async {
+  Future<void> getChart({required String chartNameSelected}) async {
     loading = true;
     this.chartNameSelected = chartNameSelected;
     await Future.delayed(const Duration(seconds: 1));
@@ -96,7 +96,7 @@ abstract class ReportChartControllerBase with Store, Charts {
     loading = false;
   }
 
-  _getListChartData({bool listaDeTotaisDeRodape = false}) {
+  dynamic _getListChartData({bool listaDeTotaisDeRodape = false}) {
     var keySelected = columnMetricSelected['key'];
 
     if (orderby.isNotEmpty) setOrderBy(key: columnOrderBySelected['key'], order: orderby == 'Decrescente' ? 'desc' : 'asc');
@@ -183,7 +183,7 @@ abstract class ReportChartControllerBase with Store, Charts {
   }
 
   //ordenar
-  setOrderBy({required key, required order}) => reportFromJSONController.setOrderBy(key: key, order: order);
+  void setOrderBy({required String key, required String order}) => reportFromJSONController.setOrderBy(key: key, order: order);
 
   List<Map<String, dynamic>> getTodosOsTiposGraficos() {
     List<Map<String, dynamic>> opcoesDeGraficos = [];

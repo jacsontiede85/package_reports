@@ -20,7 +20,7 @@ class Widgets {
     );
   }
 
-  navigator({
+  Future navigator({
     required dynamic pagina,
     required BuildContext context,
     required LayoutControllerPackage layout,

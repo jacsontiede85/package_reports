@@ -38,7 +38,7 @@ abstract class ReportPDFControllerBase with Store {
   double bottom = 0.0;
 
   @action
-  getDados({required ReportFromJSONController controller, required String titulo}) async {
+  Future<void> getDados({required ReportFromJSONController controller, required String titulo}) async {
     reportController = controller;
     this.titulo = titulo;
     loadingExportPdf = true;

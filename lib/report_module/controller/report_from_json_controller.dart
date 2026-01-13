@@ -132,7 +132,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     return posicao;
   }
 
-  setMapSelectedRowController({required Map<String, dynamic> mapSelectedRow, required Map<String, dynamic> configPageBuscaRecursiva, required Map<String, dynamic> bodySecundario}) {
+  void setMapSelectedRowController({required Map<String, dynamic> mapSelectedRow, required Map<String, dynamic> configPageBuscaRecursiva, required Map<String, dynamic> bodySecundario}) {
     this.mapSelectedRow = mapSelectedRow;
     this.configPageBuscaRecursiva = configPageBuscaRecursiva;
     this.bodySecundario.addAll(bodySecundario);
@@ -141,13 +141,13 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
   // ? FIM
 
-  setPositionScroll(double position) async {
+  void setPositionScroll(double position) async {
     visibleColElevated = false;
     if (_position != position) _position = position;
     updatePosition(pos: _position);
   }
 
-  updatePosition({required double pos}) async {
+  void updatePosition({required double pos}) async {
     if (pos == _position) positionScroll = _position;
     visibleColElevated = true;
   }
@@ -232,7 +232,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     // ! NECESSARIO CRIAR FORMA DE LIMPAR CAMPOS QUE ESTÃO INDO FAZER A BUSCA DE RELATORIOS RECURSIVOS
   }
 
-  getDados() async {
+  Future<void> getDados() async {
     limparCamposVareaveis();
 
     try{
@@ -339,7 +339,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
               {
                 'key': key,
                 'nomeFormatado': getNomeColunaFormatado(text: key),
-                'type': key.toString().toUpperCase().toUpperCase().contains('__INT_STRING') ? String : getType(dados[0][key]),
+                'type': key.toString().toUpperCase().toUpperCase().contains('__INT_STRING') ? String : getType(value: dados[0][key]),
                 'order': 'asc',
                 'isSelected': false,
                 'isMedia' : false,
@@ -357,7 +357,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
               {
                 'key': key,
                 'nomeFormatado': getNomeColunaFormatado(text: key),
-                'type': key.toString().toUpperCase().contains('__INT_STRING') ? String : getType(dados[0][key]),
+                'type': key.toString().toUpperCase().contains('__INT_STRING') ? String : getType(value: dados[0][key]),
                 'order': 'asc',
                 'isSelected': false,
                 'isMedia' : false,
@@ -416,7 +416,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
 
   //retornar o tipo de dados
-  getType(value) {
+  Type getType({required dynamic value}) {
     try {
       value = int.parse(value);
     } catch (e) {
@@ -430,7 +430,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
 
   //retornar nome de coluna formatado
-  getNomeColunaFormatado({required String text}) {
+  String getNomeColunaFormatado({required String text}) {
     text = text.toString().toUpperCase().replaceAll('__PERC', '_%');
     text = text.toString().toUpperCase().replaceAll('__INT_STRING', '');
     text = text.toString().toUpperCase().replaceAll('__STRING', '');
@@ -449,7 +449,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 
   /////////////////////////////// ORDER BY
   @action
-  setOrderBy({required key, required order}) {
+  void setOrderBy({required String key, required String order}) {
     loading = true;
     dados.sort((a, b) {
       for (var value in colunas)
@@ -486,7 +486,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
     notify();
   }
 
-  getColunaElevada() {
+  void getColunaElevada() {
     colunasCongeladas.clear();
     
     // Primeiro, procurar por todas as colunas com __FREEZE
@@ -532,7 +532,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
 
   //retornar Map com dados de coluna
-  Map<String,dynamic> getMapColuna({required key}) {
+  Map<String,dynamic> getMapColuna({required String key}) {
     for (Map<String, dynamic> col in colunas) 
       if (col['key'] == key && col['colunasFiltradas']){
         return col;
@@ -542,15 +542,13 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   }
 
   //buscar largura de cada coluna
-  double getWidthCol({
-    required key,
-  }) {
+  double getWidthCol({required String key}) {
     var coluna = getMapColuna(key: key);
     return coluna['widthCol'] ?? 0.0;
   }
 
   //obter largura total da table
-  getWidthTable({String? key}) {
+  void getWidthTable({String? key}) {
     double w = 0.0;
     bool isMobile = sizeWidth < 600;
     for (Map<String, dynamic> coluna in colunas) {
@@ -574,7 +572,7 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
   bool get isVisibleButtomCharts => (dados.isNotEmpty && !loading);
 
   //forçar atualização de tela
-  notify() {
+  void notify() {
     loading = false;
     colunas = colunas;
     dados = dados;
@@ -782,19 +780,19 @@ abstract class ReportFromJSONControllerBase with Store, ChangeNotifier {
 }
 
 
-void printW(text) {
+void printW(String text) {
   if (kDebugMode) {
     print('\x1B[33m$text\x1B[0m');
   }
 }
 
-void printE(text) {
+void printE(String text) {
   if (kDebugMode) {
     print('\x1B[31m$text\x1B[0m');
   }
 }
 
-void printO(text) {
+void printO(String text) {
   if (kDebugMode) {
     print('\x1b[32m$text\x1B[0m');
   }

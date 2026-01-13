@@ -2,7 +2,7 @@
 import 'package:intl/intl.dart';
 
 class Features {
-  static toFormatNumber(String valor, {int? qtCasasDecimais}) {
+  static String toFormatNumber(String valor, {int? qtCasasDecimais}) {
     if (valor == 'NaN') return '0,00';
     if (valor == 'null') return '0,00';
     valor = valor.replaceAll(",", ".");
@@ -13,13 +13,11 @@ class Features {
     } catch (e) {
       valor = '0,00';
     }
-    //valor = valor.replaceAll(".", "0,");
-    //if (valor == 'NaN') return '0,00';
     return valor;
   }
 
-  static toFormatInteger(String? valor) {
-    valor = valor!.replaceAll(",", ".");
+  static String toFormatInteger({required String valor}) {
+    valor = valor.replaceAll(",", ".");
     try {
       valor = NumberFormat("#,##0", "pt_BR").format(double.parse(valor));
     } catch (e) {
@@ -29,7 +27,7 @@ class Features {
     return valor;
   }
 
-  static getDataHoraNomeParaArquivo() {
+  static String getDataHoraNomeParaArquivo() {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('dd-MM-yyyy-HH-mm-ss');
     return formatter.format(now);

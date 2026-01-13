@@ -77,7 +77,7 @@ abstract class LayoutControllerPackageBase with Store {
 
 
   @action
-  setSizeScreen({required altura, required largura, required SizingInformation sizingInformation, required BuildContext context}) {
+  void setSizeScreen({required double altura, required double largura, required SizingInformation sizingInformation, required BuildContext context}) {
     setDeviceScreenType(sizingInformation: sizingInformation, context: context);
     height = altura;
     width = largura;
@@ -121,7 +121,7 @@ abstract class LayoutControllerPackageBase with Store {
 
 
 
-  setDeviceScreenType({required SizingInformation sizingInformation, required BuildContext context}) {
+  void setDeviceScreenType({required SizingInformation sizingInformation, required BuildContext context}) {
     mobile = sizingInformation.deviceScreenType == DeviceScreenType.mobile;
     tablet = sizingInformation.deviceScreenType == DeviceScreenType.tablet;
     desktop = sizingInformation.deviceScreenType == DeviceScreenType.desktop;

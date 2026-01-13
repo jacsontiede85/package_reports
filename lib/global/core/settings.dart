@@ -17,12 +17,12 @@ mixin class SettingsReports{
 
   static bool isfiltrosSalvosApp = false;
 
-  setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
-  setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;
-  setBancoDeDados({required String banco}) => bancoDeDados = banco;
-  setDisponibilizarCamposBloqueados({required bool permissao}) => permissaoCampoBloqueado = permissao;
+  void setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
+  void setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;
+  void setBancoDeDados({required String banco}) => bancoDeDados = banco;
+  void setDisponibilizarCamposBloqueados({required bool permissao}) => permissaoCampoBloqueado = permissao;
 
-  static getDataPTBR() {
+  static String getDataPTBR() {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('dd/MM/yyyy');
     return formatter.format(now);

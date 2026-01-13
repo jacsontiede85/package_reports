@@ -52,7 +52,7 @@ class WidgetXLSX {
     return sheet;
   }
 
-  colunas({required Worksheet sheet, required int linha, required int coluna, required Style colunasStyle, required colunasList}) {
+  void colunas({required Worksheet sheet, required int linha, required int coluna, required Style colunasStyle, required colunasList}) {
     for (int index = 0; index < colunasList.length; index++) {
       sheet.getRangeByIndex(linha, coluna).cellStyle = colunasStyle;
       sheet.getRangeByIndex(linha, coluna).setText(colunasList[index]);
@@ -62,7 +62,7 @@ class WidgetXLSX {
     }
   }
 
-  celulaText({required Worksheet sheet, required int linha, required int coluna, required Style style, required text, bool? autoFitColumns, bool? laguraFixa, bool? larguraTitulo}) {
+  void celulaText({required Worksheet sheet, required int linha, required int coluna, required Style style, required text, bool? autoFitColumns, bool? laguraFixa, bool? larguraTitulo}) {
     sheet.getRangeByIndex(linha, coluna).cellStyle = style;
     Range range = sheet.getRangeByIndex(linha, coluna);
     if (larguraTitulo ?? false) {
@@ -82,7 +82,7 @@ class WidgetXLSX {
     if (!(larguraTitulo ?? false)) if (!(laguraFixa ?? false)) if (autoFitColumns ?? true) range.autoFitColumns();
   }
 
-  celulaNumber({required sheet, required linha, required coluna, required style, required number, bool? laguraFixa}) {
+  void celulaNumber({required Worksheet sheet, required int linha, required int coluna, required Style style, required number, bool? laguraFixa}) {
     sheet.getRangeByIndex(linha, coluna).cellStyle = style;
     Range range = sheet.getRangeByIndex(linha, coluna);
     double num;
