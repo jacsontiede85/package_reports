@@ -6,19 +6,10 @@ import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/core/settings.dart';
+import 'package:package_reports/global/widget/card_person.dart';
+import 'package:package_reports/global/widget/titulo_cards.dart';
 
 class Widgets {
-  Widget tituloCards({required String titulo, required BuildContext context}) {
-    return Text(
-      titulo.toUpperCase(),
-      style: TextStyle(
-        fontSize: 14.0,
-        color: Theme.of(context).brightness == Brightness.light ? Colors.green[700] : Colors.greenAccent[200],
-        fontWeight: FontWeight.w700,
-      ),
-      textAlign: TextAlign.left,
-    );
-  }
 
   Future navigator({
     required dynamic pagina,
@@ -92,96 +83,93 @@ class Widgets {
         if (tipo == 'datapickerfaturamento') {
           controller.validarSeDataSeraDeFaturamento();
         }
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                tituloCards(
-                  titulo: filtrosDados.titulo.toUpperCase(),
-                  context: context,
-                ),
-                SizedBox(
-                  width: 250,
-                  child: Observer(
-                    builder: (_) => Visibility(
-                      visible: tipo == 'datapickerfaturamento',
-                      child: CheckboxListTile(
-                        value: controller.isDataFaturamento,
-                        title: const Text('Data faturamento'),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        onChanged: (c) {
-                          controller.isDataFaturamento = !controller.isDataFaturamento;
-                          controller.validarSeDataSeraDeFaturamento();
-                        },
-                      ),
+        return CardPerson(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TituloCards(
+                titulo: filtrosDados.titulo.toUpperCase(),
+              ),
+          
+              SizedBox(
+                width: 250,
+                child: Observer(
+                  builder: (_) => Visibility(
+                    visible: tipo == 'datapickerfaturamento',
+                    child: CheckboxListTile(
+                      value: controller.isDataFaturamento,
+                      title: const Text('Data faturamento'),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (c) {
+                        controller.isDataFaturamento = !controller.isDataFaturamento;
+                        controller.validarSeDataSeraDeFaturamento();
+                      },
                     ),
                   ),
                 ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Row(
-                    children: [
-                      Observer(
-                        builder: (_) => Expanded(
-                          child: SegmentedButton(
-                            selectedIcon: const Icon(Icons.calendar_today),
-                            style: ButtonStyle(
-                              shape: WidgetStatePropertyAll<OutlinedBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
+              ),
+          
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Row(
+                  children: [
+                    Observer(
+                      builder: (_) => Expanded(
+                        child: SegmentedButton(
+                          selectedIcon: const Icon(Icons.calendar_today),
+                          style: ButtonStyle(
+                            shape: WidgetStatePropertyAll<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
                               ),
                             ),
-                            segments: [
-                              ButtonSegment(
-                                value: 0,
-                                label: Text(controller.dtinicio),
-                              ),
-                              ButtonSegment(
-                                value: 1,
-                                label: Text(controller.dtfim),
-                              ),
-                            ],
-                            multiSelectionEnabled: true,
-                            selected: const {0,1},
-                            onSelectionChanged: (Set<int> newSelection) async {
-                              if (newSelection.first == 1) {
-                                controller.dtinicio = await SettingsReports().selectDate(
-                                  context: context,
-                                );
-                              } else {
-                                controller.dtfim = await SettingsReports().selectDate(
-                                  context: context,
-                                );
-                              }
-                            },
                           ),
+                          segments: [
+                            ButtonSegment(
+                              value: 0,
+                              label: Text(controller.dtinicio),
+                            ),
+                            ButtonSegment(
+                              value: 1,
+                              label: Text(controller.dtfim),
+                            ),
+                          ],
+                          multiSelectionEnabled: true,
+                          selected: const {0,1},
+                          onSelectionChanged: (Set<int> newSelection) async {
+                            if (newSelection.first == 1) {
+                              controller.dtinicio = await SettingsReports().selectDate(
+                                context: context,
+                              );
+                            } else {
+                              controller.dtfim = await SettingsReports().selectDate(
+                                context: context,
+                              );
+                            }
+                          },
                         ),
                       ),
-                      PopupMenuButton(
-                        itemBuilder: (context) {
-                          return controller.listaDePeriodos.map(
-                            (valor) {
-                              return PopupMenuItem(
-                                value: valor.replaceAll(' ', ''),
-                                child: Text(valor),
-                              );
-                            },
-                          ).toList();
-                        },
-                        onSelected: (value) {
-                          controller.selecaoDeDataPorPeriodo(periodo: value.toString(), isDataPadrao: true);
-                        },
-                      )
-                    ],
-                  ),
+                    ),
+                    PopupMenuButton(
+                      itemBuilder: (context) {
+                        return controller.listaDePeriodos.map(
+                          (valor) {
+                            return PopupMenuItem(
+                              value: valor.replaceAll(' ', ''),
+                              child: Text(valor),
+                            );
+                          },
+                        ).toList();
+                      },
+                      onSelected: (value) {
+                        controller.selecaoDeDataPorPeriodo(periodo: value.toString(), isDataPadrao: true);
+                      },
+                    )
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
@@ -194,65 +182,67 @@ class Widgets {
     required FiltroController controller,
     required int index,
   }) {
-    return Card(
-      child: ListTile(
-        title: tituloCards(titulo: filtrosDados.titulo.toUpperCase(), context: context),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Visibility(
-              visible: filtrosDados.subtitulo.isNotEmpty,
-              child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 5),
-                alignment: Alignment.topLeft,
-                child: Text(
-                  filtrosDados.subtitulo,
-                  style: const TextStyle(
-                    fontSize: 11.0,
-                  ),
+    
+    int posicaoValidada = controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index);
+
+    return CardPerson(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          TituloCards(titulo: filtrosDados.titulo.toUpperCase()),
+          
+          Visibility(
+            visible: filtrosDados.subtitulo.isNotEmpty,
+            child: Container(
+              margin: const EdgeInsets.only(top: 5, bottom: 5),
+              alignment: Alignment.topLeft,
+              child: Text(
+                filtrosDados.subtitulo,
+                style: const TextStyle(
+                  fontSize: 11.0,
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: Observer(builder: (_) {
-                return FutureBuilder(
-                  future: controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index) == -1 ? 
-                  controller.funcaoBuscarDadosDeCadaFiltro(
-                    valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                    isBuscarDropDown: true,
-                    index: index,
-                    isDataMensal: true
-                  ).then(
-                    (value) {
-                      controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.first;
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Observer(builder: (_) {
+              return FutureBuilder(
+                future: posicaoValidada == -1 ? 
+                controller.funcaoBuscarDadosDeCadaFiltro(
+                  valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                  isBuscarDropDown: true,
+                  index: index,
+                  isDataMensal: true
+                ).then(
+                  (value) {
+                    controller.listaFiltrosCarregados[posicaoValidada].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[posicaoValidada].listaFiltros.first;
+                  },
+                ) : null,
+                builder: (context, snapshot) {
+                  return DropdownButton<FiltrosModel>(
+                    value: controller.listaFiltrosCarregados[posicaoValidada].valorSelecionadoParaDropDown,
+                    isExpanded: true,
+                    isDense: true,
+                    onChanged: (value) {
+                      controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
                     },
-                  ) : null,
-                  builder: (context, snapshot) {
-                    return DropdownButton<FiltrosModel>(
-                      value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
-                      isExpanded: true,
-                      isDense: true,
-                      onChanged: (value) {
-                        controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
-                      },
-                      hint: null,
-                      items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((item) {
-                        return DropdownMenuItem<FiltrosModel>(
-                          value: item,
-                          child: Text(
-                            item.titulo,
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  }
-                );
-              }),
-            ),
-          ],
-        ),
+                    hint: null,
+                    items: controller.listaFiltrosCarregados[posicaoValidada].listaFiltros.map((item) {
+                      return DropdownMenuItem<FiltrosModel>(
+                        value: item,
+                        child: Text(
+                          item.titulo,
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }
+              );
+            }),
+          ),
+        ],
       ),
     );
   }
@@ -265,88 +255,105 @@ class Widgets {
   }) {
     return Builder(
       builder: (context) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                tituloCards(
-                  titulo: filtrosDados.titulo.toUpperCase(),
-                  context: context,
-                ),
-                SizedBox(
-                  width: 250,
-                  child: Observer(
-                    builder: (_) => CheckboxListTile(
-                      value: controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["isEnable"],
-                      title: const Text('Desabilitar data'),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      onChanged: (c) {
-                        controller.mapaDatasNomeadas.update(
-                          filtrosDados.tipoFiltro, (value) {
-                            return {
-                              "dtinicio": value["dtinicio"],
-                              "dtfim": value["dtfim"],
-                              "isEnable": c
-                            };
-                          },);
-                      },
-                    ),
+        return CardPerson(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TituloCards(titulo: filtrosDados.titulo.toUpperCase()),
+              SizedBox(
+                width: 250,
+                child: Observer(
+                  builder: (_) => CheckboxListTile(
+                    value: controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["isEnable"],
+                    title: const Text('Desabilitar data'),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    onChanged: (c) {
+                      controller.mapaDatasNomeadas.update(
+                        filtrosDados.tipoFiltro, (value) {
+                          return {
+                            "dtinicio": value["dtinicio"],
+                            "dtfim": value["dtfim"],
+                            "isEnable": c
+                          };
+                        },);
+                    },
                   ),
                 ),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  spacing: 10,
-                  children: [
-                    TextButton.icon(
-                      icon: const Icon(Icons.calendar_today),
-                      label: Observer(
-                        builder: (_) => Text(
-                          controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["dtinicio"],
-                          style: const TextStyle(fontSize: 17),
-                        ),
+              ),
+            
+              Row(
+                children: [
+                  Expanded(
+                    child: Observer(
+                      builder: (_) => SegmentedButton(
+                        selectedIcon: const Icon(Icons.calendar_today),
+                        style: ButtonStyle(
+                          shape: WidgetStatePropertyAll<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                        ),             
+                        multiSelectionEnabled: true,
+                        selected: const {0,1},
+                        segments: [
+                          ButtonSegment(
+                            enabled: !controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["isEnable"],
+                            value: 0,
+                            label: Observer(
+                              builder: (_) => Text(
+                                controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["dtinicio"],
+                                style: const TextStyle(fontSize: 17),
+                              ),
+                            ),
+                          ),
+                          ButtonSegment(
+                            enabled: !controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["isEnable"],                          
+                            value: 1,
+                            label: Observer(
+                              builder: (_) => Text(
+                                controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["dtfim"],
+                                style: const TextStyle(fontSize: 17),
+                              ),
+                            ),
+                          ),
+                        ],  
+                        onSelectionChanged: (Set<int> newSelection) async {
+                          if(newSelection.first == 1){
+                            String dataInicio = await SettingsReports().selectDate(
+                              context: context,
+                            );
+                            controller.mapaDatasNomeadas.update(
+                              filtrosDados.tipoFiltro, (value) {
+                                return {
+                                  "dtinicio": dataInicio,
+                                  "dtfim": value["dtfim"],
+                                  "isEnable": value["isEnable"]
+                                };
+                              },
+                            );
+                          }else{
+                            String dataFim = await SettingsReports().selectDate(
+                              context: context,
+                            );
+                            controller.mapaDatasNomeadas.update(
+                              filtrosDados.tipoFiltro, (value) {
+                                return {
+                                  "dtinicio": value["dtinicio"],
+                                  "dtfim": dataFim,
+                                  "isEnable": value["isEnable"]
+                                };
+                              },
+                            );
+                          }
+                        }               
                       ),
-                      onPressed: () async {
-                        String data = await SettingsReports().selectDate(
-                          context: context,
-                        );
-                        controller.mapaDatasNomeadas.update(
-                          filtrosDados.tipoFiltro, (value) {
-                            return {
-                              "dtinicio": data,
-                              "dtfim": value["dtfim"],
-                              "isEnable": value["isEnable"]
-                            };
-                          },
-                        );
-                      },
                     ),
-                    TextButton.icon(
-                      icon: const Icon(Icons.calendar_today),
-                      label: Observer(
-                        builder: (_) => Text(
-                          controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["dtfim"],
-                          style: const TextStyle(fontSize: 17),
-                        ),
-                      ),
-                      onPressed: () async {
-                        String data = await SettingsReports().selectDate(
-                          context: context,
-                        );
-                        controller.mapaDatasNomeadas.update(
-                          filtrosDados.tipoFiltro, (value) {
-                            return {
-                              "dtinicio": value["dtinicio"],
-                              "dtfim": data,
-                              "isEnable": value["isEnable"]
-                            };
-                          },
-                        );
-                      },
-                    ),
-                    PopupMenuButton(
+                  ),
+                  Observer(
+                    builder: (_) => PopupMenuButton(
+                      enabled: !controller.mapaDatasNomeadas[filtrosDados.tipoFiltro]["isEnable"],                    
                       itemBuilder: (context) {
                         return controller.listaDePeriodos.map(
                           (valor) {
@@ -367,11 +374,11 @@ class Widgets {
                           };
                         },);
                       },
-                    )
-                  ],
-                ),
-              ],
-            ),
+                    ),
+                  ),
+                ],
+              )             
+            ],
           ),
         );
       },
@@ -379,159 +386,140 @@ class Widgets {
   }
 
   Widget cardFiltroGeral({required BuildContext context, required FiltrosWidgetModel filtrosDados, required void Function()? onTap, required FiltroController controller, required int indexFiltro}) {
-    return Card(
-      child: ListTile(
-        onTap: onTap,
-        trailing: const Icon(Icons.arrow_forward_ios_rounded),
-        title: tituloCards(titulo: filtrosDados.titulo.toUpperCase(), context: context),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Observer(
-                  builder: (_) => Visibility(
-                    visible: filtrosDados.tipoWidget == "checkboxrca",
-                    child: Expanded(
-                      child: CheckboxListTile(
-                        splashRadius: 15,
-                        contentPadding: EdgeInsets.zero,
-                        title: const Text(
-                          "EXIBIR RCA SEM VENDAS",
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                          ),
+    return CardPerson(
+      onTap: onTap,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          TituloCards(titulo: filtrosDados.titulo.toUpperCase()),
+
+          Row(
+            children: [
+              Observer(
+                builder: (_) => Visibility(
+                  visible: filtrosDados.tipoWidget == "checkboxrca",
+                  child: Expanded(
+                    child: CheckboxListTile(
+                      splashRadius: 15,
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text(
+                        "EXIBIR RCA SEM VENDAS",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
                         ),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        value: controller.isRCAsemVenda,
-                        onChanged: (s) {
-                          controller.isRCAsemVenda = !controller.isRCAsemVenda;
-                          controller.validarCondicaoDebuscaRCA();
-                        },
                       ),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      value: controller.isRCAsemVenda,
+                      onChanged: (s) {
+                        controller.isRCAsemVenda = !controller.isRCAsemVenda;
+                        controller.validarCondicaoDebuscaRCA();
+                      },
                     ),
-                  ),
-                ),
-                Observer(
-                  builder: (_) => Visibility(
-                    visible: filtrosDados.tipoWidget == "checkboxrca",
-                    child: Expanded(
-                      child: CheckboxListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: const Text(
-                          "SOMENTE ATIVOS",
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        controlAffinity: ListTileControlAffinity.leading,
-                        value: controller.isRCAativo,
-                        onChanged: (s) {
-                          controller.isRCAativo = !controller.isRCAativo;
-                          filtrosDados.itensSelecionados!.clear();
-                          controller.listaFiltrosCarregados.removeWhere((element) => element.tipoFiltro == filtrosDados.tipoFiltro && element.tipoWidget == filtrosDados.tipoWidget,);
-                          controller.validarCondicaoDebuscaRCA();
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Visibility(
-              visible: filtrosDados.subtitulo.isNotEmpty,
-              child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 5),
-                alignment: Alignment.topLeft,
-                child: Text(
-                  filtrosDados.subtitulo,
-                  style: const TextStyle(
-                    fontSize: 10.0,
-                    fontWeight: FontWeight.bold
                   ),
                 ),
               ),
+              Observer(
+                builder: (_) => Visibility(
+                  visible: filtrosDados.tipoWidget == "checkboxrca",
+                  child: Expanded(
+                    child: CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text(
+                        "SOMENTE ATIVOS",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      value: controller.isRCAativo,
+                      onChanged: (s) {
+                        controller.isRCAativo = !controller.isRCAativo;
+                        filtrosDados.itensSelecionados!.clear();
+                        controller.listaFiltrosCarregados.removeWhere((element) => element.tipoFiltro == filtrosDados.tipoFiltro && element.tipoWidget == filtrosDados.tipoWidget,);
+                        controller.validarCondicaoDebuscaRCA();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Visibility(
+            visible: filtrosDados.subtitulo.isNotEmpty,
+            child: Container(
+              margin: const EdgeInsets.only(top: 5, bottom: 5),
+              alignment: Alignment.topLeft,
+              child: Text(
+                filtrosDados.subtitulo,
+                style: const TextStyle(
+                  fontSize: 10.0,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Stack(
-                alignment: Alignment.centerLeft,
-                children: [
-                  Observer(
-                    builder: (_) => Wrap(
-                      spacing: 2.0,
-                      direction: Axis.horizontal,
-                      children: [
-                        Observer(
-                          builder: (_) => Visibility(
-                            visible: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.isEmpty,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: Colors.grey[300],
-                              ),
-                              margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
-                              padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
-                              child: const Text(
-                                "\u{2718} Sem filtro",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 11,
-                                  color: Colors.blueGrey,
-                                ),
-                              ),
+          ),
+              
+          Observer(
+            builder: (_) => Visibility(
+              visible: controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.isNotEmpty,
+              replacement: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: FilterChip(
+                  onSelected: null,
+                  selected: false,
+                  label: const Text(
+                    "\u{2718} Sem filtro",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                    ),
+                  ),                
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Wrap(
+                  spacing: 5.0,
+                  runSpacing: 5,
+                  direction: Axis.horizontal,
+                  children: [
+                    for (FiltrosModel valores in controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.take(20))
+                      Observer(builder: (context) {
+                        return Visibility(
+                          visible: valores.selecionado,
+                          child: FilterChip(
+                            onSelected: null,
+                            padding: EdgeInsets.zero,
+                            showCheckmark: false,
+                            selected: true,
+                            labelStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
                             ),
+                            label: Text("\u{2705} ${valores.codigo}",),
                           ),
-                        ),
-                        for (FiltrosModel valores in controller.listaFiltrosParaConstruirTela[indexFiltro].filtrosWidgetModel.itensSelecionados!.take(20))
-                          Observer(builder: (context) {
-                            return Visibility(
-                              visible: valores.selecionado,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  color: Colors.grey[300],
-                                ),
-                                margin: const EdgeInsets.fromLTRB(1, 0, 0, 2),
-                                padding: const EdgeInsets.fromLTRB(10, 2, 12, 2),
-                                child: Text(
-                                  "\u{2705} ${valores.codigo}",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    color: Colors.blueGrey,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
-                      ],
-                    ),
-                  ),
-                ],
+                        );
+                      }),
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget cardSalvarFiltros ({required FiltrosWidgetModel filtrosDados, required BuildContext context, required void Function(bool)? onChanged}){
-    return Card(
-      margin: const EdgeInsets.only(top: 40, bottom: 10, left: 5, right: 5),
-      elevation: 10,
+    return CardPerson(
       child: SwitchListTile(
         value: SettingsReports.isfiltrosSalvosApp,
         activeTrackColor: Colors.green,
         inactiveTrackColor: Colors.grey,
-        title: tituloCards(
-          titulo: "Salvar Filtros",
-          context: context,
-        ),
+        title: TituloCards(titulo: "Salvar Filtros"),
         subtitle: Text(
           filtrosDados.titulo,
           style: const TextStyle(
@@ -549,91 +537,68 @@ class Widgets {
     required FiltroController controller,
     required int index,
   }) {
-    return Card(
-      child: ListTile(
-        title: tituloCards(titulo: filtrosDados.titulo.toUpperCase(), context: context),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Visibility(
-              visible: filtrosDados.subtitulo.isNotEmpty,
-              child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 5),
-                alignment: Alignment.topLeft,
-                child: Text(
-                  filtrosDados.subtitulo,
-                  style: const TextStyle(
-                    fontSize: 11.0,
-                  ),
+
+    int valorProcurado = controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index);
+
+    if (valorProcurado == -1){
+      controller.funcaoBuscarDadosDeCadaFiltro(
+        valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+        isBuscarDropDown: true,
+        index: index,
+      ).then(
+        (value) {
+          controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.first;
+        },
+      );
+
+      valorProcurado = controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index);
+    }
+
+    return CardPerson(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          TituloCards(titulo: filtrosDados.titulo.toUpperCase()),
+          Visibility(
+            visible: filtrosDados.subtitulo.isNotEmpty,
+            child: Container(
+              margin: const EdgeInsets.only(top: 5, bottom: 5),
+              alignment: Alignment.topLeft,
+              child: Text(
+                filtrosDados.subtitulo,
+                style: const TextStyle(
+                  fontSize: 11.0,
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10, bottom: 10),
-              child: FutureBuilder(
-                future: 
-                controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index) == -1 ? 
-                controller.funcaoBuscarDadosDeCadaFiltro(
-                  valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                  isBuscarDropDown: true,
-                  index: index,
-                ).then(
-                  (value) {
-                    controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.first;
-                  },
-                ) : null,
-                builder: (context, snapshot) {
-                  if (controller.listaFiltrosCarregados.where((element) => element.indexFiltros == index).toList().isNotEmpty) {
-                    return DropdownButton<FiltrosModel>(
-                      value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
-                      isExpanded: true,
-                      isDense: true,
-                      onChanged: (value) {
-                        controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = value;
-                        controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
-                    
-                      },
-                      hint: Text(controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown!.titulo),
-                      items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((item) {
-                        return DropdownMenuItem<FiltrosModel>(
-                          value: item,
-                          child: Text(
-                            item.titulo,
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  } else {
-                    return InkWell(
-                      child: Container(
-                        height: 25,
-                        width: MediaQuery.sizeOf(context).width,
-                        decoration: const BoxDecoration(border: Border(bottom: BorderSide(width: 0.25))),
-                        child: const Row(
-                          children: [
-                            Expanded(
-                              child: Text("NENHUM"),
-                            ),
-                            Icon(Icons.arrow_drop_down_sharp),
-                          ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
+            child: Builder(
+              builder: (context) {
+                  return DropdownButton<FiltrosModel>(
+                    value: controller.listaFiltrosCarregados[valorProcurado].valorSelecionadoParaDropDown,
+                    hint: const Text("Selecione um valor"),
+                    isExpanded: true,
+                    isDense: true,
+                    onChanged: (value) {
+                      controller.listaFiltrosCarregados[valorProcurado].valorSelecionadoParaDropDown = value;
+                      controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
+                    },
+                    items: controller.listaFiltrosCarregados[valorProcurado].listaFiltros.map((item) {
+                      return DropdownMenuItem<FiltrosModel>(
+                        value: item,
+                        child: Text(
+                          item.titulo,
                         ),
-                      ),
-                      onTap: () async {
-                        await controller.funcaoBuscarDadosDeCadaFiltro(
-                          valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                          isBuscarDropDown: true,
-                          index: index,
-                        );
-                        controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros[0];
-                      },
-                    );
-                  }
-                },
-              ),
+                      );
+                    }).toList(),
+                  );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -644,49 +609,48 @@ class Widgets {
     required FiltroController controller,
     required int index,
   }) {
-    return Card(
-      child: ListTile(
-        title: tituloCards(titulo: filtrosDados.titulo, context: context),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Visibility(
-              visible: filtrosDados.subtitulo.isNotEmpty,
-              child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 5),
-                alignment: Alignment.topLeft,
-                child: Text(
-                  filtrosDados.subtitulo,
-                  style: const TextStyle(
-                    fontSize: 11.0,
-                  ),
+    return CardPerson(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          TituloCards(titulo: filtrosDados.titulo),
+          
+          Visibility(
+            visible: filtrosDados.subtitulo.isNotEmpty,
+            child: Container(
+              margin: const EdgeInsets.only(top: 5, bottom: 5),
+              alignment: Alignment.topLeft,
+              child: Text(
+                filtrosDados.subtitulo,
+                style: const TextStyle(
+                  fontSize: 11.0,
                 ),
               ),
             ),
-            TextField(
-              decoration: const InputDecoration(
-                filled: true,
-                isDense: true,
-                contentPadding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
+          ),
+          TextField(
+            decoration: const InputDecoration(
+              filled: true,
+              isDense: true,
+              contentPadding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-              onChanged: (value) {
-                controller.filtrosSalvosParaAdicionarNoBody.addAll({
-                  filtrosDados.tipoFiltro: value,
-                });
-                if (value.isEmpty) {
-                  controller.filtrosSalvosParaAdicionarNoBody.remove(
-                    filtrosDados.tipoFiltro,
-                  );
-                }
-              },
             ),
-          ],
-        ),
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            onChanged: (value) {
+              controller.filtrosSalvosParaAdicionarNoBody.addAll({
+                filtrosDados.tipoFiltro: value,
+              });
+              if (value.isEmpty) {
+                controller.filtrosSalvosParaAdicionarNoBody.remove(
+                  filtrosDados.tipoFiltro,
+                );
+              }
+            },
+          ),
+        ],
       ),
     );
   }

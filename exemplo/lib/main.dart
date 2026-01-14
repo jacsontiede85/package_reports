@@ -19,12 +19,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Teste Report Package',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-        ),
-        useMaterial3: true,
-      ),
+      locale: const Locale('pt', 'BR'),
+      // supportedLocales: const [Locale('pt', 'BR')],
+      // localizationsDelegates: [
+      //   GlobalMaterialLocalizations.delegate,
+      //   GlobalWidgetsLocalizations.delegate,
+      //   GlobalCupertinoLocalizations.delegate,
+      // ],
+      theme: ThemeData.dark(),
+      // ThemeData(
+      //   colorScheme: ColorScheme.fromSeed(
+      //     seedColor: Colors.deepPurple,
+      //   ),
+      //   useMaterial3: true,
+      // ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(),
     );
@@ -70,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       //     return Dialog(child: Text("TESTE"),);
                       //   },);
                       // },
-                      buscarDadosNaEntrada: true,
+                      buscarDadosNaEntrada: false,
                       // function: 'vendas/venda-por-rca/index.php',
                       // function: 'compras/pedido-de-compra-saldo/index.php',
                       // function: 'comercial/ultima-data-pedido-rca/index.php',
@@ -86,7 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       // function: 'comercial/evolucao-venda-anual-por-rca/index.php',
                       // function: 'compras/ruptura-estoque-fornecedor/index.php',
                       // function: 'financeiro/analise_de_pedidos//index.php',
-                      function: 'rotina_9826/index.php',
+                      // function: 'rotina_9826/index.php',
+                      function: 'campanha/ofertas-vigentes/index_descontos.php',
                       // function: 'campanha/campanha-extra-the-pro/index_rca_maio.php',
                     ),
                   ),

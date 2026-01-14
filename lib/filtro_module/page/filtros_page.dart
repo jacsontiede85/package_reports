@@ -146,40 +146,42 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                 itemCount: controllerFiltro.listaFiltrosParaConstruirTela.length,
                 itemBuilder: (context, index) {
                   if (controllerFiltro.listaFiltrosParaConstruirTela[index].qualPaginaFiltroPertence == controllerFiltro.indexPagina) {
-                    return wp.switchQualTipoDeFiltroExibir(
-                      context: context,
-                      filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                      controller: controllerFiltro,
-                      index: index,
-                      onTap: () async {
-                        if(controllerFiltro.bodyPesquisarFiltros.containsKey("pesquisa")){
-                          controllerFiltro.bodyPesquisarFiltros.update("pesquisa", (value) => "",);
-                        }
-                        
-                        controllerFiltro.pesquisaItensDoFiltro = "";
-                        controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
-                          valor: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                          isBuscarDropDown: false,
-                          index: index,
-                        );
-                        wp.navigator(
-                          context: context,
-                          pagina: ItensFiltro(
-                            controller: controllerFiltro,
-                            indexDapagina: controllerFiltro.indexPagina,
-                            filtroPaginaAtual: controllerFiltro.listaFiltrosParaConstruirTela[index],
-                            indexDofiltro: index,
-                          ),
-                          layout: layout,
-                        );
-                      },
-                      onChanged: (value) {
-                        SettingsReports.isfiltrosSalvosApp = !SettingsReports.isfiltrosSalvosApp;
-                        SettingsReports.salvarFiltrosShared(listaFiltrosCarregadoss: controllerFiltro.listaFiltrosCarregados);
-                        setState(() {
+                    return Observer(
+                      builder: (_) => wp.switchQualTipoDeFiltroExibir(
+                        context: context,
+                        filtrosDados: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                        controller: controllerFiltro,
+                        index: index,
+                        onTap: () async {
+                          if(controllerFiltro.bodyPesquisarFiltros.containsKey("pesquisa")){
+                            controllerFiltro.bodyPesquisarFiltros.update("pesquisa", (value) => "",);
+                          }
                           
-                        });
-                      },
+                          controllerFiltro.pesquisaItensDoFiltro = "";
+                          controllerFiltro.funcaoBuscarDadosDeCadaFiltro(
+                            valor: controllerFiltro.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                            isBuscarDropDown: false,
+                            index: index,
+                          );
+                          wp.navigator(
+                            context: context,
+                            pagina: ItensFiltro(
+                              controller: controllerFiltro,
+                              indexDapagina: controllerFiltro.indexPagina,
+                              filtroPaginaAtual: controllerFiltro.listaFiltrosParaConstruirTela[index],
+                              indexDofiltro: index,
+                            ),
+                            layout: layout,
+                          );
+                        },
+                        onChanged: (value) {
+                          SettingsReports.isfiltrosSalvosApp = !SettingsReports.isfiltrosSalvosApp;
+                          SettingsReports.salvarFiltrosShared(listaFiltrosCarregadoss: controllerFiltro.listaFiltrosCarregados);
+                          setState(() {
+                            
+                          });
+                        },
+                      ),
                     );
                   } else {
                     return Container();
