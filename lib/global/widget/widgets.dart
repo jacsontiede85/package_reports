@@ -3,74 +3,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:package_reports/filtro_module/controller/filtro_controller.dart';
 import 'package:package_reports/filtro_module/model/filtros_model.dart';
 import 'package:package_reports/filtro_module/model/filtros_widget_model.dart';
-import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
-import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/core/settings.dart';
 import 'package:package_reports/global/widget/card_person.dart';
 import 'package:package_reports/global/widget/titulo_cards.dart';
 
 class Widgets {
-
-  Future navigator({
-    required dynamic pagina,
-    required BuildContext context,
-    required LayoutControllerPackage layout,
-  }) async {
-    if (layout.mobile || layout.tablet) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Material(
-            color: Colors.transparent,
-            child: pagina,
-          ),
-        ),
-      );
-    } else {
-      switch (pagina.runtimeType) {
-        case const (ItensFiltro):
-          Widget widgetContrucao = Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-              Drawer(
-                width: 500,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    topLeft: Radius.circular(15),
-                  ),
-                ),
-                child: pagina,
-              ),
-            ],
-          );
-          await showDialog<void>(
-            barrierColor: Colors.black54.withValues(alpha: 0.4),
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) => widgetContrucao,
-          );
-          break;
-        default:
-          await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Material(
-                color: Colors.transparent,
-                child: pagina,
-              ),
-            ),
-          );
-      }
-    }
-  }
 
   Widget selecaoDePeriodo({
     required FiltrosWidgetModel filtrosDados,

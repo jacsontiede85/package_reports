@@ -268,57 +268,51 @@ class _ItensFiltroState extends State<ItensFiltro> {
               ),
               child: widget.controller.novoIndexFiltro == -1
                   ? const SizedBox()
-                  : Column(
-                    children: [
-                      Expanded(
-                        child: ListView.separated(
-                            separatorBuilder: (context, index) {
-                              return const Divider();
-                            },
-                            itemCount: widget.controller.getListFiltrosComputed.length,
-                            itemBuilder: (context, index) {
-                              FiltrosModel filtro = widget.controller.getListFiltrosComputed[index];
-                              return Observer(
-                                builder: (_) => CheckboxListTile(
-                                  value: filtro.selecionado,
-                                  onChanged: (valor) {
-                                    filtro.selecionado = !filtro.selecionado;
-                                    if ( widget.filtroPaginaAtual.filtrosWidgetModel.tipoWidget == "singleCheckbox"){
-                                      widget.controller.adicionarItemUnicoSelecionado(item: filtro);
-                                    }else{
-                                      widget.controller.adicionarItensSelecionado(itens: filtro);
-                                    }
-                                  },
-                                  title: Text(
-                                    "${filtro.codigo} - ${filtro.titulo}".toUpperCase(),
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
+                  : Observer(
+                    builder:(_) => Visibility(
+                      visible: !widget.controller.loadingMoreData,
+                      replacement: const LinearProgressIndicator(),                              
+                      child: ListView.separated(
+                          separatorBuilder: (context, index) {
+                            return const Divider();
+                          },
+                          itemCount: widget.controller.getListFiltrosComputed.length,
+                          itemBuilder: (context, index) {
+                            FiltrosModel filtro = widget.controller.getListFiltrosComputed[index];
+                            return Observer(
+                              builder: (_) => CheckboxListTile(
+                                value: filtro.selecionado,
+                                onChanged: (valor) {
+                                  filtro.selecionado = !filtro.selecionado;
+                                  if ( widget.filtroPaginaAtual.filtrosWidgetModel.tipoWidget == "singleCheckbox"){
+                                    widget.controller.adicionarItemUnicoSelecionado(item: filtro);
+                                  }else{
+                                    widget.controller.adicionarItensSelecionado(itens: filtro);
+                                  }
+                                },
+                                title: Text(
+                                  "${filtro.codigo} - ${filtro.titulo}".toUpperCase(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
                                   ),
-                                  subtitle: filtro.subtitulo.isNotEmpty
-                                      ? Text(
-                                          filtro.subtitulo.toUpperCase(),
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 12,
-                                            color: Theme.of(context).brightness == Brightness.light ? Colors.orange[700] : Colors.orangeAccent[100],
-                                          ),
-                                        )
-                                      : null,
-                                  controlAffinity: ListTileControlAffinity.leading,
                                 ),
-                              );
-                            },
-                          ),
-                      ),
-                      Observer(
-                        builder: (_) => Visibility(
-                          visible: widget.controller.loadingMoreData,
-                          child: const LinearProgressIndicator(),
+                                subtitle: filtro.subtitulo.isNotEmpty
+                                    ? Text(
+                                        filtro.subtitulo.toUpperCase(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12,
+                                          color: Theme.of(context).brightness == Brightness.light ? Colors.orange[700] : Colors.orangeAccent[100],
+                                        ),
+                                      )
+                                    : null,
+                                controlAffinity: ListTileControlAffinity.leading,
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    ],
+                    ),
                   ),
             ),
           ),

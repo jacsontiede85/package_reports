@@ -120,6 +120,23 @@ abstract class LayoutControllerPackageBase with Store {
   }
 
 
+  void layoutControllerPage ({required SizingInformation sizeinfo, required BuildContext context}){ 
+    setSizeScreen(
+      altura: MediaQuery.of(context).size.height,
+      largura: MediaQuery.of(context).size.width,
+      sizingInformation: sizeinfo,
+      context: context,
+    );
+
+    // ------------------------------ FORÇAR MUDANÇA DE LAYOUT
+    menuDrawerDesktopVisible = false;
+    if (width < 800) {
+      desktop = false;
+      tablet = false;
+      mobile = true;
+    }    
+  }
+
 
   void setDeviceScreenType({required SizingInformation sizingInformation, required BuildContext context}) {
     mobile = sizingInformation.deviceScreenType == DeviceScreenType.mobile;

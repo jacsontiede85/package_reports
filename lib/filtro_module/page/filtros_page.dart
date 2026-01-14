@@ -1,4 +1,3 @@
-// ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -7,15 +6,16 @@ import 'package:package_reports/filtro_module/model/filtros_pagina_atual_model.d
 import 'package:package_reports/filtro_module/page/itens_do_filtro.dart';
 import 'package:package_reports/global/core/layout_controller.dart';
 import 'package:package_reports/global/core/settings.dart';
+import 'package:package_reports/global/widget/navigator_page.dart';
 import 'package:package_reports/global/widget/widgets.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 class FiltrosReportPage extends StatefulWidget {
   final FiltroController controllerFiltro;
-  Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela, String dtinicio, String dtfim, String dataMensal)? onAplicar;
-  Map<String, dynamic> bodypesquisaAtual;
+  final Map<String, dynamic> bodypesquisaAtual;
+  final Function(ObservableList<FiltrosPageAtual> listaFiltrosParaConstruirTela, String dtinicio, String dtfim, String dataMensal)? onAplicar;
 
-  FiltrosReportPage({super.key, required this.controllerFiltro, required this.bodypesquisaAtual, this.onAplicar});
+  const FiltrosReportPage({super.key, required this.controllerFiltro, required this.bodypesquisaAtual, this.onAplicar});
 
   @override
   State<FiltrosReportPage> createState() => _FiltrosReportPageState();
@@ -26,7 +26,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
 
   Widgets wp = Widgets();
   LayoutControllerPackage layout = LayoutControllerPackage();
-
+  
   @override
   void initState() {
     super.initState();    
@@ -40,22 +40,9 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
   Widget build(BuildContext context) {
     return ResponsiveBuilder(
       builder: (context, sizingInformation) {
-        // CONFIGURAÇÃO DE LAYOUT (CONTROLLER)
-        layout.setSizeScreen(
-          altura: MediaQuery.of(context).size.height,
-          largura: MediaQuery.of(context).size.width,
-          sizingInformation: sizingInformation,
-          context: context,
-        );
-
-        // ------------------------------ FORÇAR MUDANÇA DE LAYOUT
-        layout.menuDrawerDesktopVisible = false;
-        if (layout.width < 800) {
-          layout.desktop = false;
-          layout.tablet = false;
-          layout.mobile = true;
-        }
-
+        
+        layout.layoutControllerPage(sizeinfo: sizingInformation, context: context);
+        
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black,
@@ -163,7 +150,7 @@ class _FiltrosReportPageState extends State<FiltrosReportPage> {
                             isBuscarDropDown: false,
                             index: index,
                           );
-                          wp.navigator(
+                          NavigatorPage().open(
                             context: context,
                             pagina: ItensFiltro(
                               controller: controllerFiltro,
