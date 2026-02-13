@@ -9,6 +9,85 @@ import 'package:package_reports/global/widget/titulo_cards.dart';
 
 class Widgets {
 
+  Widget selecaoSinglePeriodo({
+    required FiltrosWidgetModel filtrosDados,
+    required FiltroController controller,
+    required BuildContext context,
+    required String tipo,
+  }) {
+    return Builder(
+      builder: (context) {
+        if (tipo == 'datapickerfaturamento') {
+          controller.validarSeDataSeraDeFaturamento();
+        }
+        return CardPerson(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TituloCards(
+                titulo: filtrosDados.titulo.toUpperCase(),
+              ),
+          
+              SizedBox(
+                width: 250,
+                child: Observer(
+                  builder: (_) => Visibility(
+                    visible: tipo == 'datapickerfaturamento',
+                    child: CheckboxListTile(
+                      value: controller.isDataFaturamento,
+                      title: const Text('Data faturamento'),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      onChanged: (c) {
+                        controller.isDataFaturamento = !controller.isDataFaturamento;
+                        controller.validarSeDataSeraDeFaturamento();
+                      },
+                    ),
+                  ),
+                ),
+              ),
+          
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: Row(
+                  children: [
+                    Observer(
+                      builder: (_) => Expanded(
+                        child: SegmentedButton(
+                          selectedIcon: const Icon(Icons.calendar_today),
+                          style: ButtonStyle(
+                            shape: WidgetStatePropertyAll<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                          segments: [
+                            ButtonSegment(
+                              value: 0,
+                              label: Text(controller.dtunico),
+                            ),
+                          ],
+                          multiSelectionEnabled: true,
+                          selected: const {0,1},
+                          onSelectionChanged: (Set<int> newSelection) async {
+                            controller.dtunico = await SettingsReports().selectDate(
+                              context: context,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget selecaoDePeriodo({
     required FiltrosWidgetModel filtrosDados,
     required FiltroController controller,
@@ -123,7 +202,7 @@ class Widgets {
     int posicaoValidada = controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index);
 
     return CardPerson(
-      child: Column(
+      child: Column( 
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -144,40 +223,38 @@ class Widgets {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
-            child: Observer(builder: (_) {
-              return FutureBuilder(
-                future: posicaoValidada == -1 ? 
-                controller.funcaoBuscarDadosDeCadaFiltro(
-                  valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
-                  isBuscarDropDown: true,
-                  index: index,
-                  isDataMensal: true
-                ).then(
-                  (value) {
-                    controller.listaFiltrosCarregados[posicaoValidada].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[posicaoValidada].listaFiltros.first;
+            child: FutureBuilder(
+              future: posicaoValidada == -1 ? 
+              controller.funcaoBuscarDadosDeCadaFiltro(
+                valor: controller.listaFiltrosParaConstruirTela[index].filtrosWidgetModel,
+                isBuscarDropDown: true,
+                index: index,
+                isDataMensal: true
+              ).then(
+                (value) {
+                  controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown = controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.first;
+                },
+              ) : null,
+              builder: (context, snapshot) {
+                return DropdownButton<FiltrosModel>(
+                  value: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].valorSelecionadoParaDropDown,
+                  isExpanded: true,
+                  isDense: true,
+                  onChanged: (value) {
+                    controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
                   },
-                ) : null,
-                builder: (context, snapshot) {
-                  return DropdownButton<FiltrosModel>(
-                    value: controller.listaFiltrosCarregados[posicaoValidada].valorSelecionadoParaDropDown,
-                    isExpanded: true,
-                    isDense: true,
-                    onChanged: (value) {
-                      controller.adicionarItensDropDown(index: index, valorSelecionado: value!);
-                    },
-                    hint: null,
-                    items: controller.listaFiltrosCarregados[posicaoValidada].listaFiltros.map((item) {
-                      return DropdownMenuItem<FiltrosModel>(
-                        value: item,
-                        child: Text(
-                          item.titulo,
-                        ),
-                      );
-                    }).toList(),
-                  );
-                }
-              );
-            }),
+                  hint: null,
+                  items: controller.listaFiltrosCarregados[controller.listaFiltrosCarregados.indexWhere((element) => element.indexFiltros == index)].listaFiltros.map((item) {
+                    return DropdownMenuItem<FiltrosModel>(
+                      value: item,
+                      child: Text(
+                        item.titulo,
+                      ),
+                    );
+                  }).toList(),
+                );
+              }
+            ),
           ),
         ],
       ),
@@ -615,6 +692,15 @@ class Widgets {
 
       case "datapicker" || "datapickerfaturamento":
         retornoFuncao = selecaoDePeriodo(
+          filtrosDados: filtrosDados,
+          context: context,
+          controller: controller,
+          tipo: filtrosDados.tipoWidget,
+        );
+      break;
+
+      case "datapickersingle":
+        retornoFuncao = selecaoSinglePeriodo(
           filtrosDados: filtrosDados,
           context: context,
           controller: controller,

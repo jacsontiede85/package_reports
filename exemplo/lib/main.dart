@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       // function: 'compras/ruptura-estoque-fornecedor/index.php',
                       // function: 'financeiro/analise_de_pedidos//index.php',
                       // function: 'rotina_9826/index.php',
-                      function: 'campanha/ofertas-vigentes/index_descontos.php',
+                      function: 'financeiro/saldo_banco_bordero_concil/index.php',
                       // function: 'campanha/campanha-extra-the-pro/index_rca_maio.php',
                     ),
                   ),

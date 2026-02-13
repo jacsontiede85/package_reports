@@ -43,7 +43,7 @@ abstract class FiltroControllerBase with Store {
   ObservableMap<String, dynamic> mapaDatasNomeadas = ObservableMap.of({});
 
   @observable
-  String dtinicio = SettingsReports.getDataPTBR(), dtfim = SettingsReports.getDataPTBR();
+  String dtinicio = SettingsReports.getDataPTBR(), dtfim = SettingsReports.getDataPTBR(), dtunico = SettingsReports.getDataPTBR();
 
   @observable
   ObservableMap<String, dynamic> filtrosSalvosParaAdicionarNoBody = ObservableMap.of({});
@@ -407,6 +407,15 @@ abstract class FiltroControllerBase with Store {
           {"dataMensal": dataCampanhaInicial}
         );
       }
+
+      if(controllerReports.bodyPrimario.containsKey("dtunico")) {
+        controllerReports.bodyPrimario.update("dtunico", (value) => value = dtunico,);
+      } else {
+        controllerReports.bodyPrimario.addAll(
+          {"dtunico": dtunico}
+        );
+      }
+
     } else {
       controllerReports.bodySecundario.update(
         'dtinicio',
@@ -419,6 +428,14 @@ abstract class FiltroControllerBase with Store {
       } else {
         controllerReports.bodyPrimario.addAll(
           {"dataMensal": dataCampanhaInicial}
+        );
+      }
+
+      if(controllerReports.bodySecundario.containsKey("dtunico")) {
+        controllerReports.bodySecundario.update("dtunico", (value) => value = dtunico,);
+      } else {
+        controllerReports.bodySecundario.addAll(
+          {"dtunico": dtunico}
         );
       }
 
