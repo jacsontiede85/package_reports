@@ -12,9 +12,15 @@ import 'package:universal_html/html.dart' show AnchorElement;
 class ReportToXLSXController extends WidgetReportXLSX {
   String xlsxFileName = "";
   bool filtraTudo = true;
+  bool incluirTotalizador = false;
 
   //CONSTRUCTOR
-  ReportToXLSXController({required String title, required ReportFromJSONController reportFromJSONController, required this.filtraTudo}) {
+  ReportToXLSXController({
+    required String title,
+    required ReportFromJSONController reportFromJSONController,
+    required this.filtraTudo,
+    this.incluirTotalizador = false,
+  }) {
     createExcel(title: title, reportFromJSONController: reportFromJSONController);
   }
 
@@ -116,6 +122,31 @@ class ReportToXLSXController extends WidgetReportXLSX {
       }
 
       
+    }
+
+    /////////////////////////////////////////////////// RODAPÉ / TOTALIZADOR
+    if (incluirTotalizador && reportFromJSONController.colunasRodapePerson.isEmpty) {
+      linha++;
+      coluna = 1;
+      for (var element in reportFromJSONController.colunas) {
+        if (element['selecionado'] && !element['key'].toString().contains('__BUTTON9826')) {
+          if (element['colunasFiltradas'] == true) {
+            if (element['type'] == double || element['type'] == int) {
+              colunasStyle.hAlign = HAlignType.right;
+            } else {
+              colunasStyle.hAlign = HAlignType.left;
+            }
+            celulaText(
+              sheet: sheet,
+              linha: linha,
+              coluna: coluna,
+              style: colunasStyle,
+              text: reportFromJSONController.valoresRodape(element: element),
+            );
+          }
+          coluna++;
+        }
+      }
     }
 
     /////////////////////////////////////////////////// OPEN FILE
