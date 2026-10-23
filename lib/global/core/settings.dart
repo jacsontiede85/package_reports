@@ -17,7 +17,13 @@ mixin class SettingsReports{
 
   static bool isfiltrosSalvosApp = false;
 
+  /// Token emitido por `api/auth`, lido a cada requisição porque o app troca o token ao entrar de novo.
+  static String Function() obterToken = () => '';
+  static Future<void> Function()? aoNaoAutenticado;
+
   void setEnderecoApi({required String enderecoUrl}) => enderecoRepositorio = enderecoUrl;
+  void setObterToken({required String Function() obter}) => obterToken = obter;
+  void setAoNaoAutenticado({required Future<void> Function() callback}) => aoNaoAutenticado = callback;
   void setMatricula({required int matriculaUsu}) => matricula = matriculaUsu;
   void setBancoDeDados({required String banco}) => bancoDeDados = banco;
   void setDisponibilizarCamposBloqueados({required bool permissao}) => permissaoCampoBloqueado = permissao;
