@@ -148,6 +148,22 @@ mixin _$FiltroController on FiltroControllerBase, Store {
     });
   }
 
+  late final _$dtunicoAtom =
+      Atom(name: 'FiltroControllerBase.dtunico', context: context);
+
+  @override
+  String get dtunico {
+    _$dtunicoAtom.reportRead();
+    return super.dtunico;
+  }
+
+  @override
+  set dtunico(String value) {
+    _$dtunicoAtom.reportWrite(value, super.dtunico, () {
+      super.dtunico = value;
+    });
+  }
+
   late final _$filtrosSalvosParaAdicionarNoBodyAtom = Atom(
       name: 'FiltroControllerBase.filtrosSalvosParaAdicionarNoBody',
       context: context);
@@ -450,6 +466,7 @@ indexFiltro: ${indexFiltro},
 mapaDatasNomeadas: ${mapaDatasNomeadas},
 dtinicio: ${dtinicio},
 dtfim: ${dtfim},
+dtunico: ${dtunico},
 filtrosSalvosParaAdicionarNoBody: ${filtrosSalvosParaAdicionarNoBody},
 exibirBarraPesquisa: ${exibirBarraPesquisa},
 pesquisaItensDoFiltro: ${pesquisaItensDoFiltro},

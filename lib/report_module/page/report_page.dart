@@ -297,13 +297,22 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           showDialog(
                             context: context,
                             builder: (context) => exibirSelecaoDeColunasParaExporta(
-                              onPressedTudo: () {
-                                ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller, filtraTudo: true);
-                                Navigator.pop(context);
+                              mostrarOpcaoTotalizador: true,
+                              onPressedTudo: (incluirTotalizador) {
+                                ReportToXLSXController(
+                                  title: controller.configPagina['name'],
+                                  reportFromJSONController: controller,
+                                  filtraTudo: true,
+                                  incluirTotalizador: incluirTotalizador,
+                                );
                               },
-                              onPressedFiltrado: () {
-                                ReportToXLSXController(title: controller.configPagina['name'], reportFromJSONController: controller, filtraTudo: false);
-                                Navigator.pop(context);
+                              onPressedFiltrado: (incluirTotalizador) {
+                                ReportToXLSXController(
+                                  title: controller.configPagina['name'],
+                                  reportFromJSONController: controller,
+                                  filtraTudo: false,
+                                  incluirTotalizador: incluirTotalizador,
+                                );
                               },
                               titulo: 'Exportar para Excel',
                             ),
@@ -332,7 +341,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                           showDialog(
                             context: context, 
                             builder: (context) => exibirSelecaoDeColunasParaExporta(
-                              onPressedFiltrado: (){
+                              onPressedFiltrado: (_){
                                 ReportPDFController controllerPDF = ReportPDFController(
                                   titulo: controller.configPagina['name'],
                                   reportController: controller,
@@ -344,7 +353,7 @@ class _ReportPageState extends State<ReportPage> with Rows {
                                   builder: (context) => PrintingPDFPage(controller: controllerPDF),
                                 );                      
                               },
-                              onPressedTudo: () {
+                              onPressedTudo: (_) {
                                 ReportPDFController controllerPDF = ReportPDFController(
                                   titulo: controller.configPagina['name'],
                                   reportController: controller,
@@ -991,47 +1000,91 @@ class _ReportPageState extends State<ReportPage> with Rows {
     }
   }
 
-  Widget exibirSelecaoDeColunasParaExporta({required void Function()? onPressedFiltrado, required void Function()? onPressedTudo, required String titulo}) {
-    return AlertDialog(
-      elevation: 0,
-      title: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        alignment: WrapAlignment.spaceBetween,
-        children: [
-          Text(
-            titulo,
-            style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+  Widget exibirSelecaoDeColunasParaExporta({
+    required void Function(bool incluirTotalizador)? onPressedFiltrado,
+    required void Function(bool incluirTotalizador)? onPressedTudo,
+    required String titulo,
+    bool mostrarOpcaoTotalizador = false,
+  }) {
+    bool incluirTotalizador = false;
+
+    return StatefulBuilder(
+      builder: (context, setDialogState) {
+        return AlertDialog(
+          elevation: 0,
+          title: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            alignment: WrapAlignment.spaceBetween,
+            children: [
+              Text(
+                titulo,
+                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              Observer(
+                builder: (_) => FilterChip.elevated(
+                  onSelected: (d){
+                    if(controller.colunas.every((element) => element['selecionado'] == true,)){
+                      for(Map<String,dynamic> valor in controller.colunas){
+                        valor['selecionado'] = false;
+                      }
+                    }
+                    else{
+                      for(Map<String,dynamic> valor in controller.colunas){
+                        valor['selecionado'] = true;
+                      }
+                    }
+                  },
+                  selected: controller.colunas.every((element) => element['selecionado'] == true,),
+                  label: Text(controller.colunas.every((element) => element['selecionado'] == true,) ? 'Desmarcar todas' : 'Marcar todos'),
+                ),
+              ),
+            ],
           ),
-          Observer(
-            builder: (_) => FilterChip.elevated(
-              onSelected: (d){
-                if(controller.colunas.every((element) => element['selecionado'] == true,)){
-                  for(Map<String,dynamic> valor in controller.colunas){
-                    valor['selecionado'] = false;
-                  }
-                }
-                else{
-                  for(Map<String,dynamic> valor in controller.colunas){
-                    valor['selecionado'] = true;
-                  }
-                }
-              },
-              selected: controller.colunas.every((element) => element['selecionado'] == true,),
-              label: Text(controller.colunas.every((element) => element['selecionado'] == true,) ? 'Desmarcar todas' : 'Marcar todos'),
+          actionsAlignment: MainAxisAlignment.center,
+          actions: [
+            Observer(
+              builder: (_) => Visibility(
+                visible: controller.colunasFiltradas.isNotEmpty,
+                child: TextButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    onPressedFiltrado?.call(incluirTotalizador);
+                  },
+                  icon: Icon(
+                    Icons.downloading_sharp,
+                    color: Colors.blue[500],
+                  ),
+                  style: ButtonStyle(
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        side: const BorderSide(
+                          color: Colors.teal,
+                        ),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    overlayColor: const WidgetStatePropertyAll(
+                      Color.fromARGB(106, 133, 138, 141),
+                    ),
+                  ),
+                  label: Text(
+                    "Linhas filtradas",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.blue[500],
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
-      actionsAlignment: MainAxisAlignment.center,
-      actions: [
-        Observer(
-          builder: (_) => Visibility(
-            visible: controller.colunasFiltradas.isNotEmpty,
-            child: TextButton.icon(
-              onPressed: onPressedFiltrado,
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                onPressedTudo?.call(incluirTotalizador);
+              },
               icon: Icon(
                 Icons.downloading_sharp,
-                color: Colors.blue[500],
+                  color: Colors.green[500],
               ),
               style: ButtonStyle(
                 shape: WidgetStatePropertyAll(
@@ -1047,80 +1100,79 @@ class _ReportPageState extends State<ReportPage> with Rows {
                 ),
               ),
               label: Text(
-                "Linhas filtradas",
+                "Exportar tudo",
                 style: TextStyle(
                   fontSize: 15,
-                  color: Colors.blue[500],
+                  color: Colors.green[500],
                 ),
               ),
             ),
-          ),
-        ),
-        TextButton.icon(
-          onPressed: onPressedTudo,
-          icon: Icon(
-            Icons.downloading_sharp,
-              color: Colors.green[500],
-          ),
-          style: ButtonStyle(
-            shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(
-                side: const BorderSide(
-                  color: Colors.teal,
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
-            ),
-            overlayColor: const WidgetStatePropertyAll(
-              Color.fromARGB(106, 133, 138, 141),
-            ),
-          ),
-          label: Text(
-            "Exportar tudo",
-            style: TextStyle(
-              fontSize: 15,
-              color: Colors.green[500],
-            ),
-          ),
-        ),
-      ],
-      content: SizedBox(
-        width: 500,
-        height: 300,
-        child: ListView.builder(
-          itemCount: controller.colunas.length,
-          itemBuilder: (context, index) {
-            return Observer(
-              builder: (_) => Card(
-                child: CheckboxListTile(
-                  dense: true,
-                  value: controller.colunas[index]['selecionado'],
-                  selected: !controller.colunas[index]['selecionado'],
-                  selectedTileColor: Colors.grey.withValues(alpha: 0.5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      controller.colunas[index]['selecionado'] = !controller.colunas[index]['selecionado'];
-                    });
-                  },
-                  title: Text(
-                    Features.formatarTextoPrimeirasLetrasMaiusculas(
-                      controller.colunas[index].entries.first.value.toString().split('__')[0].replaceAll('_', ' '),
+          ],
+          content: SizedBox(
+            width: 500,
+            height: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (mostrarOpcaoTotalizador)
+                  CheckboxListTile(
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    value: incluirTotalizador,
+                    onChanged: (value) {
+                      setDialogState(() {
+                        incluirTotalizador = value ?? false;
+                      });
+                    },
+                    title: const Text(
+                      'Incluir totalizador',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    controlAffinity: ListTileControlAffinity.leading,
                   ),
-                  controlAffinity: ListTileControlAffinity.leading,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: controller.colunas.length,
+                    itemBuilder: (context, index) {
+                      return Observer(
+                        builder: (_) => Card(
+                          child: CheckboxListTile(
+                            dense: true,
+                            value: controller.colunas[index]['selecionado'],
+                            selected: !controller.colunas[index]['selecionado'],
+                            selectedTileColor: Colors.grey.withValues(alpha: 0.5),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                controller.colunas[index]['selecionado'] = !controller.colunas[index]['selecionado'];
+                              });
+                            },
+                            title: Text(
+                              Features.formatarTextoPrimeirasLetrasMaiusculas(
+                                controller.colunas[index].entries.first.value.toString().split('__')[0].replaceAll('_', ' '),
+                              ),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            controlAffinity: ListTileControlAffinity.leading,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-      ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
